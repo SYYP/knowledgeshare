@@ -6,7 +6,5 @@
     <solid android:color="@color/white"/>
     <!-- 设置按钮的四个角为弧形 -->
     <!-- android:radius 弧形的半径 -->
-    <corners android:radius="10dip"/>
-    <stroke android:color="@color/huise2" android:width="1dp"></stroke>
-
+    <stroke android:color="@color/yellow" android:width="1dp"></stroke>
 </shape>

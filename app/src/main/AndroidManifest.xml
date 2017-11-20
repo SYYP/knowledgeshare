@@ -18,6 +18,8 @@
         </activity>
         <activity android:name=".fragment.home.DemoActivity">
         </activity>
+        <activity android:name=".fragment.home.SearchActivity">
+        </activity>
     </application>
 
 </manifest>
