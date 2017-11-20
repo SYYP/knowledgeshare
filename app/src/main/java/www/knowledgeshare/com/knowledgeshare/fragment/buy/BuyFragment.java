@@ -1,4 +1,4 @@
-package www.knowledgeshare.com.knowledgeshare.fragment;
+package www.knowledgeshare.com.knowledgeshare.fragment.buy;
 
 import android.view.View;
 

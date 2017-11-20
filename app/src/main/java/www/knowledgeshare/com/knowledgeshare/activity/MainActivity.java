@@ -11,10 +11,10 @@ import android.widget.TextView;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
-import www.knowledgeshare.com.knowledgeshare.fragment.BuyFragment;
-import www.knowledgeshare.com.knowledgeshare.fragment.HomeFragment;
-import www.knowledgeshare.com.knowledgeshare.fragment.MineFragment;
-import www.knowledgeshare.com.knowledgeshare.fragment.StudyFragment;
+import www.knowledgeshare.com.knowledgeshare.fragment.buy.BuyFragment;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.HomeFragment;
+import www.knowledgeshare.com.knowledgeshare.fragment.mine.MineFragment;
+import www.knowledgeshare.com.knowledgeshare.fragment.study.StudyFragment;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
