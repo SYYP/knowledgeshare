@@ -20,6 +20,10 @@
         </activity>
         <activity android:name=".fragment.home.SearchActivity">
         </activity>
+        <activity android:name=".fragment.home.GuDianActivity">
+        </activity>
+        <activity android:name=".fragment.home.FreeActivity">
+        </activity>
     </application>
 
 </manifest>
