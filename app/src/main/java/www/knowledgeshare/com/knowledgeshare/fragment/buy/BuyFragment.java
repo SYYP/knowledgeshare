@@ -2,6 +2,7 @@ package www.knowledgeshare.com.knowledgeshare.fragment.buy;
 
 import android.view.View;
 
+import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 
 /**
@@ -16,7 +17,8 @@ public class BuyFragment extends BaseFragment {
 
     @Override
     protected View initView() {
-        return null;
+        View inflate = View.inflate(mContext, R.layout.fragment_buy, null);
+        return inflate;
     }
 
     @Override

@@ -7,6 +7,10 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.FormatStrategy;
+import com.orhanobut.logger.Logger;
+import com.orhanobut.logger.PrettyFormatStrategy;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
 import com.umeng.socialize.Config;
@@ -31,6 +35,7 @@ public class MyApplication extends LitePalApplication {
         super.onCreate();
 //        initUMShare();
 //        initUMPush();
+        setLogger();
         application=this;
     }
 
@@ -142,5 +147,28 @@ public class MyApplication extends LitePalApplication {
         }
     }
 
+
+    /**
+     * logger-----第三方日志打印
+     */
+    private void setLogger() {
+        FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
+                .showThreadInfo(false)  // (Optional) Whether to show thread info or not. Default true
+//                .methodCount(3)         // (Optional) How many method line to show. Default 2
+//                .methodOffset(7)        // (Optional) Hides internal method calls up to offset. Default 5
+                .tag("TAG")   // (Optional) Global tag for every log. Default PRETTY_LOGGER
+//                .logStrategy(logStrategy)   // (Optional) Changes the log strategy to print out. Default LogCat
+                .build();
+        Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy));
+        /**
+         * 隐藏Log日志---上线前打开注释即可
+         */
+        /*Logger.addLogAdapter(new AndroidLogAdapter(){
+            @Override
+            public boolean isLoggable(int priority, String tag) {
+                return BuildConfig.DEBUG;
+            }
+        });*/
+    }
 }
 
