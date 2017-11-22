@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/login_background">
+
+    <RelativeLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="55dp">
+        <ImageView
+            android:padding="10dp"
+            android:id="@+id/tv_callback"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/logincallback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/login_title"
+            android:id="@+id/register_headimg"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_marginTop="40dp"
+        android:background="@drawable/shape_radius"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/img_phone"
+            android:padding="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/login_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:layout_toRightOf="@id/img_phone"
+            android:cursorVisible="false"
+            android:textCursorDrawable="@null"
+            android:inputType="number"
+            android:background="@null"
+            android:layout_gravity="center"
+            android:gravity="left|center_vertical"
+            android:textColor="@color/textcolor"
+            android:textSize="15sp"
+            android:padding="5dp"
+            android:id="@+id/register_phone"
+            android:layout_centerHorizontal="true"
+            android:hint="请输入手机号"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_marginTop="25dp"
+        android:background="@drawable/shape_radius"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/img_message"
+            android:padding="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/login_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:layout_toRightOf="@id/img_message"
+            android:textCursorDrawable="@null"
+            android:inputType="number"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="left|center_vertical"
+            android:textColor="@color/textcolor"
+            android:textSize="15sp"
+            android:padding="5dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/register_yanzheng"
+            android:hint="请输入验证码"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/register_huoqu"
+            android:textColor="#f00"
+            android:textSize="14sp"
+            android:padding="5dp"
+            android:text="获取验证码"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:padding="10dp"
+            style="@style/CustomCheckboxTheme"
+            android:id="@+id/register_agress"
+            android:textSize="15sp"
+            android:layout_weight="1"
+            android:textColor="#fff"
+            android:text="同意《用户注册协议》"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_marginTop="30dp"
+        android:background="@drawable/shape_redradius"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:inputType="number"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:padding="5dp"
+            android:id="@+id/register_next"
+            android:layout_centerHorizontal="true"
+            android:text="下一步"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+</LinearLayout>

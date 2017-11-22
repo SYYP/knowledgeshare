@@ -1,8 +1,11 @@
 package www.knowledgeshare.com.knowledgeshare;
 
 import android.app.Application;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
@@ -20,6 +23,8 @@ import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class MyApplication extends LitePalApplication {
     private static MyApplication application;
+    private static ClipboardManager cb;
+    private static ClipChangedListener listener;
 
     @Override
     public void onCreate() {
@@ -81,4 +86,61 @@ public class MyApplication extends LitePalApplication {
     public static Context getGloableContext()    {
         return  application.getApplicationContext();
     }
+
+    public static class ClipChangedListener implements ClipboardManager.OnPrimaryClipChangedListener {
+
+        @Override
+        public void onPrimaryClipChanged() {
+            // TODO Auto-generated method stub
+            // 具体实现
+            String string = cb.getText().toString();
+            if (string != null && string.equals("")) {
+                return;
+            }
+            cb.setText("");
+        }
+    }
+    public static void startClearClip(Context context) {
+
+        cb = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
+
+        Log.e("ProxyApplication", "=============================================================================");
+        Log.e("ProxyApplication", "============================== cb.setPrimaryClipBefore！==================================");
+        Log.e("ProxyApplication", "=============================================================================");
+
+        cb.setPrimaryClip(ClipData.newPlainText("", ""));
+        Log.e("ProxyApplication", "=============================================================================");
+        Log.e("ProxyApplication", "============================== cb.setPrimaryClipAfter！cb= " + cb + "==================================");
+        Log.e("ProxyApplication", "=============================================================================");
+
+        listener = new ClipChangedListener();
+        Log.e("ProxyApplication", "=============================================================================");
+        Log.e("ProxyApplication", "============================== 创建lisitener！==================================");
+        Log.e("ProxyApplication", "=============================================================================");
+
+        cb.addPrimaryClipChangedListener(listener);
+        Log.e("ProxyApplication", "=============================================================================");
+        Log.e("ProxyApplication", "============================== 开启禁止复制！==================================");
+        Log.e("ProxyApplication", "=============================================================================");
+    }
+    // 关闭禁用剪切板
+    public static void stopClearClip() {
+        try {
+            Log.e("ProxyApplication", "=============================================================================");
+            Log.e("ProxyApplication", "============================== cb = "+cb+"==================================");
+            Log.e("ProxyApplication", "====================================================");
+            if (cb != null) {
+                cb.removePrimaryClipChangedListener(listener);
+                listener = null;
+                cb = null;
+                Log.e("ProxyApplication", "=============================================================================");
+                Log.e("ProxyApplication", "============================== 停止禁止复制！==================================");
+                Log.e("ProxyApplication", "====================================================");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
+

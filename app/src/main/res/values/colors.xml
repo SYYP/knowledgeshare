@@ -24,6 +24,7 @@
     <color name="redd">#ef5a50</color>
     <color name="hui">#F0F0F2</color>
     <color name="kog">#999999</color>
+    <color name="textcolor">#999999</color>
     <!-- background -->
     <color name="bg">#FFF5F5F5</color>
     <color name="bg_pressed">#FFF2F2F2</color>

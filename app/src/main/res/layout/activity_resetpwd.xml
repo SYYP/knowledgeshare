@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/loginpwdback"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+        <ImageView
+            android:id="@+id/tv_callback"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/logincallback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textColor="@color/white"
+            android:layout_centerHorizontal="true"
+            android:textSize="20sp"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:text="重置密码"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/login_title"
+            android:id="@+id/register_headimg"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_marginTop="50dp"
+        android:background="@drawable/shape_radius"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/set_lpwd"
+            android:padding="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/set_pwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:layout_toRightOf="@id/set_lpwd"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="left|center_vertical"
+            android:textColor="@color/textcolor"
+            android:textSize="14sp"
+            android:padding="5dp"
+            android:id="@+id/reset_loginpwd"
+            android:layout_centerHorizontal="true"
+            android:hint="请输入6~20位字母，数字密码"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_marginTop="25dp"
+        android:background="@drawable/shape_radius"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/set_pwd"
+            android:padding="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/set_pwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:layout_toRightOf="@id/set_pwd"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/textcolor"
+            android:textSize="14sp"
+            android:padding="5dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/reset_forgetpwd"
+            android:hint="请输入相同的密码"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_marginTop="30dp"
+        android:background="@drawable/shape_redradius"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <EditText
+            android:inputType="number"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:padding="5dp"
+            android:id="@+id/reset_ok"
+            android:layout_centerHorizontal="true"
+            android:text="提交"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+</LinearLayout>

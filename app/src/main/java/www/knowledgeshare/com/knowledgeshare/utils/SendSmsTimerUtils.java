@@ -8,6 +8,7 @@ import android.text.style.ForegroundColorSpan;
 import android.widget.TextView;
 
 import www.knowledgeshare.com.knowledgeshare.MyApplication;
+import www.knowledgeshare.com.knowledgeshare.R;
 
 
 /**
@@ -68,6 +69,6 @@ public class SendSmsTimerUtils extends CountDownTimer {//验证码倒计时的�
     public void onFinish() {
         mTextView.setText("重新获取验证码");
         mTextView.setClickable(true);
-        mTextView.setTextColor(MyApplication.getGloableContext().getResources().getColor(inFuture));
+        mTextView.setTextColor(MyApplication.getGloableContext().getResources().getColor(R.color.redd));
     }
 }

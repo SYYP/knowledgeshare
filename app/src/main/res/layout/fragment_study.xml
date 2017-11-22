@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#edecea">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/text_red_dark"
+        android:padding="10dp">
+        <TextView
+            android:id="@+id/tv_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="25dp"
+            android:background="@drawable/bg_search"
+            android:drawableLeft="@drawable/icon_search_black"
+            android:drawablePadding="10dp"
+            android:minWidth="280dp"
+            android:text="搜索感兴趣的老师或课程"/>
+        <LinearLayout
+            android:id="@+id/ll_download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                >
+                <ImageView
+                    android:id="@+id/iv_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/study_message"/>
+            </FrameLayout>
+        </LinearLayout>
+    </RelativeLayout>
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+     <RelativeLayout
+
+         android:background="@drawable/study_body"
+         android:layout_width="match_parent"
+         android:layout_height="150dp">
+
+     <LinearLayout
+         android:id="@+id/liner"
+         android:layout_marginTop="10dp"
+         android:layout_alignParentRight="true"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content">
+         <TextView
+             android:id="@+id/study_weather"
+             android:text="晴"
+             android:layout_marginRight="10dp"
+             android:textSize="18sp"
+             android:textColor="@color/white"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content" />
+         <TextView
+             android:id="@+id/study_wendu"
+             android:layout_marginRight="15dp"
+             android:text="23℃"
+             android:textSize="18sp"
+             android:textColor="@color/white"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content" />
+     </LinearLayout>
+     <TextView
+         android:layout_marginLeft="10dp"
+         android:layout_marginTop="10dp"
+         android:layout_below="@id/liner"
+         android:text="Hi 行走的肉夹馍"
+         android:textSize="18sp"
+         android:textColor="@color/white"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content" />
+         <TextView
+             android:id="@+id/study_city"
+             android:layout_marginTop="10dp"
+             android:text="北京海淀西北旺软件园"
+             android:layout_below="@id/liner"
+             android:layout_marginRight="15dp"
+             android:layout_alignParentRight="true"
+             android:textColor="@color/white"
+             android:textSize="16sp"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content" />
+         <LinearLayout
+             android:layout_marginBottom="20dp"
+             android:layout_marginRight="15dp"
+             android:layout_alignParentRight="true"
+             android:layout_alignParentBottom="true"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content">
+         <TextView
+             android:layout_gravity="bottom"
+             android:drawablePadding="5dp"
+             android:drawableLeft="@drawable/listermusic"
+             android:text="随声听"
+             android:textColor="@color/white"
+             android:textSize="16sp"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content" />
+         <View
+
+             android:layout_marginRight="10dp"
+             android:layout_marginLeft="10dp"
+             android:background="@color/white"
+             android:layout_width="1dp"
+             android:layout_height="30dp"></View>
+         <TextView
+             android:drawablePadding="5dp"
+             android:drawableLeft="@drawable/study_collect"
+             android:text="收藏"
+             android:textColor="@color/white"
+             android:textSize="16sp"
+             android:layout_gravity="bottom"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content" />
+         </LinearLayout>
+     </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/yinying"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/relative"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="45dp">
+            <View
+                android:id="@+id/line"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:background="#b10505"
+                android:layout_width="2dp"
+                android:layout_height="20dp"></View>
+            <TextView
+                android:id="@+id/study_title"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/line"
+                android:text="历史上的今天"
+                android:textSize="16sp"
+                android:textColor="@color/textblack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="星期一"
+                android:textColor="@color/textblack"
+                android:textSize="16sp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentRight="true"
+                android:id="@+id/study_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="2017-11-20"
+                android:textColor="@color/textblack"
+                android:textSize="16sp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@id/study_day"
+                android:id="@+id/study_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <LinearLayout
+
+            android:id="@+id/study_liner"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_below="@id/relative"
+            android:background="@drawable/shape_line"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/study_count"
+                android:background="@null"
+                android:textColor="@color/textblack"
+                android:textSize="16sp"
+                android:text="喜欢聆听，风吹过的声只为等待风中夹杂着你的笑声，这不是我想要的结局忧伤的漩涡伴随着天使羽翼煽动着声响,你渐渐远去，从此风中的声音叫做静谧，每一次错过都是忘记，只有每晚的辗转反侧让我记得我的梦你曾来过！
+            "
+                android:padding="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <RelativeLayout
+            android:padding="10dp"
+            android:layout_below="@id/study_liner"
+          android:layout_marginBottom="26dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true">
+         <ImageView
+             android:id="@+id/study_xinxin"
+             android:layout_marginRight="30dp"
+             android:src="@drawable/weiguanzhuxin"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content" />
+        </RelativeLayout>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape_radioline"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="45dp">
+            <View
+                android:id="@+id/lines"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"
+                android:background="#b10505"
+                android:layout_width="2dp"
+                android:layout_height="20dp"></View>
+            <TextView
+                android:id="@+id/study_titles"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/lines"
+                android:text="学习笔记"
+                android:textSize="16sp"
+                android:textColor="@color/textblack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="星期一"
+                android:textColor="@color/textblack"
+                android:textSize="16sp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentRight="true"
+                android:id="@+id/study_days"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="2017-11-20"
+                android:textColor="@color/textblack"
+                android:textSize="16sp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@id/study_days"
+                android:id="@+id/study_dates"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <View
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/hui"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"></View>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/study_recycle"
+             android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+       <View
+           android:background="#edecea"
+           android:layout_width="match_parent"
+           android:layout_height="8dp"></View>
+    </LinearLayout>
+    </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>
+
