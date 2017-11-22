@@ -19,7 +19,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="25dp"
                 android:background="@drawable/bg_search"
-                android:drawableLeft="@drawable/icon_search"
+                android:drawableLeft="@drawable/icon_search_black"
                 android:drawablePadding="10dp"
                 android:minWidth="280dp"
                 android:text="搜索感兴趣的老师或课程"/>
@@ -553,9 +553,9 @@
                     android:textSize="16sp"/>
                 <TextView
                     android:id="@+id/tv_subtitle"
-                    android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:text="为什么要唱歌"/>
             </LinearLayout>
         </LinearLayout>

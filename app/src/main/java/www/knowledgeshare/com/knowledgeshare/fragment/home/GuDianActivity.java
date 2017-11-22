@@ -3,7 +3,6 @@ package www.knowledgeshare.com.knowledgeshare.fragment.home;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -21,12 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BannerUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 
 import static com.taobao.accs.ACCSManager.mContext;
 
-public class GuDianActivity extends AppCompatActivity implements View.OnClickListener {
+public class GuDianActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView iv_back;
     private TextView tv_title;

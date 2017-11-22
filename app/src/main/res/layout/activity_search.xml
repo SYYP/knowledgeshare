@@ -16,7 +16,7 @@
             android:layout_centerInParent="true"
             android:background="@drawable/bg_search"
             android:drawablePadding="10dp"
-            android:drawableRight="@drawable/icon_search"
+            android:drawableRight="@drawable/icon_search_black"
             android:hint="请输入关键字搜索"
             android:imeOptions="actionSearch"
             android:minWidth="260dp"

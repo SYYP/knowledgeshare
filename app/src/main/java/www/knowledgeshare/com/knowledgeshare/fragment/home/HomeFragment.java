@@ -168,6 +168,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         LikeAdapter likeAdapter=new LikeAdapter(R.layout.item_like,list);
         recycler_like.setAdapter(likeAdapter);
+        likeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(mContext,LikeDetailActivity.class));
+            }
+        });
     }
 
     private class ZhuanLanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
@@ -314,7 +320,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(intent4);
                 break;
             case R.id.ll_guanzhu:
-
+                startActivity(new Intent(mContext,MyGuanzhuActivity.class));
                 break;
             case R.id.tv_lianxubofang:
                 showDialog(Gravity.CENTER, R.style.Alpah_aniamtion);

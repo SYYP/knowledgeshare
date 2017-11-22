@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#C30D23</color>
-    <color name="colorPrimaryDark">#C30D23</color>
+    <color name="colorPrimary">#C30D23</color><!--toolbar-->
+    <color name="colorPrimaryDark">#C30D23</color><!--状态栏-->
     <color name="colorAccent">#C30D23</color>
     <color name="tab_text_selected_color">#C30D23</color>
     <color name="tab_text_normal_color">#cccccc</color>
