@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -21,14 +22,20 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.liaoinstan.springview.widget.SpringView;
 import com.youth.banner.Banner;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.utils.BannerUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
 /**
@@ -66,6 +73,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private ImageView iv_delete,iv_bo_head,iv_arrow_top,iv_mulu;
     private TextView tv_title,tv_subtitle;
     private RelativeLayout rl_bofang;
+    private BaseDialog mDialog;
+    private ZhuanLanAdapter mZhuanLanAdapter;
+    private CommentAdapter mCommentAdapter;
+    private DaShiBanAdapter mDaShiBanAdapter;
+    private YinYueKeAdapter mYinYueKeAdapter;
+    private LikeAdapter mLikeAdapter;
 
     @Override
     protected void lazyLoad() {
@@ -127,7 +140,26 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         tv_subtitle=inflate.findViewById(R.id.tv_subtitle);
         rl_bofang=inflate.findViewById(R.id.rl_bofang);
         rl_bofang.setVisibility(View.GONE);
+        EventBus.getDefault().register(this);
         return inflate;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("bofang")) {
+            rl_bofang.setVisibility(View.VISIBLE);
+            Glide.with(mContext).load("https://ss0.baidu.com/73t1b" +
+                    "jeh1BF3odCf/it/u=36377501,1487953910&fm=73&s=" +
+                    "54BA3ED516335F824A2D777E03005078").into(iv_bo_head);
+        }else if (eventBean.getMsg().equals("pause")){
+            rl_bofang.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -154,26 +186,62 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         list.add("");
         list.add("");
         list.add("");
-        ZhuanLanAdapter zhuanLanAdapter=new ZhuanLanAdapter(R.layout.item_zhuanlan,list);
-        recycler_zhuanlan.setAdapter(zhuanLanAdapter);
+        mZhuanLanAdapter = new ZhuanLanAdapter(R.layout.item_zhuanlan,list);
+        recycler_zhuanlan.setAdapter(mZhuanLanAdapter);
+        mZhuanLanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                gobofang();
+            }
+        });
 
-        CommentAdapter commentAdapter=new CommentAdapter(R.layout.item_zhuanlan,list);
-        recycler_comment.setAdapter(commentAdapter);
+        mCommentAdapter = new CommentAdapter(R.layout.item_zhuanlan,list);
+        recycler_comment.setAdapter(mCommentAdapter);
+        mCommentAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                gobofang();
+            }
+        });
 
-        DaShiBanAdapter daShiBanAdapter=new DaShiBanAdapter(R.layout.item_dashiban,list);
-        recycler_dashiban.setAdapter(daShiBanAdapter);
+        mDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban,list);
+        recycler_dashiban.setAdapter(mDaShiBanAdapter);
+        mDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
 
-        YinYueKeAdapter yinYueKeAdapter=new YinYueKeAdapter(R.layout.item_yinyueke,list);
-        recycler_yinyueke.setAdapter(yinYueKeAdapter);
+            }
+        });
 
-        LikeAdapter likeAdapter=new LikeAdapter(R.layout.item_like,list);
-        recycler_like.setAdapter(likeAdapter);
-        likeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke,list);
+        recycler_yinyueke.setAdapter(mYinYueKeAdapter);
+
+        mLikeAdapter = new LikeAdapter(R.layout.item_like,list);
+        recycler_like.setAdapter(mLikeAdapter);
+        mLikeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 startActivity(new Intent(mContext,LikeDetailActivity.class));
             }
         });
+        initDialog();
+    }
+
+    private void initDialog() {
+        BaseDialog.Builder builder = new BaseDialog.Builder(mContext);
+        mDialog = builder.setViewId(R.layout.dialog_iswifi)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
     }
 
     private class ZhuanLanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
@@ -261,34 +329,43 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         }
     }
 
-    private void showDialog(int grary, int animationStyle) {
-        BaseDialog.Builder builder = new BaseDialog.Builder(mContext);
-        final BaseDialog dialog = builder.setViewId(R.layout.dialog_iswifi)
-                //设置dialogpadding
-                .setPaddingdp(10, 0, 10, 0)
-                //设置显示位置
-                .setGravity(grary)
-                //设置动画
-                .setAnimation(animationStyle)
-                //设置dialog的宽高
-                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                //设置触摸dialog外围是否关闭
-                .isOnTouchCanceled(true)
-                //设置监听事件
-                .builder();
-        dialog.show();
-        dialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+    private void gobofang() {
+        int apnType = NetWorkUtils.getAPNType(mContext);
+        if (apnType==0){
+            Toast.makeText(mContext, "没有网络呢~", Toast.LENGTH_SHORT).show();
+            return;
+        }else if (apnType==2 || apnType==3 || apnType==4){
+            mDialog.show();
+            mDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mDialog.dismiss();
+                }
+            });
+            mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mDialog.dismiss();
+                    rl_bofang.setVisibility(View.VISIBLE);
+                    Glide.with(mContext).load("https://ss0.baidu.com/73t1b" +
+                            "jeh1BF3odCf/it/u=36377501,1487953910&fm=73&s=" +
+                            "54BA3ED516335F824A2D777E03005078").into(iv_bo_head);
+                    EventBean eventBean = new EventBean("bofang");
+                    EventBus.getDefault().postSticky(eventBean);
+                }
+            });
+            return;
+        }else if (NetWorkUtils.isMobileConnected(mContext)){
+            Toast.makeText(mContext, "wifi不可用呢~", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        rl_bofang.setVisibility(View.VISIBLE);
+        Glide.with(mContext).load("https://ss0.baidu.com/73t1b" +
+                "jeh1BF3odCf/it/u=36377501,1487953910&fm=73&s=" +
+                "54BA3ED516335F824A2D777E03005078").into(iv_bo_head);
+        EventBean eventBean = new EventBean("rotate");
+        EventBus.getDefault().postSticky(eventBean);
+
     }
 
     @Override
@@ -323,11 +400,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext,MyGuanzhuActivity.class));
                 break;
             case R.id.tv_lianxubofang:
-                showDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
-                rl_bofang.setVisibility(View.VISIBLE);
-                Glide.with(mContext).load("https://ss0.baidu.com/73t1b" +
-                        "jeh1BF3odCf/it/u=36377501,1487953910&fm=73&s=" +
-                        "54BA3ED516335F824A2D777E03005078").into(iv_bo_head);
+                gobofang();
                 break;
             case R.id.iv_zhuanlan_head:
                 break;
@@ -345,10 +418,19 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             case R.id.tv_like_refresh:
                 break;
             case R.id.iv_delete:
+                rl_bofang.setVisibility(View.GONE);
+                EventBean eventBean = new EventBean("norotate");
+                EventBus.getDefault().postSticky(eventBean);
                 break;
             case R.id.iv_arrow_top:
+                Intent intent1=new Intent(mContext,MusicActivity.class);
+                startActivity(intent1);
+                mActivity.overridePendingTransition(R.anim.bottom_in,0);
                 break;
             case R.id.iv_mulu:
+                Intent intent11=new Intent(mContext,BoFangListActivity.class);
+                startActivity(intent11);
+                mActivity.overridePendingTransition(R.anim.bottom_in,0);
                 break;
         }
     }

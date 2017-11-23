@@ -3,14 +3,22 @@ package www.knowledgeshare.com.knowledgeshare.activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.BuyFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.HomeFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.MineFragment;
@@ -37,16 +45,45 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout activity_main;
     private int position;
     private boolean isPause=true;
+    private Animation mRotate_anim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        EventBus.getDefault().register(this);
         initView();
         initData();
         initListener();
+        initAnim();
     }
 
+    private void initAnim() {
+        mRotate_anim = AnimationUtils.loadAnimation(this, R.anim.rotate_animation);
+        LinearInterpolator interpolator = new LinearInterpolator();  //设置匀速旋转，在xml文件中设置会出现卡顿
+        mRotate_anim.setInterpolator(interpolator);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("rotate")) {
+            isPause=false;
+            iv_listen.setImageResource(R.drawable.tab_listen_bo);
+            if (mRotate_anim != null) {
+                iv_listen.startAnimation(mRotate_anim);  //开始动画
+            }
+        }else if (eventBean.getMsg().equals("norotate")){
+            isPause=true;
+            iv_listen.clearAnimation();
+            iv_listen.setImageResource(R.drawable.tab_listen_pause);
+        }
+    }
 
     private void initListener() {
         ll_home.setOnClickListener(this);
@@ -111,8 +148,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 position = 2;
                 if (isPause){
                     iv_listen.setImageResource(R.drawable.tab_listen_bo);
+                    if (mRotate_anim != null) {
+                        iv_listen.startAnimation(mRotate_anim);  //开始动画
+                    }
+                    EventBean eventBean = new EventBean("bofang");
+                    EventBus.getDefault().postSticky(eventBean);
                 }else {
+                    iv_listen.clearAnimation();
                     iv_listen.setImageResource(R.drawable.tab_listen_pause);
+                    EventBean eventBean = new EventBean("pause");
+                    EventBus.getDefault().postSticky(eventBean);
                 }
                 isPause=!isPause;
                 break;

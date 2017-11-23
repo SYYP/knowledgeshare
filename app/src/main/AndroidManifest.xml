@@ -9,25 +9,27 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".activity.LoginActivity">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN"/>
+        <activity android:name=".activity.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
-            <category android:name="android.intent.category.LAUNCHER"/>
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
+
         <activity android:name=".fragment.home.DemoActivity">
         </activity>
-        <activity android:name=".activity.MainActivity" android:windowSoftInputMode="adjustPan|stateHidden"></activity>
-        <activity android:name=".activity.RegisterActivity"></activity>
-        <activity android:name=".login.ForgetActivity"></activity>
-        <activity android:name=".login.AlterActivity"></activity>
-        <activity android:name=".login.SetloginActivity"></activity>
-
+        <activity
+            android:name=".activity.MainActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity android:name=".activity.RegisterActivity"/>
+        <activity android:name=".login.ForgetActivity"/>
+        <activity android:name=".login.AlterActivity"/>
+        <activity android:name=".login.SetloginActivity"/>
         <activity android:name=".fragment.home.SearchActivity">
         </activity>
         <activity android:name=".fragment.home.GuDianActivity">
@@ -37,6 +39,10 @@
         <activity android:name=".fragment.home.MyGuanzhuActivity">
         </activity>
         <activity android:name=".fragment.home.LikeDetailActivity">
+        </activity>
+        <activity android:name=".fragment.home.MusicActivity">
+        </activity>
+        <activity android:name=".fragment.home.BoFangListActivity">
         </activity>
     </application>
 

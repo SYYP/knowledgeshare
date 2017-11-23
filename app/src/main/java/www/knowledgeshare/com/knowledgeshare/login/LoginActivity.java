@@ -90,18 +90,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void login() {
-        if (TextUtils.isEmpty(login_phone.getText().toString())) {
-            Toast.makeText(this, "请填写您的手机号", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        else if (!MyUtils.isMobileNO(login_phone.getText().toString())) {
-            Toast.makeText(this, "手机号格式不正确", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (TextUtils.isEmpty(login_pwd.getText().toString())) {
-            Toast.makeText(this, "请填写您的密码", Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (TextUtils.isEmpty(login_phone.getText().toString())) {
+//            Toast.makeText(this, "请填写您的手机号", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        else if (!MyUtils.isMobileNO(login_phone.getText().toString())) {
+//            Toast.makeText(this, "手机号格式不正确", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (TextUtils.isEmpty(login_pwd.getText().toString())) {
+//            Toast.makeText(this, "请填写您的密码", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
         //跳转到主页面
           Intent intent=new Intent(this,MainActivity.class);
           startActivity(intent);
