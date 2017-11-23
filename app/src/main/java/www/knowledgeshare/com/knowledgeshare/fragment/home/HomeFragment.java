@@ -365,7 +365,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 "54BA3ED516335F824A2D777E03005078").into(iv_bo_head);
         EventBean eventBean = new EventBean("rotate");
         EventBus.getDefault().postSticky(eventBean);
-
     }
 
     @Override

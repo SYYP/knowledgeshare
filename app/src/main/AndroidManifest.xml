@@ -44,6 +44,8 @@
         </activity>
         <activity android:name=".fragment.home.BoFangListActivity">
         </activity>
+        <activity android:name=".fragment.home.TeacherDetailActivity">
+        </activity>
     </application>
 
 </manifest>

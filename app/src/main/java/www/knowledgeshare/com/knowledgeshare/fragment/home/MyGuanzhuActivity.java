@@ -28,6 +28,7 @@ public class MyGuanzhuActivity extends BaseActivity implements View.OnClickListe
     private TextView tv_search;
     private RecyclerView recycler_guanzhu;
     private LinearLayout activity_my_guanzhu;
+    private GuanzhuAdapter mGuanzhuAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +49,14 @@ public class MyGuanzhuActivity extends BaseActivity implements View.OnClickListe
         list.add("");
         list.add("");
         recycler_guanzhu.setLayoutManager(new LinearLayoutManager(this));
-        GuanzhuAdapter guanzhuAdapter = new GuanzhuAdapter(R.layout.item_guanzhu, list);
-        recycler_guanzhu.setAdapter(guanzhuAdapter);
+        mGuanzhuAdapter = new GuanzhuAdapter(R.layout.item_guanzhu, list);
+        recycler_guanzhu.setAdapter(mGuanzhuAdapter);
+        mGuanzhuAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(MyGuanzhuActivity.this,TeacherDetailActivity.class));
+            }
+        });
     }
 
     private class GuanzhuAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

@@ -67,7 +67,6 @@
                     android:drawableLeft="@drawable/icon_clock"
                     android:drawablePadding="5dp"
                     android:text="1:20:20"
-                    android:textColor="@color/yellow"
                     android:textSize="12sp"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -84,7 +83,6 @@
                 android:drawableLeft="@drawable/jijieke"
                 android:drawablePadding="5dp"
                 android:text="32节"
-                android:textColor="@color/yellow"
                 android:textSize="12sp"/>
         </LinearLayout>
     </LinearLayout>
