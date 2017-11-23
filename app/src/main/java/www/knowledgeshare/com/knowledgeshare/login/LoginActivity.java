@@ -67,7 +67,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         switch (view.getId()) {
 
             case R.id.login_sso:
-                login();
+//                login();
+                startActivity(new Intent(this,MainActivity.class));
                 break;
             case R.id.login_phone:
                 login_phone.setCursorVisible(true);

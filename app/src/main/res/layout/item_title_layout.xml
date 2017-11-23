@@ -8,15 +8,24 @@
         android:id="@+id/title_message_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:src="@drawable/power_message_title"
+        android:layout_centerVertical="true"/>
+    <ImageView
+        android:id="@+id/title_back_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:src="@drawable/icon_back_white"
         android:layout_centerVertical="true"/>
     <TextView
         android:id="@+id/title_content_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/mine"
         android:textColor="@color/white"
         android:layout_centerInParent="true"
         android:padding="10dp"/>
@@ -24,6 +33,7 @@
         android:id="@+id/title_setting_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:src="@drawable/power_setting_title"
