@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="www.knowledgeshare.com.knowledgeshare"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="www.knowledgeshare.com.knowledgeshare">
 
     <application
         android:name=".MyApplication"
@@ -9,8 +9,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".login.LancherActivity">
+        <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -23,22 +22,28 @@
 
         <activity
             android:name=".activity.MainActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".login.ForgetActivity" />
-        <activity android:name=".login.AlterActivity" />
-        <activity android:name=".login.SetloginActivity" />
-        <activity android:name=".fragment.home.SearchActivity" />
-        <activity android:name=".fragment.home.GuDianActivity" />
-        <activity android:name=".fragment.home.FreeActivity" />
-        <activity android:name=".fragment.home.MyGuanzhuActivity" />
-        <activity android:name=".fragment.home.LikeDetailActivity" />
-        <activity android:name=".activity.MySubscriptionsActivity" />
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity android:name=".activity.RegisterActivity"/>
+        <activity android:name=".login.ForgetActivity"/>
+        <activity android:name=".login.AlterActivity"/>
+        <activity android:name=".login.SetloginActivity"/>
+        <activity android:name=".fragment.home.SearchActivity"/>
+        <activity android:name=".fragment.home.GuDianActivity"/>
+        <activity android:name=".fragment.home.FreeActivity"/>
+        <activity android:name=".fragment.home.MyGuanzhuActivity"/>
+        <activity android:name=".fragment.home.LikeDetailActivity"/>
+        <activity android:name=".activity.MySubscriptionsActivity"/>
         <activity android:name=".activity.LearningTimeActivity"/>
         <activity android:name=".fragment.home.DemoActivity"/>
         <activity android:name=".fragment.home.MusicActivity"/>
         <activity android:name=".fragment.home.BoFangListActivity"/>
         <activity android:name=".fragment.home.TeacherDetailActivity"/>
+        <activity android:name=".fragment.home.EveryDayCommentActivity">
+        </activity>
+        <activity android:name=".fragment.home.SoftMusicActivity">
+        </activity>
+        <activity android:name=".fragment.home.MusicMasterActivity">
+        </activity>
         <activity android:name=".login.GuidePageActivity"></activity>
         <activity android:name=".login.MessageActivity"></activity>
         <activity android:name=".activity.LoginActivity"></activity>

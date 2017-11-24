@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.google.gson.Gson;
@@ -30,7 +29,7 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.SearchHistoryEntity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
-import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.SoftKeyboardTool;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.FluidLayout;
 
@@ -183,6 +182,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
         YinYueKeAdapter yinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, hotList);
         recycler_yinyueke.setAdapter(yinYueKeAdapter);
+
+        SoftKeyboardTool.closeKeyboard(this);
     }
 
     private void initData() {
@@ -283,15 +284,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         @Override
         protected void convert(BaseViewHolder helper, String item) {
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-            //            ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-            //            int www = MyUtils.getScreenWidth(mContext) / 2 - 20;
-            //            layoutParams.width=www;
-            //            layoutParams.height=www*12/17;
-            //            imageView.setLayoutParams(layoutParams);
-            Glide.with(mContext).load("https://ss0.baidu.com/73t1b" +
-                    "jeh1BF3odCf/it/u=36377501,1487953910&fm=73&s=" +
-                    "54BA3ED516335F824A2D777E03005078")
-                    .into(imageView);
+//            Glide.with(mContext).load().into(imageView);
         }
     }
 
@@ -304,14 +297,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         @Override
         protected void convert(BaseViewHolder helper, String item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-            ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-            int www = MyUtils.getScreenWidth(mContext) / 2 - 20;
-            layoutParams.width = www;
-            layoutParams.height = www;
-            imageView.setLayoutParams(layoutParams);
-            Glide.with(mContext).load("https://ss0.baidu.com/73t1b" +
-                    "jeh1BF3odCf/it/u=36377501,1487953910&fm=73&s=" +
-                    "54BA3ED516335F824A2D777E03005078").into(imageView);
+//            ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+//            int www = MyUtils.getScreenWidth(mContext) / 2 - 20;
+//            layoutParams.width = www;
+//            layoutParams.height = www;
+//            imageView.setLayoutParams(layoutParams);
+//            Glide.with(mContext).load().into(imageView);
         }
     }
 

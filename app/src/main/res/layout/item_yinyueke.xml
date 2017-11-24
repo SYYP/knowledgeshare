@@ -16,6 +16,7 @@
                 android:id="@+id/iv_tupian"
                 android:layout_width="match_parent"
                 android:scaleType="fitXY"
+                android:src="@drawable/demo2"
                 android:layout_height="wrap_content"/>
             <TextView
                 android:layout_width="match_parent"
@@ -40,21 +41,23 @@
                 android:layout_marginTop="5dp"
                 android:text="如何成为一名合格的歌者"
                 android:textColor="@color/textblack"
-                android:textSize="15sp"/>
+                android:textSize="14sp"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:textSize="13sp"
                 android:text="中国好嗓门教父"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="@color/yellow"
-                android:paddingBottom="3dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="3dp"
+                android:paddingBottom="2dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="2dp"
+                android:textSize="12sp"
                 android:text="夏洛"/>
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -73,7 +76,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:text="￥198元/年"
+                    android:text="￥198/年"
+                    android:textSize="13sp"
                     android:textColor="@color/text_red_dark"/>
             </RelativeLayout>
             <TextView
