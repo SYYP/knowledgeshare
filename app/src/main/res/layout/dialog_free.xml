@@ -3,44 +3,59 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@drawable/bg_circle_white"
-              android:padding="10dp"
-              android:orientation="vertical">
-    <RelativeLayout
+              android:orientation="vertical"
+              android:padding="10dp">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        >
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+    >
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
             android:drawablePadding="5dp"
             android:drawableTop="@drawable/bofanglist_share"
+            android:gravity="center"
             android:text="分享"
             android:textColor="@color/textblack"
             android:textSize="13sp"/>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
             android:drawablePadding="5dp"
             android:drawableTop="@drawable/bofanglist_collect"
+            android:gravity="center"
             android:text="收藏"
             android:textColor="@color/textblack"
             android:textSize="13sp"/>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:drawablePadding="5dp"
+            android:drawableTop="@drawable/dianzan_yellow_big"
+            android:gravity="center"
+            android:text="点赞"
+            android:textColor="@color/textblack"
+            android:textSize="13sp"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
             android:drawablePadding="5dp"
             android:drawableTop="@drawable/bofanglist_download"
+            android:gravity="center"
             android:text="下载"
             android:textColor="@color/textblack"
             android:textSize="13sp"/>
-    </RelativeLayout>
+    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

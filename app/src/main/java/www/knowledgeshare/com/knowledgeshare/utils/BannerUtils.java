@@ -4,7 +4,10 @@ import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import www.knowledgeshare.com.knowledgeshare.R;
 
 /**
  * Created by Administrator on 2017/7/20.
@@ -16,15 +19,15 @@ public class BannerUtils {
         banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);//注意这里的设置，设置不对容易报错
         //设置图片加载器
         banner.setImageLoader(new GlideImageLoader());
-        //        List<Integer> list=new ArrayList<>();
-        //        list.add(R.drawable.lunbo);
-        //        list.add(R.drawable.lunbo);
-        //        list.add(R.drawable.lunbo);
-        //        list.add(R.drawable.lunbo);
-        //        list.add(R.drawable.lunbo);
-        //        banner.setImages(list);
+        List<Integer> list = new ArrayList<>();
+        list.add(R.drawable.banner);
+        list.add(R.drawable.banner);
+        list.add(R.drawable.banner);
+        list.add(R.drawable.banner);
+        list.add(R.drawable.banner);
+        banner.setImages(list);
         //设置图片集合
-        banner.setImages(imageurls);
+//        banner.setImages(imageurls);
         //设置banner动画效果
         banner.setBannerAnimation(Transformer.DepthPage);
         //设置标题集合（当banner样式有显示title时）

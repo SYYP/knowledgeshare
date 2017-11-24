@@ -309,9 +309,9 @@
             android:layout_weight="1"
             android:text="加入购物车"
             android:textColor="@color/textblack"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:gravity="center"
-            android:padding="13dp"
+            android:padding="12dp"
             android:background="@color/yellow"
             android:layout_width="0dp"
             android:layout_height="match_parent"/>
@@ -320,9 +320,9 @@
             android:layout_weight="1"
             android:text="购买：￥9.9"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:gravity="center"
-            android:padding="13dp"
+            android:padding="12dp"
             android:background="@color/text_red_dark"
             android:layout_width="0dp"
             android:layout_height="match_parent"/>

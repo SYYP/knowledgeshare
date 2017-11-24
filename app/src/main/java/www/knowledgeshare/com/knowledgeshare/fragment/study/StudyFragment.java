@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.study;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
+import www.knowledgeshare.com.knowledgeshare.login.MessageActivity;
 import www.knowledgeshare.com.knowledgeshare.login.adapter.Studyadapter;
 
 /**
@@ -88,6 +90,13 @@ public class StudyFragment extends BaseFragment {
                    bool=!bool;
               }
           });
+        iv_message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getActivity(), MessageActivity.class);
+                startActivity(intent);
+            }
+        });
         return rootView;
     }
 

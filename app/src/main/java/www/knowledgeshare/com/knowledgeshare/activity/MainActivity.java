@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -46,6 +47,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private int position;
     private boolean isPause=true;
     private Animation mRotate_anim;
+    private long preTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,5 +211,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         tv_mine = (TextView) findViewById(R.id.tv_mine);
         ll_mine = (LinearLayout) findViewById(R.id.ll_mine);
         activity_main = (LinearLayout) findViewById(R.id.activity_main);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() > preTime + 2000) {
+            Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
+            preTime = System.currentTimeMillis();
+        } else {
+            super.onBackPressed();//相当于finish()
+            realBack();//删除所有引用
+        }
     }
 }

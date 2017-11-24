@@ -8,7 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -19,50 +20,41 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 
-public class TeacherDetailActivity extends BaseActivity implements View.OnClickListener {
+public class MusicMasterActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView iv_back;
-    private ImageView iv_bigphoto;
-    private TextView tv_teacher_intro;
+    private RadioButton rb_gudian;
+    private RadioButton rb_minzu;
+    private RadioButton rb_liuxing;
+    private RadioButton rb_suyang;
+    private RadioGroup rgp;
     private RecyclerView recycler_dashiban;
-    private LinearLayout ll_dashiban;
-    private RecyclerView recycler_yinyueke;
-    private LinearLayout ll_yinyueke;
     private LinearLayout activity_gu_dian;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_teacher_detail);
+        setContentView(R.layout.activity_music_master);
         initView();
     }
 
     private void initView() {
         iv_back = (ImageView) findViewById(R.id.iv_back);
         iv_back.setOnClickListener(this);
-        iv_bigphoto = (ImageView) findViewById(R.id.iv_bigphoto);
-        tv_teacher_intro = (TextView) findViewById(R.id.tv_teacher_intro);
+        rb_gudian = (RadioButton) findViewById(R.id.rb_gudian);
+        rb_minzu = (RadioButton) findViewById(R.id.rb_minzu);
+        rb_liuxing = (RadioButton) findViewById(R.id.rb_liuxing);
+        rb_suyang = (RadioButton) findViewById(R.id.rb_suyang);
+        rgp = (RadioGroup) findViewById(R.id.rgp);
         recycler_dashiban = (RecyclerView) findViewById(R.id.recycler_dashiban);
-        ll_dashiban = (LinearLayout) findViewById(R.id.ll_dashiban);
-        recycler_yinyueke = (RecyclerView) findViewById(R.id.recycler_yinyueke);
-        ll_yinyueke = (LinearLayout) findViewById(R.id.ll_yinyueke);
         activity_gu_dian = (LinearLayout) findViewById(R.id.activity_gu_dian);
+        rgp.check(R.id.rb_gudian);
         recycler_dashiban.setLayoutManager(new LinearLayoutManager(this));
-        recycler_dashiban.setNestedScrollingEnabled(false);
-        recycler_yinyueke.setLayoutManager(new LinearLayoutManager(this));
-        recycler_yinyueke.setNestedScrollingEnabled(false);
-        initData();
-    }
-
-    private void initData() {
         List<String> list = new ArrayList<>();
         list.add("");
         list.add("");
-        DaShiBanAdapter daShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban2, list);
+        DaShiBanAdapter daShiBanAdapter=new DaShiBanAdapter(R.layout.item_dashiban2,list);
         recycler_dashiban.setAdapter(daShiBanAdapter);
-
-        YinYueKeAdapter yinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke2, list);
-        recycler_yinyueke.setAdapter(yinYueKeAdapter);
     }
 
     private class DaShiBanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
@@ -79,23 +71,9 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
         }
     }
 
-    private class YinYueKeAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
-
-        public YinYueKeAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
-            super(layoutResId, data);
-        }
-
-        @Override
-        protected void convert(BaseViewHolder helper, String item) {
-            ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-//            Glide.with(mContext).load().into(imageView);
-            helper.setVisible(R.id.iv_bofang,false);
-        }
-    }
-
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
+        switch (view.getId()){
             case R.id.iv_back:
                 finish();
                 break;

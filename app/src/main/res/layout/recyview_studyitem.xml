@@ -74,7 +74,9 @@
             android:id="@+id/item_count"
             android:background="@null"
             android:textColor="@color/textblack"
-            android:textSize="15sp"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.1"
+            android:lineSpacingExtra="3dp"
             android:text="喜欢聆听，风吹过的声只为等待风中夹杂着你的笑声，这不是我想要的结局忧伤的漩涡伴随着天使羽翼煽动着声响,你渐渐远去，从此风中的声音叫做静谧，每一次错过都是忘记，只有每晚的辗转反侧让我记得我的梦你曾来过！
             "
             android:padding="10dp"

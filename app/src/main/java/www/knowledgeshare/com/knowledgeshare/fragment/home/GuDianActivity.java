@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.youth.banner.Banner;
@@ -76,9 +75,6 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
         ViewGroup.LayoutParams layoutParams = banner.getLayoutParams();
         layoutParams.height = MyUtils.getScreenWidth(this) / 2;
         banner.setLayoutParams(layoutParams);
-        bannerList.add("https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=150659736,210774851&fm=73&s=75B913D56153FBD45C31DD6503006071");
-        bannerList.add("https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=3490381707,1962760987&fm=73&s=BBAC2E8E48114ACC49B33C7403008078");
-        bannerList.add("https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1472666556,2243555624&fm=73&s=55250CF6FE5279D433B7907B03004019");
         BannerUtils.startBanner(banner,bannerList);
         List<String> list = new ArrayList<>();
         list.add("");
@@ -99,10 +95,7 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
         @Override
         protected void convert(BaseViewHolder helper, String item) {
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-            Glide.with(mContext).load("https://ss0.baidu.com/73t1b" +
-                    "jeh1BF3odCf/it/u=36377501,1487953910&fm=73&s=" +
-                    "54BA3ED516335F824A2D777E03005078")
-                    .into(imageView);
+//            Glide.with(mContext).load().into(imageView);
         }
     }
 
@@ -115,9 +108,7 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
         @Override
         protected void convert(BaseViewHolder helper, String item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-            Glide.with(mContext).load("https://ss0.baidu.com/73t1b" +
-                    "jeh1BF3odCf/it/u=36377501,1487953910&fm=73&s=" +
-                    "54BA3ED516335F824A2D777E03005078").into(imageView);
+//            Glide.with(mContext).load().into(imageView);
         }
     }
 
