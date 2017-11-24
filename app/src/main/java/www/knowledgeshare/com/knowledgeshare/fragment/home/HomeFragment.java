@@ -429,7 +429,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, FreeActivity.class));
                 break;
             case R.id.tv_meiri_more:
-                startActivity(new Intent(mContext, EveryDayCommentActivity.class));
+//                startActivity(new Intent(mContext, EveryDayCommentActivity.class));
                 break;
             case R.id.ll_dashi_refresh:
                 if (mRotate_anim != null) {
@@ -438,10 +438,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 }
                 break;
             case R.id.tv_dashi_lookmore:
-                startActivity(new Intent(mContext, MusicMasterActivity.class));
+//                startActivity(new Intent(mContext, MusicMasterActivity.class));
                 break;
             case R.id.tv_yinyueke_lookmore:
-                startActivity(new Intent(mContext, SoftMusicActivity.class));
+//                startActivity(new Intent(mContext, SoftMusicActivity.class));
                 break;
             case R.id.ll_like_refresh:
                 if (mRotate_anim != null) {
