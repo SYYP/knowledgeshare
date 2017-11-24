@@ -3,9 +3,11 @@ package www.knowledgeshare.com.knowledgeshare.login;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,6 +15,7 @@ import org.zackratos.ultimatebar.UltimateBar;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 
 /**
  * date : ${Date}
@@ -55,12 +58,11 @@ public class SetloginActivity extends BaseActivity implements View.OnClickListen
             Toast.makeText(this, "请输入6-20位密码", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (!set_loginpwd.getText().toString().equals(set_loginpwd.getText().toString())) {
+        if (!set_loginpwd.getText().toString().equals(login_forgetpwd.getText().toString())) {
             Toast.makeText(this, "两次输入的密码不同，请重新输入", Toast.LENGTH_SHORT).show();
             return;
         }
-
-
+        showDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
     }
 
     @Override
@@ -76,4 +78,33 @@ public class SetloginActivity extends BaseActivity implements View.OnClickListen
         }
 
     }
+    private void showDialog(int grary, int animationStyle) {
+        BaseDialog.Builder builder = new BaseDialog.Builder(this);
+        final BaseDialog dialog = builder.setViewId(R.layout.dialog_setpwd)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(grary)
+                //设置动画
+                .setAnimation(animationStyle)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        dialog.show();
+        TextView tv_yes = dialog.getView(R.id.tv_yes);
+        tv_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //关闭dialog
+                dialog.close();
+//                Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "4006020069"));
+//                //跳转到拨号界面，同时传递电话号码
+//                startActivity(dialIntent);
+            }
+        });
+    }
+
 }

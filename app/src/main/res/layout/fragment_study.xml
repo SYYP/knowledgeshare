@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <LinearLayout
 xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#edecea">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,11 +50,9 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
      <RelativeLayout
-
          android:background="@drawable/study_body"
          android:layout_width="match_parent"
          android:layout_height="150dp">
-
      <LinearLayout
          android:id="@+id/liner"
          android:layout_marginTop="10dp"
@@ -86,7 +81,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
          android:layout_marginTop="10dp"
          android:layout_below="@id/liner"
          android:text="Hi 行走的肉夹馍"
-         android:textSize="18sp"
+         android:textSize="17sp"
          android:textColor="@color/white"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content" />
@@ -98,7 +93,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_marginRight="15dp"
              android:layout_alignParentRight="true"
              android:textColor="@color/white"
-             android:textSize="16sp"
+             android:textSize="15sp"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content" />
          <LinearLayout
@@ -114,28 +109,26 @@ xmlns:android="http://schemas.android.com/apk/res/android"
              android:drawableLeft="@drawable/listermusic"
              android:text="随声听"
              android:textColor="@color/white"
-             android:textSize="16sp"
+             android:textSize="15sp"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content" />
          <View
-
              android:layout_marginRight="10dp"
              android:layout_marginLeft="10dp"
              android:background="@color/white"
              android:layout_width="1dp"
-             android:layout_height="30dp"></View>
+             android:layout_height="25dp"></View>
          <TextView
              android:drawablePadding="5dp"
              android:drawableLeft="@drawable/study_collect"
              android:text="收藏"
              android:textColor="@color/white"
-             android:textSize="16sp"
+             android:textSize="15sp"
              android:layout_gravity="bottom"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content" />
          </LinearLayout>
      </RelativeLayout>
-
     <RelativeLayout
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
@@ -162,14 +155,14 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/line"
                 android:text="历史上的今天"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textColor="@color/textblack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:text="星期一"
                 android:textColor="@color/textblack"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_alignParentRight="true"
@@ -200,7 +193,9 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/study_count"
                 android:background="@null"
                 android:textColor="@color/textblack"
-                android:textSize="16sp"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.1"
+                android:lineSpacingExtra="3dp"
                 android:text="喜欢聆听，风吹过的声只为等待风中夹杂着你的笑声，这不是我想要的结局忧伤的漩涡伴随着天使羽翼煽动着声响,你渐渐远去，从此风中的声音叫做静谧，每一次错过都是忘记，只有每晚的辗转反侧让我记得我的梦你曾来过！
             "
                 android:padding="5dp"
@@ -248,14 +243,14 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/lines"
                 android:text="学习笔记"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textColor="@color/textblack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:text="星期一"
                 android:textColor="@color/textblack"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_alignParentRight="true"
