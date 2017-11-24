@@ -9,10 +9,11 @@
         android:orientation="horizontal">
         <ImageView
             android:id="@+id/iv_tupian"
-            android:layout_width="100dp"
-            android:layout_height="150dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:scaleType="fitXY"
+            android:src="@drawable/demo4"
         />
         <LinearLayout
             android:layout_width="match_parent"
@@ -71,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:text="￥198元/年"
+                    android:text="￥198/年"
                     android:textColor="@color/text_red_dark"/>
             </RelativeLayout>
         </LinearLayout>

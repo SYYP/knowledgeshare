@@ -10,6 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -38,6 +41,7 @@ import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
+
 /**
  * Created by Administrator on 2017/11/17.
  */
@@ -60,18 +64,15 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private RecyclerView recycler_zhuanlan;
     private TextView tv_meiri_more;
     private RecyclerView recycler_comment;
-    private TextView tv_dashi_refresh;
     private RecyclerView recycler_dashiban;
     private TextView tv_dashi_lookmore;
-    private TextView tv_yinyueke_refresh;
     private RecyclerView recycler_yinyueke;
-    private TextView tv_like_refresh;
     private RecyclerView recycler_like;
     private NestedScrollView nestView;
     private SpringView springview;
-    private List<String> bannerList=new ArrayList<>();
-    private ImageView iv_delete,iv_bo_head,iv_arrow_top,iv_mulu;
-    private TextView tv_title,tv_subtitle;
+    private List<String> bannerList = new ArrayList<>();
+    private ImageView iv_delete, iv_bo_head, iv_arrow_top, iv_mulu;
+    private TextView tv_title, tv_subtitle;
     private RelativeLayout rl_bofang;
     private BaseDialog mDialog;
     private ZhuanLanAdapter mZhuanLanAdapter;
@@ -79,6 +80,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private DaShiBanAdapter mDaShiBanAdapter;
     private YinYueKeAdapter mYinYueKeAdapter;
     private LikeAdapter mLikeAdapter;
+    private LinearLayout ll_like_refresh, ll_dashi_refresh;
+    private ImageView iv_dashi_refresh, iv_like_refresh;
+    private TextView tv_yinyueke_lookmore;
+    private boolean isBofang;
+    private Animation mRotate_anim;
 
     @Override
     protected void lazyLoad() {
@@ -116,32 +122,40 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         tv_meiri_more = (TextView) inflate.findViewById(R.id.tv_meiri_more);
         tv_meiri_more.setOnClickListener(this);
         recycler_comment = (RecyclerView) inflate.findViewById(R.id.recycler_comment);
-        tv_dashi_refresh = (TextView) inflate.findViewById(R.id.tv_dashi_refresh);
-        tv_dashi_refresh.setOnClickListener(this);
+        ll_dashi_refresh = (LinearLayout) inflate.findViewById(R.id.ll_dashi_refresh);
+        ll_dashi_refresh.setOnClickListener(this);
         recycler_dashiban = (RecyclerView) inflate.findViewById(R.id.recycler_dashiban);
         tv_dashi_lookmore = (TextView) inflate.findViewById(R.id.tv_dashi_lookmore);
         tv_dashi_lookmore.setOnClickListener(this);
-        tv_yinyueke_refresh = (TextView) inflate.findViewById(R.id.tv_yinyueke_refresh);
-        tv_yinyueke_refresh.setOnClickListener(this);
+        tv_yinyueke_lookmore = (TextView) inflate.findViewById(R.id.tv_yinyueke_lookmore);
+        tv_yinyueke_lookmore.setOnClickListener(this);
         recycler_yinyueke = (RecyclerView) inflate.findViewById(R.id.recycler_yinyueke);
-        tv_like_refresh = (TextView) inflate.findViewById(R.id.tv_like_refresh);
-        tv_like_refresh.setOnClickListener(this);
+        ll_like_refresh = (LinearLayout) inflate.findViewById(R.id.ll_like_refresh);
+        ll_like_refresh.setOnClickListener(this);
         recycler_like = (RecyclerView) inflate.findViewById(R.id.recycler_like);
         nestView = (NestedScrollView) inflate.findViewById(R.id.nestView);
         springview = (SpringView) inflate.findViewById(R.id.springview);
-        iv_delete=inflate.findViewById(R.id.iv_delete);
+        iv_delete = inflate.findViewById(R.id.iv_delete);
         iv_delete.setOnClickListener(this);
-        iv_arrow_top=inflate.findViewById(R.id.iv_arrow_top);
+        iv_arrow_top = inflate.findViewById(R.id.iv_arrow_top);
         iv_arrow_top.setOnClickListener(this);
-        iv_mulu=inflate.findViewById(R.id.iv_mulu);
+        iv_mulu = inflate.findViewById(R.id.iv_mulu);
         iv_mulu.setOnClickListener(this);
-        iv_bo_head=inflate.findViewById(R.id.iv_bo_head);
-        tv_title=inflate.findViewById(R.id.tv_title);
-        tv_subtitle=inflate.findViewById(R.id.tv_subtitle);
-        rl_bofang=inflate.findViewById(R.id.rl_bofang);
+        iv_bo_head = inflate.findViewById(R.id.iv_bo_head);
+        tv_title = inflate.findViewById(R.id.tv_title);
+        tv_subtitle = inflate.findViewById(R.id.tv_subtitle);
+        rl_bofang = inflate.findViewById(R.id.rl_bofang);
         rl_bofang.setVisibility(View.GONE);
+        iv_dashi_refresh = inflate.findViewById(R.id.iv_dashi_refresh);
+        iv_like_refresh = inflate.findViewById(R.id.iv_like_refresh);
         EventBus.getDefault().register(this);
         return inflate;
+    }
+
+    private void initAnim() {
+        mRotate_anim = AnimationUtils.loadAnimation(mContext, R.anim.rotate_animation);
+        LinearInterpolator interpolator = new LinearInterpolator();  //设置匀速旋转，在xml文件中设置会出现卡顿
+        mRotate_anim.setInterpolator(interpolator);
     }
 
     @Override
@@ -153,11 +167,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("bofang")) {
+            isBofang = true;
             rl_bofang.setVisibility(View.VISIBLE);
             Glide.with(mContext).load("https://ss0.baidu.com/73t1b" +
                     "jeh1BF3odCf/it/u=36377501,1487953910&fm=73&s=" +
                     "54BA3ED516335F824A2D777E03005078").into(iv_bo_head);
-        }else if (eventBean.getMsg().equals("pause")){
+        } else if (eventBean.getMsg().equals("pause")) {
+            isBofang = false;
             rl_bofang.setVisibility(View.GONE);
         }
     }
@@ -167,11 +183,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         ViewGroup.LayoutParams layoutParams = banner.getLayoutParams();
         layoutParams.height = MyUtils.getScreenWidth(mContext) / 2;
         banner.setLayoutParams(layoutParams);
-        bannerList.add("https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=150659736,210774851&fm=73&s=75B913D56153FBD45C31DD6503006071");
-        bannerList.add("https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=3490381707,1962760987&fm=73&s=BBAC2E8E48114ACC49B33C7403008078");
-        bannerList.add("https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1472666556,2243555624&fm=73&s=55250CF6FE5279D433B7907B03004019");
-        BannerUtils.startBanner(banner,bannerList);
-        Glide.with(this).load("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2797300661,2667050350&fm=27&gp=0.jpg").into(iv_zhuanlan_head);
+        BannerUtils.startBanner(banner, bannerList);
+        Glide.with(this).load(R.drawable.demo).into(iv_zhuanlan_head);
         recycler_zhuanlan.setLayoutManager(new LinearLayoutManager(mContext));
         recycler_zhuanlan.setNestedScrollingEnabled(false);
         recycler_comment.setLayoutManager(new LinearLayoutManager(mContext));
@@ -182,11 +195,16 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         recycler_yinyueke.setNestedScrollingEnabled(false);
         recycler_like.setLayoutManager(new GridLayoutManager(mContext, 3));
         recycler_like.setNestedScrollingEnabled(false);
-        List<String> list=new ArrayList<>();
+        List<String> list = new ArrayList<>();
         list.add("");
         list.add("");
         list.add("");
-        mZhuanLanAdapter = new ZhuanLanAdapter(R.layout.item_zhuanlan,list);
+        List<String> list2 = new ArrayList<>();
+        list2.add("");
+        list2.add("");
+        list2.add("");
+        list2.add("");
+        mZhuanLanAdapter = new ZhuanLanAdapter(R.layout.item_zhuanlan, list);
         recycler_zhuanlan.setAdapter(mZhuanLanAdapter);
         mZhuanLanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -195,7 +213,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             }
         });
 
-        mCommentAdapter = new CommentAdapter(R.layout.item_zhuanlan,list);
+        mCommentAdapter = new CommentAdapter(R.layout.item_zhuanlan, list);
         recycler_comment.setAdapter(mCommentAdapter);
         mCommentAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -204,7 +222,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             }
         });
 
-        mDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban,list);
+        mDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban, list2);
         recycler_dashiban.setAdapter(mDaShiBanAdapter);
         mDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -213,18 +231,35 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             }
         });
 
-        mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke,list);
+        mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, list2);
         recycler_yinyueke.setAdapter(mYinYueKeAdapter);
 
-        mLikeAdapter = new LikeAdapter(R.layout.item_like,list);
+        mLikeAdapter = new LikeAdapter(R.layout.item_like, list);
         recycler_like.setAdapter(mLikeAdapter);
         mLikeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(mContext,LikeDetailActivity.class));
+                startActivity(new Intent(mContext, LikeDetailActivity.class));
             }
         });
         initDialog();
+        initListener();
+        initAnim();
+    }
+
+    private void initListener() {
+        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (isBofang) {
+                    if (scrollY - oldScrollY > 0) {
+                        rl_bofang.setVisibility(View.GONE);
+                    } else if (scrollY - oldScrollY < 0) {
+                        rl_bofang.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
     }
 
     private void initDialog() {
@@ -277,15 +312,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         @Override
         protected void convert(BaseViewHolder helper, String item) {
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-//            ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-//            int www = MyUtils.getScreenWidth(mContext) / 2 - 20;
-//            layoutParams.width=www;
-//            layoutParams.height=www*12/17;
-//            imageView.setLayoutParams(layoutParams);
-            Glide.with(mContext).load("https://ss0.baidu.com/73t1b" +
-                    "jeh1BF3odCf/it/u=36377501,1487953910&fm=73&s=" +
-                    "54BA3ED516335F824A2D777E03005078")
-                    .into(imageView);
+            //            Glide.with(mContext).load().into(imageView);
         }
     }
 
@@ -300,12 +327,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
             ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
             int www = MyUtils.getScreenWidth(mContext) / 2 - 20;
-            layoutParams.width=www;
-            layoutParams.height=www;
+            layoutParams.width = www;
+            layoutParams.height = www;
             imageView.setLayoutParams(layoutParams);
-            Glide.with(mContext).load("https://ss0.baidu.com/73t1b" +
-                    "jeh1BF3odCf/it/u=36377501,1487953910&fm=73&s=" +
-                    "54BA3ED516335F824A2D777E03005078").into(imageView);
+            //            Glide.with(mContext).load().into(imageView);
         }
     }
 
@@ -320,21 +345,20 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
             ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
             int www = MyUtils.getScreenWidth(mContext) / 3 - 20;
-            layoutParams.width=www;
-            layoutParams.height=www*7/5;
+            layoutParams.width = www;
+            layoutParams.height = www * 7 / 5;
             imageView.setLayoutParams(layoutParams);
-            Glide.with(mContext).load("https://ss0.baidu.com/73t1b" +
-                    "jeh1BF3odCf/it/u=36377501,1487953910&fm=73&s=" +
-                    "54BA3ED516335F824A2D777E03005078").into(imageView);
+            //            Glide.with(mContext).load().into(imageView);
         }
     }
 
     private void gobofang() {
+        isBofang = false;
         int apnType = NetWorkUtils.getAPNType(mContext);
-        if (apnType==0){
+        if (apnType == 0) {
             Toast.makeText(mContext, "没有网络呢~", Toast.LENGTH_SHORT).show();
             return;
-        }else if (apnType==2 || apnType==3 || apnType==4){
+        } else if (apnType == 2 || apnType == 3 || apnType == 4) {
             mDialog.show();
             mDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -346,23 +370,21 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 @Override
                 public void onClick(View v) {
                     mDialog.dismiss();
+                    isBofang = true;
                     rl_bofang.setVisibility(View.VISIBLE);
-                    Glide.with(mContext).load("https://ss0.baidu.com/73t1b" +
-                            "jeh1BF3odCf/it/u=36377501,1487953910&fm=73&s=" +
-                            "54BA3ED516335F824A2D777E03005078").into(iv_bo_head);
+                    //                    Glide.with(mContext).load().into(iv_bo_head);
                     EventBean eventBean = new EventBean("bofang");
                     EventBus.getDefault().postSticky(eventBean);
                 }
             });
             return;
-        }else if (NetWorkUtils.isMobileConnected(mContext)){
+        } else if (NetWorkUtils.isMobileConnected(mContext)) {
             Toast.makeText(mContext, "wifi不可用呢~", Toast.LENGTH_SHORT).show();
             return;
         }
+        isBofang = true;
         rl_bofang.setVisibility(View.VISIBLE);
-        Glide.with(mContext).load("https://ss0.baidu.com/73t1b" +
-                "jeh1BF3odCf/it/u=36377501,1487953910&fm=73&s=" +
-                "54BA3ED516335F824A2D777E03005078").into(iv_bo_head);
+        //        Glide.with(mContext).load().into(iv_bo_head);
         EventBean eventBean = new EventBean("rotate");
         EventBus.getDefault().postSticky(eventBean);
     }
@@ -371,32 +393,32 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_search:
-                startActivity(new Intent(mContext,SearchActivity.class));
+                startActivity(new Intent(mContext, SearchActivity.class));
                 break;
             case R.id.ll_download:
                 break;
             case R.id.ll_gudian:
                 Intent intent = new Intent(mContext, GuDianActivity.class);
-                intent.putExtra("title","古典");
+                intent.putExtra("title", "古典");
                 startActivity(intent);
                 break;
             case R.id.ll_minzu:
                 Intent intent2 = new Intent(mContext, GuDianActivity.class);
-                intent2.putExtra("title","民族");
+                intent2.putExtra("title", "民族");
                 startActivity(intent2);
                 break;
             case R.id.ll_liuxing:
                 Intent intent3 = new Intent(mContext, GuDianActivity.class);
-                intent3.putExtra("title","流行");
+                intent3.putExtra("title", "流行");
                 startActivity(intent3);
                 break;
             case R.id.ll_suyang:
                 Intent intent4 = new Intent(mContext, GuDianActivity.class);
-                intent4.putExtra("title","素养");
+                intent4.putExtra("title", "素养");
                 startActivity(intent4);
                 break;
             case R.id.ll_guanzhu:
-                startActivity(new Intent(mContext,MyGuanzhuActivity.class));
+                startActivity(new Intent(mContext, MyGuanzhuActivity.class));
                 break;
             case R.id.tv_lianxubofang:
                 gobofang();
@@ -404,32 +426,44 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             case R.id.iv_zhuanlan_head:
                 break;
             case R.id.tv_zhuanlan_more:
-                startActivity(new Intent(mContext,FreeActivity.class));
+                startActivity(new Intent(mContext, FreeActivity.class));
                 break;
             case R.id.tv_meiri_more:
+                startActivity(new Intent(mContext, EveryDayCommentActivity.class));
                 break;
-            case R.id.tv_dashi_refresh:
+            case R.id.ll_dashi_refresh:
+                if (mRotate_anim != null) {
+                    iv_dashi_refresh.startAnimation(mRotate_anim);  //开始动画
+                    iv_dashi_refresh.setClickable(false);
+                }
                 break;
             case R.id.tv_dashi_lookmore:
+                startActivity(new Intent(mContext, MusicMasterActivity.class));
                 break;
-            case R.id.tv_yinyueke_refresh:
+            case R.id.tv_yinyueke_lookmore:
+                startActivity(new Intent(mContext, SoftMusicActivity.class));
                 break;
-            case R.id.tv_like_refresh:
+            case R.id.ll_like_refresh:
+                if (mRotate_anim != null) {
+                    iv_like_refresh.startAnimation(mRotate_anim);  //开始动画
+                    iv_like_refresh.setClickable(false);
+                }
                 break;
             case R.id.iv_delete:
+                isBofang = false;
                 rl_bofang.setVisibility(View.GONE);
                 EventBean eventBean = new EventBean("norotate");
                 EventBus.getDefault().postSticky(eventBean);
                 break;
             case R.id.iv_arrow_top:
-                Intent intent1=new Intent(mContext,MusicActivity.class);
+                Intent intent1 = new Intent(mContext, MusicActivity.class);
                 startActivity(intent1);
-                mActivity.overridePendingTransition(R.anim.bottom_in,0);
+                mActivity.overridePendingTransition(R.anim.bottom_in, 0);
                 break;
             case R.id.iv_mulu:
-                Intent intent11=new Intent(mContext,BoFangListActivity.class);
+                Intent intent11 = new Intent(mContext, BoFangListActivity.class);
                 startActivity(intent11);
-                mActivity.overridePendingTransition(R.anim.bottom_in,0);
+                mActivity.overridePendingTransition(R.anim.bottom_in, 0);
                 break;
         }
     }

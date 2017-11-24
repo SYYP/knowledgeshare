@@ -21,28 +21,24 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 
-public class FreeActivity extends BaseActivity implements View.OnClickListener {
+public class EveryDayCommentActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView iv_back;
+    private ImageView iv_share;
     private ImageView iv_beijing;
-    private TextView tv_download;
     private TextView tv_search;
-    private TextView tv_share;
-    private TextView tv_guanzhu;
-    private TextView tv_dianzan_count;
-    private TextView tv_teacher_intro;
-    private RecyclerView recycler_free;
-    private TextView tv_shiyirenqun;
-    private TextView tv_readxuzhi;
-    private TextView tv_writeliuyan;
-    private RecyclerView recycler_liuyan;
+    private TextView tv_download;
+    private TextView tv_jie_count;
+    private TextView tv_look_count;
+    private TextView tv_collect_count;
+    private RecyclerView recycler_liebiao;
     private LinearLayout activity_free;
     private BaseDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_free);
+        setContentView(R.layout.activity_every_day_comment);
         initView();
         initDialog();
     }
@@ -67,40 +63,31 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
     private void initView() {
         iv_back = (ImageView) findViewById(R.id.iv_back);
         iv_back.setOnClickListener(this);
+        iv_share = (ImageView) findViewById(R.id.iv_share);
+        iv_share.setOnClickListener(this);
         iv_beijing = (ImageView) findViewById(R.id.iv_beijing);
-        tv_download = (TextView) findViewById(R.id.tv_download);
-        tv_download.setOnClickListener(this);
         tv_search = (TextView) findViewById(R.id.tv_search);
         tv_search.setOnClickListener(this);
-        tv_share = (TextView) findViewById(R.id.tv_share);
-        tv_share.setOnClickListener(this);
-        tv_guanzhu = (TextView) findViewById(R.id.tv_guanzhu);
-        tv_guanzhu.setOnClickListener(this);
-        tv_dianzan_count = (TextView) findViewById(R.id.tv_dianzan_count);
-        tv_teacher_intro = (TextView) findViewById(R.id.tv_teacher_intro);
-        recycler_free = (RecyclerView) findViewById(R.id.recycler_free);
-        tv_shiyirenqun = (TextView) findViewById(R.id.tv_shiyirenqun);
-        tv_readxuzhi = (TextView) findViewById(R.id.tv_readxuzhi);
-        tv_writeliuyan = (TextView) findViewById(R.id.tv_writeliuyan);
-        recycler_liuyan = (RecyclerView) findViewById(R.id.recycler_liuyan);
+        tv_download = (TextView) findViewById(R.id.tv_download);
+        tv_download.setOnClickListener(this);
+        tv_jie_count = (TextView) findViewById(R.id.tv_jie_count);
+        tv_look_count = (TextView) findViewById(R.id.tv_look_count);
+        tv_collect_count = (TextView) findViewById(R.id.tv_collect_count);
+        recycler_liebiao = (RecyclerView) findViewById(R.id.recycler_liebiao);
         activity_free = (LinearLayout) findViewById(R.id.activity_free);
-        recycler_free.setLayoutManager(new LinearLayoutManager(this));
-        recycler_free.setNestedScrollingEnabled(false);
-        recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
-        recycler_liuyan.setNestedScrollingEnabled(false);
+        recycler_liebiao.setLayoutManager(new LinearLayoutManager(this));
+        recycler_liebiao.setNestedScrollingEnabled(false);
         List<String> list = new ArrayList<>();
         list.add("");
         list.add("");
         list.add("");
-        FreeAdapter freeAdapter = new FreeAdapter(R.layout.item_free, list);
-        recycler_free.setAdapter(freeAdapter);
-        LiuYanAdapter liuYanAdapter=new LiuYanAdapter(R.layout.item_liuyan,list);
-        recycler_liuyan.setAdapter(liuYanAdapter);
+        LieBiaoAdapter lieBiaoAdapter = new LieBiaoAdapter(R.layout.item_free, list);
+        recycler_liebiao.setAdapter(lieBiaoAdapter);
     }
 
-    private class FreeAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class LieBiaoAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
 
-        public FreeAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public LieBiaoAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
             super(layoutResId, data);
         }
 
@@ -112,18 +99,6 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                     showDialog();
                 }
             });
-        }
-    }
-
-    private class LiuYanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
-
-        public LiuYanAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
-            super(layoutResId, data);
-        }
-
-        @Override
-        protected void convert(BaseViewHolder helper, String item) {
-
         }
     }
 
@@ -143,13 +118,11 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
             case R.id.iv_back:
                 finish();
                 break;
-            case R.id.tv_download:
+            case R.id.iv_share:
                 break;
             case R.id.tv_search:
                 break;
-            case R.id.tv_share:
-                break;
-            case R.id.tv_guanzhu:
+            case R.id.tv_download:
                 break;
         }
     }
