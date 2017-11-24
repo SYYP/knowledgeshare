@@ -7,5 +7,7 @@
     <string name="wdzh">我的账户</string>
     <string name="wdxz">我的勋章</string>
     <string name="zhaq">账号安全</string>
+    <string name="yxxsc">已学习时长</string>
+    <string name="lxxxts">连续学习天数</string>
 
 </resources>

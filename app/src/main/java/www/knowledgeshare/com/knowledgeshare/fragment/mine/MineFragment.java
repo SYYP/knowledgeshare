@@ -15,7 +15,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.LearningRecordActivity;
+import www.knowledgeshare.com.knowledgeshare.activity.LearningTimeActivity;
+import www.knowledgeshare.com.knowledgeshare.activity.MyAccountActivity;
+import www.knowledgeshare.com.knowledgeshare.activity.MyMedalActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.MySubscriptionsActivity;
+import www.knowledgeshare.com.knowledgeshare.activity.SettingActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
@@ -74,17 +79,22 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.title_message_iv://消息
                 break;
             case R.id.title_setting_iv://设置
+                startActivity(new Intent(getActivity(),SettingActivity.class));
                 break;
             case R.id.xxsj_rl://学习时间
+                startActivity(new Intent(getActivity(), LearningTimeActivity.class));
                 break;
             case R.id.wddy_rl://我的订阅
                 startActivity(new Intent(getActivity(),MySubscriptionsActivity.class));
                 break;
             case R.id.xxjl_rl://学习记录
+                startActivity(new Intent(getActivity(),LearningRecordActivity.class));
                 break;
             case R.id.wdzh_rl://我的账户
+                startActivity(new Intent(getActivity(),MyAccountActivity.class));
                 break;
             case R.id.wdxz_rl://我的勋章
+                startActivity(new Intent(getActivity(),MyMedalActivity.class));
                 break;
             case R.id.zhaq_rl://帐号安全
                 break;

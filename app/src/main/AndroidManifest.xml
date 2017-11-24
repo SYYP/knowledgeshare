@@ -12,12 +12,14 @@
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN" />
+
+                    <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
@@ -38,12 +40,16 @@
         <activity android:name=".fragment.home.MyGuanzhuActivity" />
         <activity android:name=".fragment.home.LikeDetailActivity" />
         <activity android:name=".activity.MySubscriptionsActivity" />
-        <activity android:name=".activity.LearningTimeActivity"/>
-            android:value="@integer/google_play_services_version"/>
-        <activity android:name=".fragment.home.DemoActivity"/>
-        <activity android:name=".fragment.home.MusicActivity"/>
-        <activity android:name=".fragment.home.BoFangListActivity"/>
-        <activity android:name=".fragment.home.TeacherDetailActivity"/>
+        <activity android:name=".activity.LearningTimeActivity" />
+        android:value="@integer/google_play_services_version"/>
+        <activity android:name=".fragment.home.DemoActivity" />
+        <activity android:name=".fragment.home.MusicActivity" />
+        <activity android:name=".fragment.home.BoFangListActivity" />
+        <activity android:name=".fragment.home.TeacherDetailActivity" />
+        <activity android:name=".activity.LearningRecordActivity" />
+        <activity android:name=".activity.MyAccountActivity" />
+        <activity android:name=".activity.MyMedalActivity" />
+        <activity android:name=".activity.SettingActivity"></activity>
     </application>
 
 </manifest>

@@ -62,4 +62,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    compile 'com.github.zcweng:switch-button:0.0.3@aar'
+    compile 'com.lai.weavey:dialog:2.0.1'
+
 }
