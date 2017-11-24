@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="www.knowledgeshare.com.knowledgeshare">
+<manifest package="www.knowledgeshare.com.knowledgeshare"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:name=".MyApplication"
@@ -11,14 +11,10 @@
         android:theme="@style/AppTheme">
         <activity android:name=".login.LancherActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".activity.MainActivity"
@@ -46,7 +42,7 @@
         </activity>
         <activity android:name=".login.GuidePageActivity"></activity>
         <activity android:name=".login.MessageActivity"></activity>
-       <activity android:name=".activity.LoginActivity"></activity>
+        <activity android:name=".activity.LoginActivity"></activity>
     </application>
 
 </manifest>

@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.zackratos.ultimatebar.UltimateBar;
 
@@ -35,7 +34,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private TextView no_account;
     private TextView login_sso;
     private RelativeLayout forget_pwd;
-    private GoogleApiClient client;
     private TextView login_close;
 
     @Override
@@ -62,13 +60,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         login_sso.setOnClickListener(this);
         forget_pwd.setOnClickListener(this);
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
 
             case R.id.login_sso:
-//                login();
-                startActivity(new Intent(this,MainActivity.class));
+                //                login();
+                startActivity(new Intent(this, MainActivity.class));
                 break;
             case R.id.login_phone:
                 login_phone.setCursorVisible(true);
@@ -78,12 +77,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
               注册
              */
             case R.id.no_account:
-                Intent intent=new Intent(this,RegisterActivity.class);
+                Intent intent = new Intent(this, RegisterActivity.class);
                 startActivity(intent);
                 break;
-             //忘记密码
+            //忘记密码
             case R.id.forget_pwd:
-                 Intent intent1=new Intent(this, ForgetActivity.class);
+                Intent intent1 = new Intent(this, ForgetActivity.class);
                 startActivity(intent1);
                 break;
         }
@@ -91,20 +90,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void login() {
-//        if (TextUtils.isEmpty(login_phone.getText().toString())) {
-//            Toast.makeText(this, "请填写您的手机号", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        else if (!MyUtils.isMobileNO(login_phone.getText().toString())) {
-//            Toast.makeText(this, "手机号格式不正确", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        if (TextUtils.isEmpty(login_pwd.getText().toString())) {
-//            Toast.makeText(this, "请填写您的密码", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
+        //        if (TextUtils.isEmpty(login_phone.getText().toString())) {
+        //            Toast.makeText(this, "请填写您的手机号", Toast.LENGTH_SHORT).show();
+        //            return;
+        //        }
+        //        else if (!MyUtils.isMobileNO(login_phone.getText().toString())) {
+        //            Toast.makeText(this, "手机号格式不正确", Toast.LENGTH_SHORT).show();
+        //            return;
+        //        }
+        //        if (TextUtils.isEmpty(login_pwd.getText().toString())) {
+        //            Toast.makeText(this, "请填写您的密码", Toast.LENGTH_SHORT).show();
+        //            return;
+        //        }
         //跳转到主页面
-          Intent intent=new Intent(this,MainActivity.class);
-          startActivity(intent);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
