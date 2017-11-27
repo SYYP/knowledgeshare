@@ -18,6 +18,7 @@ import org.zackratos.ultimatebar.UltimateBar;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.login.ForgetActivity;
+import www.knowledgeshare.com.knowledgeshare.login.bean.HobbyActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 
 /**
@@ -67,7 +68,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
             case R.id.login_sso:
                 //                login();
-                startActivity(new Intent(this, MainActivity.class));
+                startActivity(new Intent(this, HobbyActivity.class));
                 break;
             case R.id.login_phone:
                 login_phone.setCursorVisible(true);
