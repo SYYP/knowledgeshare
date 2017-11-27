@@ -1,6 +1,8 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -85,6 +87,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private TextView tv_yinyueke_lookmore;
     private boolean isBofang;
     private Animation mRotate_anim;
+    private AnimationDrawable mRefreshDrawable;
+    private ImageView iv_anim_refresh;
 
     @Override
     protected void lazyLoad() {
@@ -148,6 +152,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         rl_bofang.setVisibility(View.GONE);
         iv_dashi_refresh = inflate.findViewById(R.id.iv_dashi_refresh);
         iv_like_refresh = inflate.findViewById(R.id.iv_like_refresh);
+        iv_anim_refresh = inflate.findViewById(R.id.iv_anim_refresh);
         EventBus.getDefault().register(this);
         return inflate;
     }
@@ -156,6 +161,20 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mRotate_anim = AnimationUtils.loadAnimation(mContext, R.anim.rotate_animation);
         LinearInterpolator interpolator = new LinearInterpolator();  //设置匀速旋转，在xml文件中设置会出现卡顿
         mRotate_anim.setInterpolator(interpolator);
+        mRefreshDrawable = (AnimationDrawable) iv_anim_refresh.getBackground();//刷新动画
+    }
+
+    /**
+     * 返回总时长
+     * @param animationDrawable
+     * @return
+     */
+    private long getTotalDuration(AnimationDrawable animationDrawable) {
+        int duration = 0;
+        for (int i = 0; i < animationDrawable.getNumberOfFrames(); i++) {
+            duration += animationDrawable.getDuration(i);
+        }
+        return duration;
     }
 
     @Override
@@ -169,9 +188,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         if (eventBean.getMsg().equals("bofang")) {
             isBofang = true;
             rl_bofang.setVisibility(View.VISIBLE);
-            Glide.with(mContext).load("https://ss0.baidu.com/73t1b" +
-                    "jeh1BF3odCf/it/u=36377501,1487953910&fm=73&s=" +
-                    "54BA3ED516335F824A2D777E03005078").into(iv_bo_head);
+            Glide.with(mContext).load(R.drawable.demo).into(iv_bo_head);
         } else if (eventBean.getMsg().equals("pause")) {
             isBofang = false;
             rl_bofang.setVisibility(View.GONE);
@@ -227,7 +244,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
+                startActivity(new Intent(mContext, ZhuanLanActivity.class));
             }
         });
 
@@ -243,8 +260,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             }
         });
         initDialog();
-        initListener();
         initAnim();
+        initListener();
     }
 
     private void initListener() {
@@ -260,6 +277,33 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 }
             }
         });
+        springview.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                long totalDuration = getTotalDuration(mRefreshDrawable);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(!mRefreshDrawable.isRunning()) {
+                            /*
+                            * start方法不能在onCreate方法内调用，
+                            * 因为此时AnimationDrawable还未绘制(attach)到界面上，
+                            * 如果需要进入界面就自动开始动画，需要在onWindowFocusChanged()回调中执行，
+                            * 此时界面已经创建完成。
+                            * */
+                            mRefreshDrawable.start();
+                        }
+                    }
+                },totalDuration);
+            }
+
+            @Override
+            public void onLoadmore() {
+
+            }
+        });
+        //        springview.setHeader(new DefaultHeader(getActivity()));xml中设置了header
+        //        springview.setFooter(new DefaultFooter(getActivity()));
     }
 
     private void initDialog() {
@@ -429,7 +473,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, FreeActivity.class));
                 break;
             case R.id.tv_meiri_more:
-//                startActivity(new Intent(mContext, EveryDayCommentActivity.class));
+                startActivity(new Intent(mContext, EveryDayCommentActivity.class));
                 break;
             case R.id.ll_dashi_refresh:
                 if (mRotate_anim != null) {
@@ -438,10 +482,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 }
                 break;
             case R.id.tv_dashi_lookmore:
-//                startActivity(new Intent(mContext, MusicMasterActivity.class));
+                startActivity(new Intent(mContext, MusicMasterActivity.class));
                 break;
             case R.id.tv_yinyueke_lookmore:
-//                startActivity(new Intent(mContext, SoftMusicActivity.class));
+                startActivity(new Intent(mContext, SoftMusicActivity.class));
                 break;
             case R.id.ll_like_refresh:
                 if (mRotate_anim != null) {
