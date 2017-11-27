@@ -73,6 +73,7 @@
         <activity android:name=".login.GuidePageActivity"></activity>
         <activity android:name=".login.MessageActivity"></activity>
         <activity android:name=".activity.LoginActivity"></activity>
+        <activity android:name=".login.bean.HobbyActivity"></activity>
     </application>
 
 </manifest>
