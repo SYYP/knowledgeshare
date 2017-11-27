@@ -23,6 +23,7 @@
         android:layout_marginTop="10dp"
         android:background="@color/huise"></View>
     <RelativeLayout
+        android:id="@+id/rl_yuezhifu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp">

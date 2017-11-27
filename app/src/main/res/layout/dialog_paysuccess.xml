@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/bg_circle_white"
+              android:orientation="vertical"
+              android:padding="10dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="支付成功，购买完成"
+        android:textColor="#333"
+        android:textSize="15sp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="交易单号为：1446464546446464"
+        android:textColor="#333"
+        android:textSize="15sp"/>
+    <View android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/huise"></View>
+    <TextView
+        android:id="@+id/tv_yes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="确定"
+        android:textColor="@color/textblack"
+        android:textSize="15sp"
+    />
+</LinearLayout>

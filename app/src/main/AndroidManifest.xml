@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="www.knowledgeshare.com.knowledgeshare">
+<manifest package="www.knowledgeshare.com.knowledgeshare"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:name=".MyApplication"
@@ -11,15 +11,15 @@
         android:theme="@style/AppTheme">
         <activity android:name=".login.LancherActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
                 <intent-filter>
-                    <action android:name="android.intent.action.MAIN" />
+                    <action android:name="android.intent.action.MAIN"/>
 
-                    <category android:name="android.intent.category.LAUNCHER" />
+                    <category android:name="android.intent.category.LAUNCHER"/>
                 </intent-filter>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
@@ -27,26 +27,25 @@
 
         <activity
             android:name=".activity.MainActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".login.ForgetActivity" />
-        <activity android:name=".login.AlterActivity" />
-        <activity android:name=".login.SetloginActivity" />
-        <activity android:name=".fragment.home.SearchActivity" />
-        <activity android:name=".fragment.home.GuDianActivity" />
-        <activity android:name=".fragment.home.FreeActivity" />
-        <activity android:name=".fragment.home.MyGuanzhuActivity" />
-        <activity android:name=".fragment.home.LikeDetailActivity" />
-        <activity android:name=".activity.MySubscriptionsActivity" />
-        <activity android:name=".activity.LearningTimeActivity" />
-        android:value="@integer/google_play_services_version"/>
-        <activity android:name=".fragment.home.DemoActivity" />
-        <activity android:name=".fragment.home.MusicActivity" />
-        <activity android:name=".fragment.home.BoFangListActivity" />
-        <activity android:name=".fragment.home.TeacherDetailActivity" />
-        <activity android:name=".activity.LearningRecordActivity" />
-        <activity android:name=".activity.MyAccountActivity" />
-        <activity android:name=".activity.MyMedalActivity" />
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity android:name=".activity.RegisterActivity"/>
+        <activity android:name=".login.ForgetActivity"/>
+        <activity android:name=".login.AlterActivity"/>
+        <activity android:name=".login.SetloginActivity"/>
+        <activity android:name=".fragment.home.SearchActivity"/>
+        <activity android:name=".fragment.home.GuDianActivity"/>
+        <activity android:name=".fragment.home.FreeActivity"/>
+        <activity android:name=".fragment.home.MyGuanzhuActivity"/>
+        <activity android:name=".fragment.home.LikeDetailActivity"/>
+        <activity android:name=".activity.MySubscriptionsActivity"/>
+        <activity android:name=".activity.LearningTimeActivity"/>
+        <activity android:name=".fragment.home.DemoActivity"/>
+        <activity android:name=".fragment.home.MusicActivity"/>
+        <activity android:name=".fragment.home.BoFangListActivity"/>
+        <activity android:name=".fragment.home.TeacherDetailActivity"/>
+        <activity android:name=".activity.LearningRecordActivity"/>
+        <activity android:name=".activity.MyAccountActivity"/>
+        <activity android:name=".activity.MyMedalActivity"/>
         <activity android:name=".activity.SettingActivity"></activity>
             android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity android:name=".fragment.home.EveryDayCommentActivity">
