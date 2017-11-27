@@ -49,21 +49,6 @@
         <activity android:name=".activity.MyMedalActivity" />
         <activity android:name=".activity.SettingActivity"></activity>
             android:windowSoftInputMode="adjustPan|stateHidden"/>
-        <activity android:name=".activity.RegisterActivity"/>
-        <activity android:name=".login.ForgetActivity"/>
-        <activity android:name=".login.AlterActivity"/>
-        <activity android:name=".login.SetloginActivity"/>
-        <activity android:name=".fragment.home.SearchActivity"/>
-        <activity android:name=".fragment.home.GuDianActivity"/>
-        <activity android:name=".fragment.home.FreeActivity"/>
-        <activity android:name=".fragment.home.MyGuanzhuActivity"/>
-        <activity android:name=".fragment.home.LikeDetailActivity"/>
-        <activity android:name=".activity.MySubscriptionsActivity"/>
-        <activity android:name=".activity.LearningTimeActivity"/>
-        <activity android:name=".fragment.home.DemoActivity"/>
-        <activity android:name=".fragment.home.MusicActivity"/>
-        <activity android:name=".fragment.home.BoFangListActivity"/>
-        <activity android:name=".fragment.home.TeacherDetailActivity"/>
         <activity android:name=".fragment.home.EveryDayCommentActivity">
         </activity>
         <activity android:name=".fragment.home.SoftMusicActivity">

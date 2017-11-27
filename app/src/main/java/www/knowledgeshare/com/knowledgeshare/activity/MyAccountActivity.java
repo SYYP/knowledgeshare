@@ -59,22 +59,117 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.one_money_tv:
+                oneMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow3));
+                oneMoneyTv.setTextColor(getResources().getColor(R.color.white));
+                clear(1);
                 break;
             case R.id.two_money_tv:
+                twoMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow3));
+                twoMoneyTv.setTextColor(getResources().getColor(R.color.white));
+                clear(2);
                 break;
             case R.id.three_money_tv:
+                threeMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow3));
+                threeMoneyTv.setTextColor(getResources().getColor(R.color.white));
+                clear(3);
                 break;
             case R.id.four_money_tv:
+                fourMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow3));
+                fourMoneyTv.setTextColor(getResources().getColor(R.color.white));
+                clear(4);
                 break;
             case R.id.five_money_tv:
+                fiveMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow3));
+                fiveMoneyTv.setTextColor(getResources().getColor(R.color.white));
+                clear(5);
                 break;
             case R.id.six_money_tv:
+                sixMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow3));
+                sixMoneyTv.setTextColor(getResources().getColor(R.color.white));
+                clear(6);
                 break;
             case R.id.query_tv:
                 break;
             case R.id.gmjl_tv:
                 break;
             case R.id.gwc_tv:
+                break;
+        }
+    }
+
+    private void clear(int i) {
+        switch (i){
+            case 1:
+                twoMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                twoMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                threeMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                threeMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                fourMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                fourMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                fiveMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                fiveMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                sixMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                sixMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                break;
+            case 2:
+                oneMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                oneMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                threeMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                threeMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                fourMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                fourMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                fiveMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                fiveMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                sixMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                sixMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                break;
+            case 3:
+                oneMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                oneMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                twoMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                twoMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                fourMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                fourMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                fiveMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                fiveMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                sixMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                sixMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                break;
+            case 4:
+                oneMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                oneMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                twoMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                twoMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                threeMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                threeMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                fiveMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                fiveMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                sixMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                sixMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                break;
+            case 5:
+                oneMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                oneMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                twoMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                twoMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                threeMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                threeMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                fourMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                fourMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                sixMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                sixMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                break;
+            case 6:
+                oneMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                oneMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                twoMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                twoMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                threeMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                threeMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                fourMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                fourMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                fiveMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                fiveMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
                 break;
         }
     }

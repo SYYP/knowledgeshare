@@ -7,41 +7,41 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30px"
-        android:layout_marginLeft="24px"
-        android:layout_marginRight="24px">
+        android:layout_marginTop="18dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
         <ImageView
             android:id="@+id/easy_face_iv"
-            android:layout_width="180px"
-            android:layout_height="240px"
+            android:layout_width="100dp"
+            android:layout_height="130dp"
             android:scaleType="fitXY"
             android:src="@drawable/face"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/easy_face_iv"
-            android:layout_marginLeft="24px"
-            android:layout_marginTop="20px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/easy_title_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textSize="28px"
+                android:textSize="16dp"
                 android:text="如何成为一名合格的歌者"
                 android:textColor="#333333"/>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24px"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
                 <TextView
                     android:id="@+id/easy_name_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/yellow"
-                    android:textSize="20px"
+                    android:textSize="11dp"
                     android:textColor="#333333"
                     android:paddingBottom="3dp"
                     android:paddingLeft="10dp"
@@ -55,7 +55,7 @@
                     android:text="中国音乐好声音王牌级人物"
                     android:singleLine="true"
                     android:ellipsize="end"
-                    android:textSize="24px"
+                    android:textSize="13dp"
                     android:layout_marginLeft="5dp"
                     android:layout_gravity="bottom"
                     android:paddingBottom="3dp"/>
@@ -63,7 +63,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30px"
+                android:layout_marginTop="15dp"
                 android:orientation="horizontal">
                 <ImageView
                     android:layout_width="wrap_content"
@@ -74,7 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="已播放：50%"
-                    android:textSize="26px"
+                    android:textSize="13dp"
                     android:layout_marginLeft="20px"/>
             </LinearLayout>
             <LinearLayout
@@ -91,7 +91,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="购买人数：110人"
-                    android:textSize="26px"
+                    android:textSize="13dp"
                     android:layout_marginLeft="20px"/>
             </LinearLayout>
         </LinearLayout>
@@ -100,7 +100,7 @@
             android:layout_height="1dp"
             android:background="@color/bg_mine"
             android:layout_below="@+id/easy_face_iv"
-            android:layout_marginTop="30px"/>
+            android:layout_marginTop="17dp"/>
     </RelativeLayout>
 
 </LinearLayout>

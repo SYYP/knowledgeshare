@@ -7,34 +7,34 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30px"
-        android:layout_marginLeft="24px"
-        android:layout_marginRight="24px">
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
         <ImageView
             android:id="@+id/sub_face_iv"
-            android:layout_width="180px"
-            android:layout_height="240px"
+            android:layout_width="100dp"
+            android:layout_height="130dp"
             android:scaleType="fitXY"
             android:src="@drawable/face"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/sub_face_iv"
-            android:layout_marginLeft="24px"
-            android:layout_marginTop="20px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/sub_title_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textSize="28px"
+                android:textSize="16dp"
                 android:text="崔宗顺的男低音歌唱家秘籍"
                 android:textColor="#333333"/>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24px"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
                 <TextView
                     android:id="@+id/sub_desc_tv"
@@ -44,21 +44,21 @@
                     android:singleLine="true"
                     android:textColor="#333333"
                     android:ellipsize="end"
-                    android:textSize="24px"
+                    android:textSize="13dp"
                     android:layout_gravity="bottom"
                     android:paddingBottom="3dp"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24px"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
                 <TextView
                     android:id="@+id/sub_updata_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_yellow2"
-                    android:textSize="24px"
+                    android:textSize="13dp"
                     android:textColor="@color/yellow"
                     android:paddingBottom="3dp"
                     android:paddingLeft="10dp"
@@ -69,14 +69,14 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30px"
+                android:layout_marginTop="15dp"
                 android:orientation="horizontal">
                 <TextView
                     android:id="@+id/sub_zlmc_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="最新更新的专栏名称"
-                    android:textSize="24px" />
+                    android:textSize="13dp" />
                 <TextView
                     android:id="@+id/sub_money_tv"
                     android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
                     android:text="￥198/年"
                     android:textColor="#b00505"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="32px"/>
+                    android:layout_marginRight="15dp"/>
             </RelativeLayout>
         </LinearLayout>
         <View
@@ -92,7 +92,7 @@
             android:layout_height="1dp"
             android:background="@color/bg_mine"
             android:layout_below="@+id/sub_face_iv"
-            android:layout_marginTop="30px"/>
+            android:layout_marginTop="17dp"/>
     </RelativeLayout>
 
 </LinearLayout>
