@@ -24,8 +24,6 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
-    testCompile 'junit:junit:4.12'
     //解决655536
     //最新版本
     //Springview
@@ -46,6 +44,12 @@ dependencies {
     compile project(':PushSDK')
 
     //沉浸式
+
+    //流式布局
+
+
+    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
+    testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:design:23.4.0'
@@ -62,12 +66,11 @@ dependencies {
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
     compile 'org.zackratos:ultimatebar:1.0.3'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.github.zcweng:switch-button:0.0.3@aar'
     compile 'com.lai.weavey:dialog:2.0.1'
-
-    //流式布局
     compile 'com.hyman:flowlayout-lib:1.1.2'
-
+    compile 'com.lzy.net:okgo:3.0.4'
+    compile 'com.lzy.net:okserver:2.0.5'
+    testCompile 'junit:junit:4.12'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }

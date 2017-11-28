@@ -39,4 +39,14 @@
         android:src="@drawable/power_setting_title"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true" />
+    <TextView
+        android:id="@+id/title_content_right_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
 </RelativeLayout>

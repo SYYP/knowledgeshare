@@ -41,6 +41,7 @@ public class MySubscriptionsActivity extends BaseActivity implements View.OnClic
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
         titleContentTv.setText("我的订阅");
+        titleBackIv.setOnClickListener(this);
         recyclerWddy.setLayoutManager(new LinearLayoutManager(this));
         recyclerWddy.setNestedScrollingEnabled(false);
         List<EasyLessonBean> list = new ArrayList<>();

@@ -2,6 +2,7 @@ package www.knowledgeshare.com.knowledgeshare.activity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -13,7 +14,7 @@ import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 
-public class SettingActivity extends BaseActivity implements View.OnClickListener{
+public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.title_back_iv) ImageView titleBackIv;
     @BindView(R.id.title_content_tv) TextView titleContentTv;
@@ -26,6 +27,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     @BindView(R.id.gywm_rl) RelativeLayout gywmRl;
     @BindView(R.id.kfzx_call_tv) TextView kfzxCallTv;
     @BindView(R.id.youxiang_tv) TextView youxiangTv;
+    @BindView(R.id.exit_btn) Button exitBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +55,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         yhxyRl.setOnClickListener(this);
         gywmRl.setOnClickListener(this);
         kfzxCallTv.setOnClickListener(this);
+        exitBtn.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.title_back_iv:
                 finish();
                 break;
@@ -75,6 +78,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.kfzx_call_tv://客服电话
                 break;
+            case R.id.exit_btn://退出
+                break;
+
         }
     }
 }

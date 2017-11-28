@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.buy;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -21,15 +22,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.DownLoadActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.adapter.BuyTabAdapter;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.SearchActivity;
 import www.knowledgeshare.com.knowledgeshare.view.NoScrollViewPager;
 
 /**
  * Created by Administrator on 2017/11/17.
  */
 
-public class BuyFragment extends BaseFragment {
+public class BuyFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.tv_search)
     TextView tvSearch;
     @BindView(R.id.iv_download)
@@ -62,6 +65,8 @@ public class BuyFragment extends BaseFragment {
 
     @Override
     protected void initData() {
+        tvSearch.setOnClickListener(this);
+        llDownload.setOnClickListener(this);
         //初始化各fragment
         EasyMusicLessonFragment easyMusicLessonFragment = new EasyMusicLessonFragment();
         MaestroClassFragment maestroClassFragment = new MaestroClassFragment();
@@ -87,7 +92,7 @@ public class BuyFragment extends BaseFragment {
 
         //设置中间竖线
         LinearLayout linearLayout = (LinearLayout) buyTablayout.getChildAt(0);
-        linearLayout.setDividerPadding(30);
+        linearLayout.setDividerPadding(20);
         linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
         linearLayout.setDividerDrawable(ContextCompat.getDrawable(getActivity(),
                 R.drawable.layout_divider_vertical));
@@ -134,5 +139,16 @@ public class BuyFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.tv_search:
+                startActivity(new Intent(getActivity(),SearchActivity.class));
+                break;
+            case R.id.ll_download:
+                startActivity(new Intent(getActivity(),DownLoadActivity.class));
+        }
     }
 }

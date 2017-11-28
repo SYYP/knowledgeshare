@@ -15,6 +15,24 @@ public class EasyLessonBean implements Serializable {
     private String zlmc;
     private String updata;
     private String money;
+    private String wendang;
+    private String huancun;
+
+    public String getWendang() {
+        return wendang;
+    }
+
+    public void setWendang(String wendang) {
+        this.wendang = wendang;
+    }
+
+    public String getHuancun() {
+        return huancun;
+    }
+
+    public void setHuancun(String huancun) {
+        this.huancun = huancun;
+    }
 
     public String getMoney() {
         return money;

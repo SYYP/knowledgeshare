@@ -15,6 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.AccountSafeActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.LearningRecordActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.LearningTimeActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.MyAccountActivity;
@@ -97,6 +98,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(getActivity(),MyMedalActivity.class));
                 break;
             case R.id.zhaq_rl://帐号安全
+                startActivity(new Intent(getActivity(), AccountSafeActivity.class));
                 break;
         }
     }

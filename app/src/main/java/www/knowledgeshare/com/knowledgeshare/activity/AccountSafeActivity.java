@@ -11,35 +11,33 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.login.AlterActivity;
 
-/**
- * 学习记录
- */
-
-public class LearningRecordActivity extends BaseActivity implements View.OnClickListener{
+public class AccountSafeActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.title_back_iv) ImageView titleBackIv;
     @BindView(R.id.title_content_tv) TextView titleContentTv;
-    @BindView(R.id.llls_rl) RelativeLayout lllsRl;
-    @BindView(R.id.xz_rl) RelativeLayout xzRl;
-    @BindView(R.id.sc_rl) RelativeLayout scRl;
-    @BindView(R.id.xxbj_rl) RelativeLayout xxbjRl;
+    @BindView(R.id.tel_tv) TextView telTv;
+    @BindView(R.id.bdsjh_rl) RelativeLayout bdsjhRl;
+    @BindView(R.id.if_bangding_tv) TextView ifBangdingTv;
+    @BindView(R.id.bdwx_rl) RelativeLayout bdwxRl;
+    @BindView(R.id.xgmm_rl) RelativeLayout xgmmRl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_learning_record);
+        setContentView(R.layout.activity_account_safe);
         ButterKnife.bind(this);
         initView();
     }
 
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
-        titleContentTv.setText("学习记录");
-        lllsRl.setOnClickListener(this);
-        xzRl.setOnClickListener(this);
-        scRl.setOnClickListener(this);
-        xxbjRl.setOnClickListener(this);
+        titleBackIv.setOnClickListener(this);
+        titleContentTv.setText("账号安全");
+        bdsjhRl.setOnClickListener(this);
+        bdwxRl.setOnClickListener(this);
+        xgmmRl.setOnClickListener(this);
     }
 
     @Override
@@ -48,15 +46,13 @@ public class LearningRecordActivity extends BaseActivity implements View.OnClick
             case R.id.title_back_iv:
                 finish();
                 break;
-            case R.id.llls_rl://浏览历史
-                startActivity(new Intent(this,BrowserHistoryActivity.class));
+            case R.id.bdsjh_rl:
+                startActivity(new Intent(this,BindPhoneActivity.class));
                 break;
-            case R.id.xz_rl://下载
-                startActivity(new Intent(this,DownLoadActivity.class));
+            case R.id.bdwx_rl:
                 break;
-            case R.id.sc_rl://收藏
-                break;
-            case R.id.xxbj_rl://学习笔记
+            case R.id.xgmm_rl:
+                startActivity(new Intent(this,AlterActivity.class));
                 break;
         }
     }
