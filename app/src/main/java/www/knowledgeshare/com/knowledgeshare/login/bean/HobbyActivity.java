@@ -78,6 +78,7 @@ public class HobbyActivity extends BaseActivity {
             public void onClick(View view) {
                 Intent intent=new Intent(HobbyActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
