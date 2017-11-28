@@ -250,6 +250,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, list2);
         recycler_yinyueke.setAdapter(mYinYueKeAdapter);
+        mYinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(mContext, SoftMusicDetailActivity.class));
+            }
+        });
 
         mLikeAdapter = new LikeAdapter(R.layout.item_like, list);
         recycler_like.setAdapter(mLikeAdapter);

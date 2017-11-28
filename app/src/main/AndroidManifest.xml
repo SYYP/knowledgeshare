@@ -12,10 +12,10 @@
         <activity android:name=".login.LancherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.MainActivity"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
@@ -37,20 +37,22 @@
         <activity android:name=".activity.LearningRecordActivity"/>
         <activity android:name=".activity.MyAccountActivity"/>
         <activity android:name=".activity.MyMedalActivity"/>
-        <activity android:name=".activity.SettingActivity"></activity>
+        <activity android:name=".activity.SettingActivity"/>
         <activity android:name=".fragment.home.EveryDayCommentActivity">
         </activity>
         <activity android:name=".fragment.home.SoftMusicActivity">
         </activity>
         <activity android:name=".fragment.home.MusicMasterActivity">
         </activity>
-        <activity android:name=".login.GuidePageActivity"></activity>
-        <activity android:name=".login.MessageActivity"></activity>
-        <activity android:name=".activity.LoginActivity"></activity>
-        <activity android:name=".login.bean.HobbyActivity"></activity>
-        <activity android:name=".fragment.home.ZhuanLanActivity"></activity>
-        <activity android:name=".fragment.home.ZhuanLanDetail1Activity"></activity>
-        <activity android:name=".fragment.home.ZhuanLanDetail2Activity"></activity>
+        <activity android:name=".login.GuidePageActivity"/>
+        <activity android:name=".login.MessageActivity"/>
+        <activity android:name=".activity.LoginActivity"/>
+        <activity android:name=".login.bean.HobbyActivity"/>
+        <activity android:name=".fragment.home.ZhuanLanActivity"/>
+        <activity android:name=".fragment.home.ZhuanLanDetail1Activity"/>
+        <activity android:name=".fragment.home.ZhuanLanDetail2Activity"/>
+        <activity android:name=".fragment.home.SoftMusicDetailActivity">
+        </activity>
     </application>
 
 </manifest>
