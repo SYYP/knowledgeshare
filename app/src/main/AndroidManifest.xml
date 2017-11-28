@@ -12,15 +12,6 @@
         <activity android:name=".login.LancherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
-                <intent-filter>
-                    <action android:name="android.intent.action.MAIN"/>
-
-                    <category android:name="android.intent.category.LAUNCHER"/>
-                </intent-filter>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-                <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -47,7 +38,6 @@
         <activity android:name=".activity.MyAccountActivity"/>
         <activity android:name=".activity.MyMedalActivity"/>
         <activity android:name=".activity.SettingActivity"></activity>
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity android:name=".fragment.home.EveryDayCommentActivity">
         </activity>
         <activity android:name=".fragment.home.SoftMusicActivity">
@@ -57,6 +47,10 @@
         <activity android:name=".login.GuidePageActivity"></activity>
         <activity android:name=".login.MessageActivity"></activity>
         <activity android:name=".activity.LoginActivity"></activity>
+        <activity android:name=".login.bean.HobbyActivity"></activity>
+        <activity android:name=".fragment.home.ZhuanLanActivity"></activity>
+        <activity android:name=".fragment.home.ZhuanLanDetail1Activity"></activity>
+        <activity android:name=".fragment.home.ZhuanLanDetail2Activity"></activity>
     </application>
 
 </manifest>
