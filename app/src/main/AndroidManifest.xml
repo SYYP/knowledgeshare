@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="www.knowledgeshare.com.knowledgeshare">
+<manifest package="www.knowledgeshare.com.knowledgeshare"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:name=".MyApplication"
@@ -11,9 +11,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".login.LancherActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -21,40 +18,6 @@
         </activity>
         <activity
             android:name=".activity.MainActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".login.ForgetActivity" />
-        <activity android:name=".login.AlterActivity" />
-        <activity android:name=".login.SetloginActivity" />
-        <activity android:name=".fragment.home.SearchActivity" />
-        <activity android:name=".fragment.home.GuDianActivity" />
-        <activity android:name=".fragment.home.FreeActivity" />
-        <activity android:name=".fragment.home.MyGuanzhuActivity" />
-        <activity android:name=".fragment.home.LikeDetailActivity" />
-        <activity android:name=".activity.MySubscriptionsActivity" />
-        <activity android:name=".activity.LearningTimeActivity" />
-        <activity android:name=".fragment.home.DemoActivity" />
-        <activity android:name=".fragment.home.MusicActivity" />
-        <activity android:name=".fragment.home.BoFangListActivity" />
-        <activity android:name=".fragment.home.TeacherDetailActivity" />
-        <activity android:name=".activity.LearningRecordActivity" />
-        <activity android:name=".activity.MyAccountActivity" />
-        <activity android:name=".activity.MyMedalActivity" />
-        <activity android:name=".activity.SettingActivity" />
-        <activity android:name=".fragment.home.EveryDayCommentActivity" />
-        <activity android:name=".fragment.home.SoftMusicActivity" />
-        <activity android:name=".fragment.home.MusicMasterActivity" />
-        <activity android:name=".login.GuidePageActivity" />
-        <activity android:name=".login.MessageActivity" />
-        <activity android:name=".activity.LoginActivity" />
-        <activity android:name=".login.bean.HobbyActivity" />
-        <activity android:name=".fragment.home.ZhuanLanActivity" />
-        <activity android:name=".fragment.home.ZhuanLanDetail1Activity" />
-        <activity android:name=".fragment.home.ZhuanLanDetail2Activity" />
-        <activity android:name=".activity.AccountSafeActivity" />
-        <activity android:name=".activity.BrowserHistoryActivity" />
-        <activity android:name=".activity.DownLoadActivity" />
-        <activity android:name=".activity.BindPhoneActivity"></activity>
             android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity android:name=".activity.RegisterActivity"/>
         <activity android:name=".login.ForgetActivity"/>
@@ -75,12 +38,9 @@
         <activity android:name=".activity.MyAccountActivity"/>
         <activity android:name=".activity.MyMedalActivity"/>
         <activity android:name=".activity.SettingActivity"/>
-        <activity android:name=".fragment.home.EveryDayCommentActivity">
-        </activity>
-        <activity android:name=".fragment.home.SoftMusicActivity">
-        </activity>
-        <activity android:name=".fragment.home.MusicMasterActivity">
-        </activity>
+        <activity android:name=".fragment.home.EveryDayCommentActivity"/>
+        <activity android:name=".fragment.home.SoftMusicActivity"/>
+        <activity android:name=".fragment.home.MusicMasterActivity"/>
         <activity android:name=".login.GuidePageActivity"/>
         <activity android:name=".login.MessageActivity"/>
         <activity android:name=".activity.LoginActivity"/>
@@ -88,7 +48,17 @@
         <activity android:name=".fragment.home.ZhuanLanActivity"/>
         <activity android:name=".fragment.home.ZhuanLanDetail1Activity"/>
         <activity android:name=".fragment.home.ZhuanLanDetail2Activity"/>
+        <activity android:name=".activity.AccountSafeActivity"/>
+        <activity android:name=".activity.BrowserHistoryActivity"/>
+        <activity android:name=".activity.DownLoadActivity"/>
+        <activity android:name=".activity.BindPhoneActivity"/>
         <activity android:name=".fragment.home.SoftMusicDetailActivity">
+        </activity>
+        <activity
+            android:name=".fragment.home.LiuYanActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden">
+        </activity>
+        <activity android:name=".fragment.home.DownLoadListActivity">
         </activity>
     </application>
 

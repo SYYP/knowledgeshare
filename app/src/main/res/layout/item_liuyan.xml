@@ -39,15 +39,25 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="留言"/>
-    <TextView
+    <LinearLayout
+        android:id="@+id/ll_dianzan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|right"
-        android:layout_marginTop="10dp"
-        android:drawableLeft="@drawable/free_dianzan"
-        android:drawablePadding="5dp"
-        android:gravity="center"
-        android:text="110"/>
+        android:layout_marginTop="10dp">
+        <ImageView
+            android:id="@+id/iv_dianzan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/free_dianzan"/>
+        <TextView
+            android:id="@+id/tv_dainzan_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:gravity="center"
+            android:text="110"/>
+    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -69,8 +79,8 @@
         android:padding="10dp"
         android:text="在的"/>
     <View
-        android:background="@color/huise"
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="1dp"></View>
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/huise"></View>
 </LinearLayout>

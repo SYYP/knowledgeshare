@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             android:background="#edecea"
 >
     <LinearLayout
         android:id="@+id/activity_free"
@@ -130,21 +131,39 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true">
-                            <TextView
-                                android:id="@+id/tv_guanzhu"
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:src="@drawable/free_guanzhu"/>
+                                <TextView
+                                    android:id="@+id/tv_guanzhu"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginLeft="5dp"
+                                    android:text="关注"/>
+                            </LinearLayout>
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:drawableLeft="@drawable/free_guanzhu"
-                                android:drawablePadding="10dp"
-                                android:text="关注"/>
-                            <TextView
-                                android:id="@+id/tv_dianzan_count"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:drawableLeft="@drawable/free_yizan"
-                                android:drawablePadding="10dp"
-                                android:text="11"/>
+                                android:layout_marginLeft="10dp">
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:src="@drawable/free_yizan"/>
+                                <TextView
+                                    android:id="@+id/tv_dianzan_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginLeft="5dp"
+                                    android:text="11"/>
+                            </LinearLayout>
                         </LinearLayout>
                     </RelativeLayout>
                     <View

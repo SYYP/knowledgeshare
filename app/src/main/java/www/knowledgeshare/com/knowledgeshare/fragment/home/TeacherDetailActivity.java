@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -60,9 +61,20 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
         list.add("");
         DaShiBanAdapter daShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban2, list);
         recycler_dashiban.setAdapter(daShiBanAdapter);
-
+        daShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(TeacherDetailActivity.this,ZhuanLanActivity.class));
+            }
+        });
         YinYueKeAdapter yinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke2, list);
         recycler_yinyueke.setAdapter(yinYueKeAdapter);
+        yinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(TeacherDetailActivity.this,SoftMusicDetailActivity.class));
+            }
+        });
     }
 
     private class DaShiBanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

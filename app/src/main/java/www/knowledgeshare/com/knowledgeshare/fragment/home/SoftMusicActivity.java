@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -42,6 +43,12 @@ public class SoftMusicActivity extends BaseActivity implements View.OnClickListe
         list.add("");
         YinYueKeAdapter yinYueKeAdapter=new YinYueKeAdapter(R.layout.item_yinyueke2,list);
         recycler_yinyueke.setAdapter(yinYueKeAdapter);
+        yinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(SoftMusicActivity.this,SoftMusicDetailActivity.class));
+            }
+        });
     }
 
     private class YinYueKeAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

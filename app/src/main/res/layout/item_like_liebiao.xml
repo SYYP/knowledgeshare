@@ -7,16 +7,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/circle_yellow"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="01"
-            android:textColor="@color/yellow"
-            android:textSize="16sp"/>
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/circle_yellow"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="01"
+                android:textColor="@color/yellow"
+                android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/tv_trylisten"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="试听"
+                android:textColor="@color/text_red_dark"
+                android:textSize="14sp"/>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,8 +65,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
-                    android:drawablePadding="5dp"
                     android:drawableLeft="@drawable/look_yellow"
+                    android:drawablePadding="5dp"
                     android:gravity="center"
                     android:text="1223"/>
                 <TextView

@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -34,6 +35,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
     private RecyclerView recycler_liebiao;
     private LinearLayout activity_free;
     private BaseDialog mDialog;
+    private BaseDialog.Builder mBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +46,8 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
     }
 
     private void initDialog() {
-        BaseDialog.Builder builder = new BaseDialog.Builder(this);
-        mDialog = builder.setViewId(R.layout.dialog_free)
+        mBuilder = new BaseDialog.Builder(this);
+        mDialog = mBuilder.setViewId(R.layout.dialog_free)
                 //设置dialogpadding
                 .setPaddingdp(10, 0, 10, 0)
                 //设置显示位置
@@ -112,6 +114,29 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
         });
     }
 
+    private void showShareDialog() {
+        mDialog = mBuilder.setViewId(R.layout.dialog_share)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.BOTTOM)
+                //设置动画
+                .setAnimation(R.style.Bottom_Top_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -119,10 +144,13 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 finish();
                 break;
             case R.id.iv_share:
+                showShareDialog();
                 break;
             case R.id.tv_search:
+                startActivity(new Intent(this,SearchActivity.class));
                 break;
             case R.id.tv_download:
+                startActivity(new Intent(this,DownLoadListActivity.class));
                 break;
         }
     }

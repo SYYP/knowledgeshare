@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -38,6 +40,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
     private RecyclerView recycler_liuyan;
     private LinearLayout activity_free;
     private BaseDialog mDialog;
+    private BaseDialog.Builder mBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,20 +51,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void initDialog() {
-        BaseDialog.Builder builder = new BaseDialog.Builder(this);
-        mDialog = builder.setViewId(R.layout.dialog_free)
-                //设置dialogpadding
-                .setPaddingdp(10, 0, 10, 0)
-                //设置显示位置
-                .setGravity(Gravity.BOTTOM)
-                //设置动画
-                .setAnimation(R.style.Bottom_Top_aniamtion)
-                //设置dialog的宽高
-                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                //设置触摸dialog外围是否关闭
-                .isOnTouchCanceled(true)
-                //设置监听事件
-                .builder();
+        mBuilder = new BaseDialog.Builder(this);
     }
 
     private void initView() {
@@ -82,6 +72,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
         tv_shiyirenqun = (TextView) findViewById(R.id.tv_shiyirenqun);
         tv_readxuzhi = (TextView) findViewById(R.id.tv_readxuzhi);
         tv_writeliuyan = (TextView) findViewById(R.id.tv_writeliuyan);
+        tv_writeliuyan.setOnClickListener(this);
         recycler_liuyan = (RecyclerView) findViewById(R.id.recycler_liuyan);
         activity_free = (LinearLayout) findViewById(R.id.activity_free);
         recycler_free.setLayoutManager(new LinearLayoutManager(this));
@@ -94,7 +85,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
         list.add("");
         FreeAdapter freeAdapter = new FreeAdapter(R.layout.item_free, list);
         recycler_free.setAdapter(freeAdapter);
-        LiuYanAdapter liuYanAdapter=new LiuYanAdapter(R.layout.item_liuyan,list);
+        LiuYanAdapter liuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan, list);
         recycler_liuyan.setAdapter(liuYanAdapter);
     }
 
@@ -109,7 +100,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
             helper.getView(R.id.iv_dian).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showDialog();
+                    showListDialog();
                 }
             });
         }
@@ -123,11 +114,53 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-
+            final ImageView iv_dianzan = helper.getView(R.id.iv_dianzan);
+            helper.getView(R.id.ll_dianzan).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Glide.with(mContext).load(R.drawable.free_yizan).into(iv_dianzan);
+                }
+            });
         }
     }
 
-    private void showDialog() {
+    private void showShareDialog() {
+        mDialog = mBuilder.setViewId(R.layout.dialog_share)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.BOTTOM)
+                //设置动画
+                .setAnimation(R.style.Bottom_Top_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+    }
+
+    private void showListDialog() {
+        mDialog = mBuilder.setViewId(R.layout.dialog_free)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.BOTTOM)
+                //设置动画
+                .setAnimation(R.style.Bottom_Top_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
         mDialog.show();
         mDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,12 +177,18 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.tv_download:
+                startActivity(new Intent(this, DownLoadListActivity.class));
                 break;
             case R.id.tv_search:
+                startActivity(new Intent(this, SearchActivity.class));
                 break;
             case R.id.tv_share:
+                showShareDialog();
                 break;
             case R.id.tv_guanzhu:
+                break;
+            case R.id.tv_writeliuyan:
+                startActivity(new Intent(this, LiuYanActivity.class));
                 break;
         }
     }

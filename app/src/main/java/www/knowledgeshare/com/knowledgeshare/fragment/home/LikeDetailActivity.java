@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -25,7 +27,7 @@ import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 public class LikeDetailActivity extends BaseActivity implements View.OnClickListener {
     private ImageView iv_back;
     private ImageView iv_beijing;
-    private TextView tv_download;
+    private TextView tv_download, tv_share;
     private TextView tv_search;
     private ImageView iv_shopcar;
     private TextView tv_guanzhu;
@@ -37,6 +39,8 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
     private TextView tv_writeliuyan;
     private RecyclerView recycler_liuyan;
     private TextView tv_shopcar, tv_buy;
+    private BaseDialog.Builder mBuilder;
+    private BaseDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,17 +65,25 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         tv_teacher_intro = (TextView) findViewById(R.id.tv_teacher_intro);
         tv_shopcar = (TextView) findViewById(R.id.tv_shopcar);
         tv_shopcar.setOnClickListener(this);
+        tv_share = (TextView) findViewById(R.id.tv_share);
+        tv_share.setOnClickListener(this);
         tv_buy = (TextView) findViewById(R.id.tv_buy);
         tv_buy.setOnClickListener(this);
         recycler_free = (RecyclerView) findViewById(R.id.recycler_free);
         tv_shiyirenqun = (TextView) findViewById(R.id.tv_shiyirenqun);
         tv_readxuzhi = (TextView) findViewById(R.id.tv_readxuzhi);
         tv_writeliuyan = (TextView) findViewById(R.id.tv_writeliuyan);
+        tv_writeliuyan.setOnClickListener(this);
         recycler_liuyan = (RecyclerView) findViewById(R.id.recycler_liuyan);
         recycler_free.setLayoutManager(new LinearLayoutManager(this));
         recycler_free.setNestedScrollingEnabled(false);
         recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
         recycler_liuyan.setNestedScrollingEnabled(false);
+        initDialog();
+        initData();
+    }
+
+    private void initData() {
         List<String> list = new ArrayList<>();
         list.add("");
         list.add("");
@@ -81,13 +93,17 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         lieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (position == 1) {
+                if (position != 0) {
                     showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
                 }
             }
         });
         LiuYanAdapter liuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan, list);
         recycler_liuyan.setAdapter(liuYanAdapter);
+    }
+
+    private void initDialog() {
+        mBuilder = new BaseDialog.Builder(this);
     }
 
     private class LieBiaoAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
@@ -98,13 +114,45 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-
+            if (helper.getAdapterPosition() == 0) {
+                helper.setVisible(R.id.tv_trylisten, true);
+            } else {
+                helper.setVisible(R.id.tv_trylisten, false);
+            }
+            helper.getView(R.id.iv_dian).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showListDialog();
+                }
+            });
         }
     }
 
+    private void showListDialog() {
+        mDialog = mBuilder.setViewId(R.layout.dialog_free)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.BOTTOM)
+                //设置动画
+                .setAnimation(R.style.Bottom_Top_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+    }
+
     private void showIsBuyDialog(int grary, int animationStyle) {
-        BaseDialog.Builder builder = new BaseDialog.Builder(this);
-        final BaseDialog dialog = builder.setViewId(R.layout.dialog_isbuy)
+        mDialog = mBuilder.setViewId(R.layout.dialog_isbuy)
                 //设置dialogpadding
                 .setPaddingdp(10, 0, 10, 0)
                 //设置显示位置
@@ -112,30 +160,105 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 //设置动画
                 .setAnimation(animationStyle)
                 //设置dialog的宽高
-                .setWidthHeightpx(MyUtils.dip2px(this,250), LinearLayout.LayoutParams.WRAP_CONTENT)
+                .setWidthHeightpx(MyUtils.dip2px(this, 250), LinearLayout.LayoutParams.WRAP_CONTENT)
                 //设置触摸dialog外围是否关闭
                 .isOnTouchCanceled(true)
                 //设置监听事件
                 .builder();
-        dialog.show();
-        dialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+        mDialog.show();
+        mDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                mDialog.dismiss();
             }
         });
-        dialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+        mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                mDialog.dismiss();
                 showBuyDialog(Gravity.BOTTOM, R.style.Bottom_Top_aniamtion);
             }
         });
     }
 
+    private void showShareDialog() {
+        mDialog = mBuilder.setViewId(R.layout.dialog_share)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.BOTTOM)
+                //设置动画
+                .setAnimation(R.style.Bottom_Top_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+    }
+
+    private void showChongzhiDialog() {
+        mDialog = mBuilder.setViewId(R.layout.dialog_ischongzhi)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+                showPaySuccessDialog();
+            }
+        });
+    }
+
+    private void showPaySuccessDialog() {
+        mDialog = mBuilder.setViewId(R.layout.dialog_paysuccess)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+    }
+
     private void showBuyDialog(int grary, int animationStyle) {
-        BaseDialog.Builder builder = new BaseDialog.Builder(this);
-        final BaseDialog dialog = builder.setViewId(R.layout.dialog_buy)
+        mDialog = mBuilder.setViewId(R.layout.dialog_buy)
                 //设置dialogpadding
                 .setPaddingdp(10, 0, 10, 0)
                 //设置显示位置
@@ -148,11 +271,18 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 .isOnTouchCanceled(true)
                 //设置监听事件
                 .builder();
-        dialog.show();
-        dialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+        mDialog.show();
+        mDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.rl_yuezhifu).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+                showChongzhiDialog();
             }
         });
     }
@@ -165,7 +295,13 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-
+            final ImageView iv_dianzan = helper.getView(R.id.iv_dianzan);
+            helper.getView(R.id.ll_dianzan).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Glide.with(mContext).load(R.drawable.free_yizan).into(iv_dianzan);
+                }
+            });
         }
     }
 
@@ -176,14 +312,22 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 finish();
                 break;
             case R.id.tv_download:
+                startActivity(new Intent(this, DownLoadListActivity.class));
                 break;
             case R.id.tv_search:
+                startActivity(new Intent(this, SearchActivity.class));
                 break;
             case R.id.iv_shopcar:
                 break;
             case R.id.tv_guanzhu:
                 break;
             case R.id.tv_shopcar:
+                break;
+            case R.id.tv_writeliuyan:
+                startActivity(new Intent(this, LiuYanActivity.class));
+                break;
+            case R.id.tv_share:
+                showShareDialog();
                 break;
             case R.id.tv_buy:
                 showBuyDialog(Gravity.BOTTOM, R.style.Bottom_Top_aniamtion);

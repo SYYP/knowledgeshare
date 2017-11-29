@@ -21,7 +21,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:padding="20dp"
-        android:text="当前无WiFi，是否允许用流量下载"
+        android:text="当前无WiFi，是否允许用流量播放"
         android:textColor="#333"
         android:textSize="15sp"/>
     <LinearLayout

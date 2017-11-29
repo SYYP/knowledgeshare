@@ -1,15 +1,18 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -18,6 +21,7 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 
 public class SoftMusicDetailActivity extends BaseActivity implements View.OnClickListener {
 
@@ -37,6 +41,8 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
     private LinearLayout activity_free;
     private TextView tv_tryread;
     private TextView tv_buy;
+    private BaseDialog mDialog;
+    private BaseDialog.Builder mBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +77,12 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
         tv_tryread.setOnClickListener(this);
         tv_buy = (TextView) findViewById(R.id.tv_buy);
         tv_buy.setOnClickListener(this);
+        initDialog();
         initData();
+    }
+
+    private void initDialog() {
+        mBuilder = new BaseDialog.Builder(this);
     }
 
     private void initData() {
@@ -104,7 +115,12 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-
+            helper.getView(R.id.iv_dian).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showListDialog();
+                }
+            });
         }
     }
 
@@ -116,8 +132,60 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-
+            final ImageView iv_dianzan = helper.getView(R.id.iv_dianzan);
+            helper.getView(R.id.ll_dianzan).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Glide.with(mContext).load(R.drawable.free_yizan).into(iv_dianzan);
+                }
+            });
         }
+    }
+
+    private void showShareDialog() {
+        mDialog = mBuilder.setViewId(R.layout.dialog_share)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.BOTTOM)
+                //设置动画
+                .setAnimation(R.style.Bottom_Top_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+    }
+
+    private void showListDialog() {
+        mDialog = mBuilder.setViewId(R.layout.dialog_free)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.BOTTOM)
+                //设置动画
+                .setAnimation(R.style.Bottom_Top_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
     }
 
     @Override
@@ -127,16 +195,20 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 finish();
                 break;
             case R.id.tv_download:
+                startActivity(new Intent(this, DownLoadListActivity.class));
                 break;
             case R.id.tv_search:
+                startActivity(new Intent(this, SearchActivity.class));
                 break;
             case R.id.tv_share:
+                showShareDialog();
                 break;
             case R.id.tv_guanzhu:
                 break;
             case R.id.tv_dianzan_count:
                 break;
             case R.id.tv_writeliuyan:
+                startActivity(new Intent(this, LiuYanActivity.class));
                 break;
             case R.id.tv_tryread:
                 break;
