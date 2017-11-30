@@ -119,6 +119,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="1dp"
              android:layout_height="25dp"></View>
          <TextView
+             android:id="@+id/study_collect"
              android:drawablePadding="5dp"
              android:drawableLeft="@drawable/study_collect"
              android:text="收藏"

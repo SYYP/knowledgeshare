@@ -5,6 +5,7 @@
           android:layout_height="wrap_content"
           android:layout_margin="8dp"
           android:paddingTop="10dp"
+           android:id="@+id/iv_text"
             android:paddingBottom="10dp"
            android:paddingLeft="15dp"
            android:paddingRight="15dp"

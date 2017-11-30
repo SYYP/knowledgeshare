@@ -51,6 +51,7 @@ public class HobbyActivity extends BaseActivity {
                 return  tv;
             }
             @Override
+
             public boolean setSelected(int position, String s)
             {
                 return false;
@@ -85,4 +86,3 @@ public class HobbyActivity extends BaseActivity {
     }
 
 }
-

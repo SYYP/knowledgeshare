@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="#edecea"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/shape_radioline"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+        <ImageView
+
+            android:id="@+id/class_bo"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+             android:layout_marginTop="15dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/my_collect_bo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+         <TextView
+             android:id="@+id/class_title"
+             android:layout_marginTop="20dp"
+             android:textColor="@color/text_black"
+             android:textSize="14sp"
+             android:layout_toRightOf="@id/class_bo"
+             android:text="男低音，一个神秘又充满魅力的声部"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content" />
+          <TextView
+              android:id="@+id/class_time"
+              android:drawablePadding="5dp"
+              android:textSize="15sp"
+              android:text="1:20:20"
+              android:drawableLeft="@drawable/class_time"
+              android:layout_marginTop="8dp"
+              android:src="@drawable/class_time"
+              android:layout_toRightOf="@id/class_bo"
+              android:layout_below="@id/class_title"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content" />
+        <TextView
+            android:text="如何成为一个男高音？"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_below="@id/class_title"
+            android:layout_toRightOf="@id/class_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+         <ImageView
+             android:id="@+id/class_xinxin"
+             android:layout_marginRight="10dp"
+             android:layout_centerVertical="true"
+             android:layout_alignParentRight="true"
+             android:src="@drawable/class_xinxin"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_marginRight="15dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/class_xinxin"
+            android:src="@drawable/class_liebiao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</LinearLayout>

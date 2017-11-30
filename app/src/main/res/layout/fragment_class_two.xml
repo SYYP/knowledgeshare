@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="#edecea"
+    android:layout_height="wrap_content">
+<LinearLayout
+
+    android:layout_marginBottom="2dp"
+  android:layout_marginTop="10dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:orientation="vertical"
+    android:background="@drawable/shape_radioline"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+        <View
+            android:layout_centerVertical="true"
+            android:id="@+id/lines"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:background="#b10505"
+            android:layout_width="2dp"
+            android:layout_height="20dp"></View>
+        <TextView
+            android:layout_centerVertical="true"
+            android:id="@+id/class_titles"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/lines"
+            android:text="如何成为一名男高音"
+            android:textSize="15sp"
+            android:textColor="@color/textblack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+       <ImageView
+           android:layout_marginRight="10dp"
+           android:layout_centerVertical="true"
+           android:layout_alignParentRight="true"
+           android:src="@drawable/class_xinxin"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <View
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/hui"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"></View>
+    <LinearLayout
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/class_count"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="5dp"
+            android:lineSpacingMultiplier="1.2"
+            android:text="你没见过我在洗澡时因为你发消息给我我擦擦手秒回的样子，你没见过我在很困的时候仍然硬撑着和你说过等你睡了在睡的样子，你没见过因为你不喜欢什么东西我去努力改的样子，你没见过我每天没事就抱着手机等你回消息的样子，你没见过我一想到你就和萌萌一样笑起来的样子，你没见过所以你不知道珍惜。"
+            android:textColor="@color/text_black"
+            android:textSize="14sp"
+            android:lineSpacingExtra="1.5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <View
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/hui"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"></View>
+    <RelativeLayout
+
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+        <www.knowledgeshare.com.knowledgeshare.view.CircleImageView
+            android:layout_centerVertical="true"
+            android:id="@+id/class_pho"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/face" />
+        <TextView
+            android:id="@+id/class_name"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/class_pho"
+            android:text="崔老师"
+            android:textSize="15sp"
+            android:textColor="@color/text_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/class_date"
+            android:textColor="@color/text_black"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:text="2017-11-30 星期一"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</LinearLayout>
+</LinearLayout>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="www.knowledgeshare.com.knowledgeshare.activity.DownLoadActivity">
+    <include layout="@layout/item_title_layout"/>
+    <android.support.design.widget.TabLayout
+        android:id="@+id/collect_tablayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        app:tabTextColor="#999999"
+        app:tabIndicatorColor="#b00505"
+        app:tabIndicatorHeight="4px"
+        app:tabSelectedTextColor="#b00505"
+        app:tabTextAppearance="@style/MyCustomTabTextAppearance"/>
+    <www.knowledgeshare.com.knowledgeshare.view.NoScrollViewPager
+        android:id="@+id/collect_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </www.knowledgeshare.com.knowledgeshare.view.NoScrollViewPager>
+</LinearLayout>

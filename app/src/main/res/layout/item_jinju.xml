@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#edecea">
+
+    <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:background="@drawable/shape_radioline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/relative"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="45dp">
+            <View
+                android:layout_centerVertical="true"
+                android:id="@+id/line"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:background="#b10505"
+                android:layout_width="2dp"
+                android:layout_height="20dp"></View>
+            <TextView
+                android:layout_centerVertical="true"
+                android:id="@+id/jin_date"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/line"
+                android:text="2017-10-10 星期一"
+                android:textSize="15sp"
+                android:textColor="@color/textblack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:layout_marginRight="15dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/class_xinxin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <LinearLayout
+
+            android:id="@+id/study_liner"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_below="@id/relative"
+            android:background="@drawable/shape_line"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/study_count"
+                android:background="@null"
+                android:textColor="@color/textblack"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.1"
+                android:lineSpacingExtra="3dp"
+                android:text="喜欢聆听，风吹过的声只为等待风中夹杂着你的笑声，这不是我想要的结局忧伤的漩涡伴随着天使羽翼煽动着声响,你渐渐远去，从此风中的声音叫做静谧，每一次错过都是忘记，只有每晚的辗转反侧让我记得我的梦你曾来过！
+            "
+                android:padding="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <RelativeLayout
+            android:padding="10dp"
+            android:layout_below="@id/study_liner"
+            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true">
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

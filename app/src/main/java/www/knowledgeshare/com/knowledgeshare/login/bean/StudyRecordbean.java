@@ -6,6 +6,7 @@ package www.knowledgeshare.com.knowledgeshare.login.bean;
  */
 
 public class StudyRecordbean {
+
     private  String time;
 
     public String getTime() {

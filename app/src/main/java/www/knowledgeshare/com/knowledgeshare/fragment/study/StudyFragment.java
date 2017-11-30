@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
+import www.knowledgeshare.com.knowledgeshare.fragment.mine.CollectActivity;
 import www.knowledgeshare.com.knowledgeshare.login.MessageActivity;
 import www.knowledgeshare.com.knowledgeshare.login.adapter.Studyadapter;
 
@@ -40,6 +41,7 @@ public class StudyFragment extends BaseFragment {
     private RecyclerView study_recycler;
     private ImageView study_xinxin;
      boolean bool;
+    private TextView study_collect;
 
     @Override
     protected void lazyLoad() {
@@ -68,6 +70,7 @@ public class StudyFragment extends BaseFragment {
         this.study_days = (TextView) rootView.findViewById(R.id.study_days);
         this.study_dates = (TextView) rootView.findViewById(R.id.study_dates);
         study_recycler = rootView.findViewById(R.id.study_recycle);
+        study_collect = rootView.findViewById(R.id.study_collect);
         study_xinxin = rootView.findViewById(R.id.study_xinxin);
         study_recycler.setNestedScrollingEnabled(false);
         /*
@@ -94,6 +97,14 @@ public class StudyFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(getActivity(), MessageActivity.class);
+                startActivity(intent);
+            }
+        });
+        //收藏
+        study_collect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            Intent intent=new Intent(getActivity(), CollectActivity.class);
                 startActivity(intent);
             }
         });
