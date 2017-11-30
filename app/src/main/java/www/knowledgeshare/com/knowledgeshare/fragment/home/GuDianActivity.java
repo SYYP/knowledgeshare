@@ -113,6 +113,12 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
         protected void convert(BaseViewHolder helper, String item) {
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
 //            Glide.with(mContext).load().into(imageView);
+            helper.getView(R.id.iv_bofang).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(GuDianActivity.this,ZhuanLanDetail2Activity.class));
+                }
+            });
         }
     }
 
@@ -126,6 +132,12 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
         protected void convert(BaseViewHolder helper, String item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
 //            Glide.with(mContext).load().into(imageView);
+            helper.getView(R.id.iv_bofang).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(GuDianActivity.this,ZhuanLanDetail2Activity.class));
+                }
+            });
         }
     }
 

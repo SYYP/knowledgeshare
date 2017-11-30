@@ -125,6 +125,12 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                     showListDialog();
                 }
             });
+            helper.getView(R.id.iv_wengao).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(LikeDetailActivity.this,WenGaoActivity.class));
+                }
+            });
         }
     }
 

@@ -87,6 +87,7 @@
             android:layout_marginLeft="5dp"
         >
             <ImageView
+                android:id="@+id/iv_wengao"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

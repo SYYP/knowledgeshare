@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -55,6 +56,12 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
         list.add("");
         DaShiBanAdapter daShiBanAdapter=new DaShiBanAdapter(R.layout.item_dashiban2,list);
         recycler_dashiban.setAdapter(daShiBanAdapter);
+        daShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(MusicMasterActivity.this,ZhuanLanActivity.class));
+            }
+        });
     }
 
     private class DaShiBanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

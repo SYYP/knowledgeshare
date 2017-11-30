@@ -103,6 +103,12 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                     showListDialog();
                 }
             });
+            helper.getView(R.id.iv_wengao).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(FreeActivity.this,WenGaoActivity.class));
+                }
+            });
         }
     }
 

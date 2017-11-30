@@ -101,6 +101,12 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                     showDialog();
                 }
             });
+            helper.getView(R.id.iv_wengao).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(EveryDayCommentActivity.this,WenGaoActivity.class));
+                }
+            });
         }
     }
 

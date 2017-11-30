@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.DownLoadActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.utils.BannerUtils;
@@ -446,6 +447,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, SearchActivity.class));
                 break;
             case R.id.ll_download:
+                startActivity(new Intent(getActivity(),DownLoadActivity.class));
                 break;
             case R.id.ll_gudian:
                 Intent intent = new Intent(mContext, GuDianActivity.class);

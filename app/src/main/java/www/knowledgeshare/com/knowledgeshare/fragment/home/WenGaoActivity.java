@@ -6,8 +6,10 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -18,60 +20,64 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
-
-public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClickListener {
+public class WenGaoActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView iv_back;
-    private TextView tv_title;
+    private ImageView iv_share;
     private CircleImageView iv_teacher_head;
+    private TextView tv_ke_name;
     private TextView tv_teacher_name;
+    private TextView tv_teacher_intro;
     private ImageView iv_collect;
-    private TextView tv_time1;
-    private ImageView iv_bofang;
-    private TextView tv_title2;
-    private TextView tv_time2;
-    private ImageView iv_download;
-    private TextView tv_writeliuyan;
+    private LinearLayout ll_liuyan;
+    private LinearLayout ll_guanzhu;
     private RecyclerView recycler_liuyan;
-    private TextView tv_buy;
+    private BaseDialog mDialog;
+    private BaseDialog.Builder mBuilder;
+    private boolean isGuanzhu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_zhuan_lan_detail2);
+        setContentView(R.layout.activity_wen_gao);
         initView();
     }
 
     private void initView() {
         iv_back = (ImageView) findViewById(R.id.iv_back);
         iv_back.setOnClickListener(this);
-        tv_title = (TextView) findViewById(R.id.tv_title);
+        iv_share = (ImageView) findViewById(R.id.iv_share);
+        iv_share.setOnClickListener(this);
         iv_teacher_head = (CircleImageView) findViewById(R.id.iv_teacher_head);
+        tv_ke_name = (TextView) findViewById(R.id.tv_ke_name);
         tv_teacher_name = (TextView) findViewById(R.id.tv_teacher_name);
+        tv_teacher_intro = (TextView) findViewById(R.id.tv_teacher_intro);
         iv_collect = (ImageView) findViewById(R.id.iv_collect);
-        iv_collect.setOnClickListener(this);
-        tv_time1 = (TextView) findViewById(R.id.tv_time1);
-        iv_bofang = (ImageView) findViewById(R.id.iv_bofang);
-        iv_bofang.setOnClickListener(this);
-        tv_title2 = (TextView) findViewById(R.id.tv_title2);
-        tv_time2 = (TextView) findViewById(R.id.tv_time2);
-        iv_download = (ImageView) findViewById(R.id.iv_download);
-        iv_download.setOnClickListener(this);
-        tv_writeliuyan = (TextView) findViewById(R.id.tv_writeliuyan);
-        tv_writeliuyan.setOnClickListener(this);
+        ll_liuyan = (LinearLayout) findViewById(R.id.ll_liuyan);
+        ll_liuyan.setOnClickListener(this);
+        ll_guanzhu = (LinearLayout) findViewById(R.id.ll_guanzhu);
+        ll_guanzhu.setOnClickListener(this);
         recycler_liuyan = (RecyclerView) findViewById(R.id.recycler_liuyan);
-        tv_buy = (TextView) findViewById(R.id.tv_buy);
-        tv_buy.setOnClickListener(this);
         recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
         recycler_liuyan.setNestedScrollingEnabled(false);
+        initDialog();
+        initData();
+    }
+
+    private void initData() {
         List<String> list = new ArrayList<>();
         list.add("");
         list.add("");
         list.add("");
         LiuYanAdapter liuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan2, list);
         recycler_liuyan.setAdapter(liuYanAdapter);
+    }
+
+    private void initDialog() {
+        mBuilder = new BaseDialog.Builder(this);
     }
 
     private class LiuYanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
@@ -86,22 +92,48 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         }
     }
 
+    private void showShareDialog() {
+        mDialog = mBuilder.setViewId(R.layout.dialog_share)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.BOTTOM)
+                //设置动画
+                .setAnimation(R.style.Bottom_Top_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
                 finish();
                 break;
-            case R.id.iv_collect:
+            case R.id.iv_share:
+                showShareDialog();
                 break;
-            case R.id.iv_bofang:
-                break;
-            case R.id.iv_download:
-                break;
-            case R.id.tv_writeliuyan:
+            case R.id.ll_liuyan:
                 startActivity(new Intent(this,LiuYanActivity.class));
                 break;
-            case R.id.tv_buy:
+            case R.id.ll_guanzhu:
+                if (isGuanzhu){
+                    iv_collect.setImageResource(R.drawable.weiguanzhuxin);
+                }else {
+                    iv_collect.setImageResource(R.drawable.xinxin);
+                }
+                isGuanzhu=!isGuanzhu;
                 break;
         }
     }

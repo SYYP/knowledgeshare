@@ -60,6 +60,8 @@
         </activity>
         <activity android:name=".fragment.home.DownLoadListActivity">
         </activity>
+        <activity android:name=".fragment.home.WenGaoActivity">
+        </activity>
     </application>
 
 </manifest>
