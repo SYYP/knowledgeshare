@@ -64,6 +64,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
         recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
         recycler_liuyan.setNestedScrollingEnabled(false);
         initDialog();
+        showTanchuangDialog();
         initData();
     }
 
@@ -115,6 +116,29 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
         });
     }
 
+    private void showTanchuangDialog() {
+        mDialog = mBuilder.setViewId(R.layout.dialog_biji)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.view_yes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -125,15 +149,15 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
                 showShareDialog();
                 break;
             case R.id.ll_liuyan:
-                startActivity(new Intent(this,LiuYanActivity.class));
+                startActivity(new Intent(this, LiuYanActivity.class));
                 break;
             case R.id.ll_guanzhu:
-                if (isGuanzhu){
+                if (isGuanzhu) {
                     iv_collect.setImageResource(R.drawable.weiguanzhuxin);
-                }else {
+                } else {
                     iv_collect.setImageResource(R.drawable.xinxin);
                 }
-                isGuanzhu=!isGuanzhu;
+                isGuanzhu = !isGuanzhu;
                 break;
         }
     }
