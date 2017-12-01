@@ -3,7 +3,6 @@ package www.knowledgeshare.com.knowledgeshare.fragment.home;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -110,7 +109,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         play_seek.setMax(100);
         play_seek.setOnSeekBarChangeListener(this);
         //模拟播放
-        new Thread() {
+        /*new Thread() {
             @Override
             public void run() {
                 for (; ; ) {
@@ -126,7 +125,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
                     });
                 }
             }
-        }.start();
+        }.start();*/
     }
 
     @Override
@@ -144,6 +143,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
                 showShareDialog();
                 break;
             case R.id.tv_wengao:
+                startActivity(new Intent(this,WenGaoActivity.class));
                 break;
             case R.id.tv_download:
                 break;
