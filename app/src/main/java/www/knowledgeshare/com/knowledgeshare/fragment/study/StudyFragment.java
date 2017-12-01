@@ -1,5 +1,4 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.study;
-
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,17 +7,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.CollectActivity;
 import www.knowledgeshare.com.knowledgeshare.login.MessageActivity;
 import www.knowledgeshare.com.knowledgeshare.login.adapter.Studyadapter;
-
 /**
  * Created by Administrator on 2017/11/17.
  */
-
 public class StudyFragment extends BaseFragment {
     public TextView tv_search;
     public ImageView iv_message;
@@ -45,7 +41,6 @@ public class StudyFragment extends BaseFragment {
 
     @Override
     protected void lazyLoad() {
-
     }
 
     @Override
