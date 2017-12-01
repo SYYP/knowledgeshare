@@ -1,8 +1,12 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,11 +14,14 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 
-public class MusicActivity extends BaseActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class MusicActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView iv_back;
     private ImageView iv_bigphoto;
@@ -35,6 +42,13 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private boolean isCollected;
+    private MediaService.MyBinder mMyBinder;
+    //“绑定”服务的intent
+    private Intent MediaServiceIntent;
+    private Handler mHandler = new Handler();
+    //进度条下面的当前进度文字，将毫秒化为m:ss格式
+    private SimpleDateFormat time = new SimpleDateFormat("m:ss");
+    private boolean isbofang = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +58,68 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         setContentView(R.layout.activity_music);
         initView();
         initDialog();
+//        initMusic();
     }
+
+    private void initMusic() {
+        MediaServiceIntent = new Intent(this, MediaService.class);
+        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //我们的handler发送是定时1000s发送的，如果不关闭，MediaPlayer release掉了还在获取getCurrentPosition就会爆IllegalStateException错误
+//        mHandler.removeCallbacks(mRunnable);
+//        unbindService(mServiceConnection);
+    }
+
+    /**
+     * 更新ui的runnable
+     */
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            play_seek.setProgress(mMyBinder.getPlayPosition());
+            music_duration_played.setText(time.format(mMyBinder.getPlayPosition()) + "");
+            mHandler.postDelayed(mRunnable, 1000);
+        }
+    };
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mMyBinder = (MediaService.MyBinder) service;
+            play_seek.setMax(mMyBinder.getProgress());
+            music_duration.setText(time.format(mMyBinder.getProgress())+"");
+            play_seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    //这里很重要，如果不判断是否来自用户操作进度条，会不断执行下面语句块里面的逻辑，然后就会卡顿卡顿
+                    if (fromUser) {
+                        mMyBinder.seekToPositon(seekBar.getProgress());
+                        //                    mMediaService.mMediaPlayer.seekTo(seekBar.getProgress());
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
+            mHandler.post(mRunnable);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     private void initDialog() {
         mBuilder = new BaseDialog.Builder(this);
@@ -107,25 +182,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         activity_music = (LinearLayout) findViewById(R.id.activity_music);
         play_seek.setProgress(0);
         play_seek.setMax(100);
-        play_seek.setOnSeekBarChangeListener(this);
-        //模拟播放
-        /*new Thread() {
-            @Override
-            public void run() {
-                for (; ; ) {
-                    currentProgress++;
-                    if (currentProgress > 100)
-                        break;
-                    SystemClock.sleep(500);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            play_seek.setProgress(currentProgress);
-                        }
-                    });
-                }
-            }
-        }.start();*/
     }
 
     @Override
@@ -143,7 +199,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
                 showShareDialog();
                 break;
             case R.id.tv_wengao:
-                startActivity(new Intent(this,WenGaoActivity.class));
+                startActivity(new Intent(this, WenGaoActivity.class));
                 break;
             case R.id.tv_download:
                 break;
@@ -159,29 +215,23 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                     tv_collect.setCompoundDrawables(null, drawable, null, null);
                 }
-                isCollected=!isCollected;
+                isCollected = !isCollected;
                 break;
             case R.id.iv_previous:
                 break;
             case R.id.iv_pause:
+                if (isbofang) {
+//                    mMyBinder.pauseMusic();
+                    iv_pause.setImageResource(R.drawable.pause_yellow_big);
+                } else {
+//                    mMyBinder.playMusic();
+                    iv_pause.setImageResource(R.drawable.bofang_yellow_big);
+                }
+                isbofang = !isbofang;
                 break;
             case R.id.iv_next:
                 break;
         }
     }
 
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
 }

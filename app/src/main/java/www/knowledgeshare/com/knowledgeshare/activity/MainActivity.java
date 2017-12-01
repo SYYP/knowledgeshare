@@ -1,6 +1,10 @@
 package www.knowledgeshare.com.knowledgeshare.activity;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.animation.Animation;
@@ -24,6 +28,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.buy.BuyFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.HomeFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.MineFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.study.StudyFragment;
+import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -45,9 +50,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout ll_mine;
     private LinearLayout activity_main;
     private int position;
-    private boolean isPause=true;
+    private boolean isPause = true;
     private Animation mRotate_anim;
     private long preTime;
+    private MediaService.MyBinder mMyBinder;
+    //“绑定”服务的intent
+    private Intent MediaServiceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +66,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initData();
         initListener();
         initAnim();
+//        initMusic();
     }
+
+    private void initMusic() {
+        MediaServiceIntent = new Intent(this, MediaService.class);
+        startService(MediaServiceIntent);
+        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+    }
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mMyBinder = (MediaService.MyBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     private void initAnim() {
         mRotate_anim = AnimationUtils.loadAnimation(this, R.anim.rotate_animation);
@@ -70,20 +97,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+//        unbindService(mServiceConnection);
+//        stopService(MediaServiceIntent);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("rotate")) {
-            isPause=false;
+            isPause = false;
             iv_listen.setImageResource(R.drawable.tab_listen_bo);
             if (mRotate_anim != null) {
                 iv_listen.startAnimation(mRotate_anim);  //开始动画
             }
-        }else if (eventBean.getMsg().equals("norotate")){
-            isPause=true;
+//            mMyBinder.playMusic();
+        } else if (eventBean.getMsg().equals("norotate")) {
+            isPause = true;
             iv_listen.clearAnimation();
             iv_listen.setImageResource(R.drawable.tab_listen_pause);
+            //homefragment传来这个的时候就是点了叉了
         }
     }
 
@@ -148,20 +179,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.ll_listen:
                 position = 2;
-                if (isPause){
+                if (isPause) {
                     iv_listen.setImageResource(R.drawable.tab_listen_bo);
                     if (mRotate_anim != null) {
                         iv_listen.startAnimation(mRotate_anim);  //开始动画
                     }
                     EventBean eventBean = new EventBean("bofang");
                     EventBus.getDefault().postSticky(eventBean);
-                }else {
+//                    mMyBinder.playMusic();
+                } else {
                     iv_listen.clearAnimation();
                     iv_listen.setImageResource(R.drawable.tab_listen_pause);
                     EventBean eventBean = new EventBean("pause");
                     EventBus.getDefault().postSticky(eventBean);
+//                    mMyBinder.pauseMusic();
                 }
-                isPause=!isPause;
+                isPause = !isPause;
                 break;
             case R.id.ll_buy:
                 position = 3;

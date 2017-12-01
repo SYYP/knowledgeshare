@@ -311,6 +311,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         switch (v.getId()) {
             case R.id.tv_back:
                 finish();
+                SoftKeyboardTool.closeKeyboard(this);
                 break;
             case R.id.iv_delete:
                 showDialog(Gravity.CENTER, R.style.Alpah_aniamtion);

@@ -88,7 +88,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         list.add("");
         list.add("");
         list.add("");
-        LieBiaoAdapter lieBiaoAdapter = new LieBiaoAdapter(R.layout.item_like_liebiao, list);
+        LieBiaoAdapter lieBiaoAdapter = new LieBiaoAdapter(R.layout.item_free, list);
         recycler_free.setAdapter(lieBiaoAdapter);
         lieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override

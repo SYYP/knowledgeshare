@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="30dp"
-            android:src="@drawable/pause_yellow_big"/>
+            android:src="@drawable/bofang_yellow_big"/>
         <ImageView
             android:id="@+id/iv_next"
             android:layout_width="wrap_content"

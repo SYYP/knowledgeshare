@@ -1,7 +1,10 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -37,12 +40,15 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.DownLoadActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
+import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BannerUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
+
+import static android.content.Context.BIND_AUTO_CREATE;
 
 
 /**
@@ -252,7 +258,30 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         initDialog();
         initAnim();
         initListener();
+//        initMusic();
     }
+
+    //“绑定”服务的intent
+    private Intent MediaServiceIntent;
+    private MediaService.MyBinder mMyBinder;
+
+    private void initMusic() {
+        MediaServiceIntent = new Intent(mContext, MediaService.class);
+//        mContext.startService(MediaServiceIntent);
+        mContext.bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+    }
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mMyBinder = (MediaService.MyBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     private void initListener() {
         nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
@@ -401,6 +430,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     //                    Glide.with(mContext).load().into(iv_bo_head);
                     EventBean eventBean = new EventBean("bofang");
                     EventBus.getDefault().postSticky(eventBean);
+                    mMyBinder.playMusic();
                 }
             });
             return;
@@ -413,6 +443,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         //        Glide.with(mContext).load().into(iv_bo_head);
         EventBean eventBean = new EventBean("rotate");
         EventBus.getDefault().postSticky(eventBean);
+//        mMyBinder.playMusic();
     }
 
     @Override
@@ -481,6 +512,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 rl_bofang.setVisibility(View.GONE);
                 EventBean eventBean = new EventBean("norotate");
                 EventBus.getDefault().postSticky(eventBean);
+//                mMyBinder.closeMedia();
                 break;
             case R.id.iv_arrow_top:
                 Intent intent1 = new Intent(mContext, MusicActivity.class);
