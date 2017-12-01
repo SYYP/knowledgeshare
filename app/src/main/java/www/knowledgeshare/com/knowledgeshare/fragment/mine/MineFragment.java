@@ -21,6 +21,7 @@ import www.knowledgeshare.com.knowledgeshare.activity.LearningTimeActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.MyAccountActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.MyMedalActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.MySubscriptionsActivity;
+import www.knowledgeshare.com.knowledgeshare.activity.PersonInfomationActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.SettingActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
@@ -81,6 +82,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.title_setting_iv://设置
                 startActivity(new Intent(getActivity(),SettingActivity.class));
+                break;
+            case R.id.mine_face_iv:
+                startActivity(new Intent(getActivity(),PersonInfomationActivity.class));
                 break;
             case R.id.xxsj_rl://学习时间
                 startActivity(new Intent(getActivity(), LearningTimeActivity.class));
