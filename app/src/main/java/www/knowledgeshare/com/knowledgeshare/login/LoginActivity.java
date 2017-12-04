@@ -53,7 +53,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         no_account = (TextView) findViewById(R.id.no_account);
         login_sso = (TextView) findViewById(R.id.login_sso);
         forget_pwd = (RelativeLayout) findViewById(R.id.forget_pwd);
-        login_close = (TextView) findViewById(R.id.login_close);
         login_phone.setOnClickListener(this);
         rember_pwd.setOnClickListener(this);
         login_pwd.setOnClickListener(this);

@@ -8,21 +8,21 @@
     <RelativeLayout
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="55dp">
         <ImageView
-            android:padding="10dp"
+            android:padding="6dp"
             android:id="@+id/tv_callback"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
             android:src="@drawable/logincallback"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
         <TextView
             android:textColor="@color/white"
             android:layout_centerHorizontal="true"
-            android:textSize="20sp"
-            android:padding="10dp"
+            android:textSize="18sp"
+            android:padding="6dp"
             android:layout_marginTop="10dp"
             android:text="验证手机号"
             android:layout_width="wrap_content"
@@ -36,7 +36,7 @@
         <ImageView
             android:src="@drawable/login_title"
             android:id="@+id/register_headimg"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="45dp"
             android:layout_centerHorizontal="true"
             android:layout_width="80dp"
             android:layout_height="80dp" />
@@ -51,7 +51,7 @@
         <ImageView
             android:id="@+id/set_lpwd"
             android:padding="10dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="25dp"
             android:layout_centerVertical="true"
             android:src="@drawable/login_phone"
             android:layout_width="wrap_content"
@@ -67,7 +67,6 @@
             android:gravity="left|center_vertical"
             android:textColor="@color/textcolor"
             android:textSize="14sp"
-            android:padding="5dp"
             android:id="@+id/verify_phone"
             android:layout_centerHorizontal="true"
             android:hint="请输入手机号"
@@ -85,7 +84,7 @@
         <ImageView
             android:id="@+id/set_pwd"
             android:padding="10dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="25dp"
             android:layout_centerVertical="true"
             android:src="@drawable/login_message"
             android:layout_width="wrap_content"
@@ -100,7 +99,6 @@
             android:gravity="left|center_vertical"
             android:textColor="@color/textcolor"
             android:textSize="14sp"
-            android:padding="5dp"
             android:layout_centerHorizontal="true"
             android:id="@+id/verify_yanzheng"
             android:hint="请输入验证码"

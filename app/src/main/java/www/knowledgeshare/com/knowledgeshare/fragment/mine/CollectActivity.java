@@ -85,7 +85,7 @@ public class CollectActivity extends BaseActivity {
         collect_tablayout.addTab(collect_tablayout.newTab().setText(tab_list.get(1)));
         //设置中间竖线
         LinearLayout linearLayout = (LinearLayout) collect_tablayout.getChildAt(0);
-        linearLayout.setDividerPadding(30);
+        linearLayout.setDividerPadding(20);
         linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
         linearLayout.setDividerDrawable(ContextCompat.getDrawable(this,
                 R.drawable.layout_divider_vertical));

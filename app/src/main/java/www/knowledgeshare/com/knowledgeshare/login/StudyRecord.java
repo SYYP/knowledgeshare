@@ -38,14 +38,14 @@ public class StudyRecord extends BaseActivity {
 
         StudyRecordbean stubean=new StudyRecordbean();
         stubean.setTime("2017-11-28");
-        stubean.setTitle("其实我喜欢你很久了");
+        stubean.setTitle("10:00    其实我喜欢你很久了");
         list.add(stubean);
         StudyRecordbean stubean1=new StudyRecordbean();
-        stubean1.setTitle("你不知道我到底在哪里");
+        stubean1.setTitle("09:00   你不知道我到底在哪里");
         list.add(stubean1);
         StudyRecordbean stubean2=new StudyRecordbean();
         stubean2.setTime("2017-11-29");
-        stubean2.setCount("微风轻轻起，我...");
+        stubean2.setTitle("09:00   微风轻轻起，我...");
         list.add(stubean2);
         //设置适配器模式
         study_record.setLayoutManager(new LinearLayoutManager(this));

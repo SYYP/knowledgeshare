@@ -62,7 +62,6 @@ public class StudyFragment extends BaseFragment {
         this.study_liner = (LinearLayout) rootView.findViewById(R.id.study_liner);
         this.lines = (View) rootView.findViewById(R.id.lines);
         this.study_titles = (TextView) rootView.findViewById(R.id.study_titles);
-        this.study_days = (TextView) rootView.findViewById(R.id.study_days);
         this.study_dates = (TextView) rootView.findViewById(R.id.study_dates);
         study_recycler = rootView.findViewById(R.id.study_recycle);
         study_collect = rootView.findViewById(R.id.study_collect);

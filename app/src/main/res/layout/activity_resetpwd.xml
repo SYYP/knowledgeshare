@@ -7,34 +7,35 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="55dp">
         <ImageView
+            android:padding="6dp"
             android:id="@+id/tv_callback"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
             android:src="@drawable/logincallback"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
         <TextView
+            android:layout_centerVertical="true"
             android:textColor="@color/white"
             android:layout_centerHorizontal="true"
-            android:textSize="20sp"
-            android:padding="10dp"
+            android:textSize="18sp"
+            android:padding="6dp"
             android:layout_marginTop="10dp"
             android:text="重置密码"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>
     <RelativeLayout
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="45dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
             android:src="@drawable/login_title"
             android:id="@+id/register_headimg"
-            android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -49,7 +50,7 @@
         <ImageView
             android:id="@+id/set_lpwd"
             android:padding="10dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="25dp"
             android:layout_centerVertical="true"
             android:src="@drawable/set_pwd"
             android:layout_width="wrap_content"
@@ -62,7 +63,6 @@
             android:gravity="left|center_vertical"
             android:textColor="@color/textcolor"
             android:textSize="14sp"
-            android:padding="5dp"
             android:id="@+id/reset_loginpwd"
             android:layout_centerHorizontal="true"
             android:hint="请输入6~20位字母，数字密码"
@@ -79,7 +79,7 @@
         <ImageView
             android:id="@+id/set_pwd"
             android:padding="10dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="25dp"
             android:layout_centerVertical="true"
             android:src="@drawable/set_pwd"
             android:layout_width="wrap_content"
@@ -92,7 +92,6 @@
             android:gravity="center"
             android:textColor="@color/textcolor"
             android:textSize="14sp"
-            android:padding="5dp"
             android:layout_centerHorizontal="true"
             android:id="@+id/reset_forgetpwd"
             android:hint="请输入相同的密码"
@@ -101,13 +100,13 @@
     </RelativeLayout>
     <RelativeLayout
         android:layout_marginTop="30dp"
-        android:background="@drawable/shape_redradius"
+        android:background="@drawable/login_back"
         android:layout_marginLeft="45dp"
         android:layout_marginRight="45dp"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
-        <EditText
+        <TextView
             android:inputType="number"
             android:background="@null"
             android:layout_centerVertical="true"

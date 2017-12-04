@@ -53,7 +53,7 @@ public class HobbyActivity extends BaseActivity {
 
     private void inindata() {
         honnybean=new Honnybean();
-        honnybean.setName("美升是是是");
+        honnybean.setName("美声");
         list.add(honnybean);
         Honnybean honybean8=new Honnybean();
         honybean8.setName("音乐治疗");
@@ -97,7 +97,7 @@ public class HobbyActivity extends BaseActivity {
             final TextView view = new TextView(this);
             view.setText(list.get(e).getName());
             view.setTextColor(Color.BLACK);
-            view.setTextSize(18);
+            view.setTextSize(16);
             view.setBackgroundDrawable(getResources().getDrawable(R.drawable.normal_bg));
             mFlowLayout.addView(view,lp);
 

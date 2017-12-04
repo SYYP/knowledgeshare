@@ -2,7 +2,11 @@ package www.knowledgeshare.com.knowledgeshare.login.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -10,10 +14,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.login.bean.StudyRecordbean;
+import www.knowledgeshare.com.knowledgeshare.utils.SoftKeyboardTool;
 
 /**
  * date : ${Date}
@@ -24,7 +31,7 @@ public class Recordadapter extends RecyclerView.Adapter<Recordadapter.Myadapter>
 
     private Context context;
     private List<StudyRecordbean> list;
-
+    boolean bool;
     public Recordadapter(Context context, List<StudyRecordbean> list) {
         this.context = context;
         this.list = list;
@@ -38,7 +45,7 @@ public class Recordadapter extends RecyclerView.Adapter<Recordadapter.Myadapter>
     }
 
     @Override
-    public void onBindViewHolder(Myadapter holder, final int position) {
+    public void onBindViewHolder(final Myadapter holder, final int position) {
 
            //添加数据
          if(list.get(position).getTime()==null||list.get(position).getTime().equals("")){
@@ -53,6 +60,7 @@ public class Recordadapter extends RecyclerView.Adapter<Recordadapter.Myadapter>
         /*
            设置监听
          */
+        //删除
         holder.item_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,7 +74,53 @@ public class Recordadapter extends RecyclerView.Adapter<Recordadapter.Myadapter>
         holder.item_compile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (bool) {
+                    holder.item_count.setFocusableInTouchMode(false);
+                    holder.item_count.setFocusable(false);
+                    holder.item_imgcompile.setImageResource(R.drawable.study_bianji);
+                    holder.item_compile.setText("编辑");
+                    //关闭键盘
+                    SoftKeyboardTool.closeKeyboard(holder.item_count);
+                    MyApplication.stopClearClip();
 
+                } else {
+                    holder.item_count.setFocusableInTouchMode(true);
+                    holder.item_count.setFocusable(true);
+                    holder.item_imgcompile.setImageResource(R.drawable.study_finish);
+                    holder.item_compile.setText("完成");
+                    MyApplication.startClearClip(context);
+                    holder.item_count.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            setInsertionDisabled( holder.item_count);
+                            return false;
+                        }
+                    });
+
+                }
+                bool = !bool;
+                holder.item_count.setTextIsSelectable(false);
+                holder.item_count.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
+                    @Override
+                    public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onDestroyActionMode(ActionMode actionMode) {
+
+                    }
+                });
             }
         });
 
@@ -96,6 +150,29 @@ public class Recordadapter extends RecyclerView.Adapter<Recordadapter.Myadapter>
             this.item_imgcompile = (ImageView) rootView.findViewById(R.id.item_imgcompile);
             this.item_delete = (TextView) rootView.findViewById(R.id.item_delete);
             this.item_img_delete = (ImageView) rootView.findViewById(R.id.item_img_delete);
+        }
+    }
+    /*
+     通过反射禁止弹出粘贴框
+    */
+    private void setInsertionDisabled(EditText editText) {
+        try {
+            Field editorField = TextView.class.getDeclaredField("mEditor");
+            editorField.setAccessible(true);
+            Object editorObject = editorField.get(editText);
+
+            // if this view supports insertion handles
+            Class editorClass = Class.forName("android.widget.Editor");
+            Field mInsertionControllerEnabledField = editorClass.getDeclaredField("mInsertionControllerEnabled");
+            mInsertionControllerEnabledField.setAccessible(true);
+            mInsertionControllerEnabledField.set(editorObject, false);
+
+            // if this view supports selection handles
+            Field mSelectionControllerEnabledField = editorClass.getDeclaredField("mSelectionControllerEnabled");
+            mSelectionControllerEnabledField.setAccessible(true);
+            mSelectionControllerEnabledField.set(editorObject, false);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
