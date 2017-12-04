@@ -85,13 +85,10 @@
                     android:layout_height="1dp"
                     android:layout_margin="10dp"
                     android:background="@color/huise"></View>
-                <TextView
-                    android:id="@+id/tv_teacher_intro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="爱好古典健身摄影"
-                    android:textColor="@color/textblack"
-                    android:textSize="14sp"/>
+                <WebView
+                    android:id="@+id/webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"></WebView>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

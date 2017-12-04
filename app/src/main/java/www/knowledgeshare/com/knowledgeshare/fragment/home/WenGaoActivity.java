@@ -30,7 +30,6 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
     private CircleImageView iv_teacher_head;
     private TextView tv_ke_name;
     private TextView tv_teacher_name;
-    private TextView tv_teacher_intro;
     private ImageView iv_collect;
     private LinearLayout ll_liuyan;
     private LinearLayout ll_guanzhu;
@@ -54,7 +53,6 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
         iv_teacher_head = (CircleImageView) findViewById(R.id.iv_teacher_head);
         tv_ke_name = (TextView) findViewById(R.id.tv_ke_name);
         tv_teacher_name = (TextView) findViewById(R.id.tv_teacher_name);
-        tv_teacher_intro = (TextView) findViewById(R.id.tv_teacher_intro);
         iv_collect = (ImageView) findViewById(R.id.iv_collect);
         ll_liuyan = (LinearLayout) findViewById(R.id.ll_liuyan);
         ll_liuyan.setOnClickListener(this);
