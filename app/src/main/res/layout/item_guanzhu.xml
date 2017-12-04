@@ -3,11 +3,12 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical"
-              android:padding="10dp">
+>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:padding="10dp"
     >
         <www.knowledgeshare.com.knowledgeshare.view.CircleImageView
             android:id="@+id/iv_teacher_head"
@@ -47,6 +48,5 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="10dp"
         android:background="@color/huise"></View>
 </LinearLayout>

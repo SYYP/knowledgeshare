@@ -21,7 +21,7 @@
                 android:padding="5dp"
                 android:text="01"
                 android:textColor="@color/yellow"
-                android:textSize="16sp"/>
+                android:textSize="14sp"/>
             <TextView
                 android:id="@+id/tv_trylisten"
                 android:layout_width="wrap_content"
@@ -29,7 +29,7 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="试听"
+                android:text="试读"
                 android:textColor="@color/text_red_dark"
                 android:textSize="14sp"/>
         </LinearLayout>
@@ -56,7 +56,7 @@
                 android:paddingTop="2dp"
                 android:text="2017-1-1发布"
                 android:textColor="@color/white"/>
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="40dp"
@@ -64,6 +64,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_marginRight="5dp"
                     android:drawableLeft="@drawable/look_yellow"
                     android:drawablePadding="5dp"
@@ -72,13 +73,23 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
+                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
                     android:drawableLeft="@drawable/shoucang_yellow"
                     android:drawablePadding="5dp"
                     android:gravity="center"
                     android:text="1223"/>
-
-            </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:drawableLeft="@drawable/dianzan_yellow"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="1223"/>
+            </RelativeLayout>
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"

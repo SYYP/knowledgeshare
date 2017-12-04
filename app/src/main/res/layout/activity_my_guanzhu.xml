@@ -37,7 +37,7 @@
         android:layout_marginRight="30dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_search2"
-        android:drawableLeft="@drawable/icon_search_black"
+        android:drawableRight="@drawable/icon_search_black"
         android:drawablePadding="10dp"
         android:minWidth="280dp"
         android:text="请输入关键词搜索"/>

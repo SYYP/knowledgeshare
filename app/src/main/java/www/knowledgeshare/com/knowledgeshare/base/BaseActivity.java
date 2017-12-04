@@ -3,6 +3,7 @@ package www.knowledgeshare.com.knowledgeshare.base;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
@@ -24,6 +25,11 @@ public class BaseActivity extends AppCompatActivity {
         if (activityList != null)
             activityList.add(this);
 
+    }
+
+    @Override
+    public void setContentView(@LayoutRes int layoutResID) {
+        super.setContentView(layoutResID);
     }
 
     @Override

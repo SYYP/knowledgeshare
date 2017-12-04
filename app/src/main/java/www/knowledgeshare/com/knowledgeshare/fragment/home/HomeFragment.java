@@ -178,10 +178,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         if (eventBean.getMsg().equals("bofang")) {
             isBofang = true;
             rl_bofang.setVisibility(View.VISIBLE);
+            iv_delete.setVisibility(View.GONE);
             Glide.with(mContext).load(R.drawable.demo).into(iv_bo_head);
         } else if (eventBean.getMsg().equals("pause")) {
             isBofang = false;
-            rl_bofang.setVisibility(View.GONE);
+            iv_delete.setVisibility(View.VISIBLE);
         }
     }
 
@@ -258,7 +259,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         initDialog();
         initAnim();
         initListener();
-//        initMusic();
+        initMusic();
     }
 
     //“绑定”服务的intent
@@ -267,7 +268,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     private void initMusic() {
         MediaServiceIntent = new Intent(mContext, MediaService.class);
-//        mContext.startService(MediaServiceIntent);
+        //        mContext.startService(MediaServiceIntent);
         mContext.bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
 
@@ -443,7 +444,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         //        Glide.with(mContext).load().into(iv_bo_head);
         EventBean eventBean = new EventBean("rotate");
         EventBus.getDefault().postSticky(eventBean);
-//        mMyBinder.playMusic();
+        mMyBinder.playMusic();
     }
 
     @Override
@@ -512,7 +513,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 rl_bofang.setVisibility(View.GONE);
                 EventBean eventBean = new EventBean("norotate");
                 EventBus.getDefault().postSticky(eventBean);
-//                mMyBinder.closeMedia();
+                mMyBinder.closeMedia();
                 break;
             case R.id.iv_arrow_top:
                 Intent intent1 = new Intent(mContext, MusicActivity.class);
@@ -522,7 +523,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             case R.id.iv_mulu:
                 Intent intent11 = new Intent(mContext, BoFangListActivity.class);
                 startActivity(intent11);
-                mActivity.overridePendingTransition(R.anim.bottom_in, 0);
+//                mActivity.overridePendingTransition(R.anim.bottom_in, 0);
                 break;
         }
     }

@@ -52,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:background="@drawable/bg_yellow"
+                android:background="@drawable/bg_yellow2"
                 android:paddingLeft="2dp"
                 android:paddingRight="2dp"
                 android:text="20小时前更新"

@@ -66,7 +66,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initData();
         initListener();
         initAnim();
-//        initMusic();
+        initMusic();
     }
 
     private void initMusic() {
@@ -97,8 +97,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-//        unbindService(mServiceConnection);
-//        stopService(MediaServiceIntent);
+        unbindService(mServiceConnection);
+        stopService(MediaServiceIntent);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -109,12 +109,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             if (mRotate_anim != null) {
                 iv_listen.startAnimation(mRotate_anim);  //开始动画
             }
-//            mMyBinder.playMusic();
+            mMyBinder.playMusic();
         } else if (eventBean.getMsg().equals("norotate")) {
             isPause = true;
             iv_listen.clearAnimation();
             iv_listen.setImageResource(R.drawable.tab_listen_pause);
             //homefragment传来这个的时候就是点了叉了
+
         }
     }
 
@@ -186,13 +187,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     }
                     EventBean eventBean = new EventBean("bofang");
                     EventBus.getDefault().postSticky(eventBean);
-//                    mMyBinder.playMusic();
+                    mMyBinder.playMusic();
                 } else {
                     iv_listen.clearAnimation();
                     iv_listen.setImageResource(R.drawable.tab_listen_pause);
                     EventBean eventBean = new EventBean("pause");
                     EventBus.getDefault().postSticky(eventBean);
-//                    mMyBinder.pauseMusic();
+                    mMyBinder.pauseMusic();
                 }
                 isPause = !isPause;
                 break;

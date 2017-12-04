@@ -89,7 +89,7 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
         daShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(GuDianActivity.this,ZhuanLanActivity.class));
+                startActivity(new Intent(GuDianActivity.this,ZhuanLanDetail1Activity.class));
             }
         });
 

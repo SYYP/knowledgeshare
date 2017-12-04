@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#edecea"
     android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,13 +13,13 @@
             android:id="@+id/et_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
             android:background="@drawable/bg_search"
             android:drawablePadding="10dp"
             android:drawableRight="@drawable/icon_search_black"
             android:hint="请输入关键字搜索"
             android:imeOptions="actionSearch"
-            android:minWidth="260dp"
+            android:minWidth="280dp"
             android:textSize="14sp"/>
         <TextView
             android:id="@+id/tv_back"
@@ -29,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
+            android:layout_marginRight="8dp"
             android:text="取消"
             android:textColor="@color/white"
             android:textSize="15sp"/>
@@ -37,11 +35,12 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
+    >
         <LinearLayout
             android:id="@+id/ll_root_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#edecea"
             android:orientation="vertical"
         >
             <LinearLayout
@@ -51,7 +50,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/bg_wanjiao"
+                android:background="@drawable/bg_circle_white"
                 android:orientation="vertical">
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -125,7 +124,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    >
+                >
                 </www.knowledgeshare.com.knowledgeshare.view.FluidLayout>
             </LinearLayout>
             <LinearLayout
@@ -138,7 +137,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:background="@drawable/bg_wanjiao"
+                    android:background="@drawable/bg_circle_white"
                     android:orientation="vertical">
                     <LinearLayout
                         android:id="@+id/ll_dashiban"
@@ -163,16 +162,14 @@
                                 android:textColor="@color/textblack"
                                 android:textSize="16sp"/>
                         </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/huise"></View>
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/recycler_dashiban"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:background="@color/white"></android.support.v7.widget.RecyclerView>
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                        ></android.support.v7.widget.RecyclerView>
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/ll_yinyueke"
@@ -198,15 +195,13 @@
                                 android:textColor="@color/textblack"
                                 android:textSize="16sp"/>
                         </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/huise"></View>
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/recycler_yinyueke"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="10dp"></android.support.v7.widget.RecyclerView>
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"></android.support.v7.widget.RecyclerView>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

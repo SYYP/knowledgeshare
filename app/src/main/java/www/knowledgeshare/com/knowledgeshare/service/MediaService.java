@@ -73,8 +73,11 @@ public class MediaService extends Service {
             try {
                 isPlaying = mMediaPlayer.isPlaying();
             } catch (IllegalStateException e) {
+//                Toast.makeText(MyApplication.getGloableContext(), "异常", Toast.LENGTH_SHORT).show();
                 mMediaPlayer = null;
                 mMediaPlayer = new MediaPlayer();
+                iniMediaPlayerFile();
+                isPlaying = mMediaPlayer.isPlaying();
             }
             if (!isPlaying) {
                 //如果还没开始播放，就开始
@@ -86,6 +89,7 @@ public class MediaService extends Service {
          * 暂停播放
          */
         public void pauseMusic() {
+            isPlaying = mMediaPlayer.isPlaying();
             if (isPlaying) {
                 //如果还没开始播放，就开始
                 mMediaPlayer.pause();
@@ -96,6 +100,7 @@ public class MediaService extends Service {
          * reset
          */
         public void resetMusic() {
+            isPlaying = mMediaPlayer.isPlaying();
             if (!isPlaying) {
                 //如果还没开始播放，就开始
                 mMediaPlayer.reset();
@@ -110,7 +115,8 @@ public class MediaService extends Service {
             if (mMediaPlayer != null) {
                 mMediaPlayer.stop();
                 mMediaPlayer.release();
-//                mMediaPlayer = null;
+                isPlaying=false;
+                //                mMediaPlayer = null;
             }
         }
 

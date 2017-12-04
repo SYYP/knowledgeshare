@@ -5,6 +5,6 @@
     <!-- 填充的颜色 -->
     <!-- 设置按钮的四个角为弧形 -->
     <!-- android:radius 弧形的半径 -->
-    <stroke android:color="@color/huise" android:width="1dp"></stroke>
+    <stroke android:color="@color/font_black_6" android:width="1dp"></stroke>
     <solid android:color="#f7f7f7"></solid>
 </shape>

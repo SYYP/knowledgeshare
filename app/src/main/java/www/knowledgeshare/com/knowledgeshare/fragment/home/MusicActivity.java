@@ -14,10 +14,13 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.text.SimpleDateFormat;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 
@@ -58,7 +61,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
         setContentView(R.layout.activity_music);
         initView();
         initDialog();
-//        initMusic();
+        initMusic();
     }
 
     private void initMusic() {
@@ -70,8 +73,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
     protected void onDestroy() {
         super.onDestroy();
         //我们的handler发送是定时1000s发送的，如果不关闭，MediaPlayer release掉了还在获取getCurrentPosition就会爆IllegalStateException错误
-//        mHandler.removeCallbacks(mRunnable);
-//        unbindService(mServiceConnection);
+        mHandler.removeCallbacks(mRunnable);
+        unbindService(mServiceConnection);
     }
 
     /**
@@ -90,7 +93,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMyBinder = (MediaService.MyBinder) service;
             play_seek.setMax(mMyBinder.getProgress());
-            music_duration.setText(time.format(mMyBinder.getProgress())+"");
+            music_duration.setText(time.format(mMyBinder.getProgress()) + "");
             play_seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -221,11 +224,15 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.iv_pause:
                 if (isbofang) {
-//                    mMyBinder.pauseMusic();
+                    mMyBinder.pauseMusic();
                     iv_pause.setImageResource(R.drawable.pause_yellow_big);
+                    EventBean eventBean = new EventBean("norotate");
+                    EventBus.getDefault().postSticky(eventBean);
                 } else {
-//                    mMyBinder.playMusic();
+                    mMyBinder.playMusic();
                     iv_pause.setImageResource(R.drawable.bofang_yellow_big);
+                    EventBean eventBean = new EventBean("rotate");
+                    EventBus.getDefault().postSticky(eventBean);
                 }
                 isbofang = !isbofang;
                 break;

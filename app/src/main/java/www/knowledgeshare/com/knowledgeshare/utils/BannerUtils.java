@@ -29,7 +29,7 @@ public class BannerUtils {
         //设置图片集合
 //        banner.setImages(imageurls);
         //设置banner动画效果
-        banner.setBannerAnimation(Transformer.DepthPage);
+        banner.setBannerAnimation(Transformer.Default);
         //设置标题集合（当banner样式有显示title时）
         //        banner.setBannerTitles(null);
         //设置自动轮播，默认为true

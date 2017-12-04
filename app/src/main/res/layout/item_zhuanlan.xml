@@ -31,5 +31,6 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:text="张老师"
+        android:layout_marginRight="10dp"
         android:visibility="gone"/>
 </RelativeLayout>

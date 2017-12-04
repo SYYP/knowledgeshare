@@ -62,7 +62,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_below="@+id/name_tv"
             android:text="为了获得更好的服务，请绑定一个手机号吧！"
             android:textColor="@color/white"
             android:textSize="14dp"/>

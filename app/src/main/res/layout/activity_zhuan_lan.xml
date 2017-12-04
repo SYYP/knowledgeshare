@@ -136,10 +136,6 @@
                             android:textColor="@color/textblack"
                             android:textSize="16sp"/>
                     </LinearLayout>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/huise"></View>
                     <TextView
                         android:id="@+id/tv_shiyirenqun"
                         android:layout_width="match_parent"
@@ -173,10 +169,6 @@
                             android:textColor="@color/textblack"
                             android:textSize="16sp"/>
                     </LinearLayout>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/huise"></View>
                     <TextView
                         android:id="@+id/tv_readxuzhi"
                         android:layout_width="match_parent"
@@ -211,10 +203,6 @@
                             android:textColor="@color/textblack"
                             android:textSize="16sp"/>
                     </LinearLayout>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/huise"></View>
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_lately"
                         android:layout_width="match_parent"
@@ -234,7 +222,7 @@
             android:layout_weight="1"
             android:background="@color/yellow"
             android:gravity="center"
-            android:padding="12dp"
+            android:padding="13dp"
             android:text="免费试读"
             android:textColor="@color/textblack"
             android:textSize="17sp"/>
@@ -245,7 +233,7 @@
             android:layout_weight="1"
             android:background="@color/text_red_dark"
             android:gravity="center"
-            android:padding="12dp"
+            android:padding="13dp"
             android:text="订阅：￥198/年"
             android:textColor="@color/white"
             android:textSize="17sp"/>

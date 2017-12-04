@@ -82,18 +82,10 @@
             android:name=".fragment.home.LiuYanActivity"
             android:windowSoftInputMode="adjustPan|stateHidden"></activity>
         <activity android:name=".fragment.home.DownLoadListActivity"></activity>
-        <activity android:name=".login.StudyRecord" />
-        <activity android:name=".fragment.home.WenGaoActivity"></activity>
-        <activity android:name=".fragment.mine.CollectActivity" />
-        <activity android:name=".activity.PersonInfomationActivity"></activity>
-            android:windowSoftInputMode="adjustPan|stateHidden">
-        </activity>
-        <activity android:name=".fragment.home.DownLoadListActivity">
-        </activity>
         <activity android:name=".login.StudyRecord"/>
-        <activity android:name=".fragment.home.WenGaoActivity">
-        </activity>
+        <activity android:name=".fragment.home.WenGaoActivity"></activity>
         <activity android:name=".fragment.mine.CollectActivity"/>
+        <activity android:name=".activity.PersonInfomationActivity"></activity>
         <service android:name=".service.MediaService"></service>
     </application>
 

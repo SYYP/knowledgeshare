@@ -29,6 +29,7 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.SearchHistoryEntity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SoftKeyboardTool;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.FluidLayout;
@@ -283,7 +284,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-            final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
+            ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
+            ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+            layoutParams.height = MyUtils.dip2px(SearchActivity.this,90);
+            imageView.setLayoutParams(layoutParams);
 //            Glide.with(mContext).load().into(imageView);
         }
     }
@@ -297,11 +301,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         @Override
         protected void convert(BaseViewHolder helper, String item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-//            ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-//            int www = MyUtils.getScreenWidth(mContext) / 2 - 20;
-//            layoutParams.width = www;
-//            layoutParams.height = www;
-//            imageView.setLayoutParams(layoutParams);
+            ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+            layoutParams.height = MyUtils.dip2px(SearchActivity.this,130);
+            imageView.setLayoutParams(layoutParams);
 //            Glide.with(mContext).load().into(imageView);
         }
     }
