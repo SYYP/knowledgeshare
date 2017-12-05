@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -258,7 +259,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 //设置动画
                 .setAnimation(R.style.Alpah_aniamtion)
                 //设置dialog的宽高
-                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 //设置触摸dialog外围是否关闭
                 .isOnTouchCanceled(true)
                 //设置监听事件
@@ -288,7 +289,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 //设置动画
                 .setAnimation(R.style.Alpah_aniamtion)
                 //设置dialog的宽高
-                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 //设置触摸dialog外围是否关闭
                 .isOnTouchCanceled(true)
                 //设置监听事件
@@ -398,6 +399,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
             case R.id.tv_guanzhu:
                 break;
             case R.id.tv_shopcar:
+                Toast.makeText(this, "已成功加入购物车", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.tv_writeliuyan:
                 startActivity(new Intent(this, LiuYanActivity.class));

@@ -54,7 +54,7 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-//        mPopupWindow.showAsDropDown(ll_root_view);
+//        mPopupWindow.showAsDropDown(ll_root_view,0,4);
     }
 
     private void initDialog() {
