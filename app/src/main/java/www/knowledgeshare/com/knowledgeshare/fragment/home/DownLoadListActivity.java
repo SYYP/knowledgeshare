@@ -8,8 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -60,7 +60,7 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 //                Toast.makeText(DownLoadListActivity.this, "触发", Toast.LENGTH_SHORT).show();
                 mList.get(position).setChecked(!mList.get(position).isChecked());
-                mMyAdapter.setNewData(mList);
+                //                mMyAdapter.setNewData(mList);
                 mMyAdapter.notifyDataSetChanged();
                 if (!isAllChecked()) {
                     iv_quanxuan.setImageResource(R.drawable.noquanxuan);
@@ -75,7 +75,7 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
         for (int i = 0; i < mList.size(); i++) {
             mList.get(i).setChecked(true);
         }
-        mMyAdapter.setNewData(mList);
+        //        mMyAdapter.setNewData(mList);
         mMyAdapter.notifyDataSetChanged();
         iv_quanxuan.setImageResource(R.drawable.quanxuan_red);
     }
@@ -94,7 +94,7 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
         for (int i = 0; i < mList.size(); i++) {
             mList.get(i).setChecked(false);
         }
-        mMyAdapter.setNewData(mList);
+        //        mMyAdapter.setNewData(mList);
         mMyAdapter.notifyDataSetChanged();
         iv_quanxuan.setImageResource(R.drawable.noquanxuan);
     }
@@ -109,9 +109,10 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
         protected void convert(final BaseViewHolder helper, DownLoadBean item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_ischeck);
             if (item.isChecked()) {
-                Glide.with(mContext).load(R.drawable.quanxuan_red).into(imageView);
+                //                Glide.with(mContext).load(R.drawable.quanxuan_red).into(imageView);//glide加载图片会有闪烁
+                imageView.setImageResource(R.drawable.quanxuan_red);
             } else {
-                Glide.with(mContext).load(R.drawable.noquanxuan).into(imageView);
+                imageView.setImageResource(R.drawable.noquanxuan);
             }
         }
     }
@@ -132,6 +133,7 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
                 isAllChecked = !isAllChecked;
                 break;
             case R.id.tv_download:
+                Toast.makeText(this, "成功加入下载列表", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
