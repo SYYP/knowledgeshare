@@ -73,7 +73,7 @@ public class MediaService extends Service {
             try {
                 isPlaying = mMediaPlayer.isPlaying();
             } catch (IllegalStateException e) {
-//                Toast.makeText(MyApplication.getGloableContext(), "异常", Toast.LENGTH_SHORT).show();
+                //                Toast.makeText(MyApplication.getGloableContext(), "异常", Toast.LENGTH_SHORT).show();
                 mMediaPlayer = null;
                 mMediaPlayer = new MediaPlayer();
                 iniMediaPlayerFile();
@@ -83,6 +83,18 @@ public class MediaService extends Service {
                 //如果还没开始播放，就开始
                 mMediaPlayer.start();
             }
+        }
+
+        public boolean isPlaying() {
+            try {
+                isPlaying = mMediaPlayer.isPlaying();
+            } catch (IllegalStateException e) {
+                //                Toast.makeText(MyApplication.getGloableContext(), "异常", Toast.LENGTH_SHORT).show();
+                mMediaPlayer = null;
+                mMediaPlayer = new MediaPlayer();
+                iniMediaPlayerFile();
+            }
+            return mMediaPlayer.isPlaying();
         }
 
         /**
@@ -115,7 +127,7 @@ public class MediaService extends Service {
             if (mMediaPlayer != null) {
                 mMediaPlayer.stop();
                 mMediaPlayer.release();
-                isPlaying=false;
+                isPlaying = false;
                 //                mMediaPlayer = null;
             }
         }

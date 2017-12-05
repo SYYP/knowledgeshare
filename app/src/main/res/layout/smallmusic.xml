@@ -22,6 +22,7 @@
             android:id="@+id/iv_bo_head"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:src="@drawable/demo"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"/>
         <LinearLayout

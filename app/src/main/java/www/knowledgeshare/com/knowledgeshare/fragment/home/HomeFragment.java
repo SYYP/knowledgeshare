@@ -179,7 +179,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             isBofang = true;
             rl_bofang.setVisibility(View.VISIBLE);
             iv_delete.setVisibility(View.GONE);
-            Glide.with(mContext).load(R.drawable.demo).into(iv_bo_head);
+//            Glide.with(mContext).load("").into(iv_bo_head);
         } else if (eventBean.getMsg().equals("pause")) {
             isBofang = false;
             iv_delete.setVisibility(View.VISIBLE);

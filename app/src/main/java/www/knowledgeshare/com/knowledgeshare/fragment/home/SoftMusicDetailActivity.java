@@ -1,7 +1,10 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,18 +13,26 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
+import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
+
+import static com.taobao.accs.ACCSManager.mContext;
 
 public class SoftMusicDetailActivity extends BaseActivity implements View.OnClickListener {
 
@@ -43,12 +54,23 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
     private TextView tv_buy;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
+    private ImageView iv_delete;
+    private CircleImageView iv_bo_head;
+    private TextView tv_title;
+    private TextView tv_subtitle;
+    private ImageView iv_arrow_top;
+    private ImageView iv_mulu;
+    private RelativeLayout rl_bofang;
+    private boolean isBofang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_soft_music_detail);
         initView();
+        initDialog();
+        initData();
+        initMusic();
     }
 
     private void initView() {
@@ -77,8 +99,17 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
         tv_tryread.setOnClickListener(this);
         tv_buy = (TextView) findViewById(R.id.tv_buy);
         tv_buy.setOnClickListener(this);
-        initDialog();
-        initData();
+        iv_delete = (ImageView) findViewById(R.id.iv_delete);
+        iv_delete.setVisibility(View.VISIBLE);
+        iv_delete.setOnClickListener(this);
+        iv_bo_head = (CircleImageView) findViewById(R.id.iv_bo_head);
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        tv_subtitle = (TextView) findViewById(R.id.tv_subtitle);
+        iv_arrow_top = (ImageView) findViewById(R.id.iv_arrow_top);
+        iv_arrow_top.setOnClickListener(this);
+        iv_mulu = (ImageView) findViewById(R.id.iv_mulu);
+        iv_mulu.setOnClickListener(this);
+        rl_bofang = (RelativeLayout) findViewById(R.id.rl_bofang);
     }
 
     private void initDialog() {
@@ -97,7 +128,11 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
         lieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
+                isBofang=true;
+                rl_bofang.setVisibility(View.VISIBLE);
+                mMyBinder.playMusic();
+                EventBean eventBean = new EventBean("rotate");
+                EventBus.getDefault().postSticky(eventBean);
             }
         });
 
@@ -188,6 +223,122 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
         });
     }
 
+    private MediaService.MyBinder mMyBinder;
+    //“绑定”服务的intent
+    private Intent MediaServiceIntent;
+    private void initMusic() {
+        MediaServiceIntent = new Intent(this, MediaService.class);
+        //        startService(MediaServiceIntent);
+        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+    }
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mMyBinder = (MediaService.MyBinder) service;
+            if (mMyBinder.isPlaying()){
+                rl_bofang.setVisibility(View.VISIBLE);
+            }else {
+                rl_bofang.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
+    private void showPayStyleDialog() {
+        mDialog = mBuilder.setViewId(R.layout.dialog_buy)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.BOTTOM)
+                //设置动画
+                .setAnimation(R.style.Bottom_Top_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.rl_yuezhifu).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+                showChongzhiDialog();
+            }
+        });
+    }
+
+    private void showChongzhiDialog() {
+        mDialog = mBuilder.setViewId(R.layout.dialog_ischongzhi)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+                showPaySuccessDialog();
+            }
+        });
+    }
+
+    private void showPaySuccessDialog() {
+        mDialog = mBuilder.setViewId(R.layout.dialog_paysuccess)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+        unbindService(mServiceConnection);
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -211,6 +362,26 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 startActivity(new Intent(this, LiuYanActivity.class));
                 break;
             case R.id.tv_tryread:
+                break;
+            case R.id.iv_delete:
+                isBofang = false;
+                rl_bofang.setVisibility(View.GONE);
+                EventBean eventBean = new EventBean("norotate");
+                EventBus.getDefault().postSticky(eventBean);
+                mMyBinder.closeMedia();
+                break;
+            case R.id.iv_arrow_top:
+                Intent intent1 = new Intent(mContext, MusicActivity.class);
+                startActivity(intent1);
+                overridePendingTransition(R.anim.bottom_in, 0);
+                break;
+            case R.id.iv_mulu:
+                Intent intent11 = new Intent(mContext, BoFangListActivity.class);
+                startActivity(intent11);
+                //                mActivity.overridePendingTransition(R.anim.bottom_in, 0);
+                break;
+            case R.id.tv_buy:
+                showPayStyleDialog();
                 break;
         }
     }

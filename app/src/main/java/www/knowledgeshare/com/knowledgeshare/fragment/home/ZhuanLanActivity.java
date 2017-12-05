@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.view.CustomPopupWindow;
 
 public class ZhuanLanActivity extends BaseActivity implements View.OnClickListener {
 
@@ -36,6 +38,9 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
     private TextView tv_buy;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
+    private FrameLayout fl_root_view;
+    private LinearLayout ll_root_view;
+    private CustomPopupWindow mPopupWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,13 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_zhuan_lan);
         initView();
         initDialog();
+        mPopupWindow = new CustomPopupWindow(this);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+//        mPopupWindow.showAsDropDown(ll_root_view);
     }
 
     private void initDialog() {
@@ -186,6 +198,8 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initView() {
+        fl_root_view= (FrameLayout) findViewById(R.id.fl_root_view);
+        ll_root_view= (LinearLayout) findViewById(R.id.ll_root_view);
         iv_back = (ImageView) findViewById(R.id.iv_back);
         iv_back.setOnClickListener(this);
         iv_share = (ImageView) findViewById(R.id.iv_share);
@@ -201,6 +215,7 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
         tv_buy = (TextView) findViewById(R.id.tv_buy);
         tv_buy.setOnClickListener(this);
         recycler_lately.setLayoutManager(new LinearLayoutManager(this));
+        recycler_lately.setNestedScrollingEnabled(false);
         List<String> list=new ArrayList<>();
         list.add("");
         list.add("");

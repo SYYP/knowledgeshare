@@ -98,4 +98,11 @@
         <!--相册文件夹列表选中图标-->
         <item name="picture.folder_checked_dot">@drawable/orange_oval</item>
     </style>
+    <!--自定义popupwindow-->
+    <style name="mypopwindow_anim_style">
+        <item name="android:windowEnterAnimation">@anim/bottom_in</item>
+        <!-- 指定显示的动画xml -->
+        <item name="android:windowExitAnimation">@anim/bottom_out</item>
+        <!-- 指定消失的动画xml -->
+    </style>
 </resources>

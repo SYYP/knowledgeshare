@@ -84,7 +84,7 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
         List<String> list = new ArrayList<>();
         list.add("");
         list.add("");
-        DaShiBanAdapter daShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban2, list);
+        DaShiBanAdapter daShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban3, list);
         recycler_dashiban.setAdapter(daShiBanAdapter);
         daShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override

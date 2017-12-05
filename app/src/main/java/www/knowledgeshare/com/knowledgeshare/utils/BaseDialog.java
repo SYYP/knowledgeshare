@@ -61,6 +61,10 @@ public class BaseDialog extends Dialog {
         layoutParams.gravity = mGravity != -11111 ? mGravity : Gravity.CENTER;
         layoutParams.width = mWidth != -11111 ? mWidth : LinearLayout.LayoutParams.WRAP_CONTENT;
         layoutParams.height = mHeight != -11111 ? mHeight : LinearLayout.LayoutParams.WRAP_CONTENT;
+        if (mGravity == Gravity.BOTTOM) {
+            //这个项目的要求是要距离屏幕底部有一段距离，我就做了些修改
+            layoutParams.y = 100; // 新位置Y坐标
+        }
         window.setAttributes(layoutParams);
     }
 
@@ -180,8 +184,8 @@ public class BaseDialog extends Dialog {
         return (int) (dpValue * scale + 0.5f);
     }
 
-    public  <T extends View> T getView(int resId) {
-        if(mView!=null){
+    public <T extends View> T getView(int resId) {
+        if (mView != null) {
             return (T) mView.findViewById(resId);
         }
         return null;
