@@ -3,12 +3,14 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.SearchActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.CollectActivity;
 import www.knowledgeshare.com.knowledgeshare.login.MessageActivity;
 import www.knowledgeshare.com.knowledgeshare.login.adapter.Studyadapter;
@@ -38,6 +40,7 @@ public class StudyFragment extends BaseFragment {
     private ImageView study_xinxin;
      boolean bool;
     private TextView study_collect;
+    private FrameLayout fram_layout;
 
     @Override
     protected void lazyLoad() {
@@ -46,7 +49,8 @@ public class StudyFragment extends BaseFragment {
     @Override
     protected View initView() {
         View rootView= View.inflate(mContext, R.layout.fragment_study, null);
-        this.tv_search = (TextView) rootView.findViewById(R.id.tv_search);
+        tv_search = (TextView) rootView.findViewById(R.id.tv_search);
+        fram_layout = rootView.findViewById(R.id.frame_layout);
         this.iv_message = (ImageView) rootView.findViewById(R.id.iv_message);
         this.ll_download = (LinearLayout) rootView.findViewById(R.id.ll_download);
         this.study_weather = (TextView) rootView.findViewById(R.id.study_weather);
@@ -87,11 +91,18 @@ public class StudyFragment extends BaseFragment {
                    bool=!bool;
               }
           });
-        iv_message.setOnClickListener(new View.OnClickListener() {
+        fram_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(getActivity(), MessageActivity.class);
                 startActivity(intent);
+            }
+        });
+        //搜索
+        tv_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(mContext, SearchActivity.class));
             }
         });
         //收藏

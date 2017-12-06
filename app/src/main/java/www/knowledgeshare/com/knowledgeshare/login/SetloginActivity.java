@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import org.zackratos.ultimatebar.UltimateBar;
 
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 
@@ -100,9 +102,10 @@ public class SetloginActivity extends BaseActivity implements View.OnClickListen
             public void onClick(View v) {
                 //关闭dialog
                 dialog.close();
-//                Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "4006020069"));
-//                //跳转到拨号界面，同时传递电话号码
-//                startActivity(dialIntent);
+                 //跳到登录页面
+                Intent intent=new Intent(SetloginActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

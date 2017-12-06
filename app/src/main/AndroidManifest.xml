@@ -87,6 +87,8 @@
         <activity android:name=".fragment.mine.CollectActivity"/>
         <activity android:name=".activity.PersonInfomationActivity"></activity>
         <service android:name=".service.MediaService"></service>
+        <activity android:name=".fragment.mine.MyMessageActivity"></activity>
+        <activity android:name=".login.ResetpwdActivity"></activity>
     </application>
 
 </manifest>

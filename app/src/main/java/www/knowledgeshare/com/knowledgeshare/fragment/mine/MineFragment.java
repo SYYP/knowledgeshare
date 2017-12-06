@@ -1,15 +1,12 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.mine;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.orhanobut.logger.Logger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,7 +21,6 @@ import www.knowledgeshare.com.knowledgeshare.activity.MySubscriptionsActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.PersonInfomationActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.SettingActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
-import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
 /**
@@ -79,6 +75,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.title_message_iv://消息
+                Intent intent=new Intent(getActivity(), MyMessageActivity.class);
+                startActivity(intent);
                 break;
             case R.id.title_setting_iv://设置
                 startActivity(new Intent(getActivity(),SettingActivity.class));

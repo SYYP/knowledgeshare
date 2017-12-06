@@ -37,16 +37,22 @@
 
     </RelativeLayout>
     <android.support.v7.widget.RecyclerView
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
         android:id="@+id/message_recy"
         android:layout_below="@id/rela"
-        android:visibility="gone"
+       android:background="@drawable/shape_radioline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
 
     <LinearLayout
+        android:id="@+id/liner"
+        android:visibility="gone"
         android:weightSum="2"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true">
 
@@ -55,17 +61,20 @@
             android:layout_weight="1.4"
             android:layout_width="0dp"
             android:layout_height="match_parent">
-            <!--<CheckBox-->
-                <!--android:layout_gravity="center_vertical"-->
-                <!--android:layout_marginLeft="20dp"-->
-                <!--android:padding="10dp"-->
-                <!--style="@style/MessageTheme"-->
-                <!--android:text="全选"-->
-                <!--android:textSize="16sp"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent" />-->
+            <CheckBox
+                android:focusable="false"
+                android:clickable="false"
+                android:id="@+id/check_all"
+                android:layout_marginLeft="20dp"
+                android:padding="10dp"
+                style="@style/MessageTheme"
+                android:text="全选"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/msg_delete"
             android:background="@color/red2"
             android:layout_weight="0.6"
             android:layout_width="0dp"

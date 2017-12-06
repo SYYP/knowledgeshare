@@ -87,7 +87,8 @@ public class ForgetActivity extends BaseActivity implements View.OnClickListener
             Toast.makeText(this, "请填写验证码", Toast.LENGTH_SHORT).show();
             return;
         }
-        Intent it=new Intent(this,AlterActivity.class);
+        Intent it=new Intent(this,ResetpwdActivity.class);
         startActivity(it);
+        finish();
     }
 }

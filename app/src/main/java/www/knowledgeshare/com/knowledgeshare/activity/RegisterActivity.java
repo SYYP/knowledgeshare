@@ -98,5 +98,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         }
         Intent intent=new Intent(this, SetloginActivity.class);
           startActivity(intent);
+        finish();
     }
 }

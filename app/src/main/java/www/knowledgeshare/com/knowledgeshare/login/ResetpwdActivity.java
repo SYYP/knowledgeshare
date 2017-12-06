@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -9,7 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.zackratos.ultimatebar.UltimateBar;
+
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 
 /**
@@ -30,7 +34,8 @@ public class ResetpwdActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        UltimateBar ultimateBar = new UltimateBar(this);
+        ultimateBar.setImmersionBar();
         setContentView(R.layout.activity_resetpwd);
         initView();
     }
@@ -43,6 +48,12 @@ public class ResetpwdActivity extends BaseActivity {
         set_pwd = (ImageView) findViewById(R.id.set_pwd);
         reset_forgetpwd = (EditText) findViewById(R.id.reset_forgetpwd);
         reset_ok = (TextView) findViewById(R.id.reset_ok);
+        reset_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                submit();
+            }
+        });
         tv_callback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,22 +63,25 @@ public class ResetpwdActivity extends BaseActivity {
     }
 
     private void submit() {
-        // validate
-        String loginpwd = reset_loginpwd.getText().toString().trim();
-        if (TextUtils.isEmpty(loginpwd)) {
-            Toast.makeText(this, "请输入6~20位字母，数字密码", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty( reset_loginpwd.getText().toString())) {
+            Toast.makeText(this, "密码不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        String forgetpwd = reset_forgetpwd.getText().toString().trim();
-        if (TextUtils.isEmpty(forgetpwd)) {
-            Toast.makeText(this, "请输入相同的密码", Toast.LENGTH_SHORT).show();
+        if ( reset_loginpwd.getText().toString().length() < 6|| reset_loginpwd.getText().toString().length() > 20) {
+            Toast.makeText(this, "请输入6-20位密码", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (!reset_loginpwd.getText().toString().equals( reset_forgetpwd.getText().toString())) {
+            Toast.makeText(this, "两次输入的密码不同，请重新输入", Toast.LENGTH_SHORT).show();
+            return;
+        }
+          /*
+             跳转登录
 
-        // TODO validate success, do something
-
-
+           */
+        Intent intent=new Intent(ResetpwdActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 }

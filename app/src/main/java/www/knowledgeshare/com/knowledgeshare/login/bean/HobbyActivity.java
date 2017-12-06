@@ -46,6 +46,7 @@ public class HobbyActivity extends BaseActivity {
                 Intent intent=new Intent(HobbyActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
+                finish();
             }
         });
 
