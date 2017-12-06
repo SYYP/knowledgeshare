@@ -34,8 +34,6 @@ import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
-import static com.taobao.accs.ACCSManager.mContext;
-
 public class LikeDetailActivity extends BaseActivity implements View.OnClickListener {
     private ImageView iv_back;
     private ImageView iv_beijing;
@@ -418,12 +416,12 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 mMyBinder.closeMedia();
                 break;
             case R.id.iv_arrow_top:
-                Intent intent1 = new Intent(mContext, MusicActivity.class);
+                Intent intent1 = new Intent(this, MusicActivity.class);
                 startActivity(intent1);
                 overridePendingTransition(R.anim.bottom_in, 0);
                 break;
             case R.id.iv_mulu:
-                Intent intent11 = new Intent(mContext, BoFangListActivity.class);
+                Intent intent11 = new Intent(this, BoFangListActivity.class);
                 startActivity(intent11);
                 //                mActivity.overridePendingTransition(R.anim.bottom_in, 0);
                 break;
