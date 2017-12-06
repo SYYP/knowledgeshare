@@ -12,13 +12,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/text_red_dark"
-            >
+        >
             <ImageView
                 android:id="@+id/iv_back"
-                android:padding="13dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:padding="13dp"
                 android:src="@drawable/icon_back_white"/>
             <TextView
                 android:id="@+id/tv_title"
@@ -75,6 +75,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
+                            android:padding="15dp"
                             android:src="@drawable/weiguanzhuxin"/>
                     </RelativeLayout>
                     <View
@@ -85,7 +86,7 @@
                     <WebView
                         android:id="@+id/webview"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"></WebView>
+                        android:layout_height="150dp"></WebView>
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"

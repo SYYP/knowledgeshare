@@ -33,6 +33,7 @@ public class GuidePageActivity extends BaseActivity {
         UltimateBar ultimateBar = new UltimateBar(this);
         ultimateBar.setImmersionBar();
         setContentView(R.layout.activity_guidepage);
+        setNotshow();
         vp = (ViewPager) findViewById(R.id.vp);
         if (mGuidePagerAdapter == null) {
             mGuidePagerAdapter = new GuidePagerAdapter();

@@ -34,6 +34,7 @@ public class AlterActivity extends BaseActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_alterpwd);
+        setNotshow();
         UltimateBar ultimateBar=new UltimateBar(this);
         ultimateBar.setImmersionBar();
         initView();

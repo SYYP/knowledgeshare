@@ -101,6 +101,8 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
                 startActivity(new Intent(GuDianActivity.this,SoftMusicDetailActivity.class));
             }
         });
+        tv_zhuanlan_content.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
+                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
     }
 
     private class DaShiBanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

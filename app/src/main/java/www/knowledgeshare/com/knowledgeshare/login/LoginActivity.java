@@ -43,6 +43,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         UltimateBar ultimateBar = new UltimateBar(this);
         ultimateBar.setImmersionBar();
         setContentView(R.layout.activity_login);
+        setNotshow();
           /*
          获取控件id
         */

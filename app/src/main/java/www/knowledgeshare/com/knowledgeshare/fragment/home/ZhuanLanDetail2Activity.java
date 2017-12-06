@@ -8,12 +8,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -44,6 +45,8 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private boolean isCollected;
+    private boolean isDianzan;
+    private WebView webview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,16 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         setContentView(R.layout.activity_zhuan_lan_detail2);
         initView();
         initDialog();
+        initData();
+    }
+
+    private void initData() {
+        List<String> list = new ArrayList<>();
+        list.add("");
+        list.add("");
+        list.add("");
+        LiuYanAdapter liuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan2, list);
+        recycler_liuyan.setAdapter(liuYanAdapter);
     }
 
     private void initDialog() {
@@ -79,12 +92,19 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         tv_buy.setOnClickListener(this);
         recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
         recycler_liuyan.setNestedScrollingEnabled(false);
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        LiuYanAdapter liuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan2, list);
-        recycler_liuyan.setAdapter(liuYanAdapter);
+        webview= (WebView) findViewById(R.id.webview);
+        webview.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return false;
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+            }
+        });
+        webview.loadUrl("http://www.baidu.com");
     }
 
     private class LiuYanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
@@ -99,7 +119,12 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
             helper.getView(R.id.ll_dianzan).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Glide.with(mContext).load(R.drawable.free_yizan).into(iv_dianzan);
+                    if (isDianzan) {
+                        iv_dianzan.setImageResource(R.drawable.free_yizan);
+                    }else {
+                        iv_dianzan.setImageResource(R.drawable.free_dianzan);
+                    }
+                    isDianzan=!isDianzan;
                 }
             });
         }

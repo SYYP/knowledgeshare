@@ -13,11 +13,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -32,7 +30,6 @@ import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
-import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
 public class LikeDetailActivity extends BaseActivity implements View.OnClickListener {
     private ImageView iv_back;
@@ -51,14 +48,10 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
     private TextView tv_shopcar, tv_buy;
     private BaseDialog.Builder mBuilder;
     private BaseDialog mDialog;
-    private ImageView iv_delete;
-    private CircleImageView iv_bo_head;
-    private TextView tv_title;
-    private TextView tv_subtitle;
-    private ImageView iv_arrow_top;
-    private ImageView iv_mulu;
-    private RelativeLayout rl_bofang;
-    private boolean isBofang;
+    private boolean isDianzan;
+    private boolean isGuanzhu=true;
+    private boolean isZan=true;
+    private ImageView iv_guanzhu,iv_dianzan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,17 +93,10 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         recycler_free.setNestedScrollingEnabled(false);
         recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
         recycler_liuyan.setNestedScrollingEnabled(false);
-        iv_delete = (ImageView) findViewById(R.id.iv_delete);
-        iv_delete.setVisibility(View.VISIBLE);
-        iv_delete.setOnClickListener(this);
-        iv_bo_head = (CircleImageView) findViewById(R.id.iv_bo_head);
-        tv_title = (TextView) findViewById(R.id.tv_title);
-        tv_subtitle = (TextView) findViewById(R.id.tv_subtitle);
-        iv_arrow_top = (ImageView) findViewById(R.id.iv_arrow_top);
-        iv_arrow_top.setOnClickListener(this);
-        iv_mulu = (ImageView) findViewById(R.id.iv_mulu);
-        iv_mulu.setOnClickListener(this);
-        rl_bofang = (RelativeLayout) findViewById(R.id.rl_bofang);
+        iv_guanzhu= (ImageView) findViewById(R.id.iv_guanzhu);
+        iv_guanzhu.setOnClickListener(this);
+        iv_dianzan= (ImageView) findViewById(R.id.iv_dianzan);
+        iv_dianzan.setOnClickListener(this);
     }
 
     private void initData() {
@@ -126,8 +112,6 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 if (position != 0) {
                     showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
                 }else {
-                    isBofang=true;
-                    rl_bofang.setVisibility(View.VISIBLE);
                     mMyBinder.playMusic();
                     EventBean eventBean = new EventBean("rotate");
                     EventBus.getDefault().postSticky(eventBean);
@@ -136,6 +120,12 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         });
         LiuYanAdapter liuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan, list);
         recycler_liuyan.setAdapter(liuYanAdapter);
+        tv_teacher_intro.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
+                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
+        tv_shiyirenqun.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
+                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
+        tv_readxuzhi.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
+                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
     }
 
     private void initDialog() {
@@ -343,7 +333,12 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
             helper.getView(R.id.ll_dianzan).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Glide.with(mContext).load(R.drawable.free_yizan).into(iv_dianzan);
+                    if (isDianzan) {
+                        iv_dianzan.setImageResource(R.drawable.free_yizan);
+                    }else {
+                        iv_dianzan.setImageResource(R.drawable.free_dianzan);
+                    }
+                    isDianzan=!isDianzan;
                 }
             });
         }
@@ -362,9 +357,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMyBinder = (MediaService.MyBinder) service;
             if (mMyBinder.isPlaying()){
-                rl_bofang.setVisibility(View.VISIBLE);
             }else {
-                rl_bofang.setVisibility(View.GONE);
             }
         }
 
@@ -394,8 +387,6 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.iv_shopcar:
                 break;
-            case R.id.tv_guanzhu:
-                break;
             case R.id.tv_shopcar:
                 Toast.makeText(this, "已成功加入购物车", Toast.LENGTH_SHORT).show();
                 break;
@@ -408,22 +399,23 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
             case R.id.tv_buy:
                 showBuyDialog(Gravity.BOTTOM, R.style.Bottom_Top_aniamtion);
                 break;
-            case R.id.iv_delete:
-                isBofang = false;
-                rl_bofang.setVisibility(View.GONE);
-                EventBean eventBean = new EventBean("norotate");
-                EventBus.getDefault().postSticky(eventBean);
-                mMyBinder.closeMedia();
+            case R.id.tv_guanzhu:
+            case R.id.iv_guanzhu:
+                if (isGuanzhu){
+                    iv_guanzhu.setImageResource(R.drawable.free_quxiaoguanzhu);
+                }else {
+                    iv_guanzhu.setImageResource(R.drawable.free_guanzhu);
+                }
+                isGuanzhu=!isGuanzhu;
                 break;
-            case R.id.iv_arrow_top:
-                Intent intent1 = new Intent(this, MusicActivity.class);
-                startActivity(intent1);
-                overridePendingTransition(R.anim.bottom_in, 0);
-                break;
-            case R.id.iv_mulu:
-                Intent intent11 = new Intent(this, BoFangListActivity.class);
-                startActivity(intent11);
-                //                mActivity.overridePendingTransition(R.anim.bottom_in, 0);
+            case R.id.tv_dianzan_count:
+            case R.id.iv_dianzan:
+                if (isZan){
+                    iv_dianzan.setImageResource(R.drawable.free_dianzan);
+                }else {
+                    iv_dianzan.setImageResource(R.drawable.free_yizan);
+                }
+                isZan=!isZan;
                 break;
         }
     }

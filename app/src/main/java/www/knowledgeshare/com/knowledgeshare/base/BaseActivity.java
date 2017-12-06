@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.view.CustomPopupWindow;
+
 
 /**
  * Created by lxk on 2017/6/10.
@@ -17,6 +19,8 @@ import java.util.List;
 
 public class BaseActivity extends AppCompatActivity {
     private static List<Activity> activityList = new ArrayList<>();
+    private boolean notshow;
+    private CustomPopupWindow musicPop;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,7 +28,21 @@ public class BaseActivity extends AppCompatActivity {
         //在这里判断是否token是否存在、是否过期之类的
         if (activityList != null)
             activityList.add(this);
+        if (musicPop==null){
+            musicPop=new CustomPopupWindow(this);
+        }
+    }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+//        if (!notshow && !musicPop.isShowing()) {
+//            musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM,0,0);
+//        }
+    }
+
+    public void setNotshow() {
+        notshow = true;
     }
 
     @Override
@@ -78,6 +96,4 @@ public class BaseActivity extends AppCompatActivity {
             activityList = null;
         }
     }
-
-
 }

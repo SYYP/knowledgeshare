@@ -37,6 +37,7 @@ public class ResetpwdActivity extends BaseActivity {
         UltimateBar ultimateBar = new UltimateBar(this);
         ultimateBar.setImmersionBar();
         setContentView(R.layout.activity_resetpwd);
+        setNotshow();
         initView();
     }
 

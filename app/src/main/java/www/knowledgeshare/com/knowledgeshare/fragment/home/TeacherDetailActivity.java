@@ -75,6 +75,8 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
                 startActivity(new Intent(TeacherDetailActivity.this,SoftMusicDetailActivity.class));
             }
         });
+        tv_teacher_intro.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
+                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
     }
 
     private class DaShiBanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
