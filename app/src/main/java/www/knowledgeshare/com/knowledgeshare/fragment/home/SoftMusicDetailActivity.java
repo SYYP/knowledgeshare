@@ -385,6 +385,8 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 startActivity(new Intent(this, LiuYanActivity.class));
                 break;
             case R.id.tv_tryread:
+                setISshow(true);
+                ClickPopShow();
                 break;
             case R.id.tv_buy:
                 showPayStyleDialog();

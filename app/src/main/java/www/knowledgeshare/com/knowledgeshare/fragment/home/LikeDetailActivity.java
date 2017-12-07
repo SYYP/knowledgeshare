@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.ShoppingCartActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
@@ -401,6 +402,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 startActivity(new Intent(this, SearchActivity.class));
                 break;
             case R.id.iv_shopcar:
+                startActivity(new Intent(this, ShoppingCartActivity.class));
                 break;
             case R.id.tv_shopcar:
                 Toast.makeText(this, "已成功加入购物车", Toast.LENGTH_SHORT).show();

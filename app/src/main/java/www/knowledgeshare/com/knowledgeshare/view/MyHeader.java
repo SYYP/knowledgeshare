@@ -123,7 +123,7 @@ public class MyHeader extends BaseHeader {
     //头部已经全部弹回时回调
     @Override
     public void onFinishAnim() {
-        headerTitle.setText("刷新完成");
+//        headerTitle.setText("刷新完成");
         animationRefresh.stop();
         mIv_anim_refresh.setImageResource(R.drawable.refresh25);
     }
