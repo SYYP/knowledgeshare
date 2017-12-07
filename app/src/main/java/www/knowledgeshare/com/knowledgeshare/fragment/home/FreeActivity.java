@@ -237,9 +237,9 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
     //“绑定”服务的intent
     private Intent MediaServiceIntent;
     private void initMusic() {
-        MediaServiceIntent = new Intent(this, MediaService.class);
+//        MediaServiceIntent = new Intent(this, MediaService.class);
 //        startService(MediaServiceIntent);
-        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+//        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {

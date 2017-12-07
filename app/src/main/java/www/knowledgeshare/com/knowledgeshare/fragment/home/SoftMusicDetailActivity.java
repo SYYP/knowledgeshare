@@ -28,6 +28,7 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 
 public class SoftMusicDetailActivity extends BaseActivity implements View.OnClickListener {
 
@@ -50,9 +51,9 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private boolean isDianzan;
-    private boolean isGuanzhu=true;
-    private boolean isZan=true;
-    private ImageView iv_guanzhu,iv_dianzan;
+    private boolean isGuanzhu = true;
+    private boolean isZan = true;
+    private ImageView iv_guanzhu, iv_dianzan;
     private NestedScrollView nestView;
 
     @Override
@@ -105,11 +106,11 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
         tv_tryread.setOnClickListener(this);
         tv_buy = (TextView) findViewById(R.id.tv_buy);
         tv_buy.setOnClickListener(this);
-        iv_guanzhu= (ImageView) findViewById(R.id.iv_guanzhu);
+        iv_guanzhu = (ImageView) findViewById(R.id.iv_guanzhu);
         iv_guanzhu.setOnClickListener(this);
-        iv_dianzan= (ImageView) findViewById(R.id.iv_dianzan);
+        iv_dianzan = (ImageView) findViewById(R.id.iv_dianzan);
         iv_dianzan.setOnClickListener(this);
-        nestView= (NestedScrollView) findViewById(R.id.nestView);
+        nestView = (NestedScrollView) findViewById(R.id.nestView);
     }
 
     private void initDialog() {
@@ -123,16 +124,21 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
         list.add("");
         recycler_free.setLayoutManager(new LinearLayoutManager(this));
         recycler_free.setNestedScrollingEnabled(false);
-        LieBiaoAdapter lieBiaoAdapter = new LieBiaoAdapter(R.layout.item_free, list);
+        LieBiaoAdapter lieBiaoAdapter = new LieBiaoAdapter(R.layout.item_like_liebiao, list);
         recycler_free.setAdapter(lieBiaoAdapter);
         lieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-//                mMyBinder.playMusic();
-//                EventBean eventBean = new EventBean("rotate");
-//                EventBus.getDefault().postSticky(eventBean);
-                setISshow(true);
-                ClickPopShow();
+                //                mMyBinder.playMusic();
+                //                EventBean eventBean = new EventBean("rotate");
+                //                EventBus.getDefault().postSticky(eventBean);
+                if (position != 0) {
+                    showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
+                } else {
+                    //                    mMyBinder.playMusic();
+                    setISshow(true);
+                    ClickPopShow();
+                }
             }
         });
 
@@ -148,6 +154,66 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
     }
 
+    private void showIsBuyDialog(int grary, int animationStyle) {
+        mDialog = mBuilder.setViewId(R.layout.dialog_isbuy)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(grary)
+                //设置动画
+                .setAnimation(animationStyle)
+                //设置dialog的宽高
+                .setWidthHeightpx(MyUtils.dip2px(this, 250), LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+                showBuyDialog(Gravity.BOTTOM, R.style.Bottom_Top_aniamtion);
+            }
+        });
+    }
+
+    private void showBuyDialog(int grary, int animationStyle) {
+        mDialog = mBuilder.setViewId(R.layout.dialog_buy)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(grary)
+                //设置动画
+                .setAnimation(animationStyle)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.rl_yuezhifu).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+                showChongzhiDialog();
+            }
+        });
+    }
+
     private class LieBiaoAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
 
         public LieBiaoAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
@@ -156,10 +222,23 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
+            if (helper.getAdapterPosition() == 0) {
+                helper.setVisible(R.id.tv_trylisten, true);
+                helper.setVisible(R.id.iv_wengao, true);
+            } else {
+                helper.setVisible(R.id.tv_trylisten, false);
+                helper.setVisible(R.id.iv_wengao, false);
+            }
             helper.getView(R.id.iv_dian).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     showListDialog();
+                }
+            });
+            helper.getView(R.id.iv_wengao).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(SoftMusicDetailActivity.this, WenGaoActivity.class));
                 }
             });
         }
@@ -179,10 +258,10 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 public void onClick(View view) {
                     if (isDianzan) {
                         iv_dianzan.setImageResource(R.drawable.free_yizan);
-                    }else {
+                    } else {
                         iv_dianzan.setImageResource(R.drawable.free_dianzan);
                     }
-                    isDianzan=!isDianzan;
+                    isDianzan = !isDianzan;
                 }
             });
         }
@@ -237,18 +316,19 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
     private MediaService.MyBinder mMyBinder;
     //“绑定”服务的intent
     private Intent MediaServiceIntent;
+
     private void initMusic() {
-        MediaServiceIntent = new Intent(this, MediaService.class);
+        //        MediaServiceIntent = new Intent(this, MediaService.class);
         //        startService(MediaServiceIntent);
-        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        //        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMyBinder = (MediaService.MyBinder) service;
-            if (mMyBinder.isPlaying()){
-            }else {
+            if (mMyBinder.isPlaying()) {
+            } else {
             }
         }
 
@@ -365,21 +445,21 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.tv_guanzhu:
             case R.id.iv_guanzhu:
-                if (isGuanzhu){
+                if (isGuanzhu) {
                     iv_guanzhu.setImageResource(R.drawable.free_quxiaoguanzhu);
-                }else {
+                } else {
                     iv_guanzhu.setImageResource(R.drawable.free_guanzhu);
                 }
-                isGuanzhu=!isGuanzhu;
+                isGuanzhu = !isGuanzhu;
                 break;
             case R.id.tv_dianzan_count:
             case R.id.iv_dianzan:
-                if (isZan){
+                if (isZan) {
                     iv_dianzan.setImageResource(R.drawable.free_dianzan);
-                }else {
+                } else {
                     iv_dianzan.setImageResource(R.drawable.free_yizan);
                 }
-                isZan=!isZan;
+                isZan = !isZan;
                 break;
             case R.id.tv_writeliuyan:
                 startActivity(new Intent(this, LiuYanActivity.class));

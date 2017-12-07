@@ -126,7 +126,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 if (position != 0) {
                     showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
                 } else {
-//                    mMyBinder.playMusic();
+                    //                    mMyBinder.playMusic();
                     setISshow(true);
                     ClickPopShow();
                 }
@@ -363,9 +363,9 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
     private Intent MediaServiceIntent;
 
     private void initMusic() {
-        MediaServiceIntent = new Intent(this, MediaService.class);
+        //        MediaServiceIntent = new Intent(this, MediaService.class);
         //        startService(MediaServiceIntent);
-        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        //        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -387,7 +387,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        unbindService(mServiceConnection);
+        //        unbindService(mServiceConnection);
     }
 
     @Override
