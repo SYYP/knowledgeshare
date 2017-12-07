@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import org.zackratos.ultimatebar.UltimateBar;
 
@@ -15,6 +16,7 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.login.bean.HobbyActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.ViewPagerIndicator;
 
 
 /**
@@ -26,6 +28,7 @@ public class GuidePageActivity extends BaseActivity {
     private GuidePagerAdapter mGuidePagerAdapter;
     private int[] imgurls = {R.drawable.yindao_1, R.drawable.yindao_2, R.drawable.yindao_3,R.drawable.yindao_4
     ,R.drawable.yindao_5};
+    private LinearLayout liner;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,10 +38,13 @@ public class GuidePageActivity extends BaseActivity {
         setISshow(false);
         setContentView(R.layout.activity_guidepage);
         vp = (ViewPager) findViewById(R.id.vp);
+        liner = (LinearLayout) findViewById(R.id.liner);
         if (mGuidePagerAdapter == null) {
             mGuidePagerAdapter = new GuidePagerAdapter();
         }
+
         vp.setAdapter(mGuidePagerAdapter);
+        vp.setOnPageChangeListener(new ViewPagerIndicator(this,vp,liner,5));
         vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

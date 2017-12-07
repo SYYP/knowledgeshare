@@ -164,7 +164,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
             <TextView
                 android:text="星期一"
                 android:textColor="@color/textblack"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_alignParentRight="true"
@@ -174,7 +174,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
             <TextView
                 android:text="2017-11-20"
                 android:textColor="@color/textblack"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_toLeftOf="@id/study_day"
@@ -223,10 +223,10 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/shape_radioline"
+        android:background="@drawable/bg_wanjiao"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
         <RelativeLayout
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
@@ -252,7 +252,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
             <TextView
                 android:text="2017-11-20"
                 android:textColor="@color/textblack"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="10dp"
                 android:layout_alignParentRight="true"
@@ -271,11 +271,12 @@ xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
-       <View
-           android:background="#edecea"
-           android:layout_width="match_parent"
-           android:layout_height="8dp"></View>
+
     </LinearLayout>
+        <View
+            android:background="#edecea"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"></View>
     </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

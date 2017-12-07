@@ -1,6 +1,7 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.mine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.WenGaoActivity;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
 /**
@@ -24,7 +26,8 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private Context context;
     private List<Collectbean> list=new ArrayList<>();
     final static int ONE = 0, TWO = 1, THREE = 2;
-
+    private OnItemClickListener mOnItemClickListener = null;
+    private OnClickListener mOnClickListener = null;
     public Myclassadapter(Context context) {
         this.context = context;
 
@@ -81,17 +84,37 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int itemViewType = getItemViewType(position);
         switch (itemViewType) {
-
             case  ONE:
           Myviewholder1 myviewhiodler1= (Myviewholder1) holder;
                 myviewhiodler1.class_title.setText(list.get(position).getTitle());
+                 myviewhiodler1.imageView.setOnClickListener(new View.OnClickListener() {
+                     @Override
+                     public void onClick(View view) {
+                         Intent intent=new Intent(context, WenGaoActivity.class);
+                         context.startActivity(intent);
+                     }
+                 });
                 break;
             case TWO:
-                Myviewholder2 myviewhiodler2= (Myviewholder2) holder;
+
+                final Myviewholder2 myviewhiodler2= (Myviewholder2) holder;
+                if(mOnItemClickListener!=null){
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            int layoutPosition = myviewhiodler2.getLayoutPosition();
+                            mOnItemClickListener.onItemClick(myviewhiodler2.itemView,layoutPosition);
+                        }
+                    });
+                }
                 myviewhiodler2.class_titles.setText(list.get(position).getTitle());
                 break;
             case  THREE:
                 Myviewholder3 myviewhiodler3= (Myviewholder3) holder;
+                if(mOnClickListener!=null){
+                    int layoutPosition = myviewhiodler3.getLayoutPosition();
+                    mOnClickListener.onItemClick(myviewhiodler3.itemView,layoutPosition);
+                }
                 myviewhiodler3.class_titles.setText(list.get(position).getTitle());
                 break;
         }
@@ -122,6 +145,7 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public TextView class_title;
         public TextView class_time;
         public ImageView class_xinxin;
+        private final ImageView imageView;
 
         public Myviewholder1(View rootView) {
             super(rootView);
@@ -129,6 +153,7 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             this.class_title = (TextView) rootView.findViewById(R.id.class_title);
             this.class_time = (TextView) rootView.findViewById(R.id.class_time);
             this.class_xinxin = (ImageView) rootView.findViewById(R.id.class_xinxin);
+            imageView = rootView.findViewById(R.id.collect_wengao);
         }
     }
 
@@ -169,5 +194,21 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             this.class_read = (TextView) rootView.findViewById(R.id.class_read);
         }
     }
+/*
+   接口回调用来item点击
+ */
+public interface OnItemClickListener {
+    void onItemClick(View view, int position);
+}
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mOnItemClickListener = listener;
+    }
+    public interface OnClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    public void setOnClickListener(OnClickListener listener) {
+        this.mOnClickListener = listener;
+    }
 }

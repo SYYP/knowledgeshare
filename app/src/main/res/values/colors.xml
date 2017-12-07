@@ -28,6 +28,7 @@
     <color name="redd">#ef5a50</color>
     <color name="hui">#F0F0F2</color>
     <color name="kog">#999999</color>
+    <color name="back_color">#edecea</color>
     <color name="textcolor">#999999</color>
     <color name="white_gray">#f5f5f9</color> <!-- 白灰色 -->
 

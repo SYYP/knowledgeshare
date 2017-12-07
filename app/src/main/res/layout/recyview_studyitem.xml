@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/white">
+    android:orientation="vertical">
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -12,7 +11,7 @@
    android:layout_centerVertical="true"
     android:layout_marginLeft="10dp"
     android:textColor="@color/textblack"
-    android:textSize="15sp"
+    android:textSize="14sp"
     android:text="凌晨四点的北京"
     android:drawablePadding="10dp"
     android:drawableLeft="@drawable/yuan"
@@ -22,7 +21,7 @@
         android:id="@+id/item_compile"
         android:textColor="@color/textblack"
         android:layout_alignParentRight="true"
-        android:textSize="15sp"
+        android:textSize="14sp"
         android:text="编辑"
         android:layout_centerVertical="true"
         android:layout_marginTop="10dp"
@@ -42,7 +41,7 @@
         android:layout_marginRight="15dp"
         android:id="@+id/item_delete"
         android:textColor="@color/textblack"
-        android:textSize="15sp"
+        android:textSize="14sp"
         android:text="删除"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
@@ -60,6 +59,7 @@
 
 </RelativeLayout>
     <LinearLayout
+        android:layout_marginBottom="10dp"
         android:layout_marginTop="5dp"
         android:id="@+id/study_liner"
         android:layout_marginLeft="25dp"
@@ -83,8 +83,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
-    <View
-        android:background="@color/white"
-        android:layout_width="match_parent"
-        android:layout_height="10dp"></View>
+    <!--<View-->
+        <!--android:background="@color/white"-->
+        <!--android:layout_marginLeft="20dp"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="10dp"></View>-->
 </LinearLayout>

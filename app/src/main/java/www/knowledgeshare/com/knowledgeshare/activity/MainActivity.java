@@ -64,6 +64,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      StudyFragment studyFragment;
     BuyFragment buyFragment;
     MineFragment mineFragment;
+    private boolean abool;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +79,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initListener();
         initAnim();
         initMusic();
+        abool = SpUtils.getBoolean(this, "abool", true);
     }
 
     private void initMusic() {
@@ -158,7 +161,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         switch (v.getId()) {
             case R.id.ll_home:
               //  position = 0;
@@ -174,13 +176,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 tv_buy.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
                 tv_study.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
                 tv_mine.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-//                fragmentTransaction.show(mBaseFragments[0]);
-//                fragmentTransaction.hide(mBaseFragments[1]).hide(mBaseFragments[2]).hide(mBaseFragments[3]);
-//                fragmentTransaction.commitAllowingStateLoss();
                 break;
             case R.id.ll_study:
-            //    position = 1;
-                boolean abool = SpUtils.getBoolean(this, "abool", true);
+
+
                 if (abool) {
                    Intent intent=new Intent(this, www.knowledgeshare.com.knowledgeshare.activity.LoginActivity.class);
                       startActivity(intent);
@@ -200,13 +199,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     tv_mine.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
 
 
-//                    fragmentTransaction.show(mBaseFragments[1]);
-//                fragmentTransaction.hide(mBaseFragments[0]).hide(mBaseFragments[2]).hide(mBaseFragments[3]);
-//                fragmentTransaction.commitAllowingStateLoss();
                 }
                 break;
             case R.id.ll_listen:
-             //   position = 2;
 
                 if (isPause) {
                     iv_listen.setImageResource(R.drawable.tab_listen_bo);
@@ -226,40 +221,45 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 isPause = !isPause;
                 break;
             case R.id.ll_buy:
-               // position = 3;
-                if(buyFragment==null){
-                    buyFragment=new BuyFragment();
+                if (abool) {
+                    Intent intent = new Intent(this, www.knowledgeshare.com.knowledgeshare.activity.LoginActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
                 }
-                addFragments(buyFragment);
-                iv_home.setImageResource(R.drawable.tab_home_normal);
-                iv_buy.setImageResource(R.drawable.tab_buy_red);
-                iv_study.setImageResource(R.drawable.tab_study_normal);
-                iv_mine.setImageResource(R.drawable.tab_mine_normal);
-                tv_home.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-                tv_buy.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
-                tv_study.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-                tv_mine.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-//                fragmentTransaction.show(mBaseFragments[2]);
-//                fragmentTransaction.hide(mBaseFragments[1]).hide(mBaseFragments[0]).hide(mBaseFragments[3]);
-//                fragmentTransaction.commitAllowingStateLoss();
+                else {
+                    if (buyFragment == null) {
+                        buyFragment = new BuyFragment();
+                    }
+                    addFragments(buyFragment);
+                    iv_home.setImageResource(R.drawable.tab_home_normal);
+                    iv_buy.setImageResource(R.drawable.tab_buy_red);
+                    iv_study.setImageResource(R.drawable.tab_study_normal);
+                    iv_mine.setImageResource(R.drawable.tab_mine_normal);
+                    tv_home.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
+                    tv_buy.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
+                    tv_study.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
+                    tv_mine.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
+                }
                 break;
             case R.id.ll_mine:
-             //   position = 4;
-                if(mineFragment==null){
-                    mineFragment=new MineFragment();
+                if (abool) {
+                    Intent intent = new Intent(this, www.knowledgeshare.com.knowledgeshare.activity.LoginActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
+                }else {
+                    if (mineFragment == null) {
+                        mineFragment = new MineFragment();
+                    }
+                    addFragments(mineFragment);
+                    iv_home.setImageResource(R.drawable.tab_home_normal);
+                    iv_buy.setImageResource(R.drawable.tab_buy_normal);
+                    iv_study.setImageResource(R.drawable.tab_study_normal);
+                    iv_mine.setImageResource(R.drawable.tab_mine_red);
+                    tv_home.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
+                    tv_buy.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
+                    tv_study.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
+                    tv_mine.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                 }
-                addFragments(mineFragment);
-                iv_home.setImageResource(R.drawable.tab_home_normal);
-                iv_buy.setImageResource(R.drawable.tab_buy_normal);
-                iv_study.setImageResource(R.drawable.tab_study_normal);
-                iv_mine.setImageResource(R.drawable.tab_mine_red);
-                tv_home.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-                tv_buy.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-                tv_study.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-                tv_mine.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
-//                fragmentTransaction.show(mBaseFragments[3]);
-//                fragmentTransaction.hide(mBaseFragments[1]).hide(mBaseFragments[2]).hide(mBaseFragments[0]);
-//                fragmentTransaction.commitAllowingStateLoss();
                 break;
         }
     }

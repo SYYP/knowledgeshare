@@ -24,7 +24,7 @@ public class Messageadapter extends RecyclerView.Adapter<Messageadapter.Myviewho
     private Context context;
     private List<String> list = new ArrayList<>();
     private View line;
-
+    private OnItemClickListener mOnItemClickListener = null;
 
     public Messageadapter(Context context) {
         this.context = context;
@@ -39,8 +39,16 @@ public class Messageadapter extends RecyclerView.Adapter<Messageadapter.Myviewho
     }
 
     @Override
-    public void onBindViewHolder(Myviewholder holder, int position) {
-
+    public void onBindViewHolder(final Myviewholder holder, int position) {
+                  if(mOnItemClickListener!=null){
+                      holder.itemView.setOnClickListener(new View.OnClickListener() {
+                          @Override
+                          public void onClick(View view) {
+                              int layoutPosition = holder.getLayoutPosition();
+                              mOnItemClickListener.onItemClick(holder.itemView,layoutPosition);
+                          }
+                      });
+                  }
          holder.mesg_text.setText(list.get(position).toString());
     }
 
@@ -73,6 +81,16 @@ public class Messageadapter extends RecyclerView.Adapter<Messageadapter.Myviewho
         list.add("我大概是没救了，但我不需要解药。我那些没由来的情绪低落、闷闷不乐、沉默，我也不知道它从哪里来，什么时候走。");
         list.add("听到你的名字会突然变得沉默，独自一人在夜里时会想你想到失眠。");
         list.add("我总在问自己为什么还坚持，可能没有答案，但我只知道，放下你、我做不到。");
+    }
+/*
+  创建接口用来回调
+ */
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mOnItemClickListener = listener;
     }
 
 }

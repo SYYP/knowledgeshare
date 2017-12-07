@@ -75,9 +75,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         switch (view.getId()) {
             case R.id.close_login:
                 finish();
-//                Intent intents=new Intent(this,MainActivity.class);
-//                startActivity(intents);
-              overridePendingTransition(R.anim.close_anim,R.anim.start_anim);
+
+              overridePendingTransition(0,R.anim.close_anim);
                 break;
             case R.id.login_sso:
                 //                login();

@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
 import www.knowledgeshare.com.knowledgeshare.login.adapter.Messageadapter;
 
 /**
@@ -40,6 +42,13 @@ public class MessageActivity extends BaseActivity {
 
           Study_mesage.setLayoutManager(new LinearLayoutManager(this));
         Messageadapter messageadapter=new Messageadapter(this);
+         messageadapter.setOnItemClickListener(new Messageadapter.OnItemClickListener() {
+             @Override
+             public void onItemClick(View view, int position) {
+                 Intent intent=new Intent(MessageActivity.this, ZhuanLanActivity.class);
+                    startActivity(intent);
+             }
+         });
         Study_mesage.setAdapter(messageadapter);
     }
 
