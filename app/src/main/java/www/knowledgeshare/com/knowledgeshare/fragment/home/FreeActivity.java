@@ -121,6 +121,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
         tv_guanzhu = (TextView) findViewById(R.id.tv_guanzhu);
         tv_guanzhu.setOnClickListener(this);
         tv_dianzan_count = (TextView) findViewById(R.id.tv_dianzan_count);
+        tv_dianzan_count.setOnClickListener(this);
         tv_teacher_intro = (TextView) findViewById(R.id.tv_teacher_intro);
         recycler_free = (RecyclerView) findViewById(R.id.recycler_free);
         tv_shiyirenqun = (TextView) findViewById(R.id.tv_shiyirenqun);

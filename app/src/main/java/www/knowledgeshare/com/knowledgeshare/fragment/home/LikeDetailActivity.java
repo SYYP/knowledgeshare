@@ -78,6 +78,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         tv_guanzhu = (TextView) findViewById(R.id.tv_guanzhu);
         tv_guanzhu.setOnClickListener(this);
         tv_dianzan_count = (TextView) findViewById(R.id.tv_dianzan_count);
+        tv_dianzan_count.setOnClickListener(this);
         tv_teacher_intro = (TextView) findViewById(R.id.tv_teacher_intro);
         tv_shopcar = (TextView) findViewById(R.id.tv_shopcar);
         tv_shopcar.setOnClickListener(this);

@@ -20,8 +20,6 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 
-import static www.knowledgeshare.com.knowledgeshare.R.id.recycler_dashiban;
-
 public class ZhuanLanDetail1Activity extends BaseActivity {
 
     private ImageView iv_back;
@@ -83,7 +81,7 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
                 @Override
                 public void onClick(View view) {
                     if (isCollected) {
-                        Drawable drawable = getResources().getDrawable(R.drawable.music_collect);
+                        Drawable drawable = getResources().getDrawable(R.drawable.zhuanlan_collect);
                         /// 这一步必须要做,否则不会显示.
                         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                         tv_collect.setCompoundDrawables(drawable, null, null, null);
