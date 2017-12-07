@@ -425,7 +425,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        unbindService(mServiceConnection);
+//        unbindService(mServiceConnection);
     }
 
     @Override

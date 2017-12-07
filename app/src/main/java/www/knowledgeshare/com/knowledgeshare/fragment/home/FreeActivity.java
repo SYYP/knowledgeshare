@@ -261,7 +261,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        unbindService(mServiceConnection);
+//        unbindService(mServiceConnection);
     }
 
     @Override
