@@ -34,6 +34,7 @@ public class MyGuanzhuActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_guanzhu);
+        setISshow(false);
         initView();
     }
 

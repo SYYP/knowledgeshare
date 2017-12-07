@@ -20,6 +20,8 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 
+import static www.knowledgeshare.com.knowledgeshare.R.id.recycler_yinyueke;
+
 public class BoFangListActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView iv_back;
@@ -69,8 +71,22 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
         list.add("");
         list.add("");
         list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
         LieBiaoAdapter lieBiaoAdapter = new LieBiaoAdapter(R.layout.item_free, list);
         recycler_bofang.setAdapter(lieBiaoAdapter);
+        recycler_bofang.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    setPopHide();
+                } else if (dy < 0) {
+                    SlidePopShow();
+                }
+            }
+        });
     }
 
     private void showDialog() {

@@ -32,6 +32,7 @@ public class LiuYanActivity extends BaseActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_liu_yan);
+        setISshow(false);
         initView();
     }
 

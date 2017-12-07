@@ -45,8 +45,8 @@ public class LancherActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 //        UltimateBar ultimateBar = new UltimateBar(this);
 //        ultimateBar.setImmersionBar();
+        setISshow(false);
         setContentView(R.layout.activity_launcher);
-        setNotshow();
 //        String umpushid = SpUtils.getString(this, "UMPUSHID", "");
 //        if (!TextUtils.isEmpty(umpushid)) {
 //            ArrayMap arrayMap = new ArrayMap<String, String>();

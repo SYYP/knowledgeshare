@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -25,7 +26,6 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
-import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 
@@ -43,6 +43,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
     private LinearLayout activity_free;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
+    private NestedScrollView nestView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,20 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
         initView();
         initDialog();
         initMusic();
+        initListener();
+    }
+
+    private void initListener() {
+        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY - oldScrollY > 0) {
+                    setPopHide();
+                } else if (scrollY - oldScrollY < 0) {
+                    SlidePopShow();
+                }
+            }
+        });
     }
 
     private void initDialog() {
@@ -85,6 +100,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
         tv_collect_count = (TextView) findViewById(R.id.tv_collect_count);
         recycler_liebiao = (RecyclerView) findViewById(R.id.recycler_liebiao);
         activity_free = (LinearLayout) findViewById(R.id.activity_free);
+        nestView= (NestedScrollView) findViewById(R.id.nestView);
         recycler_liebiao.setLayoutManager(new LinearLayoutManager(this));
         recycler_liebiao.setNestedScrollingEnabled(false);
         List<String> list = new ArrayList<>();
@@ -96,9 +112,11 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
         lieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                mMyBinder.playMusic();
-                EventBean eventBean = new EventBean("rotate");
-                EventBus.getDefault().postSticky(eventBean);
+//                mMyBinder.playMusic();
+//                EventBean eventBean = new EventBean("rotate");
+//                EventBus.getDefault().postSticky(eventBean);
+                setISshow(true);
+                ClickPopShow();
             }
         });
     }

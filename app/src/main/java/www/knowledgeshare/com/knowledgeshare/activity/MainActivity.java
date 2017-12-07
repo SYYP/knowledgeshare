@@ -67,6 +67,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setISshow(false);
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
         initView();
@@ -124,7 +125,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             iv_listen.clearAnimation();
             iv_listen.setImageResource(R.drawable.tab_listen_pause);
             //homefragment传来这个的时候就是点了叉了
-
+            mMyBinder.closeMedia();
         }
     }
 
@@ -184,7 +185,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                    Intent intent=new Intent(this, www.knowledgeshare.com.knowledgeshare.activity.LoginActivity.class);
                       startActivity(intent);
                     overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
-
                 }else {
                     if (studyFragment == null) {
                         studyFragment = new StudyFragment();

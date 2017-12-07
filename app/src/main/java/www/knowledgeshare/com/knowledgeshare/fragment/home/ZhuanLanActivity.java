@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -22,7 +23,6 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
-import www.knowledgeshare.com.knowledgeshare.view.CustomPopupWindow;
 
 public class ZhuanLanActivity extends BaseActivity implements View.OnClickListener {
 
@@ -41,7 +41,7 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
     private BaseDialog.Builder mBuilder;
     private FrameLayout fl_root_view;
     private LinearLayout ll_root_view;
-    private CustomPopupWindow mPopupWindow;
+    private NestedScrollView nestView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,20 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
         initView();
         initData();
         initDialog();
-        mPopupWindow = new CustomPopupWindow(this);
+        initListener();
+    }
+
+    private void initListener() {
+        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY - oldScrollY > 0) {
+                    setPopHide();
+                } else if (scrollY - oldScrollY < 0) {
+                    SlidePopShow();
+                }
+            }
+        });
     }
 
     private void initData() {
@@ -66,12 +79,6 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
                 "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
         tv_readxuzhi.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
                 "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-//        mPopupWindow.showAsDropDown(ll_root_view,0,4);
     }
 
     private void initDialog() {
@@ -234,6 +241,7 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
         tv_buy.setOnClickListener(this);
         recycler_lately.setLayoutManager(new LinearLayoutManager(this));
         recycler_lately.setNestedScrollingEnabled(false);
+        nestView= (NestedScrollView) findViewById(R.id.nestView);
     }
 
     private class LatelyAdapter extends BaseQuickAdapter<String,BaseViewHolder>{

@@ -20,6 +20,8 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 
+import static www.knowledgeshare.com.knowledgeshare.R.id.recycler_dashiban;
+
 public class ZhuanLanDetail1Activity extends BaseActivity {
 
     private ImageView iv_back;
@@ -53,6 +55,17 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 startActivity(new Intent(ZhuanLanDetail1Activity.this, ZhuanLanDetail2Activity.class));
+            }
+        });
+        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    setPopHide();
+                } else if (dy < 0) {
+                    SlidePopShow();
+                }
             }
         });
     }

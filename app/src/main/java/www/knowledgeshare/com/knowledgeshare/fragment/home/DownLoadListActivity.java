@@ -35,6 +35,7 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_down_load_list);
+        setISshow(false);
         initView();
     }
 

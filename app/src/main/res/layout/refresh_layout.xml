@@ -8,6 +8,45 @@
         android:id="@+id/iv_anim_refresh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:adjustViewBounds="true"
-        />
+    />
+    <LinearLayout
+        android:id="@+id/default_header_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="20dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/default_header_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="下拉刷新"
+            android:textColor="#777777"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上次更新时间："
+                android:textColor="#777777"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/default_header_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="刚刚"
+                android:textColor="#777777"
+                android:textSize="12sp"/>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

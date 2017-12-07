@@ -72,6 +72,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
         this.setWidth(RelativeLayout.LayoutParams.MATCH_PARENT);// 设置弹出窗口的宽
         this.setHeight(RelativeLayout.LayoutParams.WRAP_CONTENT);// 设置弹出窗口的高
         this.setFocusable(false);//设置为true的话，界面中的滑动控件就不滑动了，所以我取消了焦点，但是并不影响点击事件
+        this.setOutsideTouchable(true);
         this.setBackgroundDrawable(new ColorDrawable(0x00000000));// 设置背景透明
         this.setAnimationStyle(R.style.mypopwindow_anim_style);// 设置动画
     }
@@ -85,6 +86,8 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
                 rl_bofang.setVisibility(View.GONE);
                 EventBean eventBean = new EventBean("norotate");
                 EventBus.getDefault().postSticky(eventBean);
+                EventBean eventBean2 = new EventBean("close");
+                EventBus.getDefault().postSticky(eventBean2);
                 break;
             case R.id.iv_arrow_top:
                 Intent intent1 = new Intent(mContext, MusicActivity.class);

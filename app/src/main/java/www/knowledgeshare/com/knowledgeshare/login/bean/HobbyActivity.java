@@ -35,8 +35,8 @@ public class HobbyActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setISshow(false);
         setContentView(R.layout.avtivity_liushi);
-        setNotshow();
         final LayoutInflater mInflater = LayoutInflater.from(this);
         mFlowLayout = (FlowLayout) findViewById(R.id.hob_liu);
         login_sso = (TextView) findViewById(R.id.login_sso);
