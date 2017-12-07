@@ -39,6 +39,7 @@
                 android:src="@drawable/shopcar_white"/>
         </RelativeLayout>
         <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nestView"
             android:layout_width="match_parent"
             android:paddingBottom="50dp"
             android:layout_height="match_parent">

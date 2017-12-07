@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -41,6 +42,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
     private boolean isGuanzhu;
     private WebView webview;
     private boolean isDianzan;
+    private NestedScrollView nestView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,17 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
             }
         });
         webview.loadUrl("http://www.baidu.com");
+        nestView = (NestedScrollView) findViewById(R.id.nestView);
+        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY - oldScrollY > 0) {
+                    setPopHide();
+                } else if (scrollY - oldScrollY < 0) {
+                    SlidePopShow();
+                }
+            }
+        });
     }
 
     private void initData() {

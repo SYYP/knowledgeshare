@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -69,8 +70,22 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
         list.add("");
         list.add("");
         list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
         LieBiaoAdapter lieBiaoAdapter = new LieBiaoAdapter(R.layout.item_free, list);
         recycler_bofang.setAdapter(lieBiaoAdapter);
+        recycler_bofang.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    setPopHide();
+                } else if (dy < 0) {
+                    SlidePopShow();
+                }
+            }
+        });
     }
 
     private void showDialog() {
@@ -95,6 +110,12 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                 @Override
                 public void onClick(View view) {
                     showDialog();
+                }
+            });
+            helper.getView(R.id.iv_wengao).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(BoFangListActivity.this,WenGaoActivity.class));
                 }
             });
         }

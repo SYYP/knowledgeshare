@@ -7,7 +7,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.activity.LoginActivity;
+import www.knowledgeshare.com.knowledgeshare.activity.MainActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
@@ -27,7 +27,7 @@ public class LancherActivity extends BaseActivity {
                 if (time == 0) {
                     boolean isguide = SpUtils.getBoolean(LancherActivity.this, "guide", false);
                     if (isguide) {
-                        startActivity(new Intent(LancherActivity.this, LoginActivity.class));
+                        startActivity(new Intent(LancherActivity.this, MainActivity.class));
                     } else {
                         startActivity(new Intent(LancherActivity.this, GuidePageActivity.class));
                     }
@@ -45,8 +45,8 @@ public class LancherActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 //        UltimateBar ultimateBar = new UltimateBar(this);
 //        ultimateBar.setImmersionBar();
+        setISshow(false);
         setContentView(R.layout.activity_launcher);
-        setNotshow();
 //        String umpushid = SpUtils.getString(this, "UMPUSHID", "");
 //        if (!TextUtils.isEmpty(umpushid)) {
 //            ArrayMap arrayMap = new ArrayMap<String, String>();
@@ -75,7 +75,7 @@ public class LancherActivity extends BaseActivity {
             public void run() {
                 boolean isguide = SpUtils.getBoolean(LancherActivity.this, "guide", false);
                 if (isguide) {
-                    startActivity(new Intent(LancherActivity.this, LoginActivity.class));
+                    startActivity(new Intent(LancherActivity.this, MainActivity.class));
                 } else {
                     startActivity(new Intent(LancherActivity.this, GuidePageActivity.class));
                 }

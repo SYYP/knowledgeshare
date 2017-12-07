@@ -54,12 +54,27 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
         List<String> list = new ArrayList<>();
         list.add("");
         list.add("");
-        DaShiBanAdapter daShiBanAdapter=new DaShiBanAdapter(R.layout.item_dashiban3,list);
+        list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
+        DaShiBanAdapter daShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban3, list);
         recycler_dashiban.setAdapter(daShiBanAdapter);
         daShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(MusicMasterActivity.this,ZhuanLanActivity.class));
+                startActivity(new Intent(MusicMasterActivity.this, ZhuanLanActivity.class));
+            }
+        });
+        recycler_dashiban.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    setPopHide();
+                } else if (dy < 0) {
+                    SlidePopShow();
+                }
             }
         });
     }
@@ -74,14 +89,14 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
         @Override
         protected void convert(BaseViewHolder helper, String item) {
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-//            Glide.with(mContext).load().into(imageView);
-            helper.setVisible(R.id.iv_bofang,false);
+            //            Glide.with(mContext).load().into(imageView);
+            helper.setVisible(R.id.iv_bofang, false);
         }
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.iv_back:
                 finish();
                 break;

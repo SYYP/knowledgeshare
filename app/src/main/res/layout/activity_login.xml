@@ -6,19 +6,23 @@
     android:background="@drawable/login_background">
 
     <RelativeLayout
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
-        android:layout_height="55dp">
+        android:layout_height="45dp">
         <ImageView
-            android:id="@+id/tv_callback"
+            android:id="@+id/close_login"
             android:layout_marginLeft="15dp"
             android:padding="6dp"
+            android:layout_marginRight="15dp"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/logincallback"
+            android:src="@drawable/delete_login"
             android:layout_width="30dp"
-            android:layout_height="30dp" />
+            android:layout_height="30dp" ></ImageView>
+
     </RelativeLayout>
 <RelativeLayout
+
     android:layout_marginTop="40dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">

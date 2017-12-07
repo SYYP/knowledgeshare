@@ -43,6 +43,7 @@ public class BaseActivity2 extends AppCompatActivity {
     @Override
     public void setContentView(int layoutResID) {
         LayoutInflater.from(this).inflate(layoutResID, parentFrameLayout, true);
+        LayoutInflater.from(this).inflate(R.layout.smallmusic, parentFrameLayout, true);
 //        LayoutInflater.from(this).inflate(layoutResID, parentLinearLayout, true);
     }
 

@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.google.android.gms.auth.firstparty.shared.FACLConfig;
 
 import java.util.ArrayList;
 import java.util.List;

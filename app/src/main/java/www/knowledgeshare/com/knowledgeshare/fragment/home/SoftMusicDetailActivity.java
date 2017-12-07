@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -25,7 +26,6 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
-import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 
@@ -53,6 +53,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
     private boolean isGuanzhu=true;
     private boolean isZan=true;
     private ImageView iv_guanzhu,iv_dianzan;
+    private NestedScrollView nestView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,20 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
         initDialog();
         initData();
         initMusic();
+        initListener();
+    }
+
+    private void initListener() {
+        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY - oldScrollY > 0) {
+                    setPopHide();
+                } else if (scrollY - oldScrollY < 0) {
+                    SlidePopShow();
+                }
+            }
+        });
     }
 
     private void initView() {
@@ -94,6 +109,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
         iv_guanzhu.setOnClickListener(this);
         iv_dianzan= (ImageView) findViewById(R.id.iv_dianzan);
         iv_dianzan.setOnClickListener(this);
+        nestView= (NestedScrollView) findViewById(R.id.nestView);
     }
 
     private void initDialog() {
@@ -112,9 +128,11 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
         lieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                mMyBinder.playMusic();
-                EventBean eventBean = new EventBean("rotate");
-                EventBus.getDefault().postSticky(eventBean);
+//                mMyBinder.playMusic();
+//                EventBean eventBean = new EventBean("rotate");
+//                EventBus.getDefault().postSticky(eventBean);
+                setISshow(true);
+                ClickPopShow();
             }
         });
 
@@ -367,6 +385,8 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 startActivity(new Intent(this, LiuYanActivity.class));
                 break;
             case R.id.tv_tryread:
+                setISshow(true);
+                ClickPopShow();
                 break;
             case R.id.tv_buy:
                 showPayStyleDialog();

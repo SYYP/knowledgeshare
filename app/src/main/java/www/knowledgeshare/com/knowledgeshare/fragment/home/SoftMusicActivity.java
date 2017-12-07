@@ -41,12 +41,27 @@ public class SoftMusicActivity extends BaseActivity implements View.OnClickListe
         List<String> list = new ArrayList<>();
         list.add("");
         list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
         YinYueKeAdapter yinYueKeAdapter=new YinYueKeAdapter(R.layout.item_yinyueke2,list);
         recycler_yinyueke.setAdapter(yinYueKeAdapter);
         yinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 startActivity(new Intent(SoftMusicActivity.this,SoftMusicDetailActivity.class));
+            }
+        });
+        recycler_yinyueke.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    setPopHide();
+                } else if (dy < 0) {
+                    SlidePopShow();
+                }
             }
         });
     }

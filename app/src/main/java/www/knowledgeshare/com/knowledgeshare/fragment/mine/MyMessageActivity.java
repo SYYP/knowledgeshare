@@ -146,12 +146,11 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
     private void deleteCollect() {
         Log.d("bbb", list.size() + "");
 
-        for (int i = 0; i < list.size(); i++) {
-            Log.d("ccc", list.get(i).isaBoolean() + "");
-            if (list.get(i).isaBoolean()) {
-                Log.d("eee", list.get(i).isaBoolean() + "");
-            //    list.remove(i);
+        for (int i = list.size()-1; i >= 0; i--) {
+            if (list.get(i).isaBoolean()){
+                list.remove(i);
             }
+
 
 
         }

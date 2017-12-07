@@ -146,6 +146,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         springview = (SpringView) inflate.findViewById(R.id.springview);
         iv_delete = inflate.findViewById(R.id.iv_delete);
         iv_delete.setOnClickListener(this);
+        iv_delete.setVisibility(View.GONE);
         iv_arrow_top = inflate.findViewById(R.id.iv_arrow_top);
         iv_arrow_top.setOnClickListener(this);
         iv_mulu = inflate.findViewById(R.id.iv_mulu);
@@ -183,6 +184,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         } else if (eventBean.getMsg().equals("pause")) {
             isBofang = false;
             iv_delete.setVisibility(View.VISIBLE);
+        }else if (eventBean.getMsg().equals("close")) {
+            isBofang = false;
+            rl_bofang.setVisibility(View.GONE);
         }
     }
 
@@ -192,7 +196,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         layoutParams.height = MyUtils.getScreenWidth(mContext) / 2;
         banner.setLayoutParams(layoutParams);
         BannerUtils.startBanner(banner, bannerList);
-        Glide.with(this).load(R.drawable.demo).into(iv_zhuanlan_head);
+        Glide.with(this).load(R.drawable.face).into(iv_zhuanlan_head);
         recycler_zhuanlan.setLayoutManager(new LinearLayoutManager(mContext));
         recycler_zhuanlan.setNestedScrollingEnabled(false);
         recycler_comment.setLayoutManager(new LinearLayoutManager(mContext));
@@ -429,7 +433,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     isBofang = true;
                     rl_bofang.setVisibility(View.VISIBLE);
                     //                    Glide.with(mContext).load().into(iv_bo_head);
-                    EventBean eventBean = new EventBean("bofang");
+                    EventBean eventBean = new EventBean("rotate");
                     EventBus.getDefault().postSticky(eventBean);
                     mMyBinder.playMusic();
                 }
@@ -513,7 +517,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 rl_bofang.setVisibility(View.GONE);
                 EventBean eventBean = new EventBean("norotate");
                 EventBus.getDefault().postSticky(eventBean);
-                mMyBinder.closeMedia();
                 break;
             case R.id.iv_arrow_top:
                 Intent intent1 = new Intent(mContext, MusicActivity.class);

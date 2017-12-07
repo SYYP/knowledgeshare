@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -30,6 +31,7 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
     private RecyclerView recycler_yinyueke;
     private LinearLayout ll_yinyueke;
     private LinearLayout activity_gu_dian;
+    private NestedScrollView nestView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,17 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
         recycler_dashiban.setNestedScrollingEnabled(false);
         recycler_yinyueke.setLayoutManager(new LinearLayoutManager(this));
         recycler_yinyueke.setNestedScrollingEnabled(false);
+        nestView = (NestedScrollView) findViewById(R.id.nestView);
+        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY - oldScrollY > 0) {
+                    setPopHide();
+                } else if (scrollY - oldScrollY < 0) {
+                    SlidePopShow();
+                }
+            }
+        });
         initData();
     }
 

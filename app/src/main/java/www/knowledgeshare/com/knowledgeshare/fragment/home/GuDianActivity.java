@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -44,12 +45,28 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
     private List<String> bannerList=new ArrayList<>();
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
+    private NestedScrollView nestView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gu_dian);
         initView();
+        initData();
+        initListener();
+    }
+
+    private void initListener() {
+        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY - oldScrollY > 0) {
+                    setPopHide();
+                } else if (scrollY - oldScrollY < 0) {
+                    SlidePopShow();
+                }
+            }
+        });
     }
 
     private void initView() {
@@ -70,7 +87,7 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
         recycler_dashiban.setNestedScrollingEnabled(false);
         recycler_yinyueke.setLayoutManager(new LinearLayoutManager(mContext));
         recycler_yinyueke.setNestedScrollingEnabled(false);
-        initData();
+        nestView= (NestedScrollView) findViewById(R.id.nestView);
     }
 
     private void initData() {

@@ -59,6 +59,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
         //        UltimateBar ultimateBar = new UltimateBar(this);
         //        ultimateBar.setImmersionBar();
         setContentView(R.layout.activity_music);
+        setISshow(false);
         initView();
         initDialog();
         initMusic();
@@ -92,6 +93,11 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMyBinder = (MediaService.MyBinder) service;
+            if (mMyBinder.isPlaying()){
+                iv_pause.setImageResource(R.drawable.bofang_yellow_big);
+            }else {
+                iv_pause.setImageResource(R.drawable.pause_yellow_big);
+            }
             play_seek.setMax(mMyBinder.getProgress());
             music_duration.setText(time.format(mMyBinder.getProgress()) + "");
             play_seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

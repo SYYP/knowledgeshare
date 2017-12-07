@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import org.zackratos.ultimatebar.UltimateBar;
 
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.activity.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.login.bean.HobbyActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 
@@ -32,8 +32,8 @@ public class GuidePageActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         UltimateBar ultimateBar = new UltimateBar(this);
         ultimateBar.setImmersionBar();
+        setISshow(false);
         setContentView(R.layout.activity_guidepage);
-        setNotshow();
         vp = (ViewPager) findViewById(R.id.vp);
         if (mGuidePagerAdapter == null) {
             mGuidePagerAdapter = new GuidePagerAdapter();
@@ -74,7 +74,7 @@ public class GuidePageActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     SpUtils.putBoolean(GuidePageActivity.this, "guide", true);
-                    Intent intent = new Intent(GuidePageActivity.this, LoginActivity.class);
+                    Intent intent = new Intent(GuidePageActivity.this, HobbyActivity.class);
                     startActivity(intent);
                     finish();
                 }

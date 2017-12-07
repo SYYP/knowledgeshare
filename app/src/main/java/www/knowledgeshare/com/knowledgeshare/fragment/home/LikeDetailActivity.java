@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -25,8 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.ShoppingCartActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
-import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
@@ -49,9 +50,10 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
     private BaseDialog.Builder mBuilder;
     private BaseDialog mDialog;
     private boolean isDianzan;
-    private boolean isGuanzhu=true;
-    private boolean isZan=true;
-    private ImageView iv_guanzhu,iv_dianzan;
+    private boolean isGuanzhu = true;
+    private boolean isZan = true;
+    private ImageView iv_guanzhu, iv_dianzan;
+    private NestedScrollView nestView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         tv_guanzhu = (TextView) findViewById(R.id.tv_guanzhu);
         tv_guanzhu.setOnClickListener(this);
         tv_dianzan_count = (TextView) findViewById(R.id.tv_dianzan_count);
+        tv_dianzan_count.setOnClickListener(this);
         tv_teacher_intro = (TextView) findViewById(R.id.tv_teacher_intro);
         tv_shopcar = (TextView) findViewById(R.id.tv_shopcar);
         tv_shopcar.setOnClickListener(this);
@@ -93,10 +96,21 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         recycler_free.setNestedScrollingEnabled(false);
         recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
         recycler_liuyan.setNestedScrollingEnabled(false);
-        iv_guanzhu= (ImageView) findViewById(R.id.iv_guanzhu);
+        iv_guanzhu = (ImageView) findViewById(R.id.iv_guanzhu);
         iv_guanzhu.setOnClickListener(this);
-        iv_dianzan= (ImageView) findViewById(R.id.iv_dianzan);
+        iv_dianzan = (ImageView) findViewById(R.id.iv_dianzan);
         iv_dianzan.setOnClickListener(this);
+        nestView = (NestedScrollView) findViewById(R.id.nestView);
+        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY - oldScrollY > 0) {
+                    setPopHide();
+                } else if (scrollY - oldScrollY < 0) {
+                    SlidePopShow();
+                }
+            }
+        });
     }
 
     private void initData() {
@@ -111,10 +125,10 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (position != 0) {
                     showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
-                }else {
-                    mMyBinder.playMusic();
-                    EventBean eventBean = new EventBean("rotate");
-                    EventBus.getDefault().postSticky(eventBean);
+                } else {
+//                    mMyBinder.playMusic();
+                    setISshow(true);
+                    ClickPopShow();
                 }
             }
         });
@@ -156,7 +170,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
             helper.getView(R.id.iv_wengao).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(LikeDetailActivity.this,WenGaoActivity.class));
+                    startActivity(new Intent(LikeDetailActivity.this, WenGaoActivity.class));
                 }
             });
         }
@@ -335,17 +349,19 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 public void onClick(View view) {
                     if (isDianzan) {
                         iv_dianzan.setImageResource(R.drawable.free_yizan);
-                    }else {
+                    } else {
                         iv_dianzan.setImageResource(R.drawable.free_dianzan);
                     }
-                    isDianzan=!isDianzan;
+                    isDianzan = !isDianzan;
                 }
             });
         }
     }
+
     private MediaService.MyBinder mMyBinder;
     //“绑定”服务的intent
     private Intent MediaServiceIntent;
+
     private void initMusic() {
         MediaServiceIntent = new Intent(this, MediaService.class);
         //        startService(MediaServiceIntent);
@@ -356,8 +372,8 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMyBinder = (MediaService.MyBinder) service;
-            if (mMyBinder.isPlaying()){
-            }else {
+            if (mMyBinder.isPlaying()) {
+            } else {
             }
         }
 
@@ -373,6 +389,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         EventBus.getDefault().unregister(this);
         unbindService(mServiceConnection);
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -386,6 +403,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 startActivity(new Intent(this, SearchActivity.class));
                 break;
             case R.id.iv_shopcar:
+                startActivity(new Intent(this, ShoppingCartActivity.class));
                 break;
             case R.id.tv_shopcar:
                 Toast.makeText(this, "已成功加入购物车", Toast.LENGTH_SHORT).show();
@@ -401,21 +419,21 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.tv_guanzhu:
             case R.id.iv_guanzhu:
-                if (isGuanzhu){
+                if (isGuanzhu) {
                     iv_guanzhu.setImageResource(R.drawable.free_quxiaoguanzhu);
-                }else {
+                } else {
                     iv_guanzhu.setImageResource(R.drawable.free_guanzhu);
                 }
-                isGuanzhu=!isGuanzhu;
+                isGuanzhu = !isGuanzhu;
                 break;
             case R.id.tv_dianzan_count:
             case R.id.iv_dianzan:
-                if (isZan){
+                if (isZan) {
                     iv_dianzan.setImageResource(R.drawable.free_dianzan);
-                }else {
+                } else {
                     iv_dianzan.setImageResource(R.drawable.free_yizan);
                 }
-                isZan=!isZan;
+                isZan = !isZan;
                 break;
         }
     }

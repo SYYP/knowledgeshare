@@ -55,6 +55,17 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
                 startActivity(new Intent(ZhuanLanDetail1Activity.this, ZhuanLanDetail2Activity.class));
             }
         });
+        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    setPopHide();
+                } else if (dy < 0) {
+                    SlidePopShow();
+                }
+            }
+        });
     }
 
     private class MyAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
@@ -70,7 +81,7 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
                 @Override
                 public void onClick(View view) {
                     if (isCollected) {
-                        Drawable drawable = getResources().getDrawable(R.drawable.music_collect);
+                        Drawable drawable = getResources().getDrawable(R.drawable.zhuanlan_collect);
                         /// 这一步必须要做,否则不会显示.
                         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                         tv_collect.setCompoundDrawables(drawable, null, null, null);

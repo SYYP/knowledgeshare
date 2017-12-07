@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -47,6 +48,8 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     private boolean isCollected;
     private boolean isDianzan;
     private WebView webview;
+    private NestedScrollView nestView;
+    private boolean isBofang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,20 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         initView();
         initDialog();
         initData();
+        initListener();
+    }
+
+    private void initListener() {
+        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY - oldScrollY > 0) {
+                    setPopHide();
+                } else if (scrollY - oldScrollY < 0) {
+                    SlidePopShow();
+                }
+            }
+        });
     }
 
     private void initData() {
@@ -92,6 +109,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         tv_buy.setOnClickListener(this);
         recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
         recycler_liuyan.setNestedScrollingEnabled(false);
+        nestView= (NestedScrollView) findViewById(R.id.nestView);
         webview= (WebView) findViewById(R.id.webview);
         webview.setWebViewClient(new WebViewClient() {
             @Override
@@ -258,6 +276,15 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 isCollected = !isCollected;
                 break;
             case R.id.iv_bofang:
+                if (!isBofang){
+                    iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
+                    setISshow(true);
+                    ClickPopShow();
+                }else {
+                    iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
+                    ClickPauseMusic();
+                }
+                isBofang=!isBofang;
                 break;
             case R.id.iv_download:
                 Toast.makeText(this, "已成功加入下载列表", Toast.LENGTH_SHORT).show();
