@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.animation.Animation;
@@ -29,6 +30,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.HomeFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.MineFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.study.StudyFragment;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -56,14 +58,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private MediaService.MyBinder mMyBinder;
     //“绑定”服务的intent
     private Intent MediaServiceIntent;
+    private BaseFragment currentf;
 
+     HomeFragment homeFragment;
+     StudyFragment studyFragment;
+    BuyFragment buyFragment;
+    MineFragment mineFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
         initView();
-        initData();
+        homeFragment = new HomeFragment();
+        addFragments(homeFragment);
+       // initData();
         initListener();
         initAnim();
         initMusic();
@@ -151,7 +160,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         switch (v.getId()) {
             case R.id.ll_home:
-                position = 0;
+              //  position = 0;
+                if(homeFragment==null){
+                    homeFragment=new HomeFragment();
+                }
+                addFragments(homeFragment);
                 iv_home.setImageResource(R.drawable.tab_home_red);
                 iv_buy.setImageResource(R.drawable.tab_buy_normal);
                 iv_study.setImageResource(R.drawable.tab_study_normal);
@@ -160,26 +173,41 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 tv_buy.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
                 tv_study.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
                 tv_mine.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-                fragmentTransaction.show(mBaseFragments[0]);
-                fragmentTransaction.hide(mBaseFragments[1]).hide(mBaseFragments[2]).hide(mBaseFragments[3]);
-                fragmentTransaction.commitAllowingStateLoss();
+//                fragmentTransaction.show(mBaseFragments[0]);
+//                fragmentTransaction.hide(mBaseFragments[1]).hide(mBaseFragments[2]).hide(mBaseFragments[3]);
+//                fragmentTransaction.commitAllowingStateLoss();
                 break;
             case R.id.ll_study:
-                position = 1;
-                iv_home.setImageResource(R.drawable.tab_home_normal);
-                iv_buy.setImageResource(R.drawable.tab_buy_normal);
-                iv_study.setImageResource(R.drawable.tab_study_red);
-                iv_mine.setImageResource(R.drawable.tab_mine_normal);
-                tv_home.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-                tv_buy.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-                tv_study.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
-                tv_mine.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-                fragmentTransaction.show(mBaseFragments[1]);
-                fragmentTransaction.hide(mBaseFragments[0]).hide(mBaseFragments[2]).hide(mBaseFragments[3]);
-                fragmentTransaction.commitAllowingStateLoss();
+            //    position = 1;
+                boolean abool = SpUtils.getBoolean(this, "abool", true);
+                if (abool) {
+                   Intent intent=new Intent(this, www.knowledgeshare.com.knowledgeshare.activity.LoginActivity.class);
+                      startActivity(intent);
+                    overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
+
+                }else {
+                    if (studyFragment == null) {
+                        studyFragment = new StudyFragment();
+                    }
+                    addFragments(studyFragment);
+                    iv_home.setImageResource(R.drawable.tab_home_normal);
+                    iv_buy.setImageResource(R.drawable.tab_buy_normal);
+                    iv_study.setImageResource(R.drawable.tab_study_red);
+                    iv_mine.setImageResource(R.drawable.tab_mine_normal);
+                    tv_home.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
+                    tv_buy.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
+                    tv_study.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
+                    tv_mine.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
+
+
+//                    fragmentTransaction.show(mBaseFragments[1]);
+//                fragmentTransaction.hide(mBaseFragments[0]).hide(mBaseFragments[2]).hide(mBaseFragments[3]);
+//                fragmentTransaction.commitAllowingStateLoss();
+                }
                 break;
             case R.id.ll_listen:
-                position = 2;
+             //   position = 2;
+
                 if (isPause) {
                     iv_listen.setImageResource(R.drawable.tab_listen_bo);
                     if (mRotate_anim != null) {
@@ -198,7 +226,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 isPause = !isPause;
                 break;
             case R.id.ll_buy:
-                position = 3;
+               // position = 3;
+                if(buyFragment==null){
+                    buyFragment=new BuyFragment();
+                }
+                addFragments(buyFragment);
                 iv_home.setImageResource(R.drawable.tab_home_normal);
                 iv_buy.setImageResource(R.drawable.tab_buy_red);
                 iv_study.setImageResource(R.drawable.tab_study_normal);
@@ -207,12 +239,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 tv_buy.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                 tv_study.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
                 tv_mine.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-                fragmentTransaction.show(mBaseFragments[2]);
-                fragmentTransaction.hide(mBaseFragments[1]).hide(mBaseFragments[0]).hide(mBaseFragments[3]);
-                fragmentTransaction.commitAllowingStateLoss();
+//                fragmentTransaction.show(mBaseFragments[2]);
+//                fragmentTransaction.hide(mBaseFragments[1]).hide(mBaseFragments[0]).hide(mBaseFragments[3]);
+//                fragmentTransaction.commitAllowingStateLoss();
                 break;
             case R.id.ll_mine:
-                position = 4;
+             //   position = 4;
+                if(mineFragment==null){
+                    mineFragment=new MineFragment();
+                }
+                addFragments(mineFragment);
                 iv_home.setImageResource(R.drawable.tab_home_normal);
                 iv_buy.setImageResource(R.drawable.tab_buy_normal);
                 iv_study.setImageResource(R.drawable.tab_study_normal);
@@ -221,13 +257,33 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 tv_buy.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
                 tv_study.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
                 tv_mine.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
-                fragmentTransaction.show(mBaseFragments[3]);
-                fragmentTransaction.hide(mBaseFragments[1]).hide(mBaseFragments[2]).hide(mBaseFragments[0]);
-                fragmentTransaction.commitAllowingStateLoss();
+//                fragmentTransaction.show(mBaseFragments[3]);
+//                fragmentTransaction.hide(mBaseFragments[1]).hide(mBaseFragments[2]).hide(mBaseFragments[0]);
+//                fragmentTransaction.commitAllowingStateLoss();
                 break;
         }
     }
+    private void addFragments(BaseFragment f) {
+        // 第一步：得到fragment管理类
+        FragmentManager manager = getSupportFragmentManager();
+        // 第二步：开启一个事务
+        FragmentTransaction transaction = manager.beginTransaction();
 
+        if (currentf != null) {
+            //每次把前一个fragment给隐藏了
+            transaction.hide(currentf);
+        }
+        //isAdded:判断当前的fragment对象是否被加载过
+        if (!f.isAdded()) {
+            // 第三步：调用添加fragment的方法 第一个参数：容器的id 第二个参数：要放置的fragment的一个实例对象
+            transaction.add(R.id.fl_content, f);
+        }
+        //显示当前的fragment
+        transaction.show(f);
+        // 第四步：提交
+        transaction.commit();
+        currentf = f;
+    }
 
     private void initView() {
         iv_home = (ImageView) findViewById(R.id.iv_home);

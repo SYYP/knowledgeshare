@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,6 +22,9 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.login.ForgetActivity;
 import www.knowledgeshare.com.knowledgeshare.login.bean.HobbyActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+
+import static www.knowledgeshare.com.knowledgeshare.R.id.iv_back;
 
 /**
  * date : ${Date}
@@ -36,6 +41,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private TextView login_sso;
     private RelativeLayout forget_pwd;
     private TextView login_close;
+    private ImageView colse_back;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,6 +50,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         UltimateBar ultimateBar = new UltimateBar(this);
         ultimateBar.setImmersionBar();
         setContentView(R.layout.activity_login);
+
           /*
          获取控件id
         */
@@ -52,6 +60,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         rember_pwd = (CheckBox) findViewById(R.id.rember_pwd);
         no_account = (TextView) findViewById(R.id.no_account);
         login_sso = (TextView) findViewById(R.id.login_sso);
+        colse_back = (ImageView) findViewById(R.id.close_login);
         forget_pwd = (RelativeLayout) findViewById(R.id.forget_pwd);
         login_phone.setOnClickListener(this);
         rember_pwd.setOnClickListener(this);
@@ -59,16 +68,23 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         no_account.setOnClickListener(this);
         login_sso.setOnClickListener(this);
         forget_pwd.setOnClickListener(this);
+        colse_back.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-
+            case R.id.close_login:
+                finish();
+//                Intent intents=new Intent(this,MainActivity.class);
+//                startActivity(intents);
+              overridePendingTransition(R.anim.close_anim,R.anim.start_anim);
+                break;
             case R.id.login_sso:
                 //                login();
                 startActivity(new Intent(this, HobbyActivity.class));
-                finish();
+                //存一个值判断登录过
+                SpUtils.putBoolean(this,"abool",false);
                 break;
             case R.id.login_phone:
                 login_phone.setCursorVisible(true);

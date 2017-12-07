@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import org.zackratos.ultimatebar.UltimateBar;
 
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.activity.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.login.bean.HobbyActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 
@@ -73,7 +73,7 @@ public class GuidePageActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     SpUtils.putBoolean(GuidePageActivity.this, "guide", true);
-                    Intent intent = new Intent(GuidePageActivity.this, LoginActivity.class);
+                    Intent intent = new Intent(GuidePageActivity.this, HobbyActivity.class);
                     startActivity(intent);
                     finish();
                 }
