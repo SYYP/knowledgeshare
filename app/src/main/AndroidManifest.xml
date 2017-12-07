@@ -79,7 +79,6 @@
         <activity android:name=".activity.DownLoadActivity" />
         <activity android:name=".activity.BindPhoneActivity" />
         <activity android:name=".fragment.home.SoftMusicDetailActivity" />
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity
             android:name=".fragment.home.LiuYanActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />

@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -153,7 +154,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 if (!TextUtils.isEmpty(et_search.getText().toString())) {
                     doSearch(et_search.getText().toString());
                 } else {
-                    ll_root_view.setBackgroundResource(R.color.white);
                     ll_lishi.setVisibility(View.VISIBLE);
                     ll_hot.setVisibility(View.VISIBLE);
                     ll_result.setVisibility(View.GONE);
@@ -174,16 +174,26 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void doSearch(final String content) {
-        ll_root_view.setBackgroundResource(R.color.huise);
         ll_lishi.setVisibility(View.GONE);
         ll_hot.setVisibility(View.GONE);
         doSavehistory(content);
         ll_result.setVisibility(View.VISIBLE);
         DaShiBanAdapter daShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban, hotList);
         recycler_dashiban.setAdapter(daShiBanAdapter);
-
+        daShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(SearchActivity.this,ZhuanLanActivity.class));
+            }
+        });
         YinYueKeAdapter yinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, hotList);
         recycler_yinyueke.setAdapter(yinYueKeAdapter);
+        yinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(SearchActivity.this,SoftMusicDetailActivity.class));
+            }
+        });
     }
 
     private void initData() {
