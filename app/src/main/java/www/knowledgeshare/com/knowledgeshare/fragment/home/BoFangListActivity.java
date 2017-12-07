@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -19,8 +20,6 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
-
-import static www.knowledgeshare.com.knowledgeshare.R.id.recycler_yinyueke;
 
 public class BoFangListActivity extends BaseActivity implements View.OnClickListener {
 
@@ -111,6 +110,12 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                 @Override
                 public void onClick(View view) {
                     showDialog();
+                }
+            });
+            helper.getView(R.id.iv_wengao).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(BoFangListActivity.this,WenGaoActivity.class));
                 }
             });
         }

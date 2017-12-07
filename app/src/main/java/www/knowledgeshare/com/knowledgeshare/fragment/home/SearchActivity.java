@@ -184,8 +184,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
         YinYueKeAdapter yinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, hotList);
         recycler_yinyueke.setAdapter(yinYueKeAdapter);
-
-        SoftKeyboardTool.closeKeyboard(this);
     }
 
     private void initData() {
