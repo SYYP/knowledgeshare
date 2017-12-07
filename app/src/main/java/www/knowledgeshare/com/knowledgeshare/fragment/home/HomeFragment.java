@@ -196,7 +196,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         layoutParams.height = MyUtils.getScreenWidth(mContext) / 2;
         banner.setLayoutParams(layoutParams);
         BannerUtils.startBanner(banner, bannerList);
-        Glide.with(this).load(R.drawable.demo).into(iv_zhuanlan_head);
+        Glide.with(this).load(R.drawable.face).into(iv_zhuanlan_head);
         recycler_zhuanlan.setLayoutManager(new LinearLayoutManager(mContext));
         recycler_zhuanlan.setNestedScrollingEnabled(false);
         recycler_comment.setLayoutManager(new LinearLayoutManager(mContext));
