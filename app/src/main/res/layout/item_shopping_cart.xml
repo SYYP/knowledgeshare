@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+        <CheckBox
+            android:id="@+id/item_checkBox"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:button="@null"
+            android:background="@drawable/selector_gouwuche" />
+        <RelativeLayout
+            android:id="@+id/item_rl"
+            android:layout_toRightOf="@+id/item_checkBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/item_face_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/power_gwc_touxiang"/>
+            <TextView
+                android:id="@+id/item_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="15dp"
+                android:text="崔宗顺的男低音歌唱家秘籍"
+                android:textColor="@color/text_black"
+                android:layout_toRightOf="@+id/item_face_iv"/>
+            <TextView
+                android:id="@+id/item_content_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:text="男低音，一个神秘而又充满魅力的声部男低音，一个神秘而又充满魅力的声部"
+                android:textColor="#666666"
+                android:textSize="12dp"
+                android:layout_below="@+id/item_title_tv"
+                android:layout_toRightOf="@+id/item_face_iv"/>
+            <TextView
+                android:id="@+id/item_money_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/item_content_tv"
+                android:layout_marginTop="15dp"
+                android:text="￥198/年"
+                android:textColor="@color/red2"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

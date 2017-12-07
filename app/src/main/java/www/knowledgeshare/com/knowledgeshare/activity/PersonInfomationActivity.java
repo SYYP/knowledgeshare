@@ -1,16 +1,29 @@
 package www.knowledgeshare.com.knowledgeshare.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bigkoo.pickerview.OptionsPickerView;
+import com.bigkoo.pickerview.TimePickerView;
+import com.bigkoo.pickerview.listener.CustomListener;
 import com.bumptech.glide.Glide;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.compress.Luban;
@@ -20,14 +33,19 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalSelectionDialog;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.BaseSelectPopupWindow;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.TimeUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
 public class PersonInfomationActivity extends BaseActivity implements View.OnClickListener {
@@ -51,7 +69,11 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
     private List<String> cameraList;
     private List<LocalMedia> selectList = new ArrayList<>();
     private String cutPath;
-
+    private BaseSelectPopupWindow popWiw;// 昵称 编辑框
+    private List<String> sexLiset;
+    private TimePickerView pvCustomLunar;
+    private OptionsPickerView pvCustomOptions;
+    private List<String> xueliItem, hangyeItem, zhiyeItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +94,8 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
         personXueliRl.setOnClickListener(this);
         personHangyeRl.setOnClickListener(this);
         personZhiyeRl.setOnClickListener(this);
-        cameraList = new ArrayList<>();
-        cameraList.add("从相册中选择");
-        cameraList.add("拍照");
+
+        initLunarPicker();//初始化时间选择器
 
     }
 
@@ -85,19 +106,50 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                 finish();
                 break;
             case R.id.person_face_rl://头像
+                cameraList = new ArrayList<>();
+                cameraList.add("从相册中选择");
+                cameraList.add("拍照");
                 showCamera();
                 break;
             case R.id.person_name_rl://昵称
+                showNickName();
                 break;
             case R.id.person_sex_rl://性别
+                sexLiset = new ArrayList<>();
+                sexLiset.add("男");
+                sexLiset.add("女");
+                showSex();
                 break;
             case R.id.person_date_rl://出生年月
+                pvCustomLunar.show();
                 break;
             case R.id.person_xueli_rl://学历
+                xueliItem = new ArrayList<>();
+                xueliItem.add("高中");
+                xueliItem.add("专科");
+                xueliItem.add("本科");
+                xueliItem.add("研究生");
+                xueliItem.add("硕士");
+                xueliItem.add("博士");
+                xueliItem.add("博士后");
+                initCustomOptionPicker(xueliItem,0);
+                pvCustomOptions.show();
                 break;
             case R.id.person_hangye_rl://行业
+                hangyeItem = new ArrayList<>();
+                for (int i = 0; i < 10; i++) {
+                    hangyeItem.add("行业"+i);
+                }
+                initCustomOptionPicker(hangyeItem,1);
+                pvCustomOptions.show();
                 break;
             case R.id.person_zhiye_rl://职业
+                zhiyeItem = new ArrayList<>();
+                for (int i = 0; i < 10; i++) {
+                    zhiyeItem.add("职业"+i);
+                }
+                initCustomOptionPicker(zhiyeItem,2);
+                pvCustomOptions.show();
                 break;
         }
     }
@@ -209,4 +261,238 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
         }
     }
 
+    private void showNickName() {
+        if (popWiw == null) {
+            popWiw = new BaseSelectPopupWindow(this, R.layout.edit_data);
+            // popWiw.setOpenKeyboard(true);
+            popWiw.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+
+            popWiw.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+            popWiw.setShowTitle(false);
+        }
+        popWiw.setFocusable(true);
+        InputMethodManager im = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        im.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+
+        final ImageView send = (ImageView) popWiw.getContentView().findViewById(R.id.query_iv);
+        final EditText edt = (EditText) popWiw.getContentView().findViewById(R.id.edt_content);
+        final ImageView close = popWiw.getContentView().findViewById(R.id.cancle_iv);
+
+        edt.setInputType(EditorInfo.TYPE_CLASS_TEXT);
+//        edt.setImeOptions(EditorInfo.IME_ACTION_SEND);
+        edt.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+                if (TextUtils.isEmpty(edt.getText())) {
+                    send.setEnabled(false);
+                } else {
+                    send.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+
+            }
+        });
+        /*edt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView v, int actionId,
+                                          KeyEvent event) {
+
+                //输入法软键盘的控制
+                if (actionId == EditorInfo.IME_ACTION_SEND
+                        || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+
+                    if (!TextUtils.isEmpty(edt.getText().toString().trim())) {
+
+                        // /提交内容
+                        String content = edt.getText().toString().trim();
+//                        nameTv.setText(content);
+                        popWiw.dismiss();
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });*/
+        send.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(edt.getText().toString().trim())) {
+
+                    // 昵称
+                    String content = edt.getText().toString().trim();
+                    nameTv.setText(content);
+                    popWiw.dismiss();
+                }
+            }
+        });
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popWiw.dismiss();
+            }
+        });
+
+        popWiw.showAtLocation(personNameRl, Gravity.BOTTOM
+                | Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    private void showSex() {
+        new NormalSelectionDialog.Builder(this).setlTitleVisible(false)   //设置是否显示标题
+                .setItemHeight(55)  //设置item的高度
+                .setItemWidth(0.9f)  //屏幕宽度*0.9
+                .setItemTextColor(R.color.text_black)  //设置item字体颜色
+                .setItemTextSize(16)  //设置item字体大小
+                .setCancleButtonText("取消")  //设置最底部“取消”按钮文本
+                .setOnItemListener(new DialogInterface.OnItemClickListener<NormalSelectionDialog>() {
+
+                    @Override
+                    public void onItemClick(NormalSelectionDialog dialog, View button, int
+                            position) {
+                        switch (position){
+                            case 0://男
+                                sexTv.setText("男");
+                                break;
+                            case 1://女
+                                sexTv.setText("女");
+                                break;
+                        }
+                        dialog.dismiss();
+                    }
+                })
+                .setCanceledOnTouchOutside(true)  //设置是否可点击其他地方取消dialog
+                .build()
+                .setDatas(sexLiset)
+                .show();
+    }
+
+    /**
+     * 时间选择器
+     */
+    private void initLunarPicker() {
+        Calendar selectedDate = Calendar.getInstance();//系统当前时间
+        Calendar startDate = Calendar.getInstance();
+        startDate.set(1949, 0, 1);
+        Calendar endDate = Calendar.getInstance();
+        endDate.set(2030, 11, 31);
+        //时间选择器 ，自定义布局
+        pvCustomLunar = new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date, View v) {//选中事件回调
+                /*Date nowDate = TimeUtils.getNowDate();
+                if (date.getTime() > nowDate.getTime()) {
+                    TUtils.showShort(getApplicationContext(), "只能选择当前日期之前的日期");
+                    return;
+                }*/
+                dateTv.setText(getTime(date));
+            }
+        })
+                .setDate(selectedDate)
+                .setRangDate(startDate, endDate)
+                .setLayoutRes(R.layout.pickerview_date_layout, new CustomListener() {
+
+                    @Override
+                    public void customLayout(final View v) {
+                        final TextView tvSubmit = (TextView) v.findViewById(R.id.tv_finish);
+                        final TextView tvCancle = (TextView) v.findViewById(R.id.tv_cancle);
+                        tvSubmit.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                pvCustomLunar.returnData();
+                                pvCustomLunar.dismiss();
+                            }
+                        });
+                        tvCancle.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                pvCustomLunar.dismiss();
+                            }
+                        });
+                    }
+                })
+                .setContentSize(16)
+                .setLineSpacingMultiplier(1.6f)
+                .isCyclic(true)//是否循环滚动
+                .setType(new boolean[]{true, true, true, false, false, false})
+                .isCenterLabel(true) //是否只显示中间选中项的label文字，false则每项item全部都带有label。
+                .setDividerColor(getResources().getColor(R.color.textcolor))
+                .setTextColorOut(getResources().getColor(R.color.textcolor))
+                .setBgColor(getResources().getColor(R.color.white))
+                .setLabel("", "", "", "", "", "")//默认设置为年月日时分秒
+                .isCenterLabel(true)
+                .setTextColorCenter(getResources().getColor(R.color.text_black)) //设置选中项文字颜色
+                .build();
+    }
+
+    private String getTime(Date date) {//可根据需要自行截取数据显示
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return format.format(date);
+    }
+
+    private void initCustomOptionPicker(final List<String> data, final int flag){
+        pvCustomOptions = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3, View v) {
+                //返回的分别是三个级别的选中位置
+                String tx = data.get(options1);
+                switch (flag){
+                    case 0:
+                        xueliTv.setText(tx);
+                        break;
+                    case 1:
+                        hangyeTv.setText(tx);
+                        break;
+                    case 2:
+                        zhiyeTv.setText(tx);
+                        break;
+                }
+            }
+        })
+                .setLayoutRes(R.layout.pickerview_custom_options, new CustomListener() {
+                    @Override
+                    public void customLayout(View v) {
+                        final TextView tvSubmit = (TextView) v.findViewById(R.id.tv_finish);
+                        final TextView tvCancle = (TextView) v.findViewById(R.id.tv_cancle);
+
+                        tvSubmit.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                pvCustomOptions.returnData();
+                                pvCustomOptions.dismiss();
+                            }
+                        });
+
+                        tvCancle.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                pvCustomOptions.dismiss();
+                            }
+                        });
+                    }
+                })
+                .setSelectOptions(2)//默认选中项
+                .setContentTextSize(20)//设置滚轮文字大小
+                .setBgColor(getResources().getColor(R.color.huise2))
+                .setTextColorOut(getResources().getColor(R.color.textcolor))
+                .setDividerColor(getResources().getColor(R.color.textcolor))
+                .setTextColorCenter(getResources().getColor(R.color.text_black)) //设置选中项文字颜色
+                .build();
+        pvCustomOptions.setPicker(data);//添加数据
+
+    }
 }
