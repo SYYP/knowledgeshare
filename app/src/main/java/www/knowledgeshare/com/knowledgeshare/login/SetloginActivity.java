@@ -38,6 +38,7 @@ public class SetloginActivity extends BaseActivity implements View.OnClickListen
         UltimateBar ultimateBar = new UltimateBar(this);
         ultimateBar.setImmersionBar();
         setContentView(R.layout.activity_setloginpwd);
+        setNotshow();
         initView();
     }
     private void initView() {

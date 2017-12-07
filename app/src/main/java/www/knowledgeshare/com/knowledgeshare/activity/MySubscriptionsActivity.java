@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.EasyLessonBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
 
 /**
  * 我的订阅
@@ -56,6 +58,12 @@ public class MySubscriptionsActivity extends BaseActivity implements View.OnClic
         }
         MySubAdapter adapter = new MySubAdapter(R.layout.item_my_sub,list);
         recyclerWddy.setAdapter(adapter);
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(MySubscriptionsActivity.this, ZhuanLanActivity.class));
+            }
+        });
     }
 
     @Override

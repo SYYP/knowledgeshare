@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_mine"
+    tools:context="www.knowledgeshare.com.knowledgeshare.activity.ShoppingCartActivity">
+    <include
+        android:id="@+id/include"
+        layout="@layout/item_title_layout"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_gwc"
+        android:layout_below="@+id/include"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/bg_wanjiao2">
+    </android.support.v7.widget.RecyclerView>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="horizontal">
+        <CheckBox
+            android:id="@+id/all_checkBox"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="15dp"
+            android:checked="false"
+            android:layout_centerVertical="true"
+            android:button="@null"
+            android:background="@drawable/selector_gouwuche" />
+        <TextView
+            android:id="@+id/heji_tv"
+            android:layout_toRightOf="@+id/all_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:padding="15dp"
+            android:text="合计：￥0.00"
+            android:textColor="@color/text_black"/>
+        <TextView
+            android:id="@+id/jiesuan_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@color/red2"
+            android:gravity="center"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:text="结算（0）"
+            android:textColor="@color/white"/>
+    </RelativeLayout>
+
+</RelativeLayout>

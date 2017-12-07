@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_wanjiao2"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="30dp"
+        android:paddingLeft="30dp"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/dengji_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/power_tong"
+            android:layout_gravity="center_horizontal"/>
+        <TextView
+            android:id="@+id/title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="恭喜您获得铜勋章"
+            android:textColor="@color/text_black"
+            android:paddingTop="10dp"
+            android:layout_gravity="center_horizontal"/>
+        <TextView
+            android:id="@+id/content_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="并获得5元代金券，已放入账户余额"
+            android:textColor="@color/text_black"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="5dp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bg_mine"
+            android:layout_marginTop="15dp"/>
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="确定"
+            android:textColor="@color/black"
+            android:gravity="center_horizontal"
+            android:padding="10dp"/>
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_mine"
+    tools:context="www.knowledgeshare.com.knowledgeshare.activity.FeedBackActivity">
+    <include layout="@layout/item_title_layout"/>
+    <EditText
+        android:id="@+id/feed_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_wanjiao2"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:minLines="10"
+        android:gravity="start"
+        android:textColorHint="#999999"
+        android:textColor="@color/text_black"
+        android:hint="请输入您的意见"
+        android:textSize="14dp"/>
+</LinearLayout>

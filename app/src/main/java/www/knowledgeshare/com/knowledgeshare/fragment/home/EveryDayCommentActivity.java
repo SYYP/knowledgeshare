@@ -13,7 +13,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -29,7 +28,6 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
-import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
 public class EveryDayCommentActivity extends BaseActivity implements View.OnClickListener {
 
@@ -45,14 +43,6 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
     private LinearLayout activity_free;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
-    private ImageView iv_delete;
-    private CircleImageView iv_bo_head;
-    private TextView tv_title;
-    private TextView tv_subtitle;
-    private ImageView iv_arrow_top;
-    private ImageView iv_mulu;
-    private RelativeLayout rl_bofang;
-    private boolean isBofang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,17 +85,6 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
         tv_collect_count = (TextView) findViewById(R.id.tv_collect_count);
         recycler_liebiao = (RecyclerView) findViewById(R.id.recycler_liebiao);
         activity_free = (LinearLayout) findViewById(R.id.activity_free);
-        iv_delete = (ImageView) findViewById(R.id.iv_delete);
-        iv_delete.setVisibility(View.VISIBLE);
-        iv_delete.setOnClickListener(this);
-        iv_bo_head = (CircleImageView) findViewById(R.id.iv_bo_head);
-        tv_title = (TextView) findViewById(R.id.tv_title);
-        tv_subtitle = (TextView) findViewById(R.id.tv_subtitle);
-        iv_arrow_top = (ImageView) findViewById(R.id.iv_arrow_top);
-        iv_arrow_top.setOnClickListener(this);
-        iv_mulu = (ImageView) findViewById(R.id.iv_mulu);
-        iv_mulu.setOnClickListener(this);
-        rl_bofang = (RelativeLayout) findViewById(R.id.rl_bofang);
         recycler_liebiao.setLayoutManager(new LinearLayoutManager(this));
         recycler_liebiao.setNestedScrollingEnabled(false);
         List<String> list = new ArrayList<>();
@@ -117,8 +96,6 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
         lieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                isBofang=true;
-                rl_bofang.setVisibility(View.VISIBLE);
                 mMyBinder.playMusic();
                 EventBean eventBean = new EventBean("rotate");
                 EventBus.getDefault().postSticky(eventBean);
@@ -196,9 +173,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMyBinder = (MediaService.MyBinder) service;
             if (mMyBinder.isPlaying()){
-                rl_bofang.setVisibility(View.VISIBLE);
             }else {
-                rl_bofang.setVisibility(View.GONE);
             }
         }
 
@@ -229,23 +204,6 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.tv_download:
                 startActivity(new Intent(this,DownLoadListActivity.class));
-                break;
-            case R.id.iv_delete:
-                isBofang = false;
-                rl_bofang.setVisibility(View.GONE);
-                EventBean eventBean = new EventBean("norotate");
-                EventBus.getDefault().postSticky(eventBean);
-                mMyBinder.closeMedia();
-                break;
-            case R.id.iv_arrow_top:
-                Intent intent1 = new Intent(this, MusicActivity.class);
-                startActivity(intent1);
-                overridePendingTransition(R.anim.bottom_in, 0);
-                break;
-            case R.id.iv_mulu:
-                Intent intent11 = new Intent(this, BoFangListActivity.class);
-                startActivity(intent11);
-                //                mActivity.overridePendingTransition(R.anim.bottom_in, 0);
                 break;
         }
     }

@@ -138,33 +138,38 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
                                 <ImageView
+                                    android:id="@+id/iv_guanzhu"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
+                                    android:paddingLeft="10dp"
                                     android:src="@drawable/free_guanzhu"/>
                                 <TextView
                                     android:id="@+id/tv_guanzhu"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
-                                    android:layout_marginLeft="5dp"
+                                    android:paddingLeft="5dp"
                                     android:text="关注"/>
                             </LinearLayout>
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp">
+                                android:layout_marginLeft="5dp"
+                            >
                                 <ImageView
+                                    android:id="@+id/iv_dianzan"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
+                                    android:paddingLeft="10dp"
                                     android:src="@drawable/free_yizan"/>
                                 <TextView
                                     android:id="@+id/tv_dianzan_count"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
-                                    android:layout_marginLeft="5dp"
+                                    android:paddingLeft="5dp"
                                     android:text="11"/>
                             </LinearLayout>
                         </LinearLayout>
@@ -326,7 +331,7 @@
             android:textColor="@color/textblack"
             android:textSize="16sp"
             android:gravity="center"
-            android:padding="12dp"
+            android:padding="14dp"
             android:background="@color/yellow"
             android:layout_width="0dp"
             android:layout_height="match_parent"/>
@@ -337,10 +342,9 @@
             android:textColor="@color/white"
             android:textSize="15sp"
             android:gravity="center"
-            android:padding="12dp"
+            android:padding="14dp"
             android:background="@color/text_red_dark"
             android:layout_width="0dp"
             android:layout_height="match_parent"/>
     </LinearLayout>
-    <include layout="@layout/smallmusic"></include>
 </FrameLayout>

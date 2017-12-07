@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_mine"
+    tools:context="www.knowledgeshare.com.knowledgeshare.activity.QueryOrderActivity">
+    <include
+        android:id="@+id/include"
+        layout="@layout/item_title_layout"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_order"
+        android:layout_below="@+id/include"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/bg_wanjiao2"/>
+    <TextView
+        android:id="@+id/gopay_tv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/red2"
+        android:text="去支付"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        android:gravity="center"/>
+</RelativeLayout>

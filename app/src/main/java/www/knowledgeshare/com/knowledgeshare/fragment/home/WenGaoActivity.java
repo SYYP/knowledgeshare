@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,12 +39,17 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private boolean isGuanzhu;
+    private WebView webview;
+    private boolean isDianzan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wen_gao);
         initView();
+        initDialog();
+        showTanchuangDialog();
+        initData();
     }
 
     private void initView() {
@@ -61,9 +68,19 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
         recycler_liuyan = (RecyclerView) findViewById(R.id.recycler_liuyan);
         recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
         recycler_liuyan.setNestedScrollingEnabled(false);
-        initDialog();
-        showTanchuangDialog();
-        initData();
+        webview= (WebView) findViewById(R.id.webview);
+        webview.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return false;
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+            }
+        });
+        webview.loadUrl("http://www.baidu.com");
     }
 
     private void initData() {
@@ -87,7 +104,18 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-
+            final ImageView iv_dianzan = helper.getView(R.id.iv_dianzan);
+            helper.getView(R.id.ll_dianzan).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (isDianzan) {
+                        iv_dianzan.setImageResource(R.drawable.free_yizan);
+                    }else {
+                        iv_dianzan.setImageResource(R.drawable.free_dianzan);
+                    }
+                    isDianzan=!isDianzan;
+                }
+            });
         }
     }
 

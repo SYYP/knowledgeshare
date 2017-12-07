@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="留言"/>
+        android:text="留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容"/>
     <LinearLayout
         android:id="@+id/ll_dianzan"
         android:layout_width="wrap_content"
@@ -77,7 +77,7 @@
         android:background="@drawable/bg_huise_line"
         android:minHeight="80dp"
         android:padding="10dp"
-        android:text="在的"/>
+        android:text="你好我是作者，有什么可以帮助到你吗？"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

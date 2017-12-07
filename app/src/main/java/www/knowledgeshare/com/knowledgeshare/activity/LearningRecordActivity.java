@@ -37,6 +37,7 @@ public class LearningRecordActivity extends BaseActivity implements View.OnClick
 
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
+        titleBackIv.setOnClickListener(this);
         titleContentTv.setText("学习记录");
         lllsRl.setOnClickListener(this);
         xzRl.setOnClickListener(this);

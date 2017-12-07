@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import www.knowledgeshare.com.knowledgeshare.activity.MyMedalActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.MySubscriptionsActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.PersonInfomationActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.SettingActivity;
+import www.knowledgeshare.com.knowledgeshare.activity.TaskDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
@@ -37,6 +39,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.wddy_rl) RelativeLayout wddyRl;@BindView(R.id.xxjl_rl) RelativeLayout xxjlRl;
     @BindView(R.id.zhye_tv) TextView zhyeTv;@BindView(R.id.wdzh_rl) RelativeLayout wdzhRl;
     @BindView(R.id.wdxz_rl) RelativeLayout wdxzRl;@BindView(R.id.zhaq_rl) RelativeLayout zhaqRl;
+    @BindView(R.id.rwxq_ll) LinearLayout rwxqLl;
     Unbinder unbinder;
 
 
@@ -62,6 +65,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         wdzhRl.setOnClickListener(this);
         wdxzRl.setOnClickListener(this);
         zhaqRl.setOnClickListener(this);
+        rwxqLl.setOnClickListener(this);
         progressBar.setProgress(60);
         return inflate;
     }
@@ -83,6 +87,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.mine_face_iv:
                 startActivity(new Intent(getActivity(),PersonInfomationActivity.class));
+                break;
+            case R.id.rwxq_ll://任务详情
+                startActivity(new Intent(getActivity(),TaskDetailActivity.class));
                 break;
             case R.id.xxsj_rl://学习时间
                 startActivity(new Intent(getActivity(), LearningTimeActivity.class));

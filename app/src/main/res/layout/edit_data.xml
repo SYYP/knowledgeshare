@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="55dp"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:gravity="clip_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="12dp"
+        android:paddingRight="20dp" >
+
+        <EditText
+            android:id="@+id/edt_content"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/query_iv"
+            android:background="@drawable/bg_nicheng"
+            android:focusable="true"
+            android:hint="请输入昵称"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="#999999"
+            android:textSize="14sp" >
+        </EditText>
+
+        <ImageView
+            android:id="@+id/query_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="10dp"
+            android:paddingLeft="20dp"
+            android:layout_toLeftOf="@+id/cancle_iv"
+            android:layout_centerVertical="true"
+            android:src="@drawable/power_query"
+            android:enabled="false"/>
+        <ImageView
+            android:id="@+id/cancle_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/power_del"
+            android:enabled="false" />
+    </RelativeLayout>
+
+</LinearLayout>

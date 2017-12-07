@@ -45,64 +45,68 @@
                             android:textColor="@color/white"
                             android:textSize="14dp" />
                         <LinearLayout
-                            android:id="@+id/view_08"
+                            android:id="@+id/rwxq_ll"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center_horizontal"
-                            android:layout_toRightOf="@+id/mine_face_iv"
-                            android:layout_marginTop="50dp"
                             android:layout_marginLeft="20dp"
-                            android:orientation="vertical">
-                            <ImageView
-                                android:id="@+id/xz_start_iv"
+                            android:paddingBottom="40dp"
+                            android:layout_toRightOf="@+id/mine_face_iv">
+                            <LinearLayout
+                                android:id="@+id/view_08"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/power_xz_v0"/>
-                            <TextView
+                                android:gravity="center_horizontal"
+                                android:layout_marginTop="50dp"
+                                android:orientation="vertical">
+                                <ImageView
+                                    android:id="@+id/xz_start_iv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/power_xz_v0"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="默认"
+                                    android:layout_marginTop="5dp"
+                                    android:textColor="@color/white"
+                                    android:textSize="10sp"/>
+                            </LinearLayout>
+
+                            <ProgressBar
+                                android:id="@+id/progressBar"
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:progressDrawable="@drawable/mine_progressbar"
+                                android:layout_toRightOf="@+id/view_08"
+                                android:layout_width="100dp"
+                                android:layout_height="4dp"
+                                android:max="100"
+                                android:layout_marginTop="60dp"
+                                android:layout_marginLeft="10dp"/>
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="默认"
-                                android:layout_marginTop="5dp"
-                                android:textColor="@color/white"
-                                android:textSize="10sp"/>
+                                android:layout_toRightOf="@+id/progressBar"
+                                android:gravity="center_horizontal"
+
+                                android:orientation="vertical"
+                                android:layout_marginTop="50dp"
+                                android:layout_marginLeft="10dp">
+
+                                <ImageView
+                                    android:id="@+id/xz_end_iv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/power_xz_v1" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp"
+                                    android:text="铜勋章"
+                                    android:textColor="@color/white"
+                                    android:textSize="10sp"/>
+                            </LinearLayout>
                         </LinearLayout>
-
-                        <ProgressBar
-                            android:id="@+id/progressBar"
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:progressDrawable="@drawable/mine_progressbar"
-                            android:layout_toRightOf="@+id/view_08"
-                            android:layout_width="100dp"
-                            android:layout_height="4dp"
-                            android:max="100"
-                            android:layout_marginTop="60dp"
-                            android:layout_marginLeft="10dp"/>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_toRightOf="@+id/progressBar"
-                            android:gravity="center_horizontal"
-
-                            android:orientation="vertical"
-                            android:layout_marginTop="50dp"
-                            android:layout_marginLeft="10dp">
-
-                            <ImageView
-                                android:id="@+id/xz_end_iv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/power_xz_v1" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:text="铜勋章"
-                                android:textColor="@color/white"
-                                android:textSize="10sp"/>
-                        </LinearLayout>
-
-
                     </RelativeLayout>
                     <LinearLayout
                         android:layout_width="match_parent"

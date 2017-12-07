@@ -69,10 +69,11 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.github.zcweng:switch-button:0.0.3@aar'
     compile 'com.lai.weavey:dialog:2.0.1'
+    compile 'com.contrarywind:Android-PickerView:3.2.6'
     compile 'com.hyman:flowlayout-lib:1.1.2'
     compile 'com.lzy.net:okgo:3.0.4'
     compile 'com.lzy.net:okserver:2.0.5'
+    compile 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.1'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    compile 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.1'
 }

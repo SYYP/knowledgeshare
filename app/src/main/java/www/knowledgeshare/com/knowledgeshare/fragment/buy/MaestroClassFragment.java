@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.buy;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -22,6 +23,8 @@ import butterknife.Unbinder;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.EasyLessonBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanDetail1Activity;
 
 /**
  * Created by Administrator on 2017/11/23.
@@ -61,6 +64,12 @@ public class MaestroClassFragment extends BaseFragment {
         }
         MeastroClassAdapter adapter = new MeastroClassAdapter(R.layout.item_meastro_class,list);
         recyclerMeastro.setAdapter(adapter);
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(mContext, ZhuanLanActivity.class));
+            }
+        });
     }
 
     @Override

@@ -26,31 +26,35 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="30dp">
                     <TextView
+                        android:id="@+id/tong_tv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:paddingLeft="20dp"
                         android:text="铜勋章"
-                        android:drawableTop="@drawable/power_tong"
+                        android:drawableTop="@drawable/power_tong_hui"
                         android:gravity="center"
+                        android:layout_gravity="center_vertical"
                         android:drawablePadding="10dp"
                         android:textColor="@color/text_black"/>
                     <TextView
+                        android:id="@+id/yin_tv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="银勋章"
-                        android:drawableTop="@drawable/power_yin"
+                        android:drawableTop="@drawable/power_yin_hui"
                         android:gravity="center"
                         android:drawablePadding="10dp"
                         android:textColor="@color/text_black"/>
                     <TextView
+                        android:id="@+id/jin_tv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:paddingRight="20dp"
                         android:text="金勋章"
-                        android:drawableTop="@drawable/power_jin"
+                        android:drawableTop="@drawable/power_jin_hui"
                         android:gravity="center"
                         android:drawablePadding="10dp"
                         android:textColor="@color/text_black"/>
@@ -61,22 +65,24 @@
                     android:paddingTop="20dp"
                     android:paddingBottom="20dp">
                     <TextView
+                        android:id="@+id/baijin_tv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:paddingLeft="60dp"
                         android:text="白金勋章"
-                        android:drawableTop="@drawable/power_baijin"
+                        android:drawableTop="@drawable/power_baijin_hui"
                         android:gravity="center"
                         android:drawablePadding="10dp"
                         android:textColor="@color/text_black"/>
                     <TextView
+                        android:id="@+id/zuanshi_tv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:paddingRight="60dp"
                         android:text="钻石勋章"
-                        android:drawableTop="@drawable/power_zuanshi"
+                        android:drawableTop="@drawable/power_zuanshi_hui"
                         android:gravity="center"
                         android:drawablePadding="10dp"
                         android:textColor="@color/text_black"/>

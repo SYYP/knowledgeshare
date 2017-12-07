@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,6 +9,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.suke.widget.SwitchButton;
+import com.wevey.selector.dialog.DialogInterface;
+import com.wevey.selector.dialog.NormalAlertDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,16 +68,23 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.qxhc_rl://清除缓存
+                showTips("清除缓存","清除后，图片等多媒体消息需要重新下载查看，确定清除？","确定","取消",false);
                 break;
             case R.id.rjsj_rl://软件升级
+                showTips("升级提示","最新版本v1.1.1，是否需要升级？","升级","取消",false);
+//                showTips("升级提示","暂时没有最新版本","","",true);
                 break;
             case R.id.yjfk_rl://意见反馈
+                startActivity(new Intent(this,FeedBackActivity.class));
                 break;
             case R.id.bzzx_rl://帮助中心
+                startActivity(new Intent(this,HelpCenterActivity.class));
                 break;
             case R.id.yhxy_rl://用户协议
+                startActivity(new Intent(this,UserAgreementActivity.class));
                 break;
             case R.id.gywm_rl://关于我们
+                startActivity(new Intent(this,AboutUsActivity.class));
                 break;
             case R.id.kfzx_call_tv://客服电话
                 break;
@@ -82,5 +92,40 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
 
         }
+    }
+
+    private void showTips(String title, String content, String left, String right,boolean singleMode) {
+        new NormalAlertDialog.Builder(this)
+                .setTitleVisible(true).setTitleText(title)
+                .setTitleTextColor(R.color.text_black)
+                .setContentText(content)
+                .setContentTextColor(R.color.text_black)
+                .setLeftButtonText(left)
+                .setLeftButtonTextColor(R.color.text_black)
+                .setRightButtonText(right)
+                .setRightButtonTextColor(R.color.text_black)
+                .setSingleMode(singleMode)
+                .setSingleButtonText("确定")
+                .setSingleButtonTextColor(R.color.text_black)
+                .setCanceledOnTouchOutside(false)
+                .setOnclickListener(new DialogInterface.OnLeftAndRightClickListener<NormalAlertDialog>() {
+                    @Override
+                    public void clickLeftButton(NormalAlertDialog dialog, View view) {
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void clickRightButton(NormalAlertDialog dialog, View view) {
+                        dialog.dismiss();
+                    }
+                })
+                .setSingleListener(new DialogInterface.OnSingleClickListener<NormalAlertDialog>() {
+                    @Override
+                    public void clickSingleButton(NormalAlertDialog dialog, View view) {
+                        dialog.dismiss();
+                    }
+                })
+                .build()
+                .show();
     }
 }

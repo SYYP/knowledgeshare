@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -40,6 +41,8 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
         titleContentTv.setText("我的账户");
+        oneMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow3));
+        oneMoneyTv.setTextColor(getResources().getColor(R.color.white));
         titleBackIv.setOnClickListener(this);
         oneMoneyTv.setOnClickListener(this);
         twoMoneyTv.setOnClickListener(this);
@@ -91,8 +94,10 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
             case R.id.query_tv:
                 break;
             case R.id.gmjl_tv:
+                startActivity(new Intent(this,PurchaseHistoryActivity.class));
                 break;
             case R.id.gwc_tv:
+                startActivity(new Intent(this,ShoppingCartActivity.class));
                 break;
         }
     }

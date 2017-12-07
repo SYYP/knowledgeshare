@@ -37,6 +37,7 @@ public class ForgetActivity extends BaseActivity implements View.OnClickListener
         UltimateBar ultimateBar = new UltimateBar(this);
         ultimateBar.setImmersionBar();
         setContentView(R.layout.acitivty_forgetpwd);
+        setNotshow();
         inintview();
     }
 

@@ -33,6 +33,7 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
     private TextView tv_dignyue_count;
     private TextView tv_shiyirenqun;
     private TextView tv_readxuzhi;
+    private TextView tv_zhuanlanjianjie;
     private RecyclerView recycler_lately;
     private TextView tv_tryread;
     private TextView tv_buy;
@@ -47,8 +48,24 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zhuan_lan);
         initView();
+        initData();
         initDialog();
         mPopupWindow = new CustomPopupWindow(this);
+    }
+
+    private void initData() {
+        List<String> list=new ArrayList<>();
+        list.add("");
+        list.add("");
+        list.add("");
+        LatelyAdapter latelyAdapter=new LatelyAdapter(R.layout.item_lately,list);
+        recycler_lately.setAdapter(latelyAdapter);
+        tv_shiyirenqun.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
+                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
+        tv_zhuanlanjianjie.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
+                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
+        tv_readxuzhi.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
+                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
     }
 
     @Override
@@ -208,6 +225,7 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_dignyue_count = (TextView) findViewById(R.id.tv_dignyue_count);
         tv_shiyirenqun = (TextView) findViewById(R.id.tv_shiyirenqun);
+        tv_zhuanlanjianjie = (TextView) findViewById(R.id.tv_zhuanlanjianjie);
         tv_readxuzhi = (TextView) findViewById(R.id.tv_readxuzhi);
         recycler_lately = (RecyclerView) findViewById(R.id.recycler_lately);
         tv_tryread = (TextView) findViewById(R.id.tv_tryread);
@@ -216,12 +234,6 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
         tv_buy.setOnClickListener(this);
         recycler_lately.setLayoutManager(new LinearLayoutManager(this));
         recycler_lately.setNestedScrollingEnabled(false);
-        List<String> list=new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        LatelyAdapter latelyAdapter=new LatelyAdapter(R.layout.item_lately,list);
-        recycler_lately.setAdapter(latelyAdapter);
     }
 
     private class LatelyAdapter extends BaseQuickAdapter<String,BaseViewHolder>{
