@@ -58,7 +58,7 @@ public class LearningTimeActivity extends BaseActivity implements View.OnClickLi
             list.add(learnTimeBean);
         }
         list1 = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 1; i++) {
             LearnContentBean learnContentBean = new LearnContentBean();
             learnContentBean.setTime("10:00");
             learnContentBean.setContent("今天学习了钢铁是怎样练成的啊哈哈哈哈哈哈哈哈啊哈哈哈哈哈哈哈哈"+i);

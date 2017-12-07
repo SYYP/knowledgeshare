@@ -35,7 +35,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.title_setting_iv) ImageView titleSettingIv;@BindView(R.id.mine_face_iv) CircleImageView mineFaceIv;
     @BindView(R.id.mine_name_tv) TextView mineNameTv;@BindView(R.id.xz_start_iv) ImageView xzStartIv;
     @BindView(R.id.progressBar) ProgressBar progressBar;@BindView(R.id.xz_end_iv) ImageView xzEndIv;
-    @BindView(R.id.qiandao_btn) Button qiandaoBtn;@BindView(R.id.xxsj_rl) RelativeLayout xxsjRl;
+    @BindView(R.id.qiandao_btn) TextView qiandaoBtn;@BindView(R.id.xxsj_rl) RelativeLayout xxsjRl;
     @BindView(R.id.wddy_rl) RelativeLayout wddyRl;@BindView(R.id.xxjl_rl) RelativeLayout xxjlRl;
     @BindView(R.id.zhye_tv) TextView zhyeTv;@BindView(R.id.wdzh_rl) RelativeLayout wdzhRl;
     @BindView(R.id.wdxz_rl) RelativeLayout wdxzRl;@BindView(R.id.zhaq_rl) RelativeLayout zhaqRl;

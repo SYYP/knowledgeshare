@@ -113,12 +113,13 @@
                         android:layout_height="22dp"/>
 
                 </LinearLayout>
-                <Button
+                <TextView
                     android:id="@+id/qiandao_btn"
-                    android:layout_width="150px"
-                    android:layout_height="60px"
+                    android:layout_width="80dp"
+                    android:layout_height="30dp"
                     android:background="@drawable/bg_qiandao"
                     android:text="签到"
+                    android:gravity="center"
                     android:layout_marginBottom="10dp"
                     android:layout_marginRight="20dp"
                     android:layout_gravity="end|bottom"

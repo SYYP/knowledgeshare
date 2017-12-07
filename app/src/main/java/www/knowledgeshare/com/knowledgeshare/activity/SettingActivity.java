@@ -30,7 +30,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     @BindView(R.id.gywm_rl) RelativeLayout gywmRl;
     @BindView(R.id.kfzx_call_tv) TextView kfzxCallTv;
     @BindView(R.id.youxiang_tv) TextView youxiangTv;
-    @BindView(R.id.exit_btn) Button exitBtn;
+    @BindView(R.id.exit_btn) TextView exitBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -18,8 +18,8 @@
             android:src="@drawable/face"/>
         <ImageView
             android:id="@+id/already_tishi_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
             android:src="@drawable/power_tishi"
             android:layout_alignParentRight="true"
             android:layout_marginTop="15dp"
@@ -71,7 +71,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
                 <ImageView
                     android:layout_width="wrap_content"
@@ -87,7 +87,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30px"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
                 <ImageView
                     android:layout_width="wrap_content"

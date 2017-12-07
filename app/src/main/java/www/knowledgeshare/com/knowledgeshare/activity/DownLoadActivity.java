@@ -78,7 +78,7 @@ public class DownLoadActivity extends BaseActivity implements View.OnClickListen
 
         //设置中间竖线
         LinearLayout linearLayout = (LinearLayout) downloadTablayout.getChildAt(0);
-        linearLayout.setDividerPadding(30);
+        linearLayout.setDividerPadding(20);
         linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
         linearLayout.setDividerDrawable(ContextCompat.getDrawable(this,
                 R.drawable.layout_divider_vertical));

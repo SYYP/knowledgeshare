@@ -207,11 +207,13 @@
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>
     </LinearLayout>
-    <Button
+    <TextView
         android:id="@+id/exit_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="退出"
+        android:padding="10dp"
+        android:gravity="center"
         android:textColor="@color/white"
         android:textSize="16dp"
         android:background="@drawable/bg_red_button"

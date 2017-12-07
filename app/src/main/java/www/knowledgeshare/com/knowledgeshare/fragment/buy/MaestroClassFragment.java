@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,7 +25,6 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.EasyLessonBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanDetail1Activity;
 
 /**
  * Created by Administrator on 2017/11/23.
@@ -58,11 +58,11 @@ public class MaestroClassFragment extends BaseFragment {
             EasyLessonBean easyLessonBean = new EasyLessonBean();
             easyLessonBean.setTitle("崔宗顺的男低音歌唱家秘籍");
             easyLessonBean.setDesc("男低音，一个神秘又充满魅力的音部");
-            easyLessonBean.setUpdata(i+"小时前更新");
+            easyLessonBean.setUpdata(i + "小时前更新");
             easyLessonBean.setZlmc("最新更新的专栏名称");
             list.add(easyLessonBean);
         }
-        MeastroClassAdapter adapter = new MeastroClassAdapter(R.layout.item_meastro_class,list);
+        MeastroClassAdapter adapter = new MeastroClassAdapter(R.layout.item_meastro_class, list);
         recyclerMeastro.setAdapter(adapter);
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -73,12 +73,17 @@ public class MaestroClassFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
 
-    private class MeastroClassAdapter extends BaseQuickAdapter<EasyLessonBean,BaseViewHolder>{
+    private class MeastroClassAdapter extends BaseQuickAdapter<EasyLessonBean, BaseViewHolder> {
 
         public MeastroClassAdapter(@LayoutRes int layoutResId, @Nullable List<EasyLessonBean> data) {
             super(layoutResId, data);

@@ -92,6 +92,7 @@
         android:orientation="vertical"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
         android:background="@drawable/bg_wanjiao2"
         android:layout_marginTop="40px">
         <LinearLayout
@@ -118,14 +119,15 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/bg_mine"
-            android:layout_marginLeft="37px"
-            android:layout_marginRight="37px"/>
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"/>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_learntime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp">
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp">
 
         </android.support.v7.widget.RecyclerView>
     </LinearLayout>

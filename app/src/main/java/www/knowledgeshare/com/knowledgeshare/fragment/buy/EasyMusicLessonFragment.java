@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -59,7 +60,7 @@ public class EasyMusicLessonFragment extends BaseFragment {
             easyLessonBean.setTitle("如何成为一名合格的歌者");
             easyLessonBean.setName("刘鹏飞");
             easyLessonBean.setDesc("中国音乐好声音王牌级人物");
-            easyLessonBean.setYbf("已播放："+ i +"%");
+            easyLessonBean.setYbf("已播放：" + i + "%");
             easyLessonBean.setGmrs("购买人数：110人");
             list.add(easyLessonBean);
         }
@@ -71,6 +72,11 @@ public class EasyMusicLessonFragment extends BaseFragment {
                 startActivity(new Intent(mContext, SoftMusicDetailActivity.class));
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override

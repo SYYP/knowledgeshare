@@ -50,7 +50,7 @@ public class MySubscriptionsActivity extends BaseActivity implements View.OnClic
         for (int i = 0; i < 10; i++) {
             EasyLessonBean easyLessonBean = new EasyLessonBean();
             easyLessonBean.setTitle("崔宗顺的男低音歌唱家秘籍");
-            easyLessonBean.setDesc("男低音，一个神秘又充满魅力的音部");
+            easyLessonBean.setDesc("男低音，一个神秘又充满魅力的声部");
             easyLessonBean.setUpdata(i+"小时前更新");
             easyLessonBean.setZlmc("最新更新的专栏名称");
             easyLessonBean.setMoney("￥198/年");

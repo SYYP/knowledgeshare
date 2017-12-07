@@ -25,6 +25,7 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.AlreadyDlDetailBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.WenGaoActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 
 /**
  * 已下载点进来的详情
@@ -99,6 +100,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
             case R.id.title_content_right_tv:
                 if (TextUtils.equals("编辑", titleContentRightTv.getText().toString())) {
                     titleContentRightTv.setText("取消");
+                    MyUtils.setMargins(recyclerKcmc,0,0,0,100);
                     bianjiRl.setVisibility(View.VISIBLE);
                     for (int i = 0; i < list.size(); i++) {
                         list.get(i).setVisibility(true);
@@ -106,6 +108,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                     adapter.notifyDataSetChanged();
                 }else {
                     titleContentRightTv.setText("编辑");
+                    MyUtils.setMargins(recyclerKcmc,0,0,0,0);
                     bianjiRl.setVisibility(View.GONE);
                     for (int i = 0; i < list.size(); i++) {
                         list.get(i).setVisibility(false);

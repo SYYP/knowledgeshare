@@ -153,7 +153,6 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                         }
                     }
                 }else {
-                    //TODO 跳转
                     startActivity(new Intent(this,QueryOrderActivity.class));
                 }
                 break;
