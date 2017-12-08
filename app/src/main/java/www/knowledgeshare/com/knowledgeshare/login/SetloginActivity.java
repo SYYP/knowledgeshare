@@ -68,6 +68,7 @@ public class SetloginActivity extends BaseActivity implements View.OnClickListen
         showDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
     }
 
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){
