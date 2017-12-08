@@ -55,7 +55,7 @@ public class MyGuanzhuActivity extends BaseActivity implements View.OnClickListe
         mGuanzhuAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(MyGuanzhuActivity.this,TeacherDetailActivity.class));
+                startActivity(new Intent(MyGuanzhuActivity.this, TeacherDetailActivity.class));
             }
         });
     }

@@ -67,11 +67,11 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initData() {
-        List<String> list=new ArrayList<>();
+        List<String> list = new ArrayList<>();
         list.add("");
         list.add("");
         list.add("");
-        LatelyAdapter latelyAdapter=new LatelyAdapter(R.layout.item_lately,list);
+        LatelyAdapter latelyAdapter = new LatelyAdapter(R.layout.item_lately, list);
         recycler_lately.setAdapter(latelyAdapter);
         tv_shiyirenqun.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
                 "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
@@ -222,8 +222,8 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initView() {
-        fl_root_view= (FrameLayout) findViewById(R.id.fl_root_view);
-        ll_root_view= (LinearLayout) findViewById(R.id.ll_root_view);
+        fl_root_view = (FrameLayout) findViewById(R.id.fl_root_view);
+        ll_root_view = (LinearLayout) findViewById(R.id.ll_root_view);
         iv_back = (ImageView) findViewById(R.id.iv_back);
         iv_back.setOnClickListener(this);
         iv_share = (ImageView) findViewById(R.id.iv_share);
@@ -241,10 +241,10 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
         tv_buy.setOnClickListener(this);
         recycler_lately.setLayoutManager(new LinearLayoutManager(this));
         recycler_lately.setNestedScrollingEnabled(false);
-        nestView= (NestedScrollView) findViewById(R.id.nestView);
+        nestView = (NestedScrollView) findViewById(R.id.nestView);
     }
 
-    private class LatelyAdapter extends BaseQuickAdapter<String,BaseViewHolder>{
+    private class LatelyAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
 
         public LatelyAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
             super(layoutResId, data);
@@ -266,7 +266,7 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
                 showShareDialog();
                 break;
             case R.id.tv_tryread:
-                startActivity(new Intent(this,ZhuanLanDetail1Activity.class));
+                startActivity(new Intent(this, ZhuanLanDetail1Activity.class));
                 break;
             case R.id.tv_buy:
                 showBuyDialog();
