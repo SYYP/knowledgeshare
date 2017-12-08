@@ -48,5 +48,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:background="@color/huise"></View>
 </LinearLayout>

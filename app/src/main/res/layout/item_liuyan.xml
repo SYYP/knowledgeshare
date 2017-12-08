@@ -3,8 +3,9 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical"
-              android:padding="10dp">
+>
     <RelativeLayout
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
@@ -38,13 +39,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容留言内容"
+        android:textColor="#666666"/>
     <LinearLayout
         android:id="@+id/ll_dianzan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|right"
-        android:layout_marginTop="10dp">
+        android:padding="10dp"
+        >
         <ImageView
             android:id="@+id/iv_dianzan"
             android:layout_width="wrap_content"
@@ -61,26 +66,31 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:background="@drawable/line_xuxian"></View>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
         android:text="作者回复："
         android:textColor="@color/yellow"
         android:textSize="16sp"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="12dp"
         android:background="@drawable/bg_huise_line"
         android:minHeight="80dp"
         android:padding="10dp"
         android:text="你好我是作者，有什么可以帮助到你吗？"/>
     <View
+        android:id="@+id/view_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="10dp"
         android:background="@color/huise"></View>
 </LinearLayout>

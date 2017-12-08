@@ -58,7 +58,7 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
         list.add("");
         list.add("");
         list.add("");
-        DaShiBanAdapter daShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban3, list);
+        DaShiBanAdapter daShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban4, list);
         recycler_dashiban.setAdapter(daShiBanAdapter);
         daShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override

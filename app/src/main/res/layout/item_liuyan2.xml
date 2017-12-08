@@ -82,9 +82,4 @@
         android:minHeight="80dp"
         android:padding="10dp"
         android:text="在的"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/huise"></View>
 </LinearLayout>

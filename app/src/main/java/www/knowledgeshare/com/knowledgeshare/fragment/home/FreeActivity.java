@@ -184,6 +184,9 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                     isDianzan=!isDianzan;
                 }
             });
+            if (helper.getAdapterPosition()==2){
+                helper.getView(R.id.view_line).setVisibility(View.GONE);
+            }
         }
     }
 

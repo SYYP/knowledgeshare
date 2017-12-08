@@ -3,17 +3,20 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:paddingBottom="8dp">
+              android:padding="10dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_circle_white"
+        android:background="@drawable/bg_wanjiao"
         android:orientation="vertical"
-        android:padding="10dp">
+        >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
             android:text="您将订阅从2017年10月10日到2018年10月10日时间内的《如何成为一名合格的歌者》"
             android:textColor="@color/textblack"
             android:textSize="15sp"/>
@@ -23,11 +26,11 @@
             android:background="@color/huise"></View>
         <TextView
             android:id="@+id/tv_yes"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="12dp"
             android:text="确定"
             android:textColor="@color/textblack"/>
     </LinearLayout>
@@ -37,9 +40,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="5dp"
-        android:background="@drawable/bg_circle_white"
+        android:background="@drawable/bg_wanjiao"
         android:gravity="center"
-        android:padding="10dp"
+        android:padding="12dp"
         android:text="取消"
         android:textColor="@color/textblack"/>
 </LinearLayout>
