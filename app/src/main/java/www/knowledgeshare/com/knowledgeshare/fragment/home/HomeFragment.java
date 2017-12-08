@@ -155,6 +155,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         tv_title = inflate.findViewById(R.id.tv_title);
         tv_subtitle = inflate.findViewById(R.id.tv_subtitle);
         rl_bofang = inflate.findViewById(R.id.rl_bofang);
+        rl_bofang.setOnClickListener(this);
         rl_bofang.setVisibility(View.GONE);
         iv_dashi_refresh = inflate.findViewById(R.id.iv_dashi_refresh);
         iv_like_refresh = inflate.findViewById(R.id.iv_like_refresh);
@@ -180,11 +181,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             isBofang = true;
             rl_bofang.setVisibility(View.VISIBLE);
             iv_delete.setVisibility(View.GONE);
-//            Glide.with(mContext).load("").into(iv_bo_head);
+            //            Glide.with(mContext).load("").into(iv_bo_head);
         } else if (eventBean.getMsg().equals("pause")) {
             isBofang = false;
             iv_delete.setVisibility(View.VISIBLE);
-        }else if (eventBean.getMsg().equals("close")) {
+        } else if (eventBean.getMsg().equals("close")) {
             isBofang = false;
             rl_bofang.setVisibility(View.GONE);
         }
@@ -218,21 +219,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         list2.add("");
         mZhuanLanAdapter = new ZhuanLanAdapter(R.layout.item_zhuanlan, list);
         recycler_zhuanlan.setAdapter(mZhuanLanAdapter);
-        mZhuanLanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                gobofang();
-            }
-        });
 
         mCommentAdapter = new CommentAdapter(R.layout.item_zhuanlan, list);
         recycler_comment.setAdapter(mCommentAdapter);
-        mCommentAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                gobofang();
-            }
-        });
 
         mDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban, list2);
         recycler_dashiban.setAdapter(mDaShiBanAdapter);
@@ -346,8 +335,19 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
-
+        protected void convert(final BaseViewHolder helper, String item) {
+            final ImageView iv_pause = helper.getView(R.id.iv_pause);
+            helper.getView(R.id.rl_root_view).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    gobofang();
+                    if (isBofang) {
+                        iv_pause.setImageResource(R.drawable.bofang_yellow);
+                    } else {
+                        iv_pause.setImageResource(R.drawable.pause_yellow);
+                    }
+                }
+            });
         }
     }
 
@@ -360,6 +360,18 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         @Override
         protected void convert(BaseViewHolder helper, String item) {
             helper.getView(R.id.tv_teacher_name).setVisibility(View.VISIBLE);
+            final ImageView iv_pause = helper.getView(R.id.iv_pause);
+            helper.getView(R.id.rl_root_view).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    gobofang();
+                    if (isBofang) {
+                        iv_pause.setImageResource(R.drawable.bofang_yellow);
+                    } else {
+                        iv_pause.setImageResource(R.drawable.pause_yellow);
+                    }
+                }
+            });
         }
     }
 
@@ -526,7 +538,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             case R.id.iv_mulu:
                 Intent intent11 = new Intent(mContext, BoFangListActivity.class);
                 startActivity(intent11);
-//                mActivity.overridePendingTransition(R.anim.bottom_in, 0);
+                //                mActivity.overridePendingTransition(R.anim.bottom_in, 0);
+                break;
+            case R.id.rl_bofang:
                 break;
         }
     }

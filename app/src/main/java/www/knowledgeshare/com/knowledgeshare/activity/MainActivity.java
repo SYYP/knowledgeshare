@@ -60,8 +60,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Intent MediaServiceIntent;
     private BaseFragment currentf;
 
-     HomeFragment homeFragment;
-     StudyFragment studyFragment;
+    HomeFragment homeFragment;
+    StudyFragment studyFragment;
     BuyFragment buyFragment;
     MineFragment mineFragment;
     private boolean abool;
@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initView();
         homeFragment = new HomeFragment();
         addFragments(homeFragment);
-       // initData();
+        // initData();
         initListener();
         initAnim();
         initMusic();
@@ -129,7 +129,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             iv_listen.setImageResource(R.drawable.tab_listen_pause);
             //homefragment传来这个的时候就是点了叉了
             mMyBinder.closeMedia();
-        }else if (eventBean.getMsg().equals("zanting")) {
+        } else if (eventBean.getMsg().equals("zanting")) {
             isPause = true;
             iv_listen.clearAnimation();
             iv_listen.setImageResource(R.drawable.tab_listen_pause);
@@ -168,9 +168,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_home:
-              //  position = 0;
-                if(homeFragment==null){
-                    homeFragment=new HomeFragment();
+                //  position = 0;
+                if (homeFragment == null) {
+                    homeFragment = new HomeFragment();
                 }
                 addFragments(homeFragment);
                 iv_home.setImageResource(R.drawable.tab_home_red);
@@ -186,10 +186,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
                 if (abool) {
-                   Intent intent=new Intent(this, www.knowledgeshare.com.knowledgeshare.activity.LoginActivity.class);
-                      startActivity(intent);
+                    Intent intent = new Intent(this, www.knowledgeshare.com.knowledgeshare.activity.LoginActivity.class);
+                    startActivity(intent);
                     overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
-                }else {
+                } else {
                     if (studyFragment == null) {
                         studyFragment = new StudyFragment();
                     }
@@ -230,8 +230,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     Intent intent = new Intent(this, www.knowledgeshare.com.knowledgeshare.activity.LoginActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
-                }
-                else {
+                } else {
                     if (buyFragment == null) {
                         buyFragment = new BuyFragment();
                     }
@@ -251,7 +250,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     Intent intent = new Intent(this, www.knowledgeshare.com.knowledgeshare.activity.LoginActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
-                }else {
+                } else {
                     if (mineFragment == null) {
                         mineFragment = new MineFragment();
                     }
@@ -268,6 +267,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
         }
     }
+
     private void addFragments(BaseFragment f) {
         // 第一步：得到fragment管理类
         FragmentManager manager = getSupportFragmentManager();
