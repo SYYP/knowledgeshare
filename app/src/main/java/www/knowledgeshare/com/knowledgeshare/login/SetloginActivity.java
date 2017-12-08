@@ -53,6 +53,7 @@ public class SetloginActivity extends BaseActivity implements View.OnClickListen
     }
 
 
+
     private void submit() {
         if (TextUtils.isEmpty(set_loginpwd.getText().toString())) {
             Toast.makeText(this, "密码不能为空", Toast.LENGTH_SHORT).show();
