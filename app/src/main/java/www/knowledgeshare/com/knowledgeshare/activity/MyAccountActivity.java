@@ -93,10 +93,10 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.query_tv:
                 break;
-            case R.id.gmjl_tv:
+            case R.id.gmjl_tv://购买记录
                 startActivity(new Intent(this,PurchaseHistoryActivity.class));
                 break;
-            case R.id.gwc_tv:
+            case R.id.gwc_tv://购物车
                 startActivity(new Intent(this,ShoppingCartActivity.class));
                 break;
         }

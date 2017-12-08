@@ -21,6 +21,7 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.LearnContentBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.LearnTimeBean;
+import www.knowledgeshare.com.knowledgeshare.view.FullyLinearLayoutManager;
 
 public class LearningTimeActivity extends BaseActivity implements View.OnClickListener {
 
@@ -93,7 +94,7 @@ public class LearningTimeActivity extends BaseActivity implements View.OnClickLi
 
             itemTimeTv.setText(item.getDate());
 
-            recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+            recyclerView.setLayoutManager(new FullyLinearLayoutManager(mContext));
             recyclerView.setNestedScrollingEnabled(false);
 
             LearningItemAdapter adapter = new LearningItemAdapter(R.layout.item_learn_content,list1);

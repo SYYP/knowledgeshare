@@ -16,6 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
@@ -68,10 +69,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.qxhc_rl://清除缓存
-                showTips("清除缓存","清除后，图片等多媒体消息需要重新下载查看，确定清除？","确定","取消",false);
+                showTips(1,"清除缓存","清除后，图片等多媒体消息需要重新下载查看，确定清除？","确定","取消",false);
                 break;
             case R.id.rjsj_rl://软件升级
-                showTips("升级提示","最新版本v1.1.1，是否需要升级？","升级","取消",false);
+                showTips(2,"升级提示","最新版本v1.1.1，是否需要升级？","升级","取消",false);
 //                showTips("升级提示","暂时没有最新版本","","",true);
                 break;
             case R.id.yjfk_rl://意见反馈
@@ -89,12 +90,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.kfzx_call_tv://客服电话
                 break;
             case R.id.exit_btn://退出
+                showTips(3,"提示","是否退出？","是","否",false);
                 break;
 
         }
     }
 
-    private void showTips(String title, String content, String left, String right,boolean singleMode) {
+    private void showTips(final int flag, String title, String content, String left, String right, boolean singleMode) {
         new NormalAlertDialog.Builder(this)
                 .setTitleVisible(true).setTitleText(title)
                 .setTitleTextColor(R.color.text_black)
@@ -111,11 +113,28 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 .setOnclickListener(new DialogInterface.OnLeftAndRightClickListener<NormalAlertDialog>() {
                     @Override
                     public void clickLeftButton(NormalAlertDialog dialog, View view) {
+                        switch (flag){
+                            case 1:
+                                break;
+                            case 2:
+                                break;
+                            case 3:
+                                TUtils.showShort(SettingActivity.this,"退出");
+                                break;
+                        }
                         dialog.dismiss();
                     }
 
                     @Override
                     public void clickRightButton(NormalAlertDialog dialog, View view) {
+                        switch (flag){
+                            case 1:
+                                break;
+                            case 2:
+                                break;
+                            case 3:
+                                break;
+                        }
                         dialog.dismiss();
                     }
                 })

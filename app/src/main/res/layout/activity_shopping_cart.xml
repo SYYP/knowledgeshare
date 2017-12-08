@@ -10,6 +10,29 @@
     <include
         android:id="@+id/include"
         layout="@layout/item_title_layout"/>
+    <RelativeLayout
+        android:id="@+id/null_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@color/white"
+        android:layout_below="@+id/include">
+        <ImageView
+            android:id="@+id/view_01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/power_gwc_null"
+            android:layout_marginTop="110dp"
+            android:layout_centerHorizontal="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_01"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="这里什么也都没有"
+            android:textColor="#666666"/>
+    </RelativeLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_gwc"
         android:layout_below="@+id/include"

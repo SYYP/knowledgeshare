@@ -1,6 +1,7 @@
 package www.knowledgeshare.com.knowledgeshare.activity;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.TaskDetailBean;
+import www.knowledgeshare.com.knowledgeshare.view.FullyLinearLayoutManager;
 
 public class TaskDetailActivity extends BaseActivity implements View.OnClickListener {
 
@@ -64,9 +66,11 @@ public class TaskDetailActivity extends BaseActivity implements View.OnClickList
             list.add(taskDetailBean);
         }
         TaskDetailAdapter adapter = new TaskDetailAdapter(R.layout.item_task_detail,list);
+        recyclerTask.addItemDecoration(new SpaceItemDecoration(20));
         recyclerTask.setAdapter(adapter);
         View header = LayoutInflater.from(this).inflate(R.layout.header_taskdetail,recyclerTask,false);
         adapter.addHeaderView(header);
+
     }
 
     @Override
@@ -100,10 +104,9 @@ public class TaskDetailActivity extends BaseActivity implements View.OnClickList
 
             monthTv.setText(item.getMonth());
             jifenTv.setText(item.getAllJifen());
-            recyclerTaskDetail.setLayoutManager(new LinearLayoutManager(mContext));
-            recyclerTaskDetail.setNestedScrollingEnabled(false);
+
             List<TaskDetailBean> list1 = new ArrayList<>();
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < 4; i++) {
                 TaskDetailBean taskDetailBean = new TaskDetailBean();
                 taskDetailBean.setName("购买课程");
                 taskDetailBean.setDate("5日");
@@ -111,8 +114,30 @@ public class TaskDetailActivity extends BaseActivity implements View.OnClickList
                 taskDetailBean.setJifen("+5积分");
                 list1.add(taskDetailBean);
             }
+
+            recyclerTaskDetail.setLayoutManager(new FullyLinearLayoutManager(mContext));
+            recyclerTaskDetail.setNestedScrollingEnabled(false);
+
             TaskDetailsAdapter detailsAdapter = new TaskDetailsAdapter(R.layout.item_task_details,list1);
             recyclerTaskDetail.setAdapter(detailsAdapter);
+        }
+    }
+
+    class SpaceItemDecoration extends RecyclerView.ItemDecoration {
+        int mSpace;
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            outRect.left = mSpace;
+            outRect.right = mSpace;
+            outRect.bottom = mSpace;
+            if (parent.getChildAdapterPosition(view) == 0) {
+                outRect.top = mSpace;
+            }
+        }
+
+        public SpaceItemDecoration(int space) {
+            this.mSpace = space;
         }
     }
 

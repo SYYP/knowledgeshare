@@ -37,6 +37,7 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
     @BindView(R.id.all_checkBox) CheckBox allCheckBox;
     @BindView(R.id.heji_tv) TextView hejiTv;
     @BindView(R.id.jiesuan_tv) TextView jiesuanTv;
+    @BindView(R.id.null_rl) RelativeLayout nullRl;
     private List<ShoppingCartBean> list;
     private ShoppingCartAdapter adapter;
     private float totalMoney;
@@ -139,6 +140,17 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                     jiesuanTv.setText("删除");
                 }else {
                     titleContentRightTv.setText("编辑");
+                    totalMoney = 0;
+                    num = 0;
+                    if (TextUtils.equals("0",list.size()+""))
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i).isChecked()){
+                            String money = list.get(i).getMoney();
+                            int parseInt = Integer.parseInt(money);
+                            totalMoney += parseInt;
+                            num += 1;
+                        }
+                    }
                     hejiTv.setText("合计：￥"+totalMoney);
                     jiesuanTv.setText("结算（"+num+"）");
                 }
@@ -146,10 +158,16 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.jiesuan_tv:
                 if (TextUtils.equals("删除",jiesuanTv.getText().toString())){
+
                     for (int i = list.size()-1; i >= 0; i--) {
                         if (list.get(i).isChecked()){
                             list.remove(i);
-                            adapter.notifyDataSetChanged();
+                            if (TextUtils.equals("0",list.size()+"")){
+                                recyclerGwc.setVisibility(View.GONE);
+                                nullRl.setVisibility(View.VISIBLE);
+                            }else {
+                                adapter.notifyDataSetChanged();
+                            }
                         }
                     }
                 }else {
