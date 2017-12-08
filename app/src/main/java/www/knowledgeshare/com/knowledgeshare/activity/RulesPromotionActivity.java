@@ -36,7 +36,7 @@ public class RulesPromotionActivity extends BaseActivity implements View.OnClick
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.title_back_iv:
                 finish();
                 break;
