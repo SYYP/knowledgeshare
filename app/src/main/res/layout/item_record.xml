@@ -5,20 +5,20 @@
     android:orientation="vertical"
     android:layout_height="wrap_content">
       <LinearLayout
-          android:padding="8dp"
           android:layout_width="match_parent"
           android:layout_height="wrap_content">
           <TextView
+              android:padding="5dp"
               android:id="@+id/record_time"
-              android:gravity="center_horizontal"
-              android:layout_gravity="center_horizontal"
+              android:gravity="center"
               android:textSize="16sp"
               android:text="2017-11-24"
-              android:padding="5dp"
               android:layout_width="match_parent"
               android:layout_height="wrap_content" />
       </LinearLayout>
       <RelativeLayout
+          android:layout_marginTop="3dp"
+          android:layout_marginBottom="5dp"
           android:layout_marginRight="5dp"
           android:layout_marginLeft="5dp"
           android:background="@drawable/shape_radioline"

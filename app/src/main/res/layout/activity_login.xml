@@ -179,6 +179,7 @@
          android:layout_width="match_parent"
          android:layout_height="match_parent">
          <ImageView
+             android:id="@+id/weixin"
              android:layout_centerVertical="true"
              android:src="@drawable/login_weixin"
              android:layout_centerHorizontal="true"

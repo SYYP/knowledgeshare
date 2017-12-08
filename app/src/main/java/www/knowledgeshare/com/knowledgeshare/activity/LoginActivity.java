@@ -4,14 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 
 import org.zackratos.ultimatebar.UltimateBar;
 
@@ -19,10 +16,7 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.login.ForgetActivity;
 import www.knowledgeshare.com.knowledgeshare.login.bean.HobbyActivity;
-import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
-
-import static www.knowledgeshare.com.knowledgeshare.R.id.iv_back;
 
 /**
  * date : ${Date}
@@ -40,6 +34,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private RelativeLayout forget_pwd;
     private TextView login_close;
     private ImageView colse_back;
+    private ImageView img_weixin;
 
 
     @Override
@@ -61,6 +56,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         login_sso = (TextView) findViewById(R.id.login_sso);
         colse_back = (ImageView) findViewById(R.id.close_login);
         forget_pwd = (RelativeLayout) findViewById(R.id.forget_pwd);
+        img_weixin = (ImageView) findViewById(R.id.weixin);
         login_phone.setOnClickListener(this);
         rember_pwd.setOnClickListener(this);
         login_pwd.setOnClickListener(this);
@@ -68,6 +64,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         login_sso.setOnClickListener(this);
         forget_pwd.setOnClickListener(this);
         colse_back.setOnClickListener(this);
+        img_weixin.setOnClickListener(this);
     }
 
     @Override
@@ -94,13 +91,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             case R.id.no_account:
                 Intent intent = new Intent(this, RegisterActivity.class);
                 startActivity(intent);
-                finish();
+
                 break;
             //忘记密码
             case R.id.forget_pwd:
                 Intent intent1 = new Intent(this, ForgetActivity.class);
                 startActivity(intent1);
-                finish();
+
+                break;
+            case R.id.weixin:
+                 Intent intent2=new Intent(this, BindPhoneActivity.class);
+                startActivity(intent2);
                 break;
         }
 

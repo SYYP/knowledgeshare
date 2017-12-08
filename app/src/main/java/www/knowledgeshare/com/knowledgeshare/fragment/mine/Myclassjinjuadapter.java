@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import www.knowledgeshare.com.knowledgeshare.R;
 public class Myclassjinjuadapter extends RecyclerView.Adapter<Myclassjinjuadapter.Myviewholder> {
     private Context context;
     private List<String> list = new ArrayList<>();
+    boolean bool;
 
     public Myclassjinjuadapter(Context context) {
         this.context = context;
@@ -44,8 +46,20 @@ public class Myclassjinjuadapter extends RecyclerView.Adapter<Myclassjinjuadapte
     }
 
     @Override
-    public void onBindViewHolder(Myviewholder holder, int position) {
+    public void onBindViewHolder(final Myviewholder holder, int position) {
       holder.jin_date.setText(list.get(position).toString());
+        holder.jin_xinxin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (bool) {
+                   holder.jin_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+
+                } else {
+                    holder.jin_xinxin.setImageResource(R.drawable.xinxin);
+                }
+                bool = !bool;
+            }
+        });
     }
 
     @Override
@@ -60,6 +74,7 @@ public class Myclassjinjuadapter extends RecyclerView.Adapter<Myclassjinjuadapte
         public RelativeLayout relative;
         public TextView study_count;
         public LinearLayout study_liner;
+        ImageView jin_xinxin;
         public Myviewholder(View rootView) {
             super(rootView);
             this.line = (View) rootView.findViewById(R.id.line);
@@ -67,6 +82,7 @@ public class Myclassjinjuadapter extends RecyclerView.Adapter<Myclassjinjuadapte
             this.relative = (RelativeLayout) rootView.findViewById(R.id.relative);
             this.study_count = (TextView) rootView.findViewById(R.id.study_count);
             this.study_liner = (LinearLayout) rootView.findViewById(R.id.study_liner);
+               jin_xinxin=  rootView.findViewById(R.id.jin_xinxin);
         }
     }
 

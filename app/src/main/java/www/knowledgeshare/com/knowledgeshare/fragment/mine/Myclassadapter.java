@@ -3,6 +3,7 @@ package www.knowledgeshare.com.knowledgeshare.fragment.mine;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +25,12 @@ import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
-    private List<Collectbean> list=new ArrayList<>();
+    private List<Collectbean> list = new ArrayList<>();
     final static int ONE = 0, TWO = 1, THREE = 2;
     private OnItemClickListener mOnItemClickListener = null;
-    private OnClickListener mOnClickListener = null;
+//    private OnClickListener mOnClickListener = null;
+    boolean bool;
+
     public Myclassadapter(Context context) {
         this.context = context;
 
@@ -36,22 +39,22 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private void data() {
 
-          Collectbean coll=new Collectbean();
+        Collectbean coll = new Collectbean();
         coll.setTitle("知道我在等你吗");
         list.add(coll);
-        Collectbean coll1=new Collectbean();
+        Collectbean coll1 = new Collectbean();
         coll1.setTitle("其实我很喜欢");
         list.add(coll1);
-        Collectbean coll2=new Collectbean();
+        Collectbean coll2 = new Collectbean();
         coll2.setTitle("知道我在等你吗升水");
         list.add(coll2);
-        Collectbean coll3=new Collectbean();
+        Collectbean coll3 = new Collectbean();
         coll3.setTitle("知道我在等你吗升水");
         list.add(coll3);
-        Collectbean coll4=new Collectbean();
+        Collectbean coll4 = new Collectbean();
         coll4.setTitle("好可惜真的不能");
         list.add(coll4);
-        Collectbean coll5=new Collectbean();
+        Collectbean coll5 = new Collectbean();
         coll5.setTitle("好可惜真的不能在一起");
         list.add(coll5);
     }
@@ -81,40 +84,77 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        int itemViewType = getItemViewType(position);
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+        final int itemViewType = getItemViewType(position);
+        if (mOnItemClickListener != null) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int layoutPosition = holder.getLayoutPosition();
+                    Log.d("tag", layoutPosition + "");
+                    mOnItemClickListener.onItemClick(holder.itemView, layoutPosition, itemViewType);
+                }
+            });
+        }
         switch (itemViewType) {
-            case  ONE:
-          Myviewholder1 myviewhiodler1= (Myviewholder1) holder;
+
+            case ONE:
+             final    Myviewholder1 myviewhiodler1 = (Myviewholder1) holder;
                 myviewhiodler1.class_title.setText(list.get(position).getTitle());
-                 myviewhiodler1.imageView.setOnClickListener(new View.OnClickListener() {
-                     @Override
-                     public void onClick(View view) {
-                         Intent intent=new Intent(context, WenGaoActivity.class);
-                         context.startActivity(intent);
-                     }
-                 });
+                myviewhiodler1.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(context, WenGaoActivity.class);
+                        context.startActivity(intent);
+                    }
+                });
+                myviewhiodler1.class_xinxin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (bool) {
+                         myviewhiodler1.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+
+                        } else {
+                            myviewhiodler1.class_xinxin.setImageResource(R.drawable.xinxin);
+                        }
+                        bool = !bool;
+                    }
+
+                });
                 break;
             case TWO:
+                final Myviewholder2 myviewhiodler2 = (Myviewholder2) holder;
 
-                final Myviewholder2 myviewhiodler2= (Myviewholder2) holder;
-                if(mOnItemClickListener!=null){
-                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            int layoutPosition = myviewhiodler2.getLayoutPosition();
-                            mOnItemClickListener.onItemClick(myviewhiodler2.itemView,layoutPosition);
-                        }
-                    });
-                }
                 myviewhiodler2.class_titles.setText(list.get(position).getTitle());
-                break;
-            case  THREE:
-                Myviewholder3 myviewhiodler3= (Myviewholder3) holder;
-                if(mOnClickListener!=null){
-                    int layoutPosition = myviewhiodler3.getLayoutPosition();
-                    mOnClickListener.onItemClick(myviewhiodler3.itemView,layoutPosition);
+                myviewhiodler2.class_xinxin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (bool) {
+                        myviewhiodler2.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+
+                    } else {
+                        myviewhiodler2.class_xinxin.setImageResource(R.drawable.xinxin);
+                    }
+                    bool = !bool;
                 }
+
+            });
+                break;
+            case THREE:
+              final   Myviewholder3 myviewhiodler3 = (Myviewholder3) holder;
+                myviewhiodler3.class_xinxin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (bool) {
+                            myviewhiodler3.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+
+                        } else {
+                            myviewhiodler3.class_xinxin.setImageResource(R.drawable.xinxin);
+                        }
+                        bool = !bool;
+                    }
+
+                });
                 myviewhiodler3.class_titles.setText(list.get(position).getTitle());
                 break;
         }
@@ -165,6 +205,7 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public CircleImageView class_pho;
         public TextView class_name;
         public TextView class_date;
+        public ImageView class_xinxin;
 
         public Myviewholder2(View rootView) {
             super(rootView);
@@ -174,6 +215,7 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             this.class_pho = (CircleImageView) rootView.findViewById(R.id.class_pho);
             this.class_name = (TextView) rootView.findViewById(R.id.class_name);
             this.class_date = (TextView) rootView.findViewById(R.id.class_date);
+            this.class_xinxin = (ImageView) rootView.findViewById(R.id.class_xinxin);
         }
     }
 
@@ -184,6 +226,8 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public TextView class_date;
         public TextView class_dianxin;
         public TextView class_read;
+        public ImageView class_xinxin;
+
         public Myviewholder3(View rootView) {
             super(rootView);
             this.lines = (View) rootView.findViewById(R.id.lines);
@@ -192,23 +236,26 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             this.class_date = (TextView) rootView.findViewById(R.id.class_date);
             this.class_dianxin = (TextView) rootView.findViewById(R.id.class_dianxin);
             this.class_read = (TextView) rootView.findViewById(R.id.class_read);
+            this.class_xinxin = (ImageView) rootView.findViewById(R.id.class_xinxin);
         }
     }
-/*
-   接口回调用来item点击
- */
-public interface OnItemClickListener {
-    void onItemClick(View view, int position);
-}
+
+    /*
+       接口回调用来item点击
+     */
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position, int type);
+    }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mOnItemClickListener = listener;
     }
-    public interface OnClickListener {
-        void onItemClick(View view, int position);
-    }
-
-    public void setOnClickListener(OnClickListener listener) {
-        this.mOnClickListener = listener;
-    }
 }
+//    public interface OnClickListener {
+//        void onItemClick(View view, int position);
+//    }
+//
+//    public void setOnClickListener(OnClickListener listener) {
+//        this.mOnClickListener = listener;
+//    }
+//}

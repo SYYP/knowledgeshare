@@ -32,6 +32,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     public CheckBox register_agress;
     public TextView register_next;
     private ImageView tv_callback;
+    private TextView register_xieyi;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,9 +50,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             this.register_agress = (CheckBox)findViewById(R.id.register_agress);
             this.register_next = (TextView) findViewById(R.id.register_next);
             tv_callback = (ImageView) findViewById(R.id.tv_callback);
+            register_xieyi = (TextView) findViewById(R.id.register_xieyi);
              register_next.setOnClickListener(this);
             tv_callback.setOnClickListener(this);
             register_huoqu.setOnClickListener(this);
+            register_xieyi.setOnClickListener(this);
 
 
 
@@ -60,7 +63,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-
+            case R.id.register_xieyi:
+                  Intent intent=new Intent(this,UserAgreementActivity.class);
+                  startActivity(intent);
+                break;
             case R.id.register_next:
                 
                  register();

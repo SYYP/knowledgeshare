@@ -67,7 +67,7 @@
             android:textSize="14sp"
             android:id="@+id/set_loginpwd"
             android:layout_centerHorizontal="true"
-            android:hint="请输入6~20位字母，数字密码"
+            android:hint="请输入6~20位字母数、字密码"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />
     </RelativeLayout>

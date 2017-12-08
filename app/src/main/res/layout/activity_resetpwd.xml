@@ -44,8 +44,8 @@
     <RelativeLayout
         android:layout_marginTop="50dp"
         android:background="@drawable/shape_radius"
-        android:layout_marginLeft="45dp"
-        android:layout_marginRight="45dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
         android:layout_width="match_parent"
         android:layout_height="50dp">
         <ImageView
@@ -66,15 +66,15 @@
             android:textSize="14sp"
             android:id="@+id/reset_loginpwd"
             android:layout_centerHorizontal="true"
-            android:hint="请输入6~20位字母，数字密码"
+            android:hint="请输入6~20位字母、数字密码"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </RelativeLayout>
     <RelativeLayout
         android:layout_marginTop="25dp"
         android:background="@drawable/shape_radius"
-        android:layout_marginLeft="45dp"
-        android:layout_marginRight="45dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
         android:layout_width="match_parent"
         android:layout_height="50dp">
         <ImageView

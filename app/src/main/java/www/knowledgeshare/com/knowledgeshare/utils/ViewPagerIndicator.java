@@ -38,8 +38,8 @@ public class ViewPagerIndicator implements ViewPager.OnPageChangeListener {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
             //为小圆点左右添加间距
-            params.leftMargin = 5;
-            params.rightMargin = 5;
+            params.leftMargin = 3;
+            params.rightMargin = 3;
             //手动给小圆点一个大小
             params.height = imgSize;
             params.width = imgSize;

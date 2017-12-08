@@ -113,14 +113,22 @@
         android:layout_height="wrap_content">
 
         <CheckBox
-            android:padding="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
             style="@style/CustomCheckboxTheme"
             android:id="@+id/register_agress"
             android:textSize="15sp"
-            android:layout_weight="1"
             android:textColor="#fff"
-            android:text="同意《用户注册协议》"
-            android:layout_width="0dp"
+            android:text="同意"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/register_xieyi"
+            android:textSize="15sp"
+            android:textColor="#fff"
+            android:text="《用户注册协议》"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
     <RelativeLayout

@@ -81,8 +81,8 @@
     <RelativeLayout
         android:layout_marginTop="50dp"
         android:background="@drawable/shape_radius"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
         android:layout_width="match_parent"
         android:layout_height="50dp">
         <ImageView
@@ -114,8 +114,8 @@
     <RelativeLayout
         android:layout_marginTop="25dp"
         android:background="@drawable/shape_radius"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
         android:layout_width="match_parent"
         android:layout_height="50dp">
         <ImageView
@@ -158,13 +158,12 @@
     <RelativeLayout
         android:layout_marginTop="50dp"
         android:background="@drawable/login_back"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
         <TextView
-            android:inputType="number"
             android:background="@null"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
