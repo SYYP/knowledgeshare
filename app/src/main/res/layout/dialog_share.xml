@@ -3,17 +3,18 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@drawable/bg_wanjiao"
-              android:paddingTop="8dp"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:paddingTop="8dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="20dp"
-        android:paddingBottom="20dp"
     >
         <TextView
+            android:id="@+id/tv_weixin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -23,6 +24,7 @@
             android:gravity="center"
             android:text="微信"/>
         <TextView
+            android:id="@+id/tv_pengyouquan"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -32,6 +34,7 @@
             android:gravity="center"
             android:text="朋友圈"/>
         <TextView
+            android:id="@+id/tv_zone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -41,6 +44,7 @@
             android:gravity="center"
             android:text="空间"/>
         <TextView
+            android:id="@+id/tv_qq"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -50,6 +54,7 @@
             android:gravity="center"
             android:text="QQ"/>
         <TextView
+            android:id="@+id/tv_sina"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

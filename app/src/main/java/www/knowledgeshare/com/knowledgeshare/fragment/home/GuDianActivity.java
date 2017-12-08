@@ -182,6 +182,36 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
                 mDialog.dismiss();
             }
         });
+        mDialog.getView(R.id.tv_weixin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
     }
 
     @Override

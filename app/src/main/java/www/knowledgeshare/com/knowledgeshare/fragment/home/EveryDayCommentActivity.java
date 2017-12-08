@@ -3,6 +3,7 @@ package www.knowledgeshare.com.knowledgeshare.fragment.home;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -44,6 +46,8 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private NestedScrollView nestView;
+    private boolean mIsCollected;
+    private boolean mDianzan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,6 +156,56 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 mDialog.dismiss();
             }
         });
+        mDialog.getView(R.id.tv_share).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+                showShareDialog();
+            }
+        });
+        final TextView tv_collect = mDialog.getView(R.id.tv_collect);
+        tv_collect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mIsCollected) {
+                    Drawable drawable = getResources().getDrawable(R.drawable.bofanglist_collect);
+                    /// 这一步必须要做,否则不会显示.
+                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                    tv_collect.setCompoundDrawables(null, drawable, null, null);
+                } else {
+                    Drawable drawable = getResources().getDrawable(R.drawable.collect_shixin);
+                    /// 这一步必须要做,否则不会显示.
+                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                    tv_collect.setCompoundDrawables(null, drawable, null, null);
+                }
+                mIsCollected = !mIsCollected;
+            }
+        });
+        final TextView tv_dianzan = mDialog.getView(R.id.tv_dianzan);
+        tv_dianzan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mDianzan) {
+                    Drawable drawable = getResources().getDrawable(R.drawable.dianzan_yellow_big);
+                    /// 这一步必须要做,否则不会显示.
+                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                    tv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                } else {
+                    Drawable drawable = getResources().getDrawable(R.drawable.dianzan_shixin);
+                    /// 这一步必须要做,否则不会显示.
+                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                    tv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                }
+                mDianzan = !mDianzan;
+            }
+        });
+        mDialog.getView(R.id.tv_download).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(EveryDayCommentActivity.this, "已加入下载列表", Toast.LENGTH_SHORT).show();
+                mDialog.dismiss();
+            }
+        });
     }
 
     private void showShareDialog() {
@@ -170,6 +224,36 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 .builder();
         mDialog.show();
         mDialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_weixin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();

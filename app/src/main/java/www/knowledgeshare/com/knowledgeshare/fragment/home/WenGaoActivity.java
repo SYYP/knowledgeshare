@@ -70,7 +70,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
         recycler_liuyan = (RecyclerView) findViewById(R.id.recycler_liuyan);
         recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
         recycler_liuyan.setNestedScrollingEnabled(false);
-        webview= (WebView) findViewById(R.id.webview);
+        webview = (WebView) findViewById(R.id.webview);
         webview.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -123,10 +123,10 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
                 public void onClick(View view) {
                     if (isDianzan) {
                         iv_dianzan.setImageResource(R.drawable.free_yizan);
-                    }else {
+                    } else {
                         iv_dianzan.setImageResource(R.drawable.free_dianzan);
                     }
-                    isDianzan=!isDianzan;
+                    isDianzan = !isDianzan;
                 }
             });
         }

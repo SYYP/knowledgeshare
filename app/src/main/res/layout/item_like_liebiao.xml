@@ -31,7 +31,7 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="试读"
+                android:text="试听"
                 android:textColor="@color/text_red_dark"
                 android:textSize="14sp"/>
         </LinearLayout>
