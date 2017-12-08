@@ -129,6 +129,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             iv_listen.setImageResource(R.drawable.tab_listen_pause);
             //homefragment传来这个的时候就是点了叉了
             mMyBinder.closeMedia();
+        }else if (eventBean.getMsg().equals("zanting")) {
+            isPause = true;
+            iv_listen.clearAnimation();
+            iv_listen.setImageResource(R.drawable.tab_listen_pause);
+            //播放界面传来的
         }
     }
 

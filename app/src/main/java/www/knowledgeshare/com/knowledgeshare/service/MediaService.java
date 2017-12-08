@@ -23,11 +23,13 @@ public class MediaService extends Service {
     //初始化MediaPlayer
     public MediaPlayer mMediaPlayer = new MediaPlayer();
     private boolean isPlaying = false;
+    private boolean isPrepared;
 
     @Override
     public void onCreate() {
         super.onCreate();
         iniMediaPlayerFile();
+        initListener();
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
@@ -40,6 +42,15 @@ public class MediaService extends Service {
                 .setWhen(System.currentTimeMillis())
                 .build();
         startForeground(1, notification);
+    }
+
+    private void initListener() {
+        mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                isPrepared=true;
+            }
+        });
     }
 
     @Override
@@ -166,8 +177,19 @@ public class MediaService extends Service {
          * 获取播放位置
          */
         public int getPlayPosition() {
-
-            return mMediaPlayer.getCurrentPosition();
+            if (mMediaPlayer != null) {
+                try {
+                    if (isPrepared){
+                        return mMediaPlayer.getCurrentPosition();
+                    }else {
+                        return 0;
+                    }
+                } catch (IllegalStateException e) {
+                    return 0;
+                }
+            } else {
+                return 0;
+            }
         }
 
         /**

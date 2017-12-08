@@ -78,6 +78,24 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
         unbindService(mServiceConnection);
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        //onrestart死活不走，他妈的我就放到onresume中了
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mMyBinder != null) {
+            if (mMyBinder.isPlaying()) {
+                iv_pause.setImageResource(R.drawable.bofang_yellow_big);
+            } else {
+                iv_pause.setImageResource(R.drawable.pause_yellow_big);
+            }
+        }
+    }
+
     /**
      * 更新ui的runnable
      */
@@ -93,9 +111,9 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMyBinder = (MediaService.MyBinder) service;
-            if (mMyBinder.isPlaying()){
+            if (mMyBinder.isPlaying()) {
                 iv_pause.setImageResource(R.drawable.bofang_yellow_big);
-            }else {
+            } else {
                 iv_pause.setImageResource(R.drawable.pause_yellow_big);
             }
             play_seek.setMax(mMyBinder.getProgress());
@@ -232,13 +250,17 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                 if (isbofang) {
                     mMyBinder.pauseMusic();
                     iv_pause.setImageResource(R.drawable.pause_yellow_big);
-                    EventBean eventBean = new EventBean("norotate");
+                    EventBean eventBean = new EventBean("zanting");
                     EventBus.getDefault().postSticky(eventBean);
+                    EventBean eventBean2 = new EventBean("pause");
+                    EventBus.getDefault().postSticky(eventBean2);
                 } else {
                     mMyBinder.playMusic();
                     iv_pause.setImageResource(R.drawable.bofang_yellow_big);
                     EventBean eventBean = new EventBean("rotate");
                     EventBus.getDefault().postSticky(eventBean);
+                    EventBean eventBean2 = new EventBean("bofang");
+                    EventBus.getDefault().postSticky(eventBean2);
                 }
                 isbofang = !isbofang;
                 break;
