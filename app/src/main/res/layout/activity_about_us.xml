@@ -7,4 +7,5 @@
     android:orientation="vertical"
     tools:context="www.knowledgeshare.com.knowledgeshare.activity.AboutUsActivity">
     <include layout="@layout/item_title_layout"/>
+
 </LinearLayout>

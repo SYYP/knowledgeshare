@@ -47,7 +47,9 @@ public class AccountSafeActivity extends BaseActivity implements View.OnClickLis
                 finish();
                 break;
             case R.id.bdsjh_rl:
-                startActivity(new Intent(this,BindPhoneActivity.class));
+                Intent intent = new Intent(this, BindPhoneActivity.class);
+                intent.putExtra("no","no");
+                startActivity(intent);
                 break;
             case R.id.bdwx_rl:
                 break;

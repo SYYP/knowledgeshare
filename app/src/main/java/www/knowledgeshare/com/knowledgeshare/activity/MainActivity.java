@@ -98,7 +98,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 //设置动画
                 .setAnimation(R.style.Bottom_Top_aniamtion)
                 //设置dialog的宽高
-                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 //设置触摸dialog外围是否关闭
                 .isOnTouchCanceled(true)
                 //设置监听事件

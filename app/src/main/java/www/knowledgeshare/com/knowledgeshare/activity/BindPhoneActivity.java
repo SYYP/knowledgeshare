@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -28,6 +29,7 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
     @BindView(R.id.verify_yanzheng) EditText verifyYanzheng;
     @BindView(R.id.verify_huoqu) TextView verifyHuoqu;
     @BindView(R.id.verify_query) TextView verifyQuery;
+    @BindView(R.id.tv_tiaoguo) TextView tv_tiaoguo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +39,16 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_bind_phone);
         ButterKnife.bind(this);
         initView();
+        if (!TextUtils.isEmpty(getIntent().getStringExtra("no"))&&getIntent().getStringExtra("no").equals("no")){
+            tv_tiaoguo.setVisibility(View.GONE);
+        }
     }
 
     private void initView() {
         ivCallback.setOnClickListener(this);
         verifyHuoqu.setOnClickListener(this);
         verifyQuery.setOnClickListener(this);
+        tv_tiaoguo.setOnClickListener(this);
     }
 
     @Override
@@ -56,6 +62,9 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.verify_query:
                 submit();
+                break;
+            case R.id.tv_tiaoguo:
+                startActivity(new Intent(this,MainActivity.class));
                 break;
         }
     }
