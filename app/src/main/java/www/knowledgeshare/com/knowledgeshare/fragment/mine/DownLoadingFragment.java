@@ -5,9 +5,11 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -39,9 +41,12 @@ public class DownLoadingFragment extends BaseFragment implements View.OnClickLis
     LinearLayout qbscLl;
     @BindView(R.id.recycler_xzz)
     RecyclerView recyclerXzz;
+    @BindView(R.id.kaishi_tv)
+    TextView kaishiTv;
     Unbinder unbinder;
     private List<DownLoadBean> list;
     private DownLoadingAdapter adapter;
+    private boolean flag;
 
     @Override
     protected void lazyLoad() {
@@ -53,6 +58,7 @@ public class DownLoadingFragment extends BaseFragment implements View.OnClickLis
         View inflate = View.inflate(mContext, R.layout.fragment_downloading, null);
         unbinder = ButterKnife.bind(this, inflate);
         qbscLl.setOnClickListener(this);
+        qbksLl.setOnClickListener(this);
         return inflate;
     }
 
@@ -85,6 +91,15 @@ public class DownLoadingFragment extends BaseFragment implements View.OnClickLis
             case R.id.qbsc_ll:
                 showTips();
                 break;
+            case R.id.qbks_ll:
+                if (TextUtils.equals("全部开始",kaishiTv.getText().toString())){
+                    kaishiTv.setText("全部暂停");
+                }else {
+                    kaishiTv.setText("全部开始");
+                }
+                break;
+            default:
+                break;
         }
     }
 
@@ -101,11 +116,26 @@ public class DownLoadingFragment extends BaseFragment implements View.OnClickLis
             ProgressBar progressBar = helper.getView(R.id.progressBar);
             TextView size_tv = helper.getView(R.id.size_tv);
             TextView zhuangtai_tv = helper.getView(R.id.zhuangtai_tv);
+            final ImageView zhuangtai_iv = helper.getView(R.id.xz_zhuangtai_iv);
+            flag = true;
 
             downdload_content_tv.setText(item.getContent());
             progressBar.setProgress(Integer.parseInt(item.getJindu()));
             size_tv.setText(item.getSize());
             zhuangtai_tv.setText(item.getZhuangtai());
+
+            zhuangtai_iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (flag){
+                        zhuangtai_iv.setImageDrawable(getResources().getDrawable(R.drawable.power_zanting));
+                        flag = false;
+                    }else {
+                        zhuangtai_iv.setImageDrawable(getResources().getDrawable(R.drawable.power_kaishi_iv));
+                        flag = true;
+                    }
+                }
+            });
         }
     }
 

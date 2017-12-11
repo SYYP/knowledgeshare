@@ -52,7 +52,7 @@ public class PurchaseHistoryActivity extends BaseActivity implements View.OnClic
         for (int i = 0; i < 6; i++) {
             PurchaseHistoryBean purchaseHistoryBean = new PurchaseHistoryBean();
             purchaseHistoryBean.setBianhao("123456789"+i);
-            purchaseHistoryBean.setDate("2017-12-5 10:21:29");
+            purchaseHistoryBean.setDate("2017-12-5 10:21");
             purchaseHistoryBean.setName("《凌晨4点的北京》");
             purchaseHistoryBean.setMoney("￥198.00");
             list.add(purchaseHistoryBean);

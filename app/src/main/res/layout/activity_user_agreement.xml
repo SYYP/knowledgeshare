@@ -7,4 +7,10 @@
     android:orientation="vertical"
     tools:context="www.knowledgeshare.com.knowledgeshare.activity.UserAgreementActivity">
     <include layout="@layout/item_title_layout"/>
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </WebView>
 </LinearLayout>

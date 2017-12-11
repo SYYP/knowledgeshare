@@ -7,6 +7,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:background="#E6E6E6"/>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,6 +23,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/power_downloading_icon"/>
             <ImageView
+                android:id="@+id/xz_zhuangtai_iv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"

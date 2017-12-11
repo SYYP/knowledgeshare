@@ -132,7 +132,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="5dp"
-                    android:text="0-铜（200点）；铜到银（600点）；银到金（1500点）；金到白金（3000点）；白金到钻石（5000点）"/>
+                    android:text="0-铜（200 点）；铜到银（600 点）；银到金（1500 点）；金到白金（3000 点）；白金到钻石（5000 点）"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

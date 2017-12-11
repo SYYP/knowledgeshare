@@ -55,7 +55,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
         titleContentRightTv.setVisibility(View.VISIBLE);
-        titleContentTv.setText("崔宗顺的男低音歌唱家秘籍");
+        titleContentTv.setText("崔宗顺等男低音歌唱家秘籍");
         titleContentRightTv.setText("编辑");
         titleBackIv.setOnClickListener(this);
         titleContentRightTv.setOnClickListener(this);
