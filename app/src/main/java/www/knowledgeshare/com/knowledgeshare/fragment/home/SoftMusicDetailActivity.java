@@ -245,6 +245,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                     startActivity(new Intent(SoftMusicDetailActivity.this, WenGaoActivity.class));
                 }
             });
+            helper.setText(R.id.tv_order,"0"+(helper.getAdapterPosition()+1));
         }
     }
 

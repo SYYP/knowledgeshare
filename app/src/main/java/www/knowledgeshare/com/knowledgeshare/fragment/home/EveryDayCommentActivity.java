@@ -145,6 +145,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                     startActivity(new Intent(EveryDayCommentActivity.this,WenGaoActivity.class));
                 }
             });
+            helper.setText(R.id.tv_order,"0"+(helper.getAdapterPosition()+1));
         }
     }
 

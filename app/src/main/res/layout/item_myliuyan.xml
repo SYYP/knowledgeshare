@@ -7,8 +7,9 @@
               android:layout_marginRight="10dp"
               android:background="@drawable/bg_wanjiao"
               android:orientation="vertical"
-              android:padding="10dp">
+              >
     <TextView
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="留言：啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦"
@@ -30,13 +31,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
         android:text="作者回复："
         android:textColor="@color/yellow"
         android:textSize="16sp"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_margin="10dp"
         android:background="@drawable/bg_huise_line"
         android:minHeight="80dp"
         android:padding="10dp"

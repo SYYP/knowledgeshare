@@ -165,6 +165,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                     startActivity(new Intent(FreeActivity.this,WenGaoActivity.class));
                 }
             });
+            helper.setText(R.id.tv_order,"0"+(helper.getAdapterPosition()+1));
         }
     }
 

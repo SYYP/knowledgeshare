@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -27,9 +28,11 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.BuyFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.HomeFragment;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.WebActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.MineFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.study.StudyFragment;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
+import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
@@ -65,6 +68,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     BuyFragment buyFragment;
     MineFragment mineFragment;
     private boolean abool;
+    private BaseDialog mDialog;
+    private BaseDialog.Builder mBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +85,40 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initAnim();
         initMusic();
         abool = SpUtils.getBoolean(this, "abool", true);
+        pop();
+    }
+
+    private void pop() {
+        mBuilder = new BaseDialog.Builder(this);
+        mDialog = mBuilder.setViewId(R.layout.dialog_pop)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.BOTTOM)
+                //设置动画
+                .setAnimation(R.style.Bottom_Top_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.iv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.iv_pop).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+                Intent intent = new Intent(MainActivity.this, WebActivity.class);
+                intent.putExtra("lxk","lxk");
+                startActivity(intent);
+            }
+        });
     }
 
     private void initMusic() {

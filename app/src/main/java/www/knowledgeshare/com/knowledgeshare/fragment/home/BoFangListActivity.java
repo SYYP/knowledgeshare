@@ -32,6 +32,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
     private BaseDialog mDialog;
     private boolean mIsCollected;
     private BaseDialog.Builder mBuilder;
+    private boolean mDianzan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +82,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
     }
 
     private void showListDialog() {
-        mDialog = mBuilder.setViewId(R.layout.dialog_bofanglist)
+        mDialog = mBuilder.setViewId(R.layout.dialog_free)
                 //设置dialogpadding
                 .setPaddingdp(10, 0, 10, 0)
                 //设置显示位置
@@ -124,6 +125,24 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                     tv_collect.setCompoundDrawables(null, drawable, null, null);
                 }
                 mIsCollected = !mIsCollected;
+            }
+        });
+        final TextView tv_dianzan = mDialog.getView(R.id.tv_dianzan);
+        tv_dianzan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mDianzan) {
+                    Drawable drawable = getResources().getDrawable(R.drawable.dianzan_yellow_big);
+                    /// 这一步必须要做,否则不会显示.
+                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                    tv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                } else {
+                    Drawable drawable = getResources().getDrawable(R.drawable.dianzan_shixin);
+                    /// 这一步必须要做,否则不会显示.
+                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                    tv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                }
+                mDianzan = !mDianzan;
             }
         });
         mDialog.getView(R.id.tv_download).setOnClickListener(new View.OnClickListener() {
@@ -208,6 +227,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                     startActivity(new Intent(BoFangListActivity.this, WenGaoActivity.class));
                 }
             });
+            helper.setText(R.id.tv_order,"0"+(helper.getAdapterPosition()+1));
         }
     }
 

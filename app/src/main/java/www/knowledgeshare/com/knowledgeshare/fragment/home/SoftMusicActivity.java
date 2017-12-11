@@ -78,6 +78,9 @@ public class SoftMusicActivity extends BaseActivity implements View.OnClickListe
 //            Glide.with(mContext).load().into(imageView);
             helper.setVisible(R.id.iv_bofang,false);
             helper.setVisible(R.id.view_line,true);
+            if (helper.getAdapterPosition()==5){
+                helper.setVisible(R.id.view_line,false);
+            }
         }
     }
 

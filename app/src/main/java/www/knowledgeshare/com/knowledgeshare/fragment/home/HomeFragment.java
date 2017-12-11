@@ -39,12 +39,14 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.DownLoadActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
+import www.knowledgeshare.com.knowledgeshare.bean.BoFangBean;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BannerUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
@@ -94,6 +96,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private TextView tv_yinyueke_lookmore;
     private boolean isBofang;
     private Animation mRotate_anim;
+    private List<BoFangBean> mList3;
+    private List<BoFangBean> mList4;
+    private String mytype;
+    private int myposition;
 
     @Override
     protected void lazyLoad() {
@@ -185,9 +191,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         } else if (eventBean.getMsg().equals("pause")) {
             isBofang = false;
             iv_delete.setVisibility(View.VISIBLE);
+            allpause();
         } else if (eventBean.getMsg().equals("close")) {
             isBofang = false;
             rl_bofang.setVisibility(View.GONE);
+            allpause();
         }
     }
 
@@ -217,10 +225,18 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         list2.add("");
         list2.add("");
         list2.add("");
-        mZhuanLanAdapter = new ZhuanLanAdapter(R.layout.item_zhuanlan, list);
+        mList3 = new ArrayList<>();
+        mList3.add(new BoFangBean());
+        mList3.add(new BoFangBean());
+        mList3.add(new BoFangBean());
+        mList4 = new ArrayList<>();
+        mList4.add(new BoFangBean());
+        mList4.add(new BoFangBean());
+        mList4.add(new BoFangBean());
+        mZhuanLanAdapter = new ZhuanLanAdapter(R.layout.item_zhuanlan, mList3);
         recycler_zhuanlan.setAdapter(mZhuanLanAdapter);
 
-        mCommentAdapter = new CommentAdapter(R.layout.item_zhuanlan, list);
+        mCommentAdapter = new CommentAdapter(R.layout.item_zhuanlan, mList4);
         recycler_comment.setAdapter(mCommentAdapter);
 
         mDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban, list2);
@@ -328,48 +344,50 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 .builder();
     }
 
-    private class ZhuanLanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class ZhuanLanAdapter extends BaseQuickAdapter<BoFangBean, BaseViewHolder> {
 
-        public ZhuanLanAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public ZhuanLanAdapter(@LayoutRes int layoutResId, @Nullable List<BoFangBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(final BaseViewHolder helper, String item) {
+        protected void convert(final BaseViewHolder helper, BoFangBean item) {
             final ImageView iv_pause = helper.getView(R.id.iv_pause);
+            if (item.isChecked()) {
+                iv_pause.setImageResource(R.drawable.bofang_yellow);
+            } else {
+                iv_pause.setImageResource(R.drawable.pause_yellow);
+            }
             helper.getView(R.id.rl_root_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    refreshbofang("zhuanlan", helper.getAdapterPosition());
                     gobofang();
-                    if (isBofang) {
-                        iv_pause.setImageResource(R.drawable.bofang_yellow);
-                    } else {
-                        iv_pause.setImageResource(R.drawable.pause_yellow);
-                    }
                 }
             });
         }
     }
 
-    private class CommentAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class CommentAdapter extends BaseQuickAdapter<BoFangBean, BaseViewHolder> {
 
-        public CommentAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public CommentAdapter(@LayoutRes int layoutResId, @Nullable List<BoFangBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(final BaseViewHolder helper, BoFangBean item) {
             helper.getView(R.id.tv_teacher_name).setVisibility(View.VISIBLE);
             final ImageView iv_pause = helper.getView(R.id.iv_pause);
+            if (item.isChecked()) {
+                iv_pause.setImageResource(R.drawable.bofang_yellow);
+            } else {
+                iv_pause.setImageResource(R.drawable.pause_yellow);
+            }
             helper.getView(R.id.rl_root_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    refreshbofang("comment", helper.getAdapterPosition());
                     gobofang();
-                    if (isBofang) {
-                        iv_pause.setImageResource(R.drawable.bofang_yellow);
-                    } else {
-                        iv_pause.setImageResource(R.drawable.pause_yellow);
-                    }
                 }
             });
         }
@@ -429,38 +447,89 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         int apnType = NetWorkUtils.getAPNType(mContext);
         if (apnType == 0) {
             Toast.makeText(mContext, "没有网络呢~", Toast.LENGTH_SHORT).show();
-            return;
         } else if (apnType == 2 || apnType == 3 || apnType == 4) {
-            mDialog.show();
-            mDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mDialog.dismiss();
-                }
-            });
-            mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mDialog.dismiss();
-                    isBofang = true;
-                    rl_bofang.setVisibility(View.VISIBLE);
-                    //                    Glide.with(mContext).load().into(iv_bo_head);
-                    EventBean eventBean = new EventBean("rotate");
-                    EventBus.getDefault().postSticky(eventBean);
-                    mMyBinder.playMusic();
-                }
-            });
-            return;
+            if (SpUtils.getBoolean(mContext, "nowifiallowlisten", false)) {//记住用户允许流量播放
+                isBofang = true;
+                rl_bofang.setVisibility(View.VISIBLE);
+                //                    Glide.with(mContext).load().into(iv_bo_head);
+                //                    mMyBinder.playMusic();
+                mDialog.dismiss();
+                EventBean eventBean = new EventBean("rotate");
+                EventBus.getDefault().postSticky(eventBean);
+                SpUtils.putBoolean(mContext, "nowifiallowlisten", true);
+            } else {
+                mDialog.show();
+                mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        isBofang = true;
+                        rl_bofang.setVisibility(View.VISIBLE);
+                        //                    Glide.with(mContext).load().into(iv_bo_head);
+                        //                    mMyBinder.playMusic();
+                        mDialog.dismiss();
+                        EventBean eventBean = new EventBean("rotate");
+                        EventBus.getDefault().postSticky(eventBean);
+                        SpUtils.putBoolean(mContext, "nowifiallowlisten", true);
+                    }
+                });
+                mDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mDialog.dismiss();
+                    }
+                });
+            }
         } else if (NetWorkUtils.isMobileConnected(mContext)) {
             Toast.makeText(mContext, "wifi不可用呢~", Toast.LENGTH_SHORT).show();
-            return;
+        } else {
+            isBofang = true;
+            rl_bofang.setVisibility(View.VISIBLE);
+            //        Glide.with(mContext).load().into(iv_bo_head);
+            EventBean eventBean = new EventBean("rotate");
+            EventBus.getDefault().postSticky(eventBean);
+            //            mMyBinder.playMusic();
         }
-        isBofang = true;
-        rl_bofang.setVisibility(View.VISIBLE);
-        //        Glide.with(mContext).load().into(iv_bo_head);
-        EventBean eventBean = new EventBean("rotate");
-        EventBus.getDefault().postSticky(eventBean);
-        mMyBinder.playMusic();
+    }
+
+    private void refreshbofang(String type, int adapterPosition) {
+        mytype=type;
+        myposition=adapterPosition;
+        if (type.equals("comment")) {
+            for (int i = 0; i < mList3.size(); i++) {
+                mList3.get(i).setChecked(false);
+            }
+            for (int i = 0; i < mList4.size(); i++) {
+                if (i == adapterPosition) {
+                    mList4.get(i).setChecked(true);
+                } else {
+                    mList4.get(i).setChecked(false);
+                }
+            }
+        } else {
+            for (int i = 0; i < mList3.size(); i++) {
+                if (i == adapterPosition) {
+                    mList3.get(i).setChecked(true);
+                } else {
+                    mList3.get(i).setChecked(false);
+                }
+            }
+            for (int i = 0; i < mList4.size(); i++) {
+                mList4.get(i).setChecked(false);
+            }
+        }
+        mZhuanLanAdapter.notifyDataSetChanged();
+        mCommentAdapter.notifyDataSetChanged();
+    }
+
+    private void allpause() {
+        for (int i = 0; i < mList3.size(); i++) {
+            mList3.get(i).setChecked(false);
+        }
+        for (int i = 0; i < mList4.size(); i++) {
+            mList4.get(i).setChecked(false);
+        }
+        mZhuanLanAdapter.notifyDataSetChanged();
+        mCommentAdapter.notifyDataSetChanged();
     }
 
     @Override

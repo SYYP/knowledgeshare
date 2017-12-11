@@ -29,6 +29,7 @@ public class MyGuanzhuActivity extends BaseActivity implements View.OnClickListe
     private RecyclerView recycler_guanzhu;
     private LinearLayout activity_my_guanzhu;
     private GuanzhuAdapter mGuanzhuAdapter;
+    private List<String> mList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +46,12 @@ public class MyGuanzhuActivity extends BaseActivity implements View.OnClickListe
         tv_search.setOnClickListener(this);
         recycler_guanzhu = (RecyclerView) findViewById(R.id.recycler_guanzhu);
         activity_my_guanzhu = (LinearLayout) findViewById(R.id.activity_my_guanzhu);
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
+        mList = new ArrayList<>();
+        mList.add("");
+        mList.add("");
+        mList.add("");
         recycler_guanzhu.setLayoutManager(new LinearLayoutManager(this));
-        mGuanzhuAdapter = new GuanzhuAdapter(R.layout.item_guanzhu, list);
+        mGuanzhuAdapter = new GuanzhuAdapter(R.layout.item_guanzhu, mList);
         recycler_guanzhu.setAdapter(mGuanzhuAdapter);
         mGuanzhuAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -67,17 +68,17 @@ public class MyGuanzhuActivity extends BaseActivity implements View.OnClickListe
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(final BaseViewHolder helper, String item) {
             helper.getView(R.id.iv_quxiaoguanzhu).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
+                    showDialog(Gravity.CENTER, R.style.Alpah_aniamtion,helper.getAdapterPosition());
                 }
             });
         }
     }
 
-    private void showDialog(int grary, int animationStyle) {
+    private void showDialog(int grary, int animationStyle, final int position) {
         BaseDialog.Builder builder = new BaseDialog.Builder(this);
         final BaseDialog dialog = builder.setViewId(R.layout.dialog_guanzhu)
                 //设置dialogpadding
@@ -103,6 +104,8 @@ public class MyGuanzhuActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                mList.remove(position);
+                mGuanzhuAdapter.notifyDataSetChanged();
             }
         });
     }

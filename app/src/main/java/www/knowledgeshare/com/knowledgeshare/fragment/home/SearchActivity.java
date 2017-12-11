@@ -164,7 +164,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                             mHistoryAdapter.setNewData(mHistoryList);
                             mHistoryAdapter.notifyDataSetChanged();//刷新一下界面
                         } else {
-                            mHistoryAdapter = new RecyclerHistoryAdapter(R.layout.search_hot_item, mHistoryList);
+                            mHistoryAdapter = new RecyclerHistoryAdapter(R.layout.search_history_item, mHistoryList);
                             recycler_lishi.setAdapter(mHistoryAdapter);
                         }
                     }

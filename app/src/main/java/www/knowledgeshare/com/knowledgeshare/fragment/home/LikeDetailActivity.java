@@ -176,6 +176,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                     startActivity(new Intent(LikeDetailActivity.this, WenGaoActivity.class));
                 }
             });
+            helper.setText(R.id.tv_order,"0"+(helper.getAdapterPosition()+1));
         }
     }
 

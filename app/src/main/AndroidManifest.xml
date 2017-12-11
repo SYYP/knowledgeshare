@@ -102,6 +102,7 @@
         <service android:name=".service.MediaService"/>
         <activity android:name=".fragment.mine.MyMessageActivity"/>
         <activity android:name=".login.ResetpwdActivity"/>
+        <activity android:name=".fragment.home.WebActivity"/>
     </application>
 
 </manifest>
