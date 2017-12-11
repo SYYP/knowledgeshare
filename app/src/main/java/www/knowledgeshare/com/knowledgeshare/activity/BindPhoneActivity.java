@@ -65,6 +65,7 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.tv_tiaoguo:
                 startActivity(new Intent(this,MainActivity.class));
+                finish();
                 break;
         }
     }
