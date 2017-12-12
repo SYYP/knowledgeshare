@@ -23,7 +23,7 @@
         android:layout_marginTop="50dp"
         android:id="@+id/hob_liu"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></www.knowledgeshare.com.knowledgeshare.utils.FlowLayout>
+        android:layout_height="wrap_content"/>
 
     <RelativeLayout
         android:layout_marginTop="50dp"

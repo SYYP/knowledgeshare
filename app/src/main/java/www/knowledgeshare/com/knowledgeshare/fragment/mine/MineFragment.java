@@ -109,6 +109,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.zhaq_rl://帐号安全
                 startActivity(new Intent(getActivity(), AccountSafeActivity.class));
                 break;
+            default:
+                break;
         }
     }
 

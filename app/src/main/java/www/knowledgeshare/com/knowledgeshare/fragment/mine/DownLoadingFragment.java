@@ -94,8 +94,20 @@ public class DownLoadingFragment extends BaseFragment implements View.OnClickLis
             case R.id.qbks_ll:
                 if (TextUtils.equals("全部开始",kaishiTv.getText().toString())){
                     kaishiTv.setText("全部暂停");
+                    for (int i = 0; i < list.size(); i++) {
+                        if (i < list.size()-4){
+                            list.get(i).setZhuangtai("已暂停");
+                        }else {
+                            list.get(i).setZhuangtai("等待中");
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
                 }else {
                     kaishiTv.setText("全部开始");
+                    for (int i = 0; i < list.size(); i++) {
+                        list.get(i).setZhuangtai("正在下载");
+                    }
+                    adapter.notifyDataSetChanged();
                 }
                 break;
             default:
