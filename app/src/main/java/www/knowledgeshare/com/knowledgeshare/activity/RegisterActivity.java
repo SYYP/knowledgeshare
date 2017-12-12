@@ -11,17 +11,30 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
+
 import org.zackratos.ultimatebar.UltimateBar;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.ResultBean;
+import www.knowledgeshare.com.knowledgeshare.bean.VerifyCodesBean;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.login.SetloginActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SendSmsTimerUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
  * date : ${Date}
  * author:衣鹏宇(ypu)
+ * 注册
  */
 
 public class RegisterActivity extends BaseActivity implements View.OnClickListener {
@@ -68,7 +81,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                   startActivity(intent);
                 break;
             case R.id.register_next:
-                
                  register();
                 break;
             case R.id.register_phone:
@@ -79,9 +91,33 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.register_huoqu:
                 SendSmsTimerUtils.sendSms(register_huoqu, R.color.white, R.color.text_red);
+                requestVerifyCodes();
                 break;
         }
 
+    }
+
+    private void requestVerifyCodes() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("X-Header-Sms","HxP&sU1YFs78RL&Src@G3YnN5ne3HYvR");
+        HttpParams params = new HttpParams();
+        params.put("mobile",register_phone.getText().toString());
+
+        OkGo.<VerifyCodesBean>post(MyContants.verifycodes)
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<VerifyCodesBean>(VerifyCodesBean.class) {
+                    @Override
+                    public void onSuccess(Response<VerifyCodesBean> response) {
+                        VerifyCodesBean verifyCodesBean = response.body();
+                        if ( response.code() >= 200 && response.code() <= 204){
+                            TUtils.showShort(RegisterActivity.this,verifyCodesBean.getMessage());
+                        }else {
+                            TUtils.showShort(RegisterActivity.this,verifyCodesBean.getMessage());
+                        }
+                    }
+                });
     }
 
     private void register() {
@@ -89,12 +125,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             Toast.makeText(this, "手机号码不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
-
         if (!MyUtils.isMobileNO(register_phone.getText().toString())) {
             Toast.makeText(this, "手机号格式不正确", Toast.LENGTH_SHORT).show();
             return;
         }
-          if(!(register_agress.isChecked())){
+        if (!(register_agress.isChecked())){
               Toast.makeText(this, "请同意用户注册协议", Toast.LENGTH_SHORT).show();
               return;
           }
@@ -102,8 +137,32 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             Toast.makeText(RegisterActivity.this, "请填写验证码", Toast.LENGTH_SHORT).show();
             return;
         }
-        Intent intent=new Intent(this, SetloginActivity.class);
-          startActivity(intent);
-        finish();
+        requestRegistSetOne();
+
+    }
+
+    private void requestRegistSetOne() {
+        HttpParams params = new HttpParams();
+        params.put("mobile",register_phone.getText().toString());
+        params.put("code",register_yanzheng.getText().toString());
+
+        OkGo.<VerifyCodesBean>post(MyContants.registSetOne)
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<VerifyCodesBean>() {
+                    @Override
+                    public void onSuccess(Response<VerifyCodesBean> response) {
+                        VerifyCodesBean verifyCodesBean = response.body();
+                        if ( response.code() >= 200 && response.code() <= 204){
+                            Intent intent = new Intent(RegisterActivity.this, SetloginActivity.class);
+                            intent.putExtra("verify", verifyCodesBean.getVerify());
+                            SpUtils.putString(RegisterActivity.this,"mobile",register_phone.getText().toString());
+                            startActivity(intent);
+                            finish();
+                        }else {
+                            TUtils.showShort(RegisterActivity.this,verifyCodesBean.getMessage());
+                        }
+                    }
+                });
     }
 }

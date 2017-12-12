@@ -12,16 +12,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzy.okgo.model.HttpParams;
+
 import org.zackratos.ultimatebar.UltimateBar;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 /**
  * date : ${Date}
  * author:衣鹏宇(ypu)
+ * 设置登录密码
  */
 
 public class SetloginActivity extends BaseActivity implements View.OnClickListener {
@@ -31,6 +35,7 @@ public class SetloginActivity extends BaseActivity implements View.OnClickListen
     private EditText set_loginpwd;
     private EditText login_forgetpwd;
     private TextView login_ok;
+    private String verify;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +47,7 @@ public class SetloginActivity extends BaseActivity implements View.OnClickListen
         initView();
     }
     private void initView() {
+        verify = getIntent().getStringExtra("verify");
         tv_callback = (ImageView) findViewById(R.id.tv_callback);
         register_headimg = (ImageView) findViewById(R.id.register_headimg);
         set_loginpwd = (EditText) findViewById(R.id.set_loginpwd);
@@ -67,7 +73,16 @@ public class SetloginActivity extends BaseActivity implements View.OnClickListen
             Toast.makeText(this, "两次输入的密码不同，请重新输入", Toast.LENGTH_SHORT).show();
             return;
         }
+        requestRegistSetTwo();
         showDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
+    }
+
+    private void requestRegistSetTwo() {
+        HttpParams params = new HttpParams();
+        params.put("mobile", SpUtils.getString(SetloginActivity.this,"mobile",""));
+        params.put("password",set_loginpwd.getText().toString());
+        params.put("verify",verify);
+
     }
 
 

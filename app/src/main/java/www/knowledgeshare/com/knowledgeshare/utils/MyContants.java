@@ -2,9 +2,14 @@ package www.knowledgeshare.com.knowledgeshare.utils;
 
 public class MyContants {
     public static String FILENAME = "config.xml";
-    public static String BASEURL = "http://59.110.213.63/cfc/api.php?";
+    public static String BASEURL = "http://thinks.iask.in/";
     public static String IMGBASEURL = "";
-    public static final String Contexts="http://114.215.83.139/cfc/api.php?s=Upload/upload";
 
-
+    //短信发送
+    public static final String verifycodes = BASEURL + "api/v2/verifycodes";
+    //注册第一步
+    public static final String registSetOne = BASEURL + "api/v2/register/set-one";
+    //注册第二步
+    public static final String registSetTwo = BASEURL + "api/v2/register/set-two";
+    //
 }
