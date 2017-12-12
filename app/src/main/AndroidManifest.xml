@@ -46,6 +46,7 @@
 
         <activity
             android:name=".activity.MainActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".login.ForgetActivity" />

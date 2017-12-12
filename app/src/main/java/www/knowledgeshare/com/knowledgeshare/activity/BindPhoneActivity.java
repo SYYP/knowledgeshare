@@ -85,6 +85,8 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
             return;
         }
 
+        startActivity(new Intent(this,MainActivity.class));
+        finish();
 
     }
 }

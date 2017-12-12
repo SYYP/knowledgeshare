@@ -73,13 +73,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             case R.id.close_login:
                 finish();
 
-              overridePendingTransition(0,R.anim.close_anim);
+                overridePendingTransition(0, R.anim.close_anim);
                 break;
             case R.id.login_sso:
                 //                login();
                 startActivity(new Intent(this, HobbyActivity.class));
                 //存一个值判断登录过
-                SpUtils.putBoolean(this,"abool",false);
+                SpUtils.putBoolean(this, "abool", false);
+                finish();
                 break;
             case R.id.login_phone:
                 login_phone.setCursorVisible(true);
@@ -91,17 +92,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             case R.id.no_account:
                 Intent intent = new Intent(this, RegisterActivity.class);
                 startActivity(intent);
-
+                finish();
                 break;
             //忘记密码
             case R.id.forget_pwd:
                 Intent intent1 = new Intent(this, ForgetActivity.class);
                 startActivity(intent1);
-
+                finish();
                 break;
             case R.id.weixin:
-                 Intent intent2=new Intent(this, BindPhoneActivity.class);
+                Intent intent2 = new Intent(this, BindPhoneActivity.class);
                 startActivity(intent2);
+                finish();
                 break;
         }
 
