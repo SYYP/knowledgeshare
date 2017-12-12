@@ -84,8 +84,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initListener();
         initAnim();
         initMusic();
-        abool = SpUtils.getBoolean(this, "abool", true);
+        abool = SpUtils.getBoolean(this, "abool", false);
         pop();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        abool = SpUtils.getBoolean(this, "abool", false);
     }
 
     private void pop() {
@@ -222,9 +229,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 tv_mine.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
                 break;
             case R.id.ll_study:
-
-
-                if (abool) {
+                if (!abool) {
                     Intent intent = new Intent(this, www.knowledgeshare.com.knowledgeshare.activity.LoginActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
@@ -265,7 +270,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 isPause = !isPause;
                 break;
             case R.id.ll_buy:
-                if (abool) {
+                if (!abool) {
                     Intent intent = new Intent(this, www.knowledgeshare.com.knowledgeshare.activity.LoginActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
@@ -285,7 +290,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 }
                 break;
             case R.id.ll_mine:
-                if (abool) {
+                if (!abool) {
                     Intent intent = new Intent(this, www.knowledgeshare.com.knowledgeshare.activity.LoginActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.start_anim, R.anim.close_anim);

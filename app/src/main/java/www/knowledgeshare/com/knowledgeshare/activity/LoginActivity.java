@@ -79,7 +79,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 //                login();
                 startActivity(new Intent(this, HobbyActivity.class));
                 //存一个值判断登录过
-                SpUtils.putBoolean(this, "abool", false);
+                SpUtils.putBoolean(this, "abool", true);
                 finish();
                 break;
             case R.id.login_phone:
