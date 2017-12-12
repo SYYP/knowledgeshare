@@ -2,6 +2,7 @@ package www.knowledgeshare.com.knowledgeshare.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -52,6 +53,11 @@ public class AccountSafeActivity extends BaseActivity implements View.OnClickLis
                 startActivity(intent);
                 break;
             case R.id.bdwx_rl:
+                if (TextUtils.equals("未绑定",ifBangdingTv.getText().toString())){
+                    ifBangdingTv.setText("已绑定");
+                }else {
+                    ifBangdingTv.setText("未绑定");
+                }
                 break;
             case R.id.xgmm_rl:
                 startActivity(new Intent(this,AlterActivity.class));

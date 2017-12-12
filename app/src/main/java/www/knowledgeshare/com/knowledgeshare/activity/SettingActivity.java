@@ -120,6 +120,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                                 break;
                             case 3:
                                 TUtils.showShort(SettingActivity.this,"退出");
+                                startActivity(new Intent(SettingActivity.this,MainActivity.class));
                                 break;
                         }
                         dialog.dismiss();

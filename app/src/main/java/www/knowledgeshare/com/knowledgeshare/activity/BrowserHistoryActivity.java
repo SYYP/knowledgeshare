@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.BrowserHistoryBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.SoftMusicDetailActivity;
 
 
 /**
@@ -64,6 +66,12 @@ public class BrowserHistoryActivity extends BaseActivity implements View.OnClick
         }
         BrowserHistoryAdapter adapter = new BrowserHistoryAdapter(R.layout.item_browser_history,list);
         recyclerBh.setAdapter(adapter);
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(BrowserHistoryActivity.this, SoftMusicDetailActivity.class));
+            }
+        });
     }
 
     @Override

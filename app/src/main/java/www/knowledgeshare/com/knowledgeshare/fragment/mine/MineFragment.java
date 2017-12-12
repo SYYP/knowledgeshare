@@ -23,6 +23,7 @@ import www.knowledgeshare.com.knowledgeshare.activity.PersonInfomationActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.SettingActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.TaskDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
 /**
@@ -109,6 +110,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.zhaq_rl://帐号安全
                 startActivity(new Intent(getActivity(), AccountSafeActivity.class));
                 break;
+            case R.id.qiandao_btn://签到
+                TUtils.showShort(getActivity(),"签到成功");
             default:
                 break;
         }
