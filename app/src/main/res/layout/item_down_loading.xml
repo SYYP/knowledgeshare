@@ -66,7 +66,7 @@
                     android:id="@+id/zhuangtai_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="正在下载"
+                    android:text="已暂停"
                     android:textColor="#999999"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="30dp"/>

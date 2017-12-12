@@ -3,7 +3,6 @@ package www.knowledgeshare.com.knowledgeshare.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,6 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
@@ -32,6 +32,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     @BindView(R.id.kfzx_call_tv) TextView kfzxCallTv;
     @BindView(R.id.youxiang_tv) TextView youxiangTv;
     @BindView(R.id.exit_btn) TextView exitBtn;
+    @BindView(R.id.tv_cache_size) TextView tv_cache_size;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,11 +116,14 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     public void clickLeftButton(NormalAlertDialog dialog, View view) {
                         switch (flag){
                             case 1:
+                                tv_cache_size.setText("0M");
                                 break;
                             case 2:
                                 break;
                             case 3:
                                 TUtils.showShort(SettingActivity.this,"退出");
+                                SpUtils.putBoolean(SettingActivity.this, "abool", false);
+                                removeAllActivitys();
                                 startActivity(new Intent(SettingActivity.this,MainActivity.class));
                                 break;
                         }
