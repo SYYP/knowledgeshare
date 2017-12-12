@@ -46,7 +46,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private RecyclerView recycler_hot;
     private List<String> hotList = new ArrayList<>();
     private RecyclerHistoryAdapter mHistoryAdapter;
-    private RecyclerHotAdapter mHotAdapter;
+//    private RecyclerHotAdapter mHotAdapter;
     private LinearLayout ll_lishi, ll_hot, ll_root_view, ll_result;
     private List<SearchHistoryEntity> mHistoryList = new ArrayList<>();
     private int position;
@@ -221,15 +221,13 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         hotList.add("轻松音乐课");
         hotList.add("轻松音乐课");
         hotList.add("轻松音乐课");
-        mHotAdapter = new RecyclerHotAdapter(R.layout.search_hot_item, hotList);
-        recycler_hot.setAdapter(mHotAdapter);
-        mHotAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
-            }
-        });
-
+//        mHotAdapter = new RecyclerHotAdapter(R.layout.search_hot_item, hotList);
+//        recycler_hot.setAdapter(mHotAdapter);
+//        mHotAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+//            }
+//        });
         setHot();
     }
 
@@ -282,6 +280,30 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             );
             params.setMargins(12, 12, 12, 12);
             liushiview.addView(tv,params);
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ll_lishi.setVisibility(View.GONE);
+                    ll_hot.setVisibility(View.GONE);
+                    ll_result.setVisibility(View.VISIBLE);
+                    DaShiBanAdapter daShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban, hotList);
+                    recycler_dashiban.setAdapter(daShiBanAdapter);
+                    daShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                            startActivity(new Intent(SearchActivity.this,ZhuanLanActivity.class));
+                        }
+                    });
+                    YinYueKeAdapter yinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, hotList);
+                    recycler_yinyueke.setAdapter(yinYueKeAdapter);
+                    yinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                            startActivity(new Intent(SearchActivity.this,SoftMusicDetailActivity.class));
+                        }
+                    });
+                }
+            });
         }
     }
 

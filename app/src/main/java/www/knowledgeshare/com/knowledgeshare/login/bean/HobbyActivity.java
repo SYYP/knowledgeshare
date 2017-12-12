@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.activity.MainActivity;
+import www.knowledgeshare.com.knowledgeshare.activity.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.FlowLayout;
 
@@ -45,13 +45,11 @@ public class HobbyActivity extends BaseActivity {
         login_sso.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HobbyActivity.this, MainActivity.class);
+                Intent intent = new Intent(HobbyActivity.this, LoginActivity.class);
                 startActivity(intent);
-                finish();
                 finish();
             }
         });
-
     }
 
     private void inindata() {

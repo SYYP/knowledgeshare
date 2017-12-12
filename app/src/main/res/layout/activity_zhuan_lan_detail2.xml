@@ -198,7 +198,7 @@
         android:background="@color/text_red_dark"
         android:gravity="center"
         android:padding="12dp"
-        android:text="订阅：￥198/年"
+        android:text="订阅：198.00/年"
         android:textColor="@color/white"
         android:textSize="17sp"/>
 </FrameLayout>

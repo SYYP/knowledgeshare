@@ -1,14 +1,11 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.mine;
 
-import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -72,7 +69,7 @@ public class DownLoadingFragment extends BaseFragment implements View.OnClickLis
             downLoadBean.setContent("如何成为一名合格的歌者");
             downLoadBean.setJindu(i+"");
             downLoadBean.setSize("2M/10M");
-            downLoadBean.setZhuangtai("正在下载");
+            downLoadBean.setZhuangtai("已暂停");
             list.add(downLoadBean);
         }
         adapter = new DownLoadingAdapter(R.layout.item_down_loading, list);
@@ -105,7 +102,7 @@ public class DownLoadingFragment extends BaseFragment implements View.OnClickLis
                 }else {
                     kaishiTv.setText("全部开始");
                     for (int i = 0; i < list.size(); i++) {
-                        list.get(i).setZhuangtai("正在下载");
+                        list.get(i).setZhuangtai("正在下载...");
                     }
                     adapter.notifyDataSetChanged();
                 }
@@ -127,8 +124,13 @@ public class DownLoadingFragment extends BaseFragment implements View.OnClickLis
             TextView downdload_content_tv = helper.getView(R.id.downdload_content_tv);
             ProgressBar progressBar = helper.getView(R.id.progressBar);
             TextView size_tv = helper.getView(R.id.size_tv);
-            TextView zhuangtai_tv = helper.getView(R.id.zhuangtai_tv);
+            final TextView zhuangtai_tv = helper.getView(R.id.zhuangtai_tv);
             final ImageView zhuangtai_iv = helper.getView(R.id.xz_zhuangtai_iv);
+            if (item.getZhuangtai().equals("正在下载...")){
+                zhuangtai_iv.setImageDrawable(getResources().getDrawable(R.drawable.power_zanting));
+            }else {
+                zhuangtai_iv.setImageDrawable(getResources().getDrawable(R.drawable.power_kaishi_iv));
+            }
             flag = true;
 
             downdload_content_tv.setText(item.getContent());
@@ -141,9 +143,11 @@ public class DownLoadingFragment extends BaseFragment implements View.OnClickLis
                 public void onClick(View view) {
                     if (flag){
                         zhuangtai_iv.setImageDrawable(getResources().getDrawable(R.drawable.power_zanting));
+                        zhuangtai_tv.setText("正在下载...");
                         flag = false;
                     }else {
                         zhuangtai_iv.setImageDrawable(getResources().getDrawable(R.drawable.power_kaishi_iv));
+                        zhuangtai_tv.setText("已暂停");
                         flag = true;
                     }
                 }
