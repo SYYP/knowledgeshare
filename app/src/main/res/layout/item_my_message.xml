@@ -48,5 +48,5 @@
     <View
         android:background="#edecea"
         android:layout_width="match_parent"
-        android:layout_height="2dp"></View>
+        android:layout_height="1dp"/>
 </LinearLayout>

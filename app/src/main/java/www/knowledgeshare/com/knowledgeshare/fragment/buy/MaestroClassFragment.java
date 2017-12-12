@@ -22,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.BuyZhuanLanActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.EasyLessonBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
@@ -67,7 +68,7 @@ public class MaestroClassFragment extends BaseFragment {
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(mContext, ZhuanLanActivity.class));
+                startActivity(new Intent(mContext, BuyZhuanLanActivity.class));
             }
         });
     }

@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -76,7 +77,7 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
     private void data() {
         for (int i = 0; i < 6; i++) {
             msssagebean = new Messagebean();
-            msssagebean.setCount("系统消息： 恭喜行走的肉夹馍获得金牌用户勋章，再接再厉成为砖石用户");
+            msssagebean.setCount("系统消息： 恭喜行走的肉夹馍获得金牌用户勋章，再接再厉成为钻石用户");
             msssagebean.setTime("2017-10-10  10:10");
             list.add(msssagebean);
             messageadapter = new Messageadapter(R.layout.item_my_message, list);
@@ -86,12 +87,17 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     list.get(position).setaBoolean(!list.get(position).isaBoolean());
-                    if (isAllItemChecked()) {
-                        //如果所有item都选中了，就让全选按钮变红
-                        checkall.setChecked(true);
-                    } else {
-                        checkall.setChecked(false);
+                    if (isEditing){
+                        if (isAllItemChecked()) {
+                            //如果所有item都选中了，就让全选按钮变红
+                            checkall.setChecked(true);
+                        } else {
+                            checkall.setChecked(false);
+                        }
+                    }else {
+                        startActivity(new Intent(MyMessageActivity.this,MessageDetailActivity.class));
                     }
+
                     messageadapter.notifyDataSetChanged();
                 }
             });
