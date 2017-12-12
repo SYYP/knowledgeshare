@@ -67,6 +67,12 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initData() {
+        if (getIntent().getBooleanExtra("buyed",false)){
+            tv_tryread.setText("阅读");
+            tv_buy.setVisibility(View.GONE);
+            tv_tryread.setBackgroundColor(getResources().getColor(R.color.text_red_dark));
+            tv_tryread.setTextColor(getResources().getColor(R.color.white));
+        }
         List<String> list = new ArrayList<>();
         list.add("");
         list.add("");

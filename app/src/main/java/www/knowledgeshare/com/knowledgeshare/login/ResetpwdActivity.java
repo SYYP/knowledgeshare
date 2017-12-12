@@ -69,7 +69,7 @@ public class ResetpwdActivity extends BaseActivity {
             return;
         }
         if ( reset_loginpwd.getText().toString().length() < 6|| reset_loginpwd.getText().toString().length() > 20) {
-            Toast.makeText(this, "请输入6-20位密码", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "请输入6~20位字母、数字新密码", Toast.LENGTH_SHORT).show();
             return;
         }
         if (!reset_loginpwd.getText().toString().equals( reset_forgetpwd.getText().toString())) {

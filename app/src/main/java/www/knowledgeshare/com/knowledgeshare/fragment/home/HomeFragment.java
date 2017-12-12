@@ -244,7 +244,19 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(mContext, ZhuanLanActivity.class));
+                if (position == 0) {
+                    Intent intent = new Intent(mContext, ZhuanLanActivity.class);
+                    intent.putExtra("buyed",false);
+                    startActivity(intent);
+                } else if (position == 1) {
+                    Intent intent = new Intent(mContext, ZhuanLanActivity.class);
+                    intent.putExtra("buyed",true);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(mContext, ZhuanLanActivity.class);
+                    intent.putExtra("buyed",false);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -492,8 +504,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void refreshbofang(String type, int adapterPosition) {
-        mytype=type;
-        myposition=adapterPosition;
+        mytype = type;
+        myposition = adapterPosition;
         if (type.equals("comment")) {
             for (int i = 0; i < mList3.size(); i++) {
                 mList3.get(i).setChecked(false);

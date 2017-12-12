@@ -15,8 +15,8 @@
         <View
             android:layout_width="3dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
             android:background="@color/text_red_dark"></View>
         <TextView
             android:layout_width="wrap_content"
@@ -41,9 +41,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:padding="5dp"
-        android:text="崔宗顺,旅美男低音歌唱家"
+        android:text="崔宗顺,旅美男低音歌唱家撒旦好几年撒旦就撒空当接龙就撒娇的撒绝对路径撒及逻辑"
         android:textColor="@color/textblack"
-        android:textSize="14sp"/>
+        android:textSize="15sp"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

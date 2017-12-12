@@ -22,7 +22,7 @@
             android:layout_centerInParent="true"
             android:text="活动详情"
             android:textColor="@color/white"
-            android:textSize="17sp"/>
+            android:textSize="18sp"/>
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/activity_web"

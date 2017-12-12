@@ -292,6 +292,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                     tv_collect.setCompoundDrawables(null, drawable, null, null);
                 }
                 mIsCollected = !mIsCollected;
+                mDialog.dismiss();
             }
         });
         final TextView tv_dianzan = mDialog.getView(R.id.tv_dianzan);
@@ -310,6 +311,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                     tv_dianzan.setCompoundDrawables(null, drawable, null, null);
                 }
                 mDianzan = !mDianzan;
+                mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_download).setOnClickListener(new View.OnClickListener() {
