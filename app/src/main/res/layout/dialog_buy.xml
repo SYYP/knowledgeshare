@@ -44,6 +44,7 @@
             android:src="@drawable/arrow_right"/>
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/rl_weixin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp">
@@ -65,6 +66,7 @@
             android:src="@drawable/arrow_right"/>
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/rl_alipay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp">

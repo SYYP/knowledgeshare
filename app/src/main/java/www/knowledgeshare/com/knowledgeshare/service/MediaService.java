@@ -114,7 +114,7 @@ public class MediaService extends Service {
         public void pauseMusic() {
             isPlaying = mMediaPlayer.isPlaying();
             if (isPlaying) {
-                //如果还没开始播放，就开始
+                //如果正在播放，就暂停
                 mMediaPlayer.pause();
             }
         }
@@ -125,7 +125,6 @@ public class MediaService extends Service {
         public void resetMusic() {
             isPlaying = mMediaPlayer.isPlaying();
             if (!isPlaying) {
-                //如果还没开始播放，就开始
                 mMediaPlayer.reset();
                 iniMediaPlayerFile();
             }

@@ -206,6 +206,20 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 showChongzhiDialog();
             }
         });
+        mDialog.getView(R.id.rl_weixin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+                Toast.makeText(ZhuanLanDetail2Activity.this, "调起微信支付", Toast.LENGTH_SHORT).show();
+            }
+        });
+        mDialog.getView(R.id.rl_alipay).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+                Toast.makeText(ZhuanLanDetail2Activity.this, "调起支付宝支付", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void showPaySuccessDialog() {

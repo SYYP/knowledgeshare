@@ -10,13 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/text_red_dark"
-        >
+    >
         <ImageView
             android:id="@+id/iv_back"
-            android:padding="13dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:padding="13dp"
             android:src="@drawable/icon_back_white"/>
         <TextView
             android:layout_width="wrap_content"
@@ -27,12 +27,12 @@
             android:textSize="17sp"/>
         <ImageView
             android:id="@+id/iv_share"
-            android:layout_marginRight="13dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/icon_share_big"/>
+            android:layout_marginRight="13dp"
+            android:src="@drawable/icon_share2"/>
     </RelativeLayout>
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nestView"
@@ -91,7 +91,16 @@
                 <WebView
                     android:id="@+id/webview"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"></WebView>
+                    android:layout_height="150dp"
+                    android:visibility="gone"></WebView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:textSize="15sp"
+                    android:paddingRight="10dp"
+                    android:text="撒旦撒旦就撒旦就撒的链接撒的链接老实交代发了多少空间发的杀戮空间发了多少风陵渡口手机发了肯定是减肥的杀戮空间法拉利"
+                    android:textColor="@color/textblack"/>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
