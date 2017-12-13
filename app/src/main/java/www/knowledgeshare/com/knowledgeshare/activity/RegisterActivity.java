@@ -23,6 +23,7 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.ResultBean;
 import www.knowledgeshare.com.knowledgeshare.bean.VerifyCodesBean;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.login.SetloginActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
@@ -107,7 +108,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new JsonCallback<VerifyCodesBean>(VerifyCodesBean.class) {
+                .execute(new DialogCallback<VerifyCodesBean>(RegisterActivity.this,VerifyCodesBean.class) {
                     @Override
                     public void onSuccess(Response<VerifyCodesBean> response) {
                         VerifyCodesBean verifyCodesBean = response.body();
@@ -149,7 +150,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         OkGo.<VerifyCodesBean>post(MyContants.registSetOne)
                 .tag(this)
                 .params(params)
-                .execute(new JsonCallback<VerifyCodesBean>() {
+                .execute(new DialogCallback<VerifyCodesBean>(RegisterActivity.this,VerifyCodesBean.class) {
                     @Override
                     public void onSuccess(Response<VerifyCodesBean> response) {
                         VerifyCodesBean verifyCodesBean = response.body();

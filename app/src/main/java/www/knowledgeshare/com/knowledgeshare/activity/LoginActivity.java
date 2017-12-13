@@ -1,22 +1,43 @@
 package www.knowledgeshare.com.knowledgeshare.activity;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 
 import org.zackratos.ultimatebar.UltimateBar;
 
+import java.util.UUID;
+
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.LoginBean;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.login.ForgetActivity;
 import www.knowledgeshare.com.knowledgeshare.login.bean.HobbyActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
  * date : ${Date}
@@ -35,6 +56,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private TextView login_close;
     private ImageView colse_back;
     private ImageView img_weixin;
+    private String uniqueId;
 
 
     @Override
@@ -65,6 +87,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         forget_pwd.setOnClickListener(this);
         colse_back.setOnClickListener(this);
         img_weixin.setOnClickListener(this);
+
+        if (TextUtils.isEmpty(SpUtils.getString(LoginActivity.this,"zhanghao",""))){
+            login_phone.setText(SpUtils.getString(LoginActivity.this,"zhanghao",""));
+            login_pwd.setText(SpUtils.getString(LoginActivity.this,"mima",""));
+        }
+
+        rember_pwd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    SpUtils.putString(LoginActivity.this,"zhanghao",login_phone.getText().toString());
+                    SpUtils.putString(LoginActivity.this,"mima",login_pwd.getText().toString());
+                }
+            }
+        });
     }
 
     @Override
@@ -72,20 +109,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         switch (view.getId()) {
             case R.id.close_login:
                 finish();
-
                 overridePendingTransition(0, R.anim.close_anim);
                 break;
             case R.id.login_sso:
-                //                login();
-                startActivity(new Intent(this, HobbyActivity.class));
-                //存一个值判断登录过
-                SpUtils.putBoolean(this, "abool", true);
-                finish();
+                login();
                 break;
             case R.id.login_phone:
                 login_phone.setCursorVisible(true);
                 break;
-
             /*
               注册
              */
@@ -110,21 +141,81 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void login() {
-        //        if (TextUtils.isEmpty(login_phone.getText().toString())) {
-        //            Toast.makeText(this, "请填写您的手机号", Toast.LENGTH_SHORT).show();
-        //            return;
-        //        }
-        //        else if (!MyUtils.isMobileNO(login_phone.getText().toString())) {
-        //            Toast.makeText(this, "手机号格式不正确", Toast.LENGTH_SHORT).show();
-        //            return;
-        //        }
-        //        if (TextUtils.isEmpty(login_pwd.getText().toString())) {
-        //            Toast.makeText(this, "请填写您的密码", Toast.LENGTH_SHORT).show();
-        //            return;
-        //        }
-        //跳转到主页面
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        if (TextUtils.isEmpty(login_phone.getText().toString())) {
+            Toast.makeText(this, "请填写您的手机号", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if (!MyUtils.isMobileNO(login_phone.getText().toString())) {
+            Toast.makeText(this, "手机号格式不正确", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(login_pwd.getText().toString())) {
+            Toast.makeText(this, "请填写您的密码", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //存一个值判断登录过
+        SpUtils.putBoolean(this, "abool", true);
+        requestLogin();
+
+    }
+
+    private void requestLogin() {
+        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        String tmDevice, tmSerial, tmPhone, androidId;
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 101);
+        } else {
+            tmDevice = "" + tm.getDeviceId();
+            tmSerial = "" + tm.getSimSerialNumber();
+            androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+            UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+            uniqueId = deviceUuid.toString();
+        }
+
+
+        HttpParams params = new HttpParams();
+        params.put("mobile",login_phone.getText().toString());
+        //字符串倒序
+        params.put("password",new StringBuffer(login_pwd.getText().toString()).reverse().toString());
+        //0--手机号登录  1--微信登录
+        params.put("type","0");
+        params.put("device_token",uniqueId);
+
+        OkGo.<LoginBean>post(MyContants.login)
+                .tag(this)
+                .params(params)
+                .execute(new DialogCallback<LoginBean>(LoginActivity.this,LoginBean.class) {
+                    @Override
+                    public void onSuccess(Response<LoginBean> response) {
+                        LoginBean loginBean = response.body();
+                        if ( response.code() >= 200 && response.code() <= 204){
+                            //跳转到主页面
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }else if (response.code() == 404){
+                            //TODO 微信登录，没有绑定帐号
+                        }else {
+                            TUtils.showShort(LoginActivity.this,loginBean.getMessage());
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 101){
+            TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            String tmDevice, tmSerial, tmPhone, androidId;
+            tmDevice = "" + tm.getDeviceId();
+            tmSerial = "" + tm.getSimSerialNumber();
+            androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+            UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+            uniqueId = deviceUuid.toString();
+        }
     }
 }

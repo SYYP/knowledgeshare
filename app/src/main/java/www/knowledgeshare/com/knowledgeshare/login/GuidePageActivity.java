@@ -81,6 +81,7 @@ public class GuidePageActivity extends BaseActivity {
                 public void onClick(View v) {
                     SpUtils.putBoolean(GuidePageActivity.this, "guide", true);
                     Intent intent = new Intent(GuidePageActivity.this, HobbyActivity.class);
+                    intent.putExtra("flag","0");
                     startActivity(intent);
                     finish();
                 }

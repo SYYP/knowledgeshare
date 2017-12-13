@@ -12,15 +12,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 
 import org.zackratos.ultimatebar.UltimateBar;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.LoginActivity;
+import www.knowledgeshare.com.knowledgeshare.activity.RegisterActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.VerifyCodesBean;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
+import www.knowledgeshare.com.knowledgeshare.login.bean.HobbyActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
  * date : ${Date}
@@ -73,18 +81,8 @@ public class SetloginActivity extends BaseActivity implements View.OnClickListen
             Toast.makeText(this, "两次输入的密码不同，请重新输入", Toast.LENGTH_SHORT).show();
             return;
         }
-        requestRegistSetTwo();
         showDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
     }
-
-    private void requestRegistSetTwo() {
-        HttpParams params = new HttpParams();
-        params.put("mobile", SpUtils.getString(SetloginActivity.this,"mobile",""));
-        params.put("password",set_loginpwd.getText().toString());
-        params.put("verify",verify);
-
-    }
-
 
     @Override
     public void onClick(View view) {
@@ -122,7 +120,11 @@ public class SetloginActivity extends BaseActivity implements View.OnClickListen
                 //关闭dialog
                 dialog.close();
                  //跳到登录页面
-                Intent intent=new Intent(SetloginActivity.this, LoginActivity.class);
+//                Intent intent=new Intent(SetloginActivity.this, LoginActivity.class);
+                Intent intent = new Intent(SetloginActivity.this, HobbyActivity.class);
+                intent.putExtra("password",set_loginpwd.getText().toString());
+                intent.putExtra("verify",verify);
+                intent.putExtra("flag","1");
                 startActivity(intent);
                 finish();
             }

@@ -4,18 +4,35 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.LoginActivity;
+import www.knowledgeshare.com.knowledgeshare.activity.MainActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.TagBean;
+import www.knowledgeshare.com.knowledgeshare.bean.VerifyCodesBean;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.login.SetloginActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.FlowLayout;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
  * date : ${Date}
@@ -29,125 +46,119 @@ public class HobbyActivity extends BaseActivity {
                     "乡村风格", "轻音乐", "民谣", "蓝调", "hiphop",
                     "乐器", "艺术管理", "编曲", "中西方音乐史", "其他"};
     private TextView login_sso;
-    List<Honnybean> list = new ArrayList<>();
-    Honnybean honnybean;
+    List<TagBean.DataBean> list1 = new ArrayList<>();
+    private String password;
+    private String verify;
+    private String flag;
+    StringBuilder sb = new StringBuilder();
+    private String tag;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setISshow(false);
         setContentView(R.layout.avtivity_liushi);
-        final LayoutInflater mInflater = LayoutInflater.from(this);
         mFlowLayout = (FlowLayout) findViewById(R.id.hob_liu);
         login_sso = (TextView) findViewById(R.id.login_sso);
-        //添加数据
-        inindata();
+
+        /**
+         *  0是导航页传过来，存在本地，跳转首页
+         *  1是注册爷传过来，跳转登录
+         */
+        flag = getIntent().getStringExtra("flag");
+
+        requestTag();
+
+        password = getIntent().getStringExtra("password");
+        verify = getIntent().getStringExtra("verify");
+
         login_sso.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HobbyActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
+                    for (int i = 0; i < list1.size(); i++) {
+                        if (list1.get(i).isaBoolean()){
+                            sb.append(list1.get(i).getId()+",");
+                        }
+                    }
+                //当循环结束后截取最后一个逗号
+                tag = sb.substring(0,sb.length()-1);
+                Logger.e(tag);
+                SpUtils.putString(HobbyActivity.this,"tag", tag);
+                sb.delete(0,sb.length());
+                if (TextUtils.equals("0",flag)){
+                    Intent intent = new Intent(HobbyActivity.this, MainActivity.class);
+                    intent.putExtra("tag",tag);
+                }else if (TextUtils.equals("1",flag)){
+                    requestRegistSetTwo();
+                }
             }
         });
     }
 
-    private void inindata() {
-        honnybean = new Honnybean();
-        honnybean.setName("美声");
-        list.add(honnybean);
-        Honnybean honnybean2 = new Honnybean();
-        honnybean2.setName("音乐剧");
-        list.add(honnybean2);
-        Honnybean honnybean3 = new Honnybean();
-        honnybean3.setName("交响乐");
-        list.add(honnybean3);
-        Honnybean honnybean4 = new Honnybean();
-        honnybean4.setName("R&B");
-        list.add(honnybean4);
-        Honnybean honnybean5 = new Honnybean();
-        honnybean5.setName("乡村风格");
-        list.add(honnybean5);
-        Honnybean honybean8 = new Honnybean();
-        honybean8.setName("轻音乐");
-        list.add(honybean8);
-        Honnybean honnybean6 = new Honnybean();
-        honnybean6.setName("民谣");
-        list.add(honnybean6);
-        Honnybean honnybean7 = new Honnybean();
-        honnybean7.setName("蓝调");
-        list.add(honnybean7);
-        Honnybean honnybean11 = new Honnybean();
-        honnybean11.setName("hiphop");
-        list.add(honnybean11);
-        Honnybean honybean9 = new Honnybean();
-        honybean9.setName("乐器");
-        list.add(honybean9);
-        Honnybean honybean12 = new Honnybean();
-        honybean12.setName("摇滚");
-        list.add(honybean12);
-        Honnybean honybean13 = new Honnybean();
-        honybean13.setName("音乐治疗");
-        list.add(honybean13);
-        Honnybean honybean14= new Honnybean();
-        honybean14.setName("艺术管理");
-        list.add(honybean14);
-        Honnybean honybean15= new Honnybean();
-        honybean15.setName("艺术管理");
-        list.add(honybean9);
-        /*Honnybean honybean16 = new Honnybean();
-        honybean16.setName("hiphop");*/
-        list.add(honybean9);
-        Honnybean honybean17 = new Honnybean();
-        honybean17.setName("编曲");
-        list.add(honybean17);
-        Honnybean honybean18 = new Honnybean();
-        honybean18.setName("艺考");
-        list.add(honybean18);
-        Honnybean honybean19 = new Honnybean();
-        honybean19.setName("中西方音乐史");
-        list.add(honybean19);
-        Honnybean honnybean1 = new Honnybean();
-        honnybean1.setName("爵士");
-        list.add(honnybean1);
-        Honnybean honybean10 = new Honnybean();
-        honybean10.setName("其他");
-        list.add(honybean10);
-        //动态添加view
-        final ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.leftMargin = 20;
-        lp.rightMargin = 20;
-        lp.topMargin = 20;
-        lp.bottomMargin = 20;
-        for (int i = 0; i < list.size(); i++) {
-            final int e = i;
-            final TextView view = new TextView(this);
-            view.setText(list.get(e).getName());
-            view.setTextColor(Color.BLACK);
-            view.setTextSize(16);
-            view.setBackgroundDrawable(getResources().getDrawable(R.drawable.normal_bg));
-            mFlowLayout.addView(view, lp);
+    private void requestTag() {
+        OkGo.<TagBean>get(MyContants.tag)
+                .tag(this)
+                .execute(new JsonCallback<TagBean>(TagBean.class) {
+                    @Override
+                    public void onSuccess(Response<TagBean> response) {
+                        list1 = response.body().getData();
+                        //动态添加view
+                        final ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams
+                                (ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        lp.leftMargin = 20;
+                        lp.rightMargin = 20;
+                        lp.topMargin = 20;
+                        lp.bottomMargin = 20;
+                        for (int i = 0; i < list1.size(); i++) {
+                            final int e = i;
+                            final TextView view = new TextView(HobbyActivity.this);
+                            view.setText(list1.get(e).getTag_name());
+                            view.setTextColor(Color.BLACK);
+                            view.setTextSize(16);
+                            view.setBackgroundDrawable(getResources().getDrawable(R.drawable.normal_bg));
+                            mFlowLayout.addView(view, lp);
 
-            view.setOnClickListener(new View.OnClickListener() {
+                            view.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View arg0) {
-                    // TODO Auto-generated method stub
-
-                    if (list.get(e).isaBoolean() == true) {
-                        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.normal_bg));
-                        list.get(e).setaBoolean(false);
-                    } else if (list.get(e).isaBoolean() == false) {
-                        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.checked_bg));
-                        list.get(e).setaBoolean(true);
+                                @Override
+                                public void onClick(View arg0) {
+                                        if (list1.get(e).isaBoolean()) {
+                                            view.setBackgroundDrawable(getResources().getDrawable(R.drawable.normal_bg));
+                                            list1.get(e).setaBoolean(false);
+                                        } else if (!list1.get(e).isaBoolean()) {
+                                            view.setBackgroundDrawable(getResources().getDrawable(R.drawable.checked_bg));
+                                            list1.get(e).setaBoolean(true);
+                                        }
+                                }
+                            });
+                        }
                     }
-
-                }
-            });
-
-        }
+                });
 
     }
 
+    private void requestRegistSetTwo() {
+        HttpParams params = new HttpParams();
+        params.put("mobile", SpUtils.getString(HobbyActivity.this,"mobile",""));
+        params.put("password",password);
+        params.put("verify",verify);
+        params.put("tagid",tag);
+        OkGo.<VerifyCodesBean>post(MyContants.registSetTwo)
+                .tag(this)
+                .params(params)
+                .execute(new DialogCallback<VerifyCodesBean>(HobbyActivity.this,VerifyCodesBean.class) {
+                    @Override
+                    public void onSuccess(Response<VerifyCodesBean> response) {
+                        VerifyCodesBean verifyCodesBean = response.body();
+                        if ( response.code() >= 200 && response.code() <= 204){
+                            Intent intent = new Intent(HobbyActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }else {
+                            TUtils.showShort(HobbyActivity.this,verifyCodesBean.getMessage());
+                        }
+                    }
+                });
+    }
 
 }
