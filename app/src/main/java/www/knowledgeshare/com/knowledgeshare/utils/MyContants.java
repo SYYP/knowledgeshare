@@ -15,5 +15,7 @@ public class MyContants {
     public static final String tag = BASEURL + "api/v2/tag";
     //登录授权
     public static final String login = BASEURL + "api/v2/tokens";
+    //启动信息
+    public static final String bootstrappers = BASEURL + "api/v2/bootstrappers";
     //
 }

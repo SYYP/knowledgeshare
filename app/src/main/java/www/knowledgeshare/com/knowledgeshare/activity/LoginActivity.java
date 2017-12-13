@@ -23,9 +23,12 @@ import android.widget.Toast;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
 
 import org.zackratos.ultimatebar.UltimateBar;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 import www.knowledgeshare.com.knowledgeshare.R;
@@ -38,6 +41,7 @@ import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.TimeUtils;
 
 /**
  * date : ${Date}
@@ -174,14 +178,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             uniqueId = deviceUuid.toString();
         }
 
-
         HttpParams params = new HttpParams();
         params.put("mobile",login_phone.getText().toString());
         //字符串倒序
         params.put("password",new StringBuffer(login_pwd.getText().toString()).reverse().toString());
+        Logger.e(new StringBuffer(login_pwd.getText().toString()).reverse().toString());
         //0--手机号登录  1--微信登录
         params.put("type","0");
         params.put("device_token",uniqueId);
+        Logger.e(uniqueId);
 
         OkGo.<LoginBean>post(MyContants.login)
                 .tag(this)
@@ -191,8 +196,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     public void onSuccess(Response<LoginBean> response) {
                         LoginBean loginBean = response.body();
                         if ( response.code() >= 200 && response.code() <= 204){
+                            SpUtils.putString(LoginActivity.this,"id",loginBean.getUser().getId());
+                            String token = loginBean.getToken();
+                            SpUtils.putString(LoginActivity.this,"token",token);
+                            long ttlMs = loginBean.getTtl() * 60 * 1000L;
+                            long timeMillis = System.currentTimeMillis();
+                            long totalMs = ttlMs + timeMillis;
+                            SpUtils.putString(LoginActivity.this,"totalMs",totalMs+"");
+                            String go = MyUtils.go(ttlMs);
+                            Logger.e(go);
                             //跳转到主页面
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.putExtra("token",token);
                             startActivity(intent);
                             finish();
                         }else if (response.code() == 404){

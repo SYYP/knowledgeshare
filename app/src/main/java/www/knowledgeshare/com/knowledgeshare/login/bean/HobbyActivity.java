@@ -88,6 +88,7 @@ public class HobbyActivity extends BaseActivity {
                 if (TextUtils.equals("0",flag)){
                     Intent intent = new Intent(HobbyActivity.this, MainActivity.class);
                     intent.putExtra("tag",tag);
+                    startActivity(intent);
                 }else if (TextUtils.equals("1",flag)){
                     requestRegistSetTwo();
                 }
@@ -140,7 +141,7 @@ public class HobbyActivity extends BaseActivity {
     private void requestRegistSetTwo() {
         HttpParams params = new HttpParams();
         params.put("mobile", SpUtils.getString(HobbyActivity.this,"mobile",""));
-        params.put("password",password);
+        params.put("password",new StringBuffer(password).reverse().toString());
         params.put("verify",verify);
         params.put("tagid",tag);
         OkGo.<VerifyCodesBean>post(MyContants.registSetTwo)

@@ -121,8 +121,8 @@ public class MyUtils {
         return format;
     }
 
-    public static String go(){
-        Date nowTime = new Date(System.currentTimeMillis()+2000 * 60000);
+    public static String go(Long ttl){
+        Date nowTime = new Date(System.currentTimeMillis()+ttl);
         System.out.println(System.currentTimeMillis());
         SimpleDateFormat sdFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:dd");
         String retStrFormatNowDate = sdFormatter.format(nowTime);

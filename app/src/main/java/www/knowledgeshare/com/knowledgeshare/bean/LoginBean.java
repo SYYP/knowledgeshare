@@ -17,7 +17,7 @@ public class LoginBean extends BaseBean implements Serializable {
 
     private String token;
     private UserBean user;
-    private int ttl;
+    private Long ttl;
     private int refresh_ttl;
 
     public String getToken() {
@@ -36,11 +36,11 @@ public class LoginBean extends BaseBean implements Serializable {
         this.user = user;
     }
 
-    public int getTtl() {
+    public Long getTtl() {
         return ttl;
     }
 
-    public void setTtl(int ttl) {
+    public void setTtl(Long ttl) {
         this.ttl = ttl;
     }
 
@@ -71,7 +71,7 @@ public class LoginBean extends BaseBean implements Serializable {
          * updated_at : 2017-12-01 07:04:04
          */
 
-        private int id;
+        private String id;
         private String user_name;
         private String user_mobile;
         private String user_avatar;
@@ -87,11 +87,11 @@ public class LoginBean extends BaseBean implements Serializable {
         private String created_at;
         private String updated_at;
 
-        public int getId() {
+        public String getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(String id) {
             this.id = id;
         }
 
