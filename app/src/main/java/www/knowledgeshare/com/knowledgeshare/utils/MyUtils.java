@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -119,6 +120,38 @@ public class MyUtils {
         long lcc_time = Long.valueOf(time);
         String format = sdf.format(new Date(lcc_time * 1000L));
         return format;
+    }
+
+    public static String go(){
+        //获得系统的时间，单位为毫秒,转换为妙
+        long totalMilliSeconds = System.currentTimeMillis();
+
+        DateFormat dateFormatterChina = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.MEDIUM);//格式化输出
+        TimeZone timeZoneChina = TimeZone.getTimeZone("Asia/Shanghai");//获取时区 这句加上，很关键。
+        dateFormatterChina.setTimeZone(timeZoneChina);//设置系统时区
+        long totalSeconds = totalMilliSeconds / 1000;
+
+        //求出现在的秒
+        long currentSecond = totalSeconds % 60;
+
+        //求出现在的分
+        long totalMinutes = totalSeconds / 60;
+        long currentMinute = totalMinutes % 60;
+
+        //求出现在的小时
+        long totalHour = totalMinutes / 60;
+        long currentHour = totalHour % 24;
+
+        //显示时间
+        System.out.println("总毫秒为： " + totalMilliSeconds);
+        System.out.println(currentHour + ":" + currentMinute + ":" + currentSecond + " GMT");
+
+
+        Date nowTime = new Date(System.currentTimeMillis());
+        System.out.println(System.currentTimeMillis());
+        SimpleDateFormat sdFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:dd");
+        String retStrFormatNowDate = sdFormatter.format(nowTime);
+        return retStrFormatNowDate;
     }
 
     //  时间戳转为日期  /年/月/日
