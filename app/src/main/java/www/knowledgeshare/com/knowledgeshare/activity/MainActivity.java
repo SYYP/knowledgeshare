@@ -183,6 +183,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+    }
+
     private void initListener() {
         ll_home.setOnClickListener(this);
         ll_study.setOnClickListener(this);

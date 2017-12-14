@@ -3,6 +3,7 @@ package www.knowledgeshare.com.knowledgeshare.utils;
 public class MyContants {
     public static String FILENAME = "config.xml";
     public static String BASEURL = "http://thinks.iask.in/";
+    public static String LXKURL = "http://thinks.iask.in/api/v2/";
     public static String IMGBASEURL = "";
 
     //短信发送

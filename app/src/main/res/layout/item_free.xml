@@ -28,11 +28,13 @@
             android:layout_weight="1"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="男低音，一个神秘又充满魅力的声部"
                 android:textColor="@color/textblack"/>
             <TextView
+                android:id="@+id/tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -49,6 +51,7 @@
                 android:layout_marginRight="40dp"
                 android:layout_marginTop="5dp">
                 <TextView
+                    android:id="@+id/tv_look_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -58,6 +61,7 @@
                     android:gravity="center"
                     android:text="1223"/>
                 <TextView
+                    android:id="@+id/tv_collect_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -68,6 +72,7 @@
                     android:gravity="center"
                     android:text="1223"/>
                 <TextView
+                    android:id="@+id/tv_dianzan_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

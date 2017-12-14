@@ -20,16 +20,21 @@ import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.EveryDayBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 
 public class EveryDayCommentActivity extends BaseActivity implements View.OnClickListener {
 
@@ -48,15 +53,53 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
     private NestedScrollView nestView;
     private boolean mIsCollected;
     private boolean mDianzan;
+    private LieBiaoAdapter mLieBiaoAdapter;
+    private List<EveryDayBean.DailysEntity> mDailys;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_every_day_comment);
         initView();
+        initData();
         initDialog();
         initMusic();
         initListener();
+    }
+
+    private void initData() {
+        OkGo.<EveryDayBean>post(MyContants.LXKURL + "daily")
+                .tag(this)
+                .execute(new JsonCallback<EveryDayBean>(EveryDayBean.class) {
+                    @Override
+                    public void onSuccess(Response<EveryDayBean> response) {
+                        int code = response.code();
+                        EveryDayBean everyDayBean = response.body();
+                        mDailys = everyDayBean.getDailys();
+                        if (response.code() >= 200 && response.code() <= 204) {
+                            Logger.e(code + "");
+                            tv_jie_count.setText("已更新："+everyDayBean.getUpdate_count()+"节");
+                            tv_look_count.setText("浏览次数："+everyDayBean.getView_count()+"");
+                            tv_collect_count.setText("收藏次数："+everyDayBean.getCollect_count()+"");
+                            mLieBiaoAdapter = new LieBiaoAdapter(R.layout.item_free, mDailys);
+                            recycler_liebiao.setAdapter(mLieBiaoAdapter);
+                            mLieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                    setISshow(true);
+                                    ClickPopShow();
+                                }
+                            });
+                        } else {
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<EveryDayBean> response) {
+                        super.onError(response);
+                        Logger.e(response.getException().getMessage());
+                    }
+                });
     }
 
     private void initListener() {
@@ -107,32 +150,21 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
         nestView= (NestedScrollView) findViewById(R.id.nestView);
         recycler_liebiao.setLayoutManager(new LinearLayoutManager(this));
         recycler_liebiao.setNestedScrollingEnabled(false);
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        LieBiaoAdapter lieBiaoAdapter = new LieBiaoAdapter(R.layout.item_free, list);
-        recycler_liebiao.setAdapter(lieBiaoAdapter);
-        lieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-//                mMyBinder.playMusic();
-//                EventBean eventBean = new EventBean("rotate");
-//                EventBus.getDefault().postSticky(eventBean);
-                setISshow(true);
-                ClickPopShow();
-            }
-        });
     }
 
-    private class LieBiaoAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class LieBiaoAdapter extends BaseQuickAdapter<EveryDayBean.DailysEntity, BaseViewHolder> {
 
-        public LieBiaoAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public LieBiaoAdapter(@LayoutRes int layoutResId, @Nullable List<EveryDayBean.DailysEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, EveryDayBean.DailysEntity item) {
+            helper.setText(R.id.tv_name, item.getVideo_name())
+                    .setText(R.id.tv_time, item.getCreated_at() + "发布")
+                    .setText(R.id.tv_look_count, item.getIs_view()==0?item.getView_count() + "":item.getView_count_true()+"")
+                    .setText(R.id.tv_collect_count, item.getIs_collect()==0?item.getCollect_count() + "":item.getCollect_count_true()+"")
+                    .setText(R.id.tv_dianzan_count, item.getIs_good()==0?item.getGood_count() + "":item.getGood_count_true()+"");
             helper.getView(R.id.iv_dian).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

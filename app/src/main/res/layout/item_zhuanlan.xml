@@ -19,6 +19,7 @@
             android:layout_gravity="center_vertical"
             android:src="@drawable/pause_yellow"/>
         <TextView
+            android:id="@+id/tv_video_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

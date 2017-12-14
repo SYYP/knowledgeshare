@@ -28,7 +28,10 @@
             android:textColor="@color/white"
             android:textSize="17sp"/>
     </RelativeLayout>
-
+    <com.liaoinstan.springview.widget.SpringView
+        android:id="@+id/springview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nestView"
         android:layout_width="match_parent"
@@ -318,4 +321,5 @@
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+    </com.liaoinstan.springview.widget.SpringView>
 </LinearLayout>

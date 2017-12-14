@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -18,18 +19,36 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.liaoinstan.springview.container.DefaultFooter;
+import com.liaoinstan.springview.widget.SpringView;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.CommentMoreBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
+
+import static www.knowledgeshare.com.knowledgeshare.R.id.tv_collect;
+import static www.knowledgeshare.com.knowledgeshare.R.id.tv_dianzan;
 
 public class FreeActivity extends BaseActivity implements View.OnClickListener {
 
@@ -49,13 +68,23 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout activity_free;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
-    private boolean isDianzan;
-    private boolean isGuanzhu=true;
-    private boolean isZan=true;
-    private ImageView iv_guanzhu,iv_dianzan;
+    private boolean isGuanzhu;
+    private boolean isZan;
+    private ImageView iv_guanzhu, iv_dianzan;
     private NestedScrollView nestView;
     private boolean mIsCollected;
     private boolean mDianzan;
+    private List<FreeBean.ChildEntity> mChild;
+    private FreeBean.TeacherHasEntity mTeacher_has;
+    private FreeBean mFreeBean;
+    private List<CommentMoreBean.DataEntity> mComment;
+    private LiuYanAdapter mLiuYanAdapter;
+    private FreeAdapter mFreeAdapter;
+    private SpringView springview;
+    private int lastID;
+    private int mTeacher_zan_count;
+    private TextView mTv_collect;
+    private TextView mTv_dianzan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,33 +108,136 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 }
             }
         });
+        springview.setType(SpringView.Type.FOLLOW);
+        springview.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        springview.onFinishFreshAndLoad();
+                    }
+                }, 2000);
+            }
+
+            @Override
+            public void onLoadmore() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadMoreComment(lastID + "");
+                    }
+                }, 500);
+            }
+        });
+        springview.setHeader(new MyHeader(this));
+        springview.setFooter(new DefaultFooter(this));
+    }
+
+    private void loadMoreComment(String after) {
+        HttpParams params = new HttpParams();
+        params.put("userid", SpUtils.getString(this, "id", ""));
+        params.put("after", after);
+        OkGo.<CommentMoreBean>post(MyContants.LXKURL + "free/more-comment")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<CommentMoreBean>(CommentMoreBean.class) {
+                    @Override
+                    public void onSuccess(Response<CommentMoreBean> response) {
+                        int code = response.code();
+                        CommentMoreBean commentMoreBean = response.body();
+                        if (response.code() >= 200 && response.code() <= 204) {
+                            Logger.e(code + "");
+                            List<CommentMoreBean.DataEntity> data = commentMoreBean.getData();
+                            if (mComment == null || mComment.size() == 0) {
+                                mComment = data;
+                                mLiuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan, mComment);
+                                recycler_liuyan.setAdapter(mLiuYanAdapter);
+                            } else {
+                                if (data == null || data.size() == 0) {
+                                    Toast.makeText(FreeActivity.this, "已无更多评论", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    mComment.addAll(data);
+                                    mLiuYanAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        } else {
+                        }
+                    }
+                });
+        springview.onFinishFreshAndLoad();
     }
 
     private void initData() {
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        FreeAdapter freeAdapter = new FreeAdapter(R.layout.item_free, list);
-        recycler_free.setAdapter(freeAdapter);
-        freeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-//                mMyBinder.playMusic();
-//                EventBean eventBean = new EventBean("rotate");
-//                EventBus.getDefault().postSticky(eventBean);
-                setISshow(true);
-                ClickPopShow();
-            }
-        });
-        LiuYanAdapter liuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan, list);
-        recycler_liuyan.setAdapter(liuYanAdapter);
-        tv_teacher_intro.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
-                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
-        tv_shiyirenqun.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
-                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
-        tv_readxuzhi.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
-                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
+        HttpParams params = new HttpParams();
+        params.put("userid", SpUtils.getString(this, "id", ""));
+        OkGo.<FreeBean>post(MyContants.LXKURL + "free")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<FreeBean>(FreeBean.class) {
+                    @Override
+                    public void onSuccess(Response<FreeBean> response) {
+                        int code = response.code();
+                        mFreeBean = response.body();
+                        if (response.code() >= 200 && response.code() <= 204) {
+                            Logger.e(code + "");
+                            mTeacher_has = mFreeBean.getTeacher_has();
+                            Glide.with(FreeActivity.this).load(mFreeBean.getImgurl()).into(iv_beijing);
+                            tv_teacher_intro.setText(mTeacher_has.getT_introduce());
+                            isGuanzhu = mTeacher_has.isIsfollow();
+                            if (isGuanzhu) {
+                                iv_guanzhu.setImageResource(R.drawable.free_guanzhu);
+                                tv_guanzhu.setText("已关注");
+                            } else {
+                                iv_guanzhu.setImageResource(R.drawable.free_quxiaoguanzhu);
+                                tv_guanzhu.setText("关注");
+                            }
+                            isZan = mTeacher_has.isIslive();
+                            if (isZan) {
+                                iv_dianzan.setImageResource(R.drawable.free_yizan);
+                            } else {
+                                iv_dianzan.setImageResource(R.drawable.free_dianzan);
+                            }
+                            mTeacher_zan_count = mTeacher_has.getT_live();
+                            tv_dianzan_count.setText(mTeacher_zan_count + "");
+                            tv_shiyirenqun.setText(mFreeBean.getSuitable());
+                            tv_readxuzhi.setText(mFreeBean.getLook());
+                            mChild = mFreeBean.getChild();
+                            mFreeAdapter = new FreeAdapter(R.layout.item_free, mChild);
+                            recycler_free.setAdapter(mFreeAdapter);
+                            mFreeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                    setISshow(true);
+                                    ClickPopShow();
+                                    addListenCount(mFreeAdapter.getData().get(position).getId() + "");
+                                }
+                            });
+                            loadMoreComment("");
+                        } else {
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<FreeBean> response) {
+                        super.onError(response);
+                        Logger.e(response.getException().getMessage());
+                    }
+                });
+    }
+
+    private void addListenCount(String id) {
+        HttpParams params = new HttpParams();
+        params.put("id", id);
+        OkGo.<BaseBean>post(MyContants.LXKURL + "free/views")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        int code = response.code();
+                    }
+                });
     }
 
     private void initDialog() {
@@ -138,61 +270,131 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
         recycler_free.setNestedScrollingEnabled(false);
         recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
         recycler_liuyan.setNestedScrollingEnabled(false);
-        iv_guanzhu= (ImageView) findViewById(R.id.iv_guanzhu);
+        iv_guanzhu = (ImageView) findViewById(R.id.iv_guanzhu);
         iv_guanzhu.setOnClickListener(this);
-        iv_dianzan= (ImageView) findViewById(R.id.iv_dianzan);
+        iv_dianzan = (ImageView) findViewById(R.id.iv_dianzan);
         iv_dianzan.setOnClickListener(this);
-        nestView= (NestedScrollView) findViewById(R.id.nestView);
+        nestView = (NestedScrollView) findViewById(R.id.nestView);
+        springview = (SpringView) findViewById(R.id.springview);
     }
 
-    private class FreeAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class FreeAdapter extends BaseQuickAdapter<FreeBean.ChildEntity, BaseViewHolder> {
 
-        public FreeAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public FreeAdapter(@LayoutRes int layoutResId, @Nullable List<FreeBean.ChildEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(final BaseViewHolder helper, final FreeBean.ChildEntity item) {
+            helper.setText(R.id.tv_name, item.getVideo_name())
+                    .setText(R.id.tv_time, item.getCreated_at() + "发布")
+                    .setText(R.id.tv_look_count, item.getIs_view() == 0 ? item.getView_count() + "" : item.getView_count_true() + "")
+                    .setText(R.id.tv_collect_count, item.getIs_collect() == 0 ? item.getCollect_count() + "" : item.getCollect_count_true() + "")
+                    .setText(R.id.tv_dianzan_count, item.getIs_good() == 0 ? item.getGood_count() + "" : item.getGood_count_true() + "");
             helper.getView(R.id.iv_dian).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showListDialog();
+                    showListDialog(helper.getAdapterPosition(), item.isIsfav(), item.isIslive(), item.getId());
                 }
             });
             helper.getView(R.id.iv_wengao).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(FreeActivity.this,WenGaoActivity.class));
+                    Intent intent = new Intent(FreeActivity.this, WenGaoActivity.class);
+                    intent.putExtra("t_name", mTeacher_has.getT_name());
+                    intent.putExtra("t_head", mTeacher_has.getT_header());
+                    intent.putExtra("video_name", item.getVideo_name());
+                    intent.putExtra("id", item.getId() + "");
+                    startActivity(intent);
                 }
             });
-            helper.setText(R.id.tv_order,"0"+(helper.getAdapterPosition()+1));
+            helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
         }
     }
 
-    private class LiuYanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class LiuYanAdapter extends BaseQuickAdapter<CommentMoreBean.DataEntity, BaseViewHolder> {
 
-        public LiuYanAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public LiuYanAdapter(@LayoutRes int layoutResId, @Nullable List<CommentMoreBean.DataEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(final BaseViewHolder helper, final CommentMoreBean.DataEntity item) {
+            lastID = item.getId();
             final ImageView iv_dianzan = helper.getView(R.id.iv_dianzan);
+            final ImageView iv_head = helper.getView(R.id.iv_head);
+            if (item.isIslive()) {
+                iv_dianzan.setImageResource(R.drawable.free_yizan);
+            } else {
+                iv_dianzan.setImageResource(R.drawable.free_dianzan);
+            }
+            Glide.with(mContext).load(item.getUser_avatar()).into(iv_head);
+            helper.setText(R.id.tv_name, item.getUser_name())
+                    .setText(R.id.tv_time, item.getCreated_at())
+                    .setText(R.id.tv_content, item.getContent())
+                    .setText(R.id.tv_dainzan_count, item.getLive() + "");
             helper.getView(R.id.ll_dianzan).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (isDianzan) {
-                        iv_dianzan.setImageResource(R.drawable.free_yizan);
-                    }else {
-                        iv_dianzan.setImageResource(R.drawable.free_dianzan);
+                    boolean islive = item.isIslive();
+                    if (islive) {
+                        mComment.get(helper.getAdapterPosition()).setIslive(false);
+                        nodianzan(helper.getAdapterPosition(), item.getId(), item.getLive());
+                    } else {
+                        mComment.get(helper.getAdapterPosition()).setIslive(true);
+                        dianzan(helper.getAdapterPosition(), item.getId(), item.getLive());
                     }
-                    isDianzan=!isDianzan;
+                    mLiuYanAdapter.notifyDataSetChanged();
                 }
             });
-            if (helper.getAdapterPosition()==2){
+            if (helper.getAdapterPosition() == mLiuYanAdapter.getData().size() - 1) {
                 helper.getView(R.id.view_line).setVisibility(View.GONE);
             }
         }
+    }
+
+    private void dianzan(final int adapterPosition, int id,final int count) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("comment_id", id);
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "free-comment/live")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(FreeActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 mComment.get(adapterPosition).setLive(count + 1);
+                                 mLiuYanAdapter.notifyDataSetChanged();
+                             }
+                         }
+                );
+    }
+
+    private void nodianzan(final int adapterPosition, int id, final int count) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("comment_id", id);
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "free-comment/no-live")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(FreeActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 mComment.get(adapterPosition).setLive(count - 1);
+                                 mLiuYanAdapter.notifyDataSetChanged();
+                             }
+                         }
+                );
     }
 
     private void showShareDialog() {
@@ -248,7 +450,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
         });
     }
 
-    private void showListDialog() {
+    private void showListDialog(final int adapterPosition, boolean isfav, boolean islive, final int id) {
         mDialog = mBuilder.setViewId(R.layout.dialog_free)
                 //设置dialogpadding
                 .setPaddingdp(10, 0, 10, 0)
@@ -276,42 +478,42 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 showShareDialog();
             }
         });
-        final TextView tv_collect = mDialog.getView(R.id.tv_collect);
-        tv_collect.setOnClickListener(new View.OnClickListener() {
+        mTv_collect = mDialog.getView(tv_collect);
+        mIsCollected = isfav;
+        if (mIsCollected) {
+            Drawable drawable = getResources().getDrawable(R.drawable.collect_shixin);
+            /// 这一步必须要做,否则不会显示.
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            mTv_collect.setCompoundDrawables(null, drawable, null, null);
+        } else {
+            Drawable drawable = getResources().getDrawable(R.drawable.bofanglist_collect);
+            /// 这一步必须要做,否则不会显示.
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            mTv_collect.setCompoundDrawables(null, drawable, null, null);
+        }
+        mTv_collect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mIsCollected) {
-                    Drawable drawable = getResources().getDrawable(R.drawable.bofanglist_collect);
-                    /// 这一步必须要做,否则不会显示.
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    tv_collect.setCompoundDrawables(null, drawable, null, null);
-                } else {
-                    Drawable drawable = getResources().getDrawable(R.drawable.collect_shixin);
-                    /// 这一步必须要做,否则不会显示.
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    tv_collect.setCompoundDrawables(null, drawable, null, null);
-                }
-                mIsCollected = !mIsCollected;
-                mDialog.dismiss();
+                changeCollect(adapterPosition, id);
             }
         });
-        final TextView tv_dianzan = mDialog.getView(R.id.tv_dianzan);
-        tv_dianzan.setOnClickListener(new View.OnClickListener() {
+        mTv_dianzan = mDialog.getView(tv_dianzan);
+        mDianzan = islive;
+        if (mDianzan) {
+            Drawable drawable = getResources().getDrawable(R.drawable.dianzan_shixin);
+            /// 这一步必须要做,否则不会显示.
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+        } else {
+            Drawable drawable = getResources().getDrawable(R.drawable.dianzan_yellow_big);
+            /// 这一步必须要做,否则不会显示.
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+        }
+        mTv_dianzan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mDianzan) {
-                    Drawable drawable = getResources().getDrawable(R.drawable.dianzan_yellow_big);
-                    /// 这一步必须要做,否则不会显示.
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    tv_dianzan.setCompoundDrawables(null, drawable, null, null);
-                } else {
-                    Drawable drawable = getResources().getDrawable(R.drawable.dianzan_shixin);
-                    /// 这一步必须要做,否则不会显示.
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    tv_dianzan.setCompoundDrawables(null, drawable, null, null);
-                }
-                mDianzan = !mDianzan;
-                mDialog.dismiss();
+                changeDianzan(adapterPosition, id);
             }
         });
         mDialog.getView(R.id.tv_download).setOnClickListener(new View.OnClickListener() {
@@ -323,21 +525,105 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
         });
     }
 
+    private void changeCollect(final int adapterPosition, int id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("id", id + "");
+        params.put("type", "1");
+        String url = "";
+        if (mIsCollected) {
+            url = MyContants.LXKURL + "free/no-favorite";
+        } else {
+            url = MyContants.LXKURL + "free/favorite";
+        }
+        OkGo.<DianZanbean>post(url)
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(FreeActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 if (mIsCollected) {
+                                     Drawable drawable = getResources().getDrawable(R.drawable.bofanglist_collect);
+                                     /// 这一步必须要做,否则不会显示.
+                                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                     mTv_collect.setCompoundDrawables(null, drawable, null, null);
+                                 } else {
+                                     Drawable drawable = getResources().getDrawable(R.drawable.collect_shixin);
+                                     /// 这一步必须要做,否则不会显示.
+                                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                     mTv_collect.setCompoundDrawables(null, drawable, null, null);
+                                 }
+                                 mIsCollected = !mIsCollected;
+                                 mChild.get(adapterPosition).setIsfav(mIsCollected);
+                                 mFreeAdapter.notifyDataSetChanged();
+                                 mDialog.dismiss();
+                             }
+                         }
+                );
+    }
+
+    private void changeDianzan(final int adapterPosition, int id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("id", id + "");
+        String url = "";
+        if (mDianzan) {
+            url = MyContants.LXKURL + "free/no-dianzan";
+        } else {
+            url = MyContants.LXKURL + "free/dianzan";
+        }
+        OkGo.<DianZanbean>post(url)
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(FreeActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 if (mDianzan) {
+                                     Drawable drawable = getResources().getDrawable(R.drawable.dianzan_yellow_big);
+                                     /// 这一步必须要做,否则不会显示.
+                                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                     mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                                 } else {
+                                     Drawable drawable = getResources().getDrawable(R.drawable.dianzan_shixin);
+                                     /// 这一步必须要做,否则不会显示.
+                                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                     mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                                 }
+                                 mDianzan = !mDianzan;
+                                 mChild.get(adapterPosition).setIslive(mDianzan);
+                                 mFreeAdapter.notifyDataSetChanged();
+                                 mDialog.dismiss();
+                             }
+                         }
+                );
+    }
+
     private MediaService.MyBinder mMyBinder;
     //“绑定”服务的intent
     private Intent MediaServiceIntent;
+
     private void initMusic() {
-//        MediaServiceIntent = new Intent(this, MediaService.class);
-//        startService(MediaServiceIntent);
-//        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        //        MediaServiceIntent = new Intent(this, MediaService.class);
+        //        startService(MediaServiceIntent);
+        //        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMyBinder = (MediaService.MyBinder) service;
-            if (mMyBinder.isPlaying()){
-            }else {
+            if (mMyBinder.isPlaying()) {
+            } else {
             }
         }
 
@@ -351,7 +637,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-//        unbindService(mServiceConnection);
+        //        unbindService(mServiceConnection);
     }
 
     @Override
@@ -371,25 +657,118 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.tv_guanzhu:
             case R.id.iv_guanzhu:
-                if (isGuanzhu){
+                if (isGuanzhu) {
                     iv_guanzhu.setImageResource(R.drawable.free_quxiaoguanzhu);
-                }else {
+                    noguanzhu(mFreeBean.getTeacher_id());
+                } else {
                     iv_guanzhu.setImageResource(R.drawable.free_guanzhu);
+                    guanzhu(mFreeBean.getTeacher_id());
                 }
-                isGuanzhu=!isGuanzhu;
+                isGuanzhu = !isGuanzhu;
                 break;
             case R.id.tv_dianzan_count:
             case R.id.iv_dianzan:
-                if (isZan){
+                if (isZan) {
                     iv_dianzan.setImageResource(R.drawable.free_dianzan);
-                }else {
+                    nodianzanTeacher(mFreeBean.getTeacher_id());
+                } else {
                     iv_dianzan.setImageResource(R.drawable.free_yizan);
+                    dianzanTeacher(mFreeBean.getTeacher_id());
                 }
-                isZan=!isZan;
+                isZan = !isZan;
                 break;
             case R.id.tv_writeliuyan:
-                startActivity(new Intent(this, LiuYanActivity.class));
+                Intent intent = new Intent(this, LiuYanActivity.class);
+                intent.putExtra("teacher_id", mFreeBean.getTeacher_id());
+                intent.putExtra("type", "free");
+                startActivity(intent);
                 break;
         }
+    }
+
+    private void guanzhu(int teacher_id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("teacher_id", teacher_id);
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "free-follow/attention")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 tv_guanzhu.setText("已关注");
+                                 Toast.makeText(FreeActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                             }
+                         }
+                );
+    }
+
+    private void noguanzhu(int teacher_id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("teacher_id", teacher_id);
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "free-follow/no-attention")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 tv_guanzhu.setText("关注");
+                                 Toast.makeText(FreeActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                             }
+                         }
+                );
+    }
+
+    private void dianzanTeacher(int teacher_id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("teacher_id", teacher_id);
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "free-teacher/live")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(FreeActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 mTeacher_zan_count += 1;
+                                 tv_dianzan_count.setText(mTeacher_zan_count + "");
+                             }
+                         }
+                );
+    }
+
+    private void nodianzanTeacher(int teacher_id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("teacher_id", teacher_id);
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "free-teacher/no-live")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(FreeActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 mTeacher_zan_count -= 1;
+                                 tv_dianzan_count.setText(mTeacher_zan_count + "");
+                             }
+                         }
+                );
     }
 }

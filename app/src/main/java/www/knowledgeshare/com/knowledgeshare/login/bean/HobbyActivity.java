@@ -5,14 +5,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.orhanobut.logger.Logger;
@@ -28,7 +25,6 @@ import www.knowledgeshare.com.knowledgeshare.bean.TagBean;
 import www.knowledgeshare.com.knowledgeshare.bean.VerifyCodesBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
-import www.knowledgeshare.com.knowledgeshare.login.SetloginActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.FlowLayout;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
@@ -98,7 +94,7 @@ public class HobbyActivity extends BaseActivity {
 
     private void requestTag() {
         OkGo.<TagBean>get(MyContants.tag)
-                .tag(this)
+                 .tag(this)
                 .execute(new JsonCallback<TagBean>(TagBean.class) {
                     @Override
                     public void onSuccess(Response<TagBean> response) {

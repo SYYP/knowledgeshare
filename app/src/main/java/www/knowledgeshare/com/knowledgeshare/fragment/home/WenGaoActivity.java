@@ -14,16 +14,27 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.WenGaoBean;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
 public class WenGaoActivity extends BaseActivity implements View.OnClickListener {
@@ -33,6 +44,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
     private CircleImageView iv_teacher_head;
     private TextView tv_ke_name;
     private TextView tv_teacher_name;
+    private TextView tv_content;
     private ImageView iv_collect;
     private LinearLayout ll_liuyan;
     private LinearLayout ll_guanzhu;
@@ -43,6 +55,9 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
     private WebView webview;
     private boolean isDianzan;
     private NestedScrollView nestView;
+    private List<WenGaoBean.CommentEntity> mComment;
+    private LiuYanAdapter mLiuYanAdapter;
+    private String mId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +77,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
         iv_teacher_head = (CircleImageView) findViewById(R.id.iv_teacher_head);
         tv_ke_name = (TextView) findViewById(R.id.tv_ke_name);
         tv_teacher_name = (TextView) findViewById(R.id.tv_teacher_name);
+        tv_content = (TextView) findViewById(R.id.tv_content);
         iv_collect = (ImageView) findViewById(R.id.iv_collect);
         ll_liuyan = (LinearLayout) findViewById(R.id.ll_liuyan);
         ll_liuyan.setOnClickListener(this);
@@ -97,39 +113,158 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void initData() {
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        LiuYanAdapter liuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan2, list);
-        recycler_liuyan.setAdapter(liuYanAdapter);
+        String t_name = getIntent().getStringExtra("t_name");
+        String t_head = getIntent().getStringExtra("t_head");
+        String video_name = getIntent().getStringExtra("video_name");
+        mId = getIntent().getStringExtra("id");
+        Glide.with(this).load(t_head).into(iv_teacher_head);
+        tv_teacher_name.setText(t_name);
+        tv_ke_name.setText(video_name);
+        HttpParams params = new HttpParams();
+        params.put("userid", SpUtils.getString(this, "id", ""));
+        params.put("id", mId);
+        OkGo.<WenGaoBean>post(MyContants.LXKURL + "free/draft-show")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<WenGaoBean>(WenGaoBean.class) {
+                    @Override
+                    public void onSuccess(Response<WenGaoBean> response) {
+                        int code = response.code();
+                        WenGaoBean wenGaoBean = response.body();
+                        if (response.code() >= 200 && response.code() <= 204) {
+                            Logger.e(code + "");
+                            tv_content.setText(wenGaoBean.getContent());
+                            mComment = wenGaoBean.getComment();
+                            isGuanzhu = wenGaoBean.isIsfav();
+                            if (isGuanzhu) {
+                                iv_collect.setImageResource(R.drawable.xinxin);
+                            } else {
+                                iv_collect.setImageResource(R.drawable.weiguanzhuxin);
+                            }
+                            mLiuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan2, mComment);
+                            recycler_liuyan.setAdapter(mLiuYanAdapter);
+                        } else {
+                        }
+                    }
+                });
     }
 
     private void initDialog() {
         mBuilder = new BaseDialog.Builder(this);
     }
 
-    private class LiuYanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class LiuYanAdapter extends BaseQuickAdapter<WenGaoBean.CommentEntity, BaseViewHolder> {
 
-        public LiuYanAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public LiuYanAdapter(@LayoutRes int layoutResId, @Nullable List<WenGaoBean.CommentEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(final BaseViewHolder helper, final WenGaoBean.CommentEntity item) {
             final ImageView iv_dianzan = helper.getView(R.id.iv_dianzan);
+            final ImageView iv_head = helper.getView(R.id.iv_head);
+            if (item.isIslive()) {
+                iv_dianzan.setImageResource(R.drawable.free_yizan);
+            } else {
+                iv_dianzan.setImageResource(R.drawable.free_dianzan);
+            }
+            Glide.with(mContext).load(item.getUser_avatar()).into(iv_head);
+            helper.setText(R.id.tv_name, item.getUser_name())
+                    .setText(R.id.tv_time, item.getCreated_at())
+                    .setText(R.id.tv_content, item.getContent())
+                    .setText(R.id.tv_dainzan_count, item.getLive() + "");
             helper.getView(R.id.ll_dianzan).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (isDianzan) {
-                        iv_dianzan.setImageResource(R.drawable.free_yizan);
+                    boolean islive = item.isIslive();
+                    if (islive) {
+                        mComment.get(helper.getAdapterPosition()).setIslive(false);
+                        nodianzan(helper.getAdapterPosition(), item.getId(), item.getLive());
                     } else {
-                        iv_dianzan.setImageResource(R.drawable.free_dianzan);
+                        mComment.get(helper.getAdapterPosition()).setIslive(true);
+                        dianzan(helper.getAdapterPosition(), item.getId(), item.getLive());
                     }
-                    isDianzan = !isDianzan;
+                    mLiuYanAdapter.notifyDataSetChanged();
                 }
             });
         }
+    }
+
+    private void changeCollect() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("id", mId);
+        params.put("type", "2");
+        String url = "";
+        if (isGuanzhu) {
+            url = MyContants.LXKURL + "free/no-favorite";
+        } else {
+            url = MyContants.LXKURL + "free/favorite";
+        }
+        OkGo.<DianZanbean>post(url)
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(WenGaoActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 if (isGuanzhu) {
+                                     iv_collect.setImageResource(R.drawable.weiguanzhuxin);
+                                 } else {
+                                     iv_collect.setImageResource(R.drawable.xinxin);
+                                 }
+                                 isGuanzhu = !isGuanzhu;
+                             }
+                         }
+                );
+    }
+
+    private void dianzan(final int adapterPosition, int id, final int count) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("comment_id", id);
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "free-comment/live")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(WenGaoActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 mComment.get(adapterPosition).setLive(count + 1);
+                                 mLiuYanAdapter.notifyDataSetChanged();
+                             }
+                         }
+                );
+    }
+
+    private void nodianzan(final int adapterPosition, int id, final int count) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("comment_id", id);
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "free-comment/no-live")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(WenGaoActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 mComment.get(adapterPosition).setLive(count - 1);
+                                 mLiuYanAdapter.notifyDataSetChanged();
+                             }
+                         }
+                );
     }
 
     private void showShareDialog() {
@@ -188,15 +323,13 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
                 showShareDialog();
                 break;
             case R.id.ll_liuyan:
-                startActivity(new Intent(this, LiuYanActivity.class));
+                Intent intent = new Intent(this, LiuYanActivity.class);
+                intent.putExtra("type", "wengao");
+                intent.putExtra("xiaoke_id", mId);
+                startActivity(intent);
                 break;
             case R.id.ll_guanzhu:
-                if (isGuanzhu) {
-                    iv_collect.setImageResource(R.drawable.weiguanzhuxin);
-                } else {
-                    iv_collect.setImageResource(R.drawable.xinxin);
-                }
-                isGuanzhu = !isGuanzhu;
+                changeCollect();
                 break;
         }
     }

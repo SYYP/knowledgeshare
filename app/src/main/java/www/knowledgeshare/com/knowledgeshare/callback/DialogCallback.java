@@ -26,7 +26,7 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
         dialog = new LoadingDialog(activity, R.style.dialog);
     }
 
-    public DialogCallback(Activity activity, Class<T> clazz) {
+    public DialogCallback(Class<T> clazz) {
         super();
         this.clazz = clazz;
         initDialog(activity);
@@ -35,6 +35,7 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
     public DialogCallback(Activity activity, Type type) {
         super();
         this.type = type;
+        this.activity=activity;
         initDialog(activity);
     }
 

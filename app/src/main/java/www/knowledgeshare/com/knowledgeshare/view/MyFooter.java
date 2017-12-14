@@ -11,15 +11,14 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.liaoinstan.springview.container.BaseHeader;
+import com.liaoinstan.springview.container.BaseFooter;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 
 /**
- * Created by Administrator on 2017/11/30.
+ * Created by Administrator on 2016/3/21.
  */
-
-public class MyHeader extends BaseHeader {
+public class MyFooter extends BaseFooter {
 
     private ImageView mIv_anim_refresh;
     private Context mContext;
@@ -37,11 +36,9 @@ public class MyHeader extends BaseHeader {
     private AnimationDrawable animationRefresh;
 
 
-    private long freshTime;
     private TextView headerTitle;
-    private TextView headerTime;
 
-    public MyHeader(Context context) {
+    public MyFooter(Context context) {
         this.mContext = context;
         mRotateUpAnim = new RotateAnimation(0.0f, -180.0f,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
@@ -63,33 +60,16 @@ public class MyHeader extends BaseHeader {
     //获取Header
     @Override
     public View getView(LayoutInflater inflater, ViewGroup viewGroup) {
-        View inflate = inflater.inflate(R.layout.refresh_layout, viewGroup, true);
-        mIv_anim_refresh = inflate.findViewById(R.id.iv_anim_refresh);
+        View view = inflater.inflate(R.layout.my_footer, viewGroup, true);
+        mIv_anim_refresh = view.findViewById(R.id.iv_anim_refresh);
         mIv_anim_refresh.setImageResource(R.drawable.refresh25);
-        headerTitle = (TextView) inflate.findViewById(R.id.default_header_title);
-        headerTime = (TextView) inflate.findViewById(R.id.default_header_time);
-        return inflate;
+        headerTitle = view.findViewById(R.id.default_header_title);
+        return view;
     }
 
     //拖拽开始前回调
     @Override
     public void onPreDrag(View rootView) {
-        if (freshTime == 0) {
-            freshTime = System.currentTimeMillis();
-        } else {
-            int m = (int) ((System.currentTimeMillis() - freshTime) / 1000 / 60);
-            if (m >= 1 && m < 60) {
-                headerTime.setText(m + "分钟前");
-            } else if (m >= 60) {
-                int h = m / 60;
-                headerTime.setText(h + "小时前");
-            } else if (m > 60 * 24) {
-                int d = m / (60 * 24);
-                headerTime.setText(d + "天前");
-            } else if (m == 0) {
-                headerTime.setText("刚刚");
-            }
-        }
     }
 
     //手指拖拽过程中不断回调，dy为拖拽的距离，可以根据拖动的距离添加拖动过程动画
@@ -101,11 +81,11 @@ public class MyHeader extends BaseHeader {
     //手指拖拽过程中每次经过临界点时回调，upORdown是向上经过还是向下经过
     @Override
     public void onLimitDes(View rootView, boolean upORdown) {
-        if (!upORdown) {
-            headerTitle.setText("松开刷新数据");
+        if (upORdown) {
+            headerTitle.setText("松开载入更多");
             mIv_anim_refresh.startAnimation(mRotateUpAnim);
         } else {
-            headerTitle.setText("下拉刷新");
+            headerTitle.setText("查看更多");
             mIv_anim_refresh.startAnimation(mRotateDownAnim);
         }
     }
@@ -113,8 +93,7 @@ public class MyHeader extends BaseHeader {
     //拉动超过临界点后松开时回调
     @Override
     public void onStartAnim() {
-        freshTime = System.currentTimeMillis();
-        headerTitle.setText("正在刷新");
+        headerTitle.setText("正在加载...");
         mIv_anim_refresh.clearAnimation();
         mIv_anim_refresh.setImageDrawable(animationRefresh);
         animationRefresh.start();
@@ -123,7 +102,6 @@ public class MyHeader extends BaseHeader {
     //头部已经全部弹回时回调
     @Override
     public void onFinishAnim() {
-//        headerTitle.setText("刷新完成");
         animationRefresh.stop();
         mIv_anim_refresh.setImageResource(R.drawable.refresh25);
     }

@@ -94,6 +94,7 @@
                     android:layout_height="150dp"
                     android:visibility="gone"></WebView>
                 <TextView
+                    android:id="@+id/tv_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
@@ -125,7 +126,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
-                            android:text="关注"/>
+                            android:text="收藏"/>
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/ll_liuyan"

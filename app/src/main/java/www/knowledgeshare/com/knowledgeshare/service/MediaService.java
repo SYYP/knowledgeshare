@@ -48,7 +48,7 @@ public class MediaService extends Service {
         mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
-                isPrepared=true;
+                isPrepared = true;
             }
         });
     }
@@ -178,9 +178,9 @@ public class MediaService extends Service {
         public int getPlayPosition() {
             if (mMediaPlayer != null) {
                 try {
-                    if (isPrepared){
+                    if (isPrepared) {
                         return mMediaPlayer.getCurrentPosition();
-                    }else {
+                    } else {
                         return 0;
                     }
                 } catch (IllegalStateException e) {
@@ -190,6 +190,7 @@ public class MediaService extends Service {
                 return 0;
             }
         }
+
         /**
          * 播放指定位置
          */
@@ -198,7 +199,6 @@ public class MediaService extends Service {
         }
 
     }
-
 
     /**
      * 添加file文件到MediaPlayer对象并且准备播放音频

@@ -1,6 +1,8 @@
 package www.knowledgeshare.com.knowledgeshare.callback;
 
 
+import android.app.Activity;
+
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.lzy.okgo.callback.AbsCallback;
@@ -14,6 +16,7 @@ import okhttp3.ResponseBody;
 public abstract class JsonCallback<T> extends AbsCallback<T> {
     private Type type;
     private Class<T> clazz;
+    public Activity activity;
 
     public JsonCallback() {
     }

@@ -12,14 +12,20 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicMasterMoreBean;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 
 public class MusicMasterActivity extends BaseActivity implements View.OnClickListener {
 
@@ -31,12 +37,61 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
     private RadioGroup rgp;
     private RecyclerView recycler_dashiban;
     private LinearLayout activity_gu_dian;
+    private List<MusicMasterMoreBean.DataEntity> mData;
+    private DaShiBanAdapter mDaShiBanAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_master);
         initView();
+        initData("1", "");
+        initListener();
+    }
+
+    private void initListener() {
+        recycler_dashiban.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    setPopHide();
+                } else if (dy < 0) {
+                    SlidePopShow();
+                }
+            }
+        });
+    }
+
+    private void initData(String type, String after) {
+        HttpParams params = new HttpParams();
+        params.put("after", after);
+        params.put("class_id", type);
+        OkGo.<MusicMasterMoreBean>post(MyContants.LXKURL + "index/zl-more")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<MusicMasterMoreBean>(MusicMasterMoreBean.class) {
+                             @Override
+                             public void onSuccess(Response<MusicMasterMoreBean> response) {
+                                 int code = response.code();
+                                 MusicMasterMoreBean musicMasterMoreBean = response.body();
+                                 mData = musicMasterMoreBean.getData();
+                                 if (mDaShiBanAdapter == null) {
+                                     mDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban4, mData);
+                                     recycler_dashiban.setAdapter(mDaShiBanAdapter);
+                                 } else {
+                                     mDaShiBanAdapter.setNewData(mData);
+                                     mDaShiBanAdapter.notifyDataSetChanged();
+                                 }
+                                 mDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                     @Override
+                                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                         startActivity(new Intent(MusicMasterActivity.this, ZhuanLanActivity.class));
+                                     }
+                                 });
+                             }
+                         }
+                );
     }
 
     private void initView() {
@@ -51,46 +106,44 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
         activity_gu_dian = (LinearLayout) findViewById(R.id.activity_gu_dian);
         rgp.check(R.id.rb_gudian);
         recycler_dashiban.setLayoutManager(new LinearLayoutManager(this));
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        DaShiBanAdapter daShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban4, list);
-        recycler_dashiban.setAdapter(daShiBanAdapter);
-        daShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        rgp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(MusicMasterActivity.this, ZhuanLanActivity.class));
-            }
-        });
-        recycler_dashiban.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0) {
-                    setPopHide();
-                } else if (dy < 0) {
-                    SlidePopShow();
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                switch (i) {
+                    case R.id.rb_gudian:
+                        initData("1", "");
+                        break;
+                    case R.id.rb_minzu:
+                        initData("2", "");
+                        break;
+                    case R.id.rb_liuxing:
+                        initData("3", "");
+                        break;
+                    case R.id.rb_suyang:
+                        initData("4", "");
+                        break;
                 }
             }
         });
     }
 
 
-    private class DaShiBanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class DaShiBanAdapter extends BaseQuickAdapter<MusicMasterMoreBean.DataEntity, BaseViewHolder> {
 
-        public DaShiBanAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public DaShiBanAdapter(@LayoutRes int layoutResId, @Nullable List<MusicMasterMoreBean.DataEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, MusicMasterMoreBean.DataEntity item) {
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-            //            Glide.with(mContext).load().into(imageView);
+            Glide.with(mContext).load(item.getZl_img()).into(imageView);
             helper.setVisible(R.id.iv_bofang, false);
+            helper.setText(R.id.tv_name, item.getZl_name())
+                    .setText(R.id.tv_introduce, item.getZl_introduce())
+                    .setText(R.id.tv_update_name, item.getZl_update_name())
+                    .setText(R.id.tv_update_time, item.getZl_update_time())
+                    .setText(R.id.tv_price, item.getZl_price());
         }
     }
 

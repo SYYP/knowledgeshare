@@ -27,8 +27,6 @@ import com.orhanobut.logger.Logger;
 
 import org.zackratos.ultimatebar.UltimateBar;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
 import www.knowledgeshare.com.knowledgeshare.R;
@@ -36,12 +34,10 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.LoginBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.login.ForgetActivity;
-import www.knowledgeshare.com.knowledgeshare.login.bean.HobbyActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
-import www.knowledgeshare.com.knowledgeshare.utils.TimeUtils;
 
 /**
  * date : ${Date}
@@ -70,7 +66,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         ultimateBar.setImmersionBar();
         setISshow(false);
         setContentView(R.layout.activity_login);
-
           /*
          获取控件id
         */
@@ -141,7 +136,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 finish();
                 break;
         }
-
     }
 
     private void login() {
