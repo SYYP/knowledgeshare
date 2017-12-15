@@ -43,15 +43,10 @@ dependencies {
     compile files('libs/umeng_social_net.jar')
     compile files('libs/umeng_social_api.jar')
     compile project(':PushSDK')
-
     //沉浸式
-
     //流式布局
-
-
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:design:23.4.0'
     compile 'com.android.support:cardview-v7:23.4.0'
@@ -64,7 +59,7 @@ dependencies {
     compile 'com.liaoinstan.springview:library:1.2.6'
     compile 'com.jakewharton:butterknife:8.8.1'
     compile 'com.orhanobut:logger:2.1.1'
-    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+
     compile 'org.zackratos:ultimatebar:1.0.3'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.github.zcweng:switch-button:0.0.3@aar'
