@@ -66,24 +66,31 @@
             android:gravity="center"
             android:text="110"/>
     </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/line_xuxian"></View>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="作者回复："
-        android:textColor="@color/yellow"
-        android:textSize="16sp"/>
-    <TextView
+    <LinearLayout
+        android:id="@+id/ll_author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/bg_huise_line"
-        android:minHeight="80dp"
-        android:padding="10dp"
-        android:text="在的"/>
+        android:orientation="vertical">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/line_xuxian"></View>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="作者回复："
+            android:textColor="@color/yellow"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/tv_author_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_huise_line"
+            android:minHeight="80dp"
+            android:padding="10dp"
+            android:text="在的"/>
+    </LinearLayout>
 </LinearLayout>

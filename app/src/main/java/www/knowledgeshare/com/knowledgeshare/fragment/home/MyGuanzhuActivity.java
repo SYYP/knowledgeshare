@@ -11,16 +11,27 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MyFollowBean;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class MyGuanzhuActivity extends BaseActivity implements View.OnClickListener {
 
@@ -29,7 +40,7 @@ public class MyGuanzhuActivity extends BaseActivity implements View.OnClickListe
     private RecyclerView recycler_guanzhu;
     private LinearLayout activity_my_guanzhu;
     private GuanzhuAdapter mGuanzhuAdapter;
-    private List<String> mList;
+    private List<MyFollowBean.DataEntity> mData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +48,32 @@ public class MyGuanzhuActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_my_guanzhu);
         setISshow(false);
         initView();
+        initData();
+    }
+
+    private void initData() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        OkGo.<MyFollowBean>post(MyContants.LXKURL + "index/my-follow")
+                .tag(this)
+                .headers(headers)
+                .execute(new DialogCallback<MyFollowBean>(MyGuanzhuActivity.this, MyFollowBean.class) {
+                             @Override
+                             public void onSuccess(Response<MyFollowBean> response) {
+                                 int code = response.code();
+                                 MyFollowBean myFollowBean = response.body();
+                                 mData = myFollowBean.getData();
+                                 mGuanzhuAdapter = new GuanzhuAdapter(R.layout.item_guanzhu, mData);
+                                 recycler_guanzhu.setAdapter(mGuanzhuAdapter);
+                                 mGuanzhuAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                     @Override
+                                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                         startActivity(new Intent(MyGuanzhuActivity.this, TeacherDetailActivity.class));
+                                     }
+                                 });
+                             }
+                         }
+                );
     }
 
     private void initView() {
@@ -46,36 +83,49 @@ public class MyGuanzhuActivity extends BaseActivity implements View.OnClickListe
         tv_search.setOnClickListener(this);
         recycler_guanzhu = (RecyclerView) findViewById(R.id.recycler_guanzhu);
         activity_my_guanzhu = (LinearLayout) findViewById(R.id.activity_my_guanzhu);
-        mList = new ArrayList<>();
-        mList.add("");
-        mList.add("");
-        mList.add("");
         recycler_guanzhu.setLayoutManager(new LinearLayoutManager(this));
-        mGuanzhuAdapter = new GuanzhuAdapter(R.layout.item_guanzhu, mList);
-        recycler_guanzhu.setAdapter(mGuanzhuAdapter);
-        mGuanzhuAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(MyGuanzhuActivity.this, TeacherDetailActivity.class));
-            }
-        });
     }
 
-    private class GuanzhuAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class GuanzhuAdapter extends BaseQuickAdapter<MyFollowBean.DataEntity, BaseViewHolder> {
 
-        public GuanzhuAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public GuanzhuAdapter(@LayoutRes int layoutResId, @Nullable List<MyFollowBean.DataEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(final BaseViewHolder helper, String item) {
+        protected void convert(final BaseViewHolder helper, MyFollowBean.DataEntity item) {
+            ImageView iv_teacher_head = helper.getView(R.id.iv_teacher_head);
+            Glide.with(mContext).load(item.getT_header()).into(iv_teacher_head);
+            helper.setText(R.id.tv_teacher_name, item.getT_name())
+                    .setText(R.id.tv_teacher_intro, item.getT_tag());
             helper.getView(R.id.iv_quxiaoguanzhu).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showDialog(Gravity.CENTER, R.style.Alpah_aniamtion,helper.getAdapterPosition());
+                    showDialog(Gravity.CENTER, R.style.Alpah_aniamtion, helper.getAdapterPosition());
                 }
             });
         }
+    }
+
+    private void noguanzhu(int teacher_id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("teacher_id", teacher_id);
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "free-follow/no-attention")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(MyGuanzhuActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 initData();
+                             }
+                         }
+                );
     }
 
     private void showDialog(int grary, int animationStyle, final int position) {
@@ -104,8 +154,7 @@ public class MyGuanzhuActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                mList.remove(position);
-                mGuanzhuAdapter.notifyDataSetChanged();
+                noguanzhu(mData.get(position).getId());
             }
         });
     }

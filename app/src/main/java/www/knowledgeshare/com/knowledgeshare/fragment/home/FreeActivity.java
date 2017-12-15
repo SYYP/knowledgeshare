@@ -301,10 +301,12 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(FreeActivity.this, WenGaoActivity.class);
+                    intent.putExtra("type", "free");
                     intent.putExtra("t_name", mTeacher_has.getT_name());
                     intent.putExtra("t_head", mTeacher_has.getT_header());
                     intent.putExtra("video_name", item.getVideo_name());
                     intent.putExtra("id", item.getId() + "");
+                    intent.putExtra("teacher_id",mFreeBean.getTeacher_id() + "");
                     startActivity(intent);
                 }
             });
@@ -333,6 +335,12 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                     .setText(R.id.tv_time, item.getCreated_at())
                     .setText(R.id.tv_content, item.getContent())
                     .setText(R.id.tv_dainzan_count, item.getLive() + "");
+            if (item.getComment()!=null && item.getComment().size()>0){
+                helper.setVisible(R.id.ll_author,true);
+                helper.setText(R.id.tv_author_content, item.getComment().get(0).getContent());
+            }else {
+                helper.setVisible(R.id.ll_author,false);
+            }
             helper.getView(R.id.ll_dianzan).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -353,7 +361,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    private void dianzan(final int adapterPosition, int id,final int count) {
+    private void dianzan(final int adapterPosition, int id, final int count) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -679,8 +687,8 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.tv_writeliuyan:
                 Intent intent = new Intent(this, LiuYanActivity.class);
-                intent.putExtra("teacher_id", mFreeBean.getTeacher_id());
-                intent.putExtra("type", "free");
+                intent.putExtra("teacher_id", mFreeBean.getTeacher_id() + "");
+                intent.putExtra("type", "free-root");
                 startActivity(intent);
                 break;
         }

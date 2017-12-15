@@ -59,7 +59,7 @@ public class WenGaoBean {
         private int teacher_id;
         private String user_name;
         private String created_at;
-        private List<?> comment;
+        private List<ChildCommentEntity> comment;
         private int id;
         private String content;
         private int live;
@@ -88,7 +88,7 @@ public class WenGaoBean {
             this.created_at = created_at;
         }
 
-        public void setComment(List<?> comment) {
+        public void setComment(List<ChildCommentEntity> comment) {
             this.comment = comment;
         }
 
@@ -128,8 +128,42 @@ public class WenGaoBean {
             return created_at;
         }
 
-        public List<?> getComment() {
+        public List<ChildCommentEntity> getComment() {
             return comment;
+        }
+        public static class ChildCommentEntity {
+            /**
+             * id : 2
+             * comment_id : 6
+             * content : 测试回复666
+             */
+            private int id;
+            private int comment_id;
+            private String content;
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public void setComment_id(int comment_id) {
+                this.comment_id = comment_id;
+            }
+
+            public void setContent(String content) {
+                this.content = content;
+            }
+
+            public int getId() {
+                return id;
+            }
+
+            public int getComment_id() {
+                return comment_id;
+            }
+
+            public String getContent() {
+                return content;
+            }
         }
 
         public int getId() {

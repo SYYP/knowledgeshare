@@ -24,6 +24,7 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.LiuYanListFree;
@@ -37,6 +38,7 @@ public class LiuYanActivity extends BaseActivity implements View.OnClickListener
     private EditText edt_liuyan;
     private RecyclerView recycler_list;
     private List<LiuYanListFree.DataEntity> mData;
+    private String mType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +61,8 @@ public class LiuYanActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void initData() {
-        if (getIntent().getStringExtra("type").equals("free")) {
+        mType = getIntent().getStringExtra("type");
+        if (mType.equals("free-root")) {
             HttpHeaders headers = new HttpHeaders();
             headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
             OkGo.<LiuYanListFree>get(MyContants.LXKURL + "free-comment/comment-list")
@@ -79,7 +82,7 @@ public class LiuYanActivity extends BaseActivity implements View.OnClickListener
                             }
                         }
                     });
-        } else {
+        } else if (mType.equals("free-wengao")){
             HttpHeaders headers = new HttpHeaders();
             headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
             HttpParams params = new HttpParams();
@@ -99,6 +102,31 @@ public class LiuYanActivity extends BaseActivity implements View.OnClickListener
                                 MyAdapter myAdapter = new MyAdapter(R.layout.item_myliuyan, mData);
                                 recycler_list.setAdapter(myAdapter);
                             } else {
+
+                            }
+                        }
+                    });
+        }else if (mType.equals("everydaycomment-wengao")){
+            HttpHeaders headers = new HttpHeaders();
+            headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+            HttpParams params = new HttpParams();
+            params.put("id", getIntent().getStringExtra("xiaoke_id"));
+            OkGo.<LiuYanListFree>post(MyContants.LXKURL + "daily/comment-list")
+                    .tag(this)
+                    .headers(headers)
+                    .params(params)
+                    .execute(new JsonCallback<LiuYanListFree>(LiuYanListFree.class) {
+                        @Override
+                        public void onSuccess(Response<LiuYanListFree> response) {
+                            int code = response.code();
+                            LiuYanListFree liuYanListFree = response.body();
+                            if (response.code() >= 200 && response.code() <= 204) {
+                                Logger.e(code + "");
+                                mData = liuYanListFree.getData();
+                                MyAdapter myAdapter = new MyAdapter(R.layout.item_myliuyan, mData);
+                                recycler_list.setAdapter(myAdapter);
+                            } else {
+
                             }
                         }
                     });
@@ -115,6 +143,12 @@ public class LiuYanActivity extends BaseActivity implements View.OnClickListener
         protected void convert(BaseViewHolder helper, LiuYanListFree.DataEntity item) {
             helper.setText(R.id.tv_time, item.getCreated_at())
                     .setText(R.id.tv_content, item.getContent());
+            if (item.getComment_reply() != null && !TextUtils.isEmpty(item.getComment_reply().getContent())) {
+                helper.setVisible(R.id.ll_author, true);
+                helper.setText(R.id.tv_author_content, item.getComment_reply().getContent());
+            } else {
+                helper.setVisible(R.id.ll_author, false);
+            }
         }
     }
 
@@ -128,28 +162,36 @@ public class LiuYanActivity extends BaseActivity implements View.OnClickListener
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
         params.put("content", liuyan);
+        params.put("teacher_id", getIntent().getStringExtra("teacher_id"));
         String url = "";
-        if (getIntent().getStringExtra("type").equals("free")) {
-            params.put("teacher_id", getIntent().getStringExtra("teacher_id"));
+        if (mType.equals("free-root")) {
             url = MyContants.LXKURL + "free-comment/submit";
-        } else {
+        } else if (mType.equals("free-wengao")){
             params.put("id", getIntent().getStringExtra("xiaoke_id"));
             url = MyContants.LXKURL + "free-comment/draft";
+        }else if (mType.equals("everydaycomment-wengao")){
+            params.put("id", getIntent().getStringExtra("xiaoke_id"));
+            url = MyContants.LXKURL + "daily/submit-comment";
         }
         OkGo.<DianZanbean>post(url)
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                .execute(new DialogCallback<DianZanbean>(LiuYanActivity.this, DianZanbean.class) {
                              @Override
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
                                  Toast.makeText(LiuYanActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
                              }
+
+                             @Override
+                             public void onError(Response<DianZanbean> response) {
+                                 super.onError(response);
+                             }
                          }
                 );
-//        finish();
+        //        finish();
     }
 
     @Override

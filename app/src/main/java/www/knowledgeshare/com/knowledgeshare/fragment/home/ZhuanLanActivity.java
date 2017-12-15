@@ -14,15 +14,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.ZhuanLanBean;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 
 public class ZhuanLanActivity extends BaseActivity implements View.OnClickListener {
 
@@ -42,6 +48,9 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
     private FrameLayout fl_root_view;
     private LinearLayout ll_root_view;
     private NestedScrollView nestView;
+    private List<ZhuanLanBean.LatelyEntity> mLately;
+    private LatelyAdapter mLatelyAdapter;
+    private ZhuanLanBean mZhuanLanBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,24 +76,35 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initData() {
-        if (getIntent().getBooleanExtra("buyed",false)){
-            tv_tryread.setText("阅读");
-            tv_buy.setVisibility(View.GONE);
-            tv_tryread.setBackgroundColor(getResources().getColor(R.color.text_red_dark));
-            tv_tryread.setTextColor(getResources().getColor(R.color.white));
-        }
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        LatelyAdapter latelyAdapter = new LatelyAdapter(R.layout.item_lately, list);
-        recycler_lately.setAdapter(latelyAdapter);
-        tv_shiyirenqun.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
-                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
-        tv_zhuanlanjianjie.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
-                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
-        tv_readxuzhi.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
-                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
+        String id = getIntent().getStringExtra("id");
+        HttpParams params = new HttpParams();
+        params.put("id", id);
+        OkGo.<ZhuanLanBean>post(MyContants.LXKURL + "zl/show")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<ZhuanLanBean>(ZhuanLanBean.class) {
+                             @Override
+                             public void onSuccess(Response<ZhuanLanBean> response) {
+                                 int code = response.code();
+                                 mZhuanLanBean = response.body();
+                                 Glide.with(ZhuanLanActivity.this).load(mZhuanLanBean.getZl_img()).into(iv_beijing);
+                                 tv_shiyirenqun.setText(mZhuanLanBean.getZl_suitable());
+                                 tv_zhuanlanjianjie.setText(mZhuanLanBean.getZl_introduce());
+                                 tv_readxuzhi.setText(mZhuanLanBean.getZl_look());
+                                 tv_title.setText(mZhuanLanBean.getZl_name());
+                                 tv_dignyue_count.setText(mZhuanLanBean.getZl_buy_count()+"人订阅");
+                                 mLately = mZhuanLanBean.getLately();
+                                 mLatelyAdapter = new LatelyAdapter(R.layout.item_lately, mLately);
+                                 recycler_lately.setAdapter(mLatelyAdapter);
+                             }
+                         }
+                );
+//        if (getIntent().getBooleanExtra("buyed",false)){
+//            tv_tryread.setText("阅读");
+//            tv_buy.setVisibility(View.GONE);
+//            tv_tryread.setBackgroundColor(getResources().getColor(R.color.text_red_dark));
+//            tv_tryread.setTextColor(getResources().getColor(R.color.white));
+//        }
     }
 
     private void initDialog() {
@@ -250,15 +270,17 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
         nestView = (NestedScrollView) findViewById(R.id.nestView);
     }
 
-    private class LatelyAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class LatelyAdapter extends BaseQuickAdapter<ZhuanLanBean.LatelyEntity, BaseViewHolder> {
 
-        public LatelyAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public LatelyAdapter(@LayoutRes int layoutResId, @Nullable List<ZhuanLanBean.LatelyEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
-
+        protected void convert(BaseViewHolder helper, ZhuanLanBean.LatelyEntity item) {
+            helper.setText(R.id.tv_name,item.getName())
+                    .setText(R.id.tv_time,item.getCreated_at())
+                    .setText(R.id.tv_description,item.getDescription());
         }
     }
 
@@ -272,7 +294,9 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
                 showShareDialog();
                 break;
             case R.id.tv_tryread:
-                startActivity(new Intent(this, ZhuanLanDetail1Activity.class));
+                Intent intent = new Intent(this, ZhuanLanDetail1Activity.class);
+                intent.putExtra("id",mZhuanLanBean.getId()+"");
+                startActivity(intent);
                 break;
             case R.id.tv_buy:
                 showBuyDialog();

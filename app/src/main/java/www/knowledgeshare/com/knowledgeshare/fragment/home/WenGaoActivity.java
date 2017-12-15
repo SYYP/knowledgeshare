@@ -57,7 +57,8 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
     private NestedScrollView nestView;
     private List<WenGaoBean.CommentEntity> mComment;
     private LiuYanAdapter mLiuYanAdapter;
-    private String mId;
+    private String mId, mType;
+    private WenGaoBean mWenGaoBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,25 +118,32 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
         String t_head = getIntent().getStringExtra("t_head");
         String video_name = getIntent().getStringExtra("video_name");
         mId = getIntent().getStringExtra("id");
+        mType = getIntent().getStringExtra("type");
         Glide.with(this).load(t_head).into(iv_teacher_head);
         tv_teacher_name.setText(t_name);
         tv_ke_name.setText(video_name);
         HttpParams params = new HttpParams();
         params.put("userid", SpUtils.getString(this, "id", ""));
         params.put("id", mId);
-        OkGo.<WenGaoBean>post(MyContants.LXKURL + "free/draft-show")
+        String url = "";
+        if (mType.equals("free")) {
+            url = MyContants.LXKURL + "free/draft-show";
+        } else if (mType.equals("everydaycomment")) {
+            url = MyContants.LXKURL + "daily/draft-show";
+        }
+        OkGo.<WenGaoBean>post(url)
                 .tag(this)
                 .params(params)
                 .execute(new JsonCallback<WenGaoBean>(WenGaoBean.class) {
                     @Override
                     public void onSuccess(Response<WenGaoBean> response) {
                         int code = response.code();
-                        WenGaoBean wenGaoBean = response.body();
+                        mWenGaoBean = response.body();
                         if (response.code() >= 200 && response.code() <= 204) {
                             Logger.e(code + "");
-                            tv_content.setText(wenGaoBean.getContent());
-                            mComment = wenGaoBean.getComment();
-                            isGuanzhu = wenGaoBean.isIsfav();
+                            tv_content.setText(mWenGaoBean.getContent());
+                            mComment = mWenGaoBean.getComment();
+                            isGuanzhu = mWenGaoBean.isIsfav();
                             if (isGuanzhu) {
                                 iv_collect.setImageResource(R.drawable.xinxin);
                             } else {
@@ -173,6 +181,12 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
                     .setText(R.id.tv_time, item.getCreated_at())
                     .setText(R.id.tv_content, item.getContent())
                     .setText(R.id.tv_dainzan_count, item.getLive() + "");
+            if (item.getComment() != null && item.getComment().size() > 0) {
+                helper.setVisible(R.id.ll_author, true);
+                helper.setText(R.id.tv_author_content, item.getComment().get(0).getContent());
+            } else {
+                helper.setVisible(R.id.ll_author, false);
+            }
             helper.getView(R.id.ll_dianzan).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -197,11 +211,20 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
         params.put("id", mId);
         params.put("type", "2");
         String url = "";
-        if (isGuanzhu) {
-            url = MyContants.LXKURL + "free/no-favorite";
-        } else {
-            url = MyContants.LXKURL + "free/favorite";
+        if (mType.equals("free")) {
+            if (isGuanzhu) {
+                url = MyContants.LXKURL + "free/no-favorite";
+            } else {
+                url = MyContants.LXKURL + "free/favorite";
+            }
+        }else if (mType.equals("everydaycomment")) {
+            if (isGuanzhu) {
+                url = MyContants.LXKURL + "daily/no-favorite";
+            } else {
+                url = MyContants.LXKURL + "daily/favorite";
+            }
         }
+
         OkGo.<DianZanbean>post(url)
                 .tag(this)
                 .headers(headers)
@@ -324,8 +347,9 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.ll_liuyan:
                 Intent intent = new Intent(this, LiuYanActivity.class);
-                intent.putExtra("type", "wengao");
+                intent.putExtra("type", mType+"-wengao");
                 intent.putExtra("xiaoke_id", mId);
+                intent.putExtra("teacher_id", getIntent().getStringExtra("teacher_id"));
                 startActivity(intent);
                 break;
             case R.id.ll_guanzhu:

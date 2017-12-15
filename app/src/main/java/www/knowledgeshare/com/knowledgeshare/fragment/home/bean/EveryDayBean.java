@@ -8,16 +8,23 @@ import java.util.List;
 
 public class EveryDayBean {
 
+
     /**
-     * dailys : [{"good_count":0,"video_name":"女高音，一个神秘又充满魅力的声音1","is_good":0,"teacher_id":1,"teacher_to":{"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/http://knowledges.oss-cn-qingdao.aliyuncs.com/http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","t_name":"张老师","id":1},"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":0,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"collect_count_true":0,"is_collect":0,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":0,"send_time":0,"updated_at":"2017-12-08 08:35:30","id":1,"view_count":0},{"good_count":0,"video_name":"女高音，一个神秘又充满魅力的声音2","is_good":0,"teacher_id":1,"teacher_to":{"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/http://knowledges.oss-cn-qingdao.aliyuncs.com/http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","t_name":"张老师","id":1},"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":0,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"collect_count_true":0,"is_collect":0,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music2.mp3","view_count_true":0,"send_time":0,"updated_at":"2017-12-08 08:35:30","id":2,"view_count":0},{"good_count":0,"video_name":"女高音，一个神秘又充满魅力的声音3","is_good":0,"teacher_id":1,"teacher_to":{"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/http://knowledges.oss-cn-qingdao.aliyuncs.com/http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","t_name":"张老师","id":1},"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":0,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"collect_count_true":0,"is_collect":0,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":0,"send_time":0,"updated_at":"2017-12-08 08:35:30","id":3,"view_count":0}]
+     * imgurl : http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/1x1.png
+     * dailys : [{"good_count":0,"video_name":"女高音，一个神秘又充满魅力的声音1","islive":false,"is_good":0,"teacher_id":1,"teacher_to":{"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","t_name":"张老师","id":1},"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":0,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","isfav":false,"collect_count":0,"collect_count_true":0,"is_collect":0,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":0,"send_time":0,"updated_at":"2017-12-08 08:35:30","id":1,"view_count":0},{"good_count":0,"video_name":"女高音，一个神秘又充满魅力的声音2","islive":false,"is_good":0,"teacher_id":1,"teacher_to":{"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","t_name":"张老师","id":1},"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":0,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","isfav":false,"collect_count":0,"collect_count_true":0,"is_collect":0,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music2.mp3","view_count_true":0,"send_time":0,"updated_at":"2017-12-08 08:35:30","id":2,"view_count":0},{"good_count":0,"video_name":"女高音，一个神秘又充满魅力的声音3","islive":false,"is_good":0,"teacher_id":1,"teacher_to":{"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","t_name":"张老师","id":1},"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":0,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","isfav":false,"collect_count":0,"collect_count_true":0,"is_collect":0,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":0,"send_time":0,"updated_at":"2017-12-08 08:35:30","id":3,"view_count":0}]
      * update_count : 3
      * view_count : 0
      * collect_count : 0
      */
+    private String imgurl;
     private List<DailysEntity> dailys;
     private int update_count;
     private int view_count;
     private int collect_count;
+
+    public void setImgurl(String imgurl) {
+        this.imgurl = imgurl;
+    }
 
     public void setDailys(List<DailysEntity> dailys) {
         this.dailys = dailys;
@@ -33,6 +40,10 @@ public class EveryDayBean {
 
     public void setCollect_count(int collect_count) {
         this.collect_count = collect_count;
+    }
+
+    public String getImgurl() {
+        return imgurl;
     }
 
     public List<DailysEntity> getDailys() {
@@ -55,14 +66,16 @@ public class EveryDayBean {
         /**
          * good_count : 0
          * video_name : 女高音，一个神秘又充满魅力的声音1
+         * islive : false
          * is_good : 0
          * teacher_id : 1
-         * teacher_to : {"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/http://knowledges.oss-cn-qingdao.aliyuncs.com/http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","t_name":"张老师","id":1}
+         * teacher_to : {"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","t_name":"张老师","id":1}
          * txt_url : http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt
          * txt_old_name : 女高音.txt
          * is_view : 0
          * created_at : 2017-12-08 08:35:30
          * video_old_name : 女高音.mp3
+         * isfav : false
          * collect_count : 0
          * collect_count_true : 0
          * is_collect : 0
@@ -76,6 +89,7 @@ public class EveryDayBean {
          */
         private int good_count;
         private String video_name;
+        private boolean islive;
         private int is_good;
         private int teacher_id;
         private TeacherToEntity teacher_to;
@@ -84,6 +98,7 @@ public class EveryDayBean {
         private int is_view;
         private String created_at;
         private String video_old_name;
+        private boolean isfav;
         private int collect_count;
         private int collect_count_true;
         private int is_collect;
@@ -101,6 +116,10 @@ public class EveryDayBean {
 
         public void setVideo_name(String video_name) {
             this.video_name = video_name;
+        }
+
+        public void setIslive(boolean islive) {
+            this.islive = islive;
         }
 
         public void setIs_good(int is_good) {
@@ -133,6 +152,10 @@ public class EveryDayBean {
 
         public void setVideo_old_name(String video_old_name) {
             this.video_old_name = video_old_name;
+        }
+
+        public void setIsfav(boolean isfav) {
+            this.isfav = isfav;
         }
 
         public void setCollect_count(int collect_count) {
@@ -183,6 +206,10 @@ public class EveryDayBean {
             return video_name;
         }
 
+        public boolean isIslive() {
+            return islive;
+        }
+
         public int getIs_good() {
             return is_good;
         }
@@ -213,6 +240,10 @@ public class EveryDayBean {
 
         public String getVideo_old_name() {
             return video_old_name;
+        }
+
+        public boolean isIsfav() {
+            return isfav;
         }
 
         public int getCollect_count() {
@@ -257,7 +288,7 @@ public class EveryDayBean {
 
         public static class TeacherToEntity {
             /**
-             * t_header : http://knowledges.oss-cn-qingdao.aliyuncs.com/http://knowledges.oss-cn-qingdao.aliyuncs.com/http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg
+             * t_header : http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg
              * t_name : 张老师
              * id : 1
              */

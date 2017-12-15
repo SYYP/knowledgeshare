@@ -18,9 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.orhanobut.logger.Logger;
 
@@ -31,10 +34,12 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.EveryDayBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class EveryDayCommentActivity extends BaseActivity implements View.OnClickListener {
 
@@ -68,8 +73,11 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
     }
 
     private void initData() {
+        HttpParams params = new HttpParams();
+        params.put("userid", SpUtils.getString(this, "id", ""));
         OkGo.<EveryDayBean>post(MyContants.LXKURL + "daily")
                 .tag(this)
+                .params(params)
                 .execute(new JsonCallback<EveryDayBean>(EveryDayBean.class) {
                     @Override
                     public void onSuccess(Response<EveryDayBean> response) {
@@ -78,6 +86,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                         mDailys = everyDayBean.getDailys();
                         if (response.code() >= 200 && response.code() <= 204) {
                             Logger.e(code + "");
+                            Glide.with(EveryDayCommentActivity.this).load(everyDayBean.getImgurl()).into(iv_beijing);
                             tv_jie_count.setText("已更新："+everyDayBean.getUpdate_count()+"节");
                             tv_look_count.setText("浏览次数："+everyDayBean.getView_count()+"");
                             tv_collect_count.setText("收藏次数："+everyDayBean.getCollect_count()+"");
@@ -159,7 +168,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, EveryDayBean.DailysEntity item) {
+        protected void convert(final BaseViewHolder helper, final EveryDayBean.DailysEntity item) {
             helper.setText(R.id.tv_name, item.getVideo_name())
                     .setText(R.id.tv_time, item.getCreated_at() + "发布")
                     .setText(R.id.tv_look_count, item.getIs_view()==0?item.getView_count() + "":item.getView_count_true()+"")
@@ -168,20 +177,40 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
             helper.getView(R.id.iv_dian).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showDialog();
+                    showListDialog(helper.getAdapterPosition(), item.isIsfav(), item.isIslive(), item.getId());
                 }
             });
             helper.getView(R.id.iv_wengao).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(EveryDayCommentActivity.this,WenGaoActivity.class));
+                    Intent intent = new Intent(EveryDayCommentActivity.this, WenGaoActivity.class);
+                    intent.putExtra("type", "everydaycomment");
+                    intent.putExtra("t_name", item.getTeacher_to().getT_name());
+                    intent.putExtra("t_head", item.getTeacher_to().getT_header());
+                    intent.putExtra("video_name", item.getVideo_name());
+                    intent.putExtra("teacher_id", item.getTeacher_id()+"");
+                    intent.putExtra("id", item.getId() + "");
+                    startActivity(intent);
                 }
             });
             helper.setText(R.id.tv_order,"0"+(helper.getAdapterPosition()+1));
         }
     }
-
-    private void showDialog() {
+    private TextView mTv_collect,mTv_dianzan;
+    private void showListDialog(final int adapterPosition, boolean isfav, boolean islive, final int id) {
+        mDialog = mBuilder.setViewId(R.layout.dialog_free)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.BOTTOM)
+                //设置动画
+                .setAnimation(R.style.Bottom_Top_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
         mDialog.show();
         mDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,40 +225,42 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 showShareDialog();
             }
         });
-        final TextView tv_collect = mDialog.getView(R.id.tv_collect);
-        tv_collect.setOnClickListener(new View.OnClickListener() {
+        mTv_collect = mDialog.getView(R.id.tv_collect);
+        mIsCollected = isfav;
+        if (mIsCollected) {
+            Drawable drawable = getResources().getDrawable(R.drawable.collect_shixin);
+            /// 这一步必须要做,否则不会显示.
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            mTv_collect.setCompoundDrawables(null, drawable, null, null);
+        } else {
+            Drawable drawable = getResources().getDrawable(R.drawable.bofanglist_collect);
+            /// 这一步必须要做,否则不会显示.
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            mTv_collect.setCompoundDrawables(null, drawable, null, null);
+        }
+        mTv_collect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mIsCollected) {
-                    Drawable drawable = getResources().getDrawable(R.drawable.bofanglist_collect);
-                    /// 这一步必须要做,否则不会显示.
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    tv_collect.setCompoundDrawables(null, drawable, null, null);
-                } else {
-                    Drawable drawable = getResources().getDrawable(R.drawable.collect_shixin);
-                    /// 这一步必须要做,否则不会显示.
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    tv_collect.setCompoundDrawables(null, drawable, null, null);
-                }
-                mIsCollected = !mIsCollected;
+                changeCollect(adapterPosition, id);
             }
         });
-        final TextView tv_dianzan = mDialog.getView(R.id.tv_dianzan);
-        tv_dianzan.setOnClickListener(new View.OnClickListener() {
+        mTv_dianzan = mDialog.getView(R.id.tv_dianzan);
+        mDianzan = islive;
+        if (mDianzan) {
+            Drawable drawable = getResources().getDrawable(R.drawable.dianzan_shixin);
+            /// 这一步必须要做,否则不会显示.
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+        } else {
+            Drawable drawable = getResources().getDrawable(R.drawable.dianzan_yellow_big);
+            /// 这一步必须要做,否则不会显示.
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+        }
+        mTv_dianzan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mDianzan) {
-                    Drawable drawable = getResources().getDrawable(R.drawable.dianzan_yellow_big);
-                    /// 这一步必须要做,否则不会显示.
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    tv_dianzan.setCompoundDrawables(null, drawable, null, null);
-                } else {
-                    Drawable drawable = getResources().getDrawable(R.drawable.dianzan_shixin);
-                    /// 这一步必须要做,否则不会显示.
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    tv_dianzan.setCompoundDrawables(null, drawable, null, null);
-                }
-                mDianzan = !mDianzan;
+                changeDianzan(adapterPosition, id);
             }
         });
         mDialog.getView(R.id.tv_download).setOnClickListener(new View.OnClickListener() {
@@ -239,6 +270,89 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 mDialog.dismiss();
             }
         });
+    }
+
+    private void changeCollect(final int adapterPosition, int id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("id", id + "");
+        params.put("type", "1");
+        String url = "";
+        if (mIsCollected) {
+            url = MyContants.LXKURL + "daily/no-favorite";
+        } else {
+            url = MyContants.LXKURL + "daily/favorite";
+        }
+        OkGo.<DianZanbean>post(url)
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(EveryDayCommentActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 if (mIsCollected) {
+                                     Drawable drawable = getResources().getDrawable(R.drawable.bofanglist_collect);
+                                     /// 这一步必须要做,否则不会显示.
+                                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                     mTv_collect.setCompoundDrawables(null, drawable, null, null);
+                                 } else {
+                                     Drawable drawable = getResources().getDrawable(R.drawable.collect_shixin);
+                                     /// 这一步必须要做,否则不会显示.
+                                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                     mTv_collect.setCompoundDrawables(null, drawable, null, null);
+                                 }
+                                 mIsCollected = !mIsCollected;
+                                 mDailys.get(adapterPosition).setIsfav(mIsCollected);
+                                 mLieBiaoAdapter.notifyDataSetChanged();
+                                 mDialog.dismiss();
+                             }
+                         }
+                );
+    }
+
+    private void changeDianzan(final int adapterPosition, int id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("id", id + "");
+        String url = "";
+        if (mDianzan) {
+            url = MyContants.LXKURL + "daily/no-dianzan";
+        } else {
+            url = MyContants.LXKURL + "daily/dianzan";
+        }
+        OkGo.<DianZanbean>post(url)
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(EveryDayCommentActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 if (mDianzan) {
+                                     Drawable drawable = getResources().getDrawable(R.drawable.dianzan_yellow_big);
+                                     /// 这一步必须要做,否则不会显示.
+                                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                     mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                                 } else {
+                                     Drawable drawable = getResources().getDrawable(R.drawable.dianzan_shixin);
+                                     /// 这一步必须要做,否则不会显示.
+                                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                     mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                                 }
+                                 mDianzan = !mDianzan;
+                                 mDailys.get(adapterPosition).setIslive(mDianzan);
+                                 mLieBiaoAdapter.notifyDataSetChanged();
+                                 mDialog.dismiss();
+                             }
+                         }
+                );
     }
 
     private void showShareDialog() {

@@ -250,19 +250,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             mDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    if (position == 0) {
-                                        Intent intent = new Intent(mContext, ZhuanLanActivity.class);
-                                        intent.putExtra("buyed", false);
-                                        startActivity(intent);
-                                    } else if (position == 1) {
-                                        Intent intent = new Intent(mContext, ZhuanLanActivity.class);
-                                        intent.putExtra("buyed", true);
-                                        startActivity(intent);
-                                    } else {
-                                        Intent intent = new Intent(mContext, ZhuanLanActivity.class);
-                                        intent.putExtra("buyed", false);
-                                        startActivity(intent);
-                                    }
+                                    Intent intent = new Intent(mContext, ZhuanLanActivity.class);
+                                    intent.putExtra("id",mDaShiBanAdapter.getData().get(position).getId()+"");
+                                    startActivity(intent);
                                 }
                             });
                             mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, mXiaoke);
@@ -345,6 +335,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        initData();
                         springview.onFinishFreshAndLoad();
                     }
                 }, 2000);
@@ -352,16 +343,16 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
             @Override
             public void onLoadmore() {
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        springview.onFinishFreshAndLoad();
-//                    }
-//                }, 2000);
+                //                new Handler().postDelayed(new Runnable() {
+                //                    @Override
+                //                    public void run() {
+                //                        springview.onFinishFreshAndLoad();
+                //                    }
+                //                }, 2000);
             }
         });
         springview.setHeader(new MyHeader(mContext));
-//        springview.setFooter(new MyFooter(mContext));
+        //        springview.setFooter(new MyFooter(mContext));
     }
 
     private void initDialog() {
@@ -634,21 +625,25 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             case R.id.ll_gudian:
                 Intent intent = new Intent(mContext, GuDianActivity.class);
                 intent.putExtra("title", "古典");
+                intent.putExtra("type", "gudian");
                 startActivity(intent);
                 break;
             case R.id.ll_minzu:
                 Intent intent2 = new Intent(mContext, GuDianActivity.class);
                 intent2.putExtra("title", "民族");
+                intent2.putExtra("type", "minzu");
                 startActivity(intent2);
                 break;
             case R.id.ll_liuxing:
                 Intent intent3 = new Intent(mContext, GuDianActivity.class);
                 intent3.putExtra("title", "流行");
+                intent3.putExtra("type", "liuxing");
                 startActivity(intent3);
                 break;
             case R.id.ll_suyang:
                 Intent intent4 = new Intent(mContext, GuDianActivity.class);
                 intent4.putExtra("title", "素养");
+                intent4.putExtra("type", "suyang");
                 startActivity(intent4);
                 break;
             case R.id.ll_guanzhu:

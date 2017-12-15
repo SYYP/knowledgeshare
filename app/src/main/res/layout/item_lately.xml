@@ -8,12 +8,14 @@
         android:layout_height="wrap_content"
         android:padding="10dp">
         <TextView
+            android:id="@+id/tv_name"
             android:text="如何成为男高音"
             android:textColor="@color/textblack"
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
+            android:id="@+id/tv_time"
             android:text="今天"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
@@ -21,6 +23,7 @@
             android:layout_height="wrap_content"/>
     </RelativeLayout>
     <TextView
+        android:id="@+id/tv_description"
         android:text="如何成为男高音。。。。。。。"
         android:layout_centerVertical="true"
         android:paddingLeft="10dp"

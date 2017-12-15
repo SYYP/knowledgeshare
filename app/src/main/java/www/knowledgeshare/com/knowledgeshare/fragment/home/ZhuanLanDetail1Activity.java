@@ -92,7 +92,6 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
                         tv_collect.setCompoundDrawables(drawable, null, null, null);
                     }
                     isCollected = !isCollected;
-
                 }
             });
         }

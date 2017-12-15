@@ -86,7 +86,9 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
                                  mDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                         startActivity(new Intent(MusicMasterActivity.this, ZhuanLanActivity.class));
+                                         Intent intent = new Intent(MusicMasterActivity.this, ZhuanLanActivity.class);
+                                         intent.putExtra("id",mDaShiBanAdapter.getData().get(position).getId()+"");
+                                         startActivity(intent);
                                      }
                                  });
                              }

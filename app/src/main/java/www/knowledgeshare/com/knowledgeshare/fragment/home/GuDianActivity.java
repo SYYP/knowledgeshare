@@ -14,8 +14,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.youth.banner.Banner;
 
 import java.util.ArrayList;
@@ -23,8 +26,11 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.GuDianBean;
 import www.knowledgeshare.com.knowledgeshare.utils.BannerUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 
 import static com.taobao.accs.ACCSManager.mContext;
@@ -42,10 +48,14 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
     private RecyclerView recycler_yinyueke;
     private LinearLayout ll_yinyueke;
     private LinearLayout activity_gu_dian;
-    private List<String> bannerList=new ArrayList<>();
+    private List<String> bannerList = new ArrayList<>();
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private NestedScrollView nestView;
+    private List<GuDianBean.SlideEntity> mSlide;
+    private List<GuDianBean.XiaokeEntity> mXiaoke;
+    private List<GuDianBean.ZhuanlanEntity> mZhuanlan;
+    private DaShiBanAdapter mDaShiBanAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,74 +97,101 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
         recycler_dashiban.setNestedScrollingEnabled(false);
         recycler_yinyueke.setLayoutManager(new LinearLayoutManager(mContext));
         recycler_yinyueke.setNestedScrollingEnabled(false);
-        nestView= (NestedScrollView) findViewById(R.id.nestView);
+        nestView = (NestedScrollView) findViewById(R.id.nestView);
     }
 
     private void initData() {
         String title = getIntent().getStringExtra("title");
+        String type = getIntent().getStringExtra("type");
         tv_title.setText(title);
-        tv_zhuanlan_title.setText(title+"分类专栏介绍");
+        tv_zhuanlan_title.setText(title + "分类专栏介绍");
         ViewGroup.LayoutParams layoutParams = banner.getLayoutParams();
         layoutParams.height = MyUtils.getScreenWidth(this) / 2;
         banner.setLayoutParams(layoutParams);
-        BannerUtils.startBanner(banner,bannerList);
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        DaShiBanAdapter daShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban3, list);
-        recycler_dashiban.setAdapter(daShiBanAdapter);
-        daShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(GuDianActivity.this,ZhuanLanDetail1Activity.class));
-            }
-        });
-
-        YinYueKeAdapter yinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke2, list);
-        recycler_yinyueke.setAdapter(yinYueKeAdapter);
-        yinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(GuDianActivity.this,SoftMusicDetailActivity.class));
-            }
-        });
-        tv_zhuanlan_content.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
-                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
+        OkGo.<GuDianBean>post(MyContants.LXKURL + "index/"+type)
+                .tag(this)
+                .execute(new JsonCallback<GuDianBean>(GuDianBean.class) {
+                             @Override
+                             public void onSuccess(Response<GuDianBean> response) {
+                                 int code = response.code();
+                                 GuDianBean guDianBean = response.body();
+                                 tv_zhuanlan_content.setText(guDianBean.getIntroduce());
+                                 mSlide = guDianBean.getSlide();
+                                 if (bannerList != null) {
+                                     bannerList.clear();
+                                     for (int i = 0; i < mSlide.size(); i++) {
+                                         bannerList.add(mSlide.get(i).getImgurl());
+                                     }
+                                 }
+                                 BannerUtils.startBanner(banner, bannerList);
+                                 mXiaoke = guDianBean.getXiaoke();
+                                 mZhuanlan = guDianBean.getZhuanlan();
+                                 mDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban3, mZhuanlan);
+                                 recycler_dashiban.setAdapter(mDaShiBanAdapter);
+                                 mDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                     @Override
+                                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                         startActivity(new Intent(GuDianActivity.this, ZhuanLanDetail1Activity.class));
+                                     }
+                                 });
+                                 YinYueKeAdapter yinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke2, mXiaoke);
+                                 recycler_yinyueke.setAdapter(yinYueKeAdapter);
+                                 yinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                     @Override
+                                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                         startActivity(new Intent(GuDianActivity.this, SoftMusicDetailActivity.class));
+                                     }
+                                 });
+                             }
+                         }
+                );
     }
 
-    private class DaShiBanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class DaShiBanAdapter extends BaseQuickAdapter<GuDianBean.ZhuanlanEntity, BaseViewHolder> {
 
-        public DaShiBanAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public DaShiBanAdapter(@LayoutRes int layoutResId, @Nullable List<GuDianBean.ZhuanlanEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, GuDianBean.ZhuanlanEntity item) {
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-//            Glide.with(mContext).load().into(imageView);
+            Glide.with(mContext).load(item.getZl_img()).into(imageView);
+            helper.setText(R.id.tv_name, item.getZl_name())
+                    .setText(R.id.tv_introduce, item.getZl_introduce())
+                    .setText(R.id.tv_update_name, item.getZl_update_name())
+                    .setText(R.id.tv_update_time, item.getZl_update_time())
+                    .setText(R.id.tv_price, item.getZl_price());
             helper.getView(R.id.iv_bofang).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(GuDianActivity.this,ZhuanLanDetail2Activity.class));
+                    startActivity(new Intent(GuDianActivity.this, ZhuanLanDetail2Activity.class));
                 }
             });
         }
     }
 
-    private class YinYueKeAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class YinYueKeAdapter extends BaseQuickAdapter<GuDianBean.XiaokeEntity, BaseViewHolder> {
 
-        public YinYueKeAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public YinYueKeAdapter(@LayoutRes int layoutResId, @Nullable List<GuDianBean.XiaokeEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, GuDianBean.XiaokeEntity item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-//            Glide.with(mContext).load().into(imageView);
+            Glide.with(mContext).load(item.getXk_image()).into(imageView);
+            helper.setText(R.id.tv_buy_count, item.getBuy_count())
+                    .setText(R.id.tv_name, item.getXk_name())
+                    .setText(R.id.tv_jie_count, item.getNodule_count())
+                    .setText(R.id.tv_teacher_name, item.getTeacher_name())
+                    .setText(R.id.tv_price, item.getXk_price())
+                    .setText(R.id.tv_time, item.getTime_count())
+                    .setText(R.id.tv_teacher_tag, item.getXk_teacher_tags());
             helper.getView(R.id.iv_bofang).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(GuDianActivity.this,ZhuanLanDetail2Activity.class));
+                    startActivity(new Intent(GuDianActivity.this, ZhuanLanDetail2Activity.class));
                 }
             });
         }
