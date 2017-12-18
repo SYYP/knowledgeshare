@@ -23,6 +23,7 @@ public class FreeTryReadDetailBean {
      * id : 1
      */
     private String video_time;
+    private String imgurl;
     private String zl_price;
     private int zl_id;
     private String video_url;
@@ -34,6 +35,14 @@ public class FreeTryReadDetailBean {
     private String created_at;
     private List<CommentEntity> comment;
     private int id;
+
+    public String getImgurl() {
+        return imgurl;
+    }
+
+    public void setImgurl(String imgurl) {
+        this.imgurl = imgurl;
+    }
 
     public void setVideo_time(String video_time) {
         this.video_time = video_time;

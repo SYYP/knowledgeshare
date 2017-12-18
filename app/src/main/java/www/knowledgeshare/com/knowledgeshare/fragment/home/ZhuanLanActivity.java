@@ -26,6 +26,8 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.OrderBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.TimeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.ZhuanLanBean;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
@@ -51,6 +53,8 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
     private List<ZhuanLanBean.LatelyEntity> mLately;
     private LatelyAdapter mLatelyAdapter;
     private ZhuanLanBean mZhuanLanBean;
+    private String mId;
+    private String mTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +80,9 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initData() {
-        String id = getIntent().getStringExtra("id");
+        mId = getIntent().getStringExtra("id");
         HttpParams params = new HttpParams();
-        params.put("id", id);
+        params.put("id", mId);
         OkGo.<ZhuanLanBean>post(MyContants.LXKURL + "zl/show")
                 .tag(this)
                 .params(params)
@@ -92,19 +96,19 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
                                  tv_zhuanlanjianjie.setText(mZhuanLanBean.getZl_introduce());
                                  tv_readxuzhi.setText(mZhuanLanBean.getZl_look());
                                  tv_title.setText(mZhuanLanBean.getZl_name());
-                                 tv_dignyue_count.setText(mZhuanLanBean.getZl_buy_count()+"人订阅");
+                                 tv_dignyue_count.setText(mZhuanLanBean.getZl_buy_count() + "人订阅");
                                  mLately = mZhuanLanBean.getLately();
                                  mLatelyAdapter = new LatelyAdapter(R.layout.item_lately, mLately);
                                  recycler_lately.setAdapter(mLatelyAdapter);
                              }
                          }
                 );
-//        if (getIntent().getBooleanExtra("buyed",false)){
-//            tv_tryread.setText("阅读");
-//            tv_buy.setVisibility(View.GONE);
-//            tv_tryread.setBackgroundColor(getResources().getColor(R.color.text_red_dark));
-//            tv_tryread.setTextColor(getResources().getColor(R.color.white));
-//        }
+        //        if (getIntent().getBooleanExtra("buyed",false)){
+        //            tv_tryread.setText("阅读");
+        //            tv_buy.setVisibility(View.GONE);
+        //            tv_tryread.setBackgroundColor(getResources().getColor(R.color.text_red_dark));
+        //            tv_tryread.setTextColor(getResources().getColor(R.color.white));
+        //        }
     }
 
     private void initDialog() {
@@ -112,6 +116,18 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void showBuyDialog() {
+        //        order/expire-time
+        OkGo.<TimeBean>get(MyContants.LXKURL + "order/expire-time")
+                .tag(this)
+                .execute(new JsonCallback<TimeBean>(TimeBean.class) {
+                             @Override
+                             public void onSuccess(Response<TimeBean> response) {
+                                 int code = response.code();
+                                 TimeBean timeBean = response.body();
+                                 mTime = timeBean.getTime();
+                             }
+                         }
+                );
         mDialog = mBuilder.setViewId(R.layout.dialog_dingyue)
                 //设置dialogpadding
                 .setPaddingdp(10, 0, 10, 0)
@@ -126,6 +142,8 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
                 //设置监听事件
                 .builder();
         mDialog.show();
+        TextView tv_content = mDialog.getView(R.id.tv_content);
+        tv_content.setText("您将订阅从" + mTime + "时间内的《" + mZhuanLanBean.getZl_name() + "》");
         mDialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,6 +157,45 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
                 showPayStyleDialog();
             }
         });
+    }
+
+    private void pushOrder(final String type) {
+        HttpParams params = new HttpParams();
+        params.put("id", mId);
+        params.put("type", "zhuanlan");
+        params.put("from", "android");
+        OkGo.<OrderBean>post(MyContants.LXKURL + "order/buy")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<OrderBean>(OrderBean.class) {
+                             @Override
+                             public void onSuccess(Response<OrderBean> response) {
+                                 int code = response.code();
+                                 OrderBean orderBean = response.body();
+                                 String order_sn = orderBean.getOrder_sn();
+                                 goPay(order_sn, type);
+                             }
+                         }
+                );
+    }
+
+    private void goPay(String order_sn, String type) {
+        HttpParams params = new HttpParams();
+        params.put("order_sn", order_sn);
+        params.put("type", type);
+        params.put("from", "android");
+        OkGo.<OrderBean>post(MyContants.LXKURL + "order/pay")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<OrderBean>(OrderBean.class) {
+                             @Override
+                             public void onSuccess(Response<OrderBean> response) {
+                                 int code = response.code();
+                                 OrderBean orderBean = response.body();
+
+                             }
+                         }
+                );
     }
 
     private void showShareDialog() {
@@ -189,7 +246,22 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
+                pushOrder("1");
                 showChongzhiDialog();
+            }
+        });
+        mDialog.getView(R.id.rl_weixin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+                pushOrder("2");
+            }
+        });
+        mDialog.getView(R.id.rl_alipay).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+                pushOrder("3");
             }
         });
     }
@@ -278,9 +350,9 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
 
         @Override
         protected void convert(BaseViewHolder helper, ZhuanLanBean.LatelyEntity item) {
-            helper.setText(R.id.tv_name,item.getName())
-                    .setText(R.id.tv_time,item.getCreated_at())
-                    .setText(R.id.tv_description,item.getDescription());
+            helper.setText(R.id.tv_name, item.getName())
+                    .setText(R.id.tv_time, item.getCreated_at())
+                    .setText(R.id.tv_description, item.getDescription());
         }
     }
 
@@ -295,7 +367,8 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.tv_tryread:
                 Intent intent = new Intent(this, ZhuanLanDetail1Activity.class);
-                intent.putExtra("id",mZhuanLanBean.getId()+"");
+                intent.putExtra("id", mZhuanLanBean.getId() + "");
+                intent.putExtra("title", mZhuanLanBean.getZl_name());
                 startActivity(intent);
                 break;
             case R.id.tv_buy:

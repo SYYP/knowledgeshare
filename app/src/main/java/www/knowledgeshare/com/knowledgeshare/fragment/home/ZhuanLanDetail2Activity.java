@@ -88,6 +88,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     }
 
     private void initData() {
+        tv_title.setText(getIntent().getStringExtra("title"));
         String id = getIntent().getStringExtra("id");
         HttpParams params = new HttpParams();
         params.put("id", id);
@@ -101,7 +102,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                  int code = response.code();
                                  mFreeTryReadDetailBean = response.body();
                                  Glide.with(ZhuanLanDetail2Activity.this).load(mFreeTryReadDetailBean.getT_header()).into(iv_teacher_head);
-//                                 Glide.with(ZhuanLanDetail2Activity.this).load(mFreeTryReadDetailBean.get()).into(iv_beijing);
+                                 Glide.with(ZhuanLanDetail2Activity.this).load(mFreeTryReadDetailBean.getImgurl()).into(iv_beijing);
                                  tv_teacher_name.setText(mFreeTryReadDetailBean.getT_name());
                                  tv_content.setText(mFreeTryReadDetailBean.getDescription());
                                  tv_time1.setText(mFreeTryReadDetailBean.getCreated_at());
