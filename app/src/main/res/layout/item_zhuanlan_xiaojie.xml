@@ -19,6 +19,7 @@
             android:layout_marginTop="5dp"
             android:background="@color/text_red_dark"></View>
         <TextView
+            android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
@@ -31,12 +32,14 @@
         android:layout_height="1dp"
         android:background="@color/huise"></View>
     <ImageView
+        android:id="@+id/iv_tupian"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:scaleType="fitXY"
         android:src="@drawable/demo"/>
     <TextView
+        android:id="@+id/tv_introduce"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
@@ -55,6 +58,7 @@
         android:padding="15dp"
     >
         <TextView
+            android:id="@+id/tv_rss_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -64,7 +68,7 @@
             android:gravity="center"
             android:text="1223"/>
         <TextView
-            android:id="@+id/tv_collect"
+            android:id="@+id/tv_collect_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -75,6 +79,7 @@
             android:gravity="center"
             android:text="1223"/>
         <TextView
+            android:id="@+id/tv_look_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

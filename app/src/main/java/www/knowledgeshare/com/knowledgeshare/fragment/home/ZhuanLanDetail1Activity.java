@@ -1,7 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -11,26 +10,63 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeTryReadListBean;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 
 public class ZhuanLanDetail1Activity extends BaseActivity {
 
     private ImageView iv_back;
     private RecyclerView recycler;
     private boolean isCollected;
+    private List<FreeTryReadListBean.DataEntity> mData;
+    private MyAdapter mMyAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zhuan_lan_detail1);
         initView();
+        initData();
+    }
+
+    private void initData() {
+        String id = getIntent().getStringExtra("id");
+        HttpParams params = new HttpParams();
+        params.put("id", id);
+        OkGo.<FreeTryReadListBean>post(MyContants.LXKURL + "zl/free-trials")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<FreeTryReadListBean>(FreeTryReadListBean.class) {
+                             @Override
+                             public void onSuccess(Response<FreeTryReadListBean> response) {
+                                 int code = response.code();
+                                 FreeTryReadListBean freeTryReadListBean = response.body();
+                                 mData = freeTryReadListBean.getData();
+                                 mMyAdapter = new MyAdapter(R.layout.item_zhuanlan_xiaojie, mData);
+                                 recycler.setAdapter(mMyAdapter);
+                                 mMyAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                     @Override
+                                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                         Intent intent = new Intent(ZhuanLanDetail1Activity.this, ZhuanLanDetail2Activity.class);
+                                         intent.putExtra("id",mData.get(position).getId()+"");
+                                         startActivity(intent);
+                                     }
+                                 });
+                             }
+                         }
+                );
     }
 
     private void initView() {
@@ -43,18 +79,6 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
         });
         recycler = (RecyclerView) findViewById(R.id.recycler);
         recycler.setLayoutManager(new LinearLayoutManager(this));
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        MyAdapter myAdapter = new MyAdapter(R.layout.item_zhuanlan_xiaojie, list);
-        recycler.setAdapter(myAdapter);
-        myAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(ZhuanLanDetail1Activity.this, ZhuanLanDetail2Activity.class));
-            }
-        });
         recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -68,30 +92,37 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
         });
     }
 
-    private class MyAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class MyAdapter extends BaseQuickAdapter<FreeTryReadListBean.DataEntity, BaseViewHolder> {
 
-        public MyAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public MyAdapter(@LayoutRes int layoutResId, @Nullable List<FreeTryReadListBean.DataEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
-            final TextView tv_collect = helper.getView(R.id.tv_collect);
-            tv_collect.setOnClickListener(new View.OnClickListener() {
+        protected void convert(BaseViewHolder helper, FreeTryReadListBean.DataEntity item) {
+            final TextView tv_collect_count = helper.getView(R.id.tv_collect_count);
+            ImageView iv_tupian=helper.getView(R.id.iv_tupian);
+            Glide.with(mContext).load(item.getImgurl()).into(iv_tupian);
+            helper.setText(R.id.tv_name,item.getName())
+                    .setText(R.id.tv_introduce,item.getDescription())
+                    .setText(R.id.tv_look_count, item.getIs_view() == 0 ? item.getView_count() + "" : item.getView_count_true() + "")
+                    .setText(R.id.tv_collect_count, item.getIs_collect() == 0 ? item.getCollect_count() + "" : item.getCollect_count_true() + "")
+                    .setText(R.id.tv_rss_count, item.getIs_rss() == 0 ? item.getRss_count() + "" : item.getRss_count_true() + "");
+            tv_collect_count.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (isCollected) {
-                        Drawable drawable = getResources().getDrawable(R.drawable.zhuanlan_collect);
-                        /// 这一步必须要做,否则不会显示.
-                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                        tv_collect.setCompoundDrawables(drawable, null, null, null);
-                    } else {
-                        Drawable drawable = getResources().getDrawable(R.drawable.music_collected);
-                        /// 这一步必须要做,否则不会显示.
-                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                        tv_collect.setCompoundDrawables(drawable, null, null, null);
-                    }
-                    isCollected = !isCollected;
+//                    if (isCollected) {
+//                        Drawable drawable = getResources().getDrawable(R.drawable.zhuanlan_collect);
+//                        /// 这一步必须要做,否则不会显示.
+//                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+//                        tv_collect.setCompoundDrawables(drawable, null, null, null);
+//                    } else {
+//                        Drawable drawable = getResources().getDrawable(R.drawable.music_collected);
+//                        /// 这一步必须要做,否则不会显示.
+//                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+//                        tv_collect.setCompoundDrawables(drawable, null, null, null);
+//                    }
+//                    isCollected = !isCollected;
                 }
             });
         }

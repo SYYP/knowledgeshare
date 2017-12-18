@@ -130,6 +130,8 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
             url = MyContants.LXKURL + "free/draft-show";
         } else if (mType.equals("everydaycomment")) {
             url = MyContants.LXKURL + "daily/draft-show";
+        }else if (mType.equals("softmusicdetail")){
+            url = MyContants.LXKURL + "xk/draft-show";
         }
         OkGo.<WenGaoBean>post(url)
                 .tag(this)
@@ -222,6 +224,12 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
                 url = MyContants.LXKURL + "daily/no-favorite";
             } else {
                 url = MyContants.LXKURL + "daily/favorite";
+            }
+        }else if (mType.equals("softmusicdetail")) {
+            if (isGuanzhu) {
+                url = MyContants.LXKURL + "xk/no-favorite";
+            } else {
+                url = MyContants.LXKURL + "xk/favorite";
             }
         }
 

@@ -43,11 +43,11 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.DownLoadActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
-import www.knowledgeshare.com.knowledgeshare.bean.BoFangBean;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeDaShiBanNewBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBannerBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeDaShiBanNewBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.LikeMoreBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BannerUtils;
@@ -105,8 +105,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private TextView tv_yinyueke_lookmore;
     private boolean isBofang;
     private Animation mRotate_anim;
-    private List<BoFangBean> mList3;
-    private List<BoFangBean> mList4;
     private String mytype;
     private int myposition;
     private List<HomeBean.DailyEntity> mDaily;
@@ -116,6 +114,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private List<HomeBean.ZhuanlanEntity> mZhuanlan;
     private DaShiBanNewAdapter mDaShiBanNewAdapter;
     private LikeNewAdapter mLikeNewAdapter;
+    private List<HomeBean.FreeEntity.ChildEntity> mMFreeChild;
 
     @Override
     protected void lazyLoad() {
@@ -251,7 +250,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(mContext, ZhuanLanActivity.class);
-                                    intent.putExtra("id",mDaShiBanAdapter.getData().get(position).getId()+"");
+                                    intent.putExtra("id", mDaShiBanAdapter.getData().get(position).getId() + "");
                                     startActivity(intent);
                                 }
                             });
@@ -260,7 +259,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             mYinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    startActivity(new Intent(mContext, SoftMusicDetailActivity.class));
+                                    Intent intent = new Intent(mContext, SoftMusicDetailActivity.class);
+                                    intent.putExtra("id",mYinYueKeAdapter.getData().get(position).getXk_id()+"");
+                                    startActivity(intent);
                                 }
                             });
                             mLikeAdapter = new LikeAdapter(R.layout.item_like, mLive);
@@ -272,7 +273,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                 }
                             });
                             Glide.with(mContext).load(mFree.getT_header()).into(iv_zhuanlan_head);
-                            mZhuanLanAdapter = new ZhuanLanAdapter(R.layout.item_zhuanlan, mFree.getChild());
+                            mMFreeChild = mFree.getChild();
+                            mZhuanLanAdapter = new ZhuanLanAdapter(R.layout.item_zhuanlan, mMFreeChild);
                             recycler_zhuanlan.setAdapter(mZhuanLanAdapter);
 
                             mCommentAdapter = new CommentAdapter(R.layout.item_zhuanlan, mDaily);
@@ -282,11 +284,30 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         }
                     }
                 });
-        ViewGroup.LayoutParams layoutParams = banner.getLayoutParams();
-        layoutParams.height = MyUtils.getScreenWidth(mContext) / 2;
-        banner.setLayoutParams(layoutParams);
-        BannerUtils.startBanner(banner, bannerList);
+        OkGo.<HomeBannerBean>post(MyContants.LXKURL + "bootstrappers")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<HomeBannerBean>(HomeBannerBean.class) {
+                    @Override
+                    public void onSuccess(Response<HomeBannerBean> response) {
+                        int code = response.code();
+                        HomeBannerBean bannerBean = response.body();
+                        if (response.code() >= 200 && response.code() <= 204) {
+                            Logger.e(code + "");
+                            List<HomeBannerBean.HomeslideEntity> homeslide = bannerBean.getHomeslide();
+                            for (int i = 0; i < homeslide.size(); i++) {
+                                String imgurl = homeslide.get(i).getImgurl();
+                                bannerList.add(imgurl);
+                            }
+                            ViewGroup.LayoutParams layoutParams = banner.getLayoutParams();
+                            layoutParams.height = MyUtils.getScreenWidth(mContext) / 2;
+                            banner.setLayoutParams(layoutParams);
+                            BannerUtils.startBanner(banner, bannerList);
+                        } else {
 
+                        }
+                    }
+                });
         initDialog();
         initAnim();
         initListener();
@@ -379,7 +400,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         }
 
         @Override
-        protected void convert(final BaseViewHolder helper, HomeBean.FreeEntity.ChildEntity item) {
+        protected void convert(final BaseViewHolder helper, final HomeBean.FreeEntity.ChildEntity item) {
             final ImageView iv_pause = helper.getView(R.id.iv_pause);
             //            if (item.isChecked()) {
             //                iv_pause.setImageResource(R.drawable.bofang_yellow);
@@ -391,7 +412,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 @Override
                 public void onClick(View view) {
                     refreshbofang("zhuanlan", helper.getAdapterPosition());
-                    gobofang();
+                    gobofang(item.getVideo_url());
                 }
             });
         }
@@ -404,7 +425,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         }
 
         @Override
-        protected void convert(final BaseViewHolder helper, HomeBean.DailyEntity item) {
+        protected void convert(final BaseViewHolder helper, final HomeBean.DailyEntity item) {
             helper.getView(R.id.tv_teacher_name).setVisibility(View.VISIBLE);
             final ImageView iv_pause = helper.getView(R.id.iv_pause);
             //            if (item.isChecked()) {
@@ -418,7 +439,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 @Override
                 public void onClick(View view) {
                     refreshbofang("comment", helper.getAdapterPosition());
-                    gobofang();
+                    gobofang(item.getVideo_url());
                 }
             });
         }
@@ -523,7 +544,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         }
     }
 
-    private void gobofang() {
+    private void gobofang(final String video_url) {
         isBofang = false;
         int apnType = NetWorkUtils.getAPNType(mContext);
         if (apnType == 0) {
@@ -532,8 +553,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             if (SpUtils.getBoolean(mContext, "nowifiallowlisten", false)) {//记住用户允许流量播放
                 isBofang = true;
                 rl_bofang.setVisibility(View.VISIBLE);
+                mMyBinder.setMusicUrl(video_url);
                 //                    Glide.with(mContext).load().into(iv_bo_head);
-                //                    mMyBinder.playMusic();
+                mMyBinder.playMusic();
                 mDialog.dismiss();
                 EventBean eventBean = new EventBean("rotate");
                 EventBus.getDefault().postSticky(eventBean);
@@ -545,8 +567,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     public void onClick(View v) {
                         isBofang = true;
                         rl_bofang.setVisibility(View.VISIBLE);
+                        mMyBinder.setMusicUrl(video_url);
                         //                    Glide.with(mContext).load().into(iv_bo_head);
-                        //                    mMyBinder.playMusic();
+                        mMyBinder.playMusic();
                         mDialog.dismiss();
                         EventBean eventBean = new EventBean("rotate");
                         EventBus.getDefault().postSticky(eventBean);
@@ -568,7 +591,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             //        Glide.with(mContext).load().into(iv_bo_head);
             EventBean eventBean = new EventBean("rotate");
             EventBus.getDefault().postSticky(eventBean);
-            //            mMyBinder.playMusic();
+            mMyBinder.setMusicUrl(video_url);
+            mMyBinder.playMusic();
         }
     }
 
@@ -576,26 +600,26 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mytype = type;
         myposition = adapterPosition;
         if (type.equals("comment")) {
-            for (int i = 0; i < mList3.size(); i++) {
-                mList3.get(i).setChecked(false);
+            for (int i = 0; i < mMFreeChild.size(); i++) {
+                mMFreeChild.get(i).setChecked(false);
             }
-            for (int i = 0; i < mList4.size(); i++) {
+            for (int i = 0; i < mDaily.size(); i++) {
                 if (i == adapterPosition) {
-                    mList4.get(i).setChecked(true);
+                    mDaily.get(i).setChecked(true);
                 } else {
-                    mList4.get(i).setChecked(false);
+                    mDaily.get(i).setChecked(false);
                 }
             }
         } else {
-            for (int i = 0; i < mList3.size(); i++) {
+            for (int i = 0; i < mMFreeChild.size(); i++) {
                 if (i == adapterPosition) {
-                    mList3.get(i).setChecked(true);
+                    mMFreeChild.get(i).setChecked(true);
                 } else {
-                    mList3.get(i).setChecked(false);
+                    mMFreeChild.get(i).setChecked(false);
                 }
             }
-            for (int i = 0; i < mList4.size(); i++) {
-                mList4.get(i).setChecked(false);
+            for (int i = 0; i < mDaily.size(); i++) {
+                mDaily.get(i).setChecked(false);
             }
         }
         mZhuanLanAdapter.notifyDataSetChanged();
@@ -603,11 +627,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void allpause() {
-        for (int i = 0; i < mList3.size(); i++) {
-            mList3.get(i).setChecked(false);
+        for (int i = 0; i < mMFreeChild.size(); i++) {
+            mMFreeChild.get(i).setChecked(false);
         }
-        for (int i = 0; i < mList4.size(); i++) {
-            mList4.get(i).setChecked(false);
+        for (int i = 0; i < mDaily.size(); i++) {
+            mDaily.get(i).setChecked(false);
         }
         mZhuanLanAdapter.notifyDataSetChanged();
         mCommentAdapter.notifyDataSetChanged();
@@ -650,7 +674,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, MyGuanzhuActivity.class));
                 break;
             case R.id.tv_lianxubofang:
-                gobofang();
+                //                gobofang(item.getVideo_url());
                 break;
             case R.id.iv_zhuanlan_head:
                 break;

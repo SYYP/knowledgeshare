@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -24,12 +23,11 @@ public class MediaService extends Service {
     public MediaPlayer mMediaPlayer = new MediaPlayer();
     private boolean isPlaying = false;
     private boolean isPrepared;
+    private String mMusicUrl;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        iniMediaPlayerFile();
-        initListener();
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
@@ -55,6 +53,7 @@ public class MediaService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        initListener();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -87,7 +86,6 @@ public class MediaService extends Service {
                 //                Toast.makeText(MyApplication.getGloableContext(), "异常", Toast.LENGTH_SHORT).show();
                 mMediaPlayer = null;
                 mMediaPlayer = new MediaPlayer();
-                iniMediaPlayerFile();
                 isPlaying = mMediaPlayer.isPlaying();
             }
             if (!isPlaying) {
@@ -103,7 +101,6 @@ public class MediaService extends Service {
                 //                Toast.makeText(MyApplication.getGloableContext(), "异常", Toast.LENGTH_SHORT).show();
                 mMediaPlayer = null;
                 mMediaPlayer = new MediaPlayer();
-                iniMediaPlayerFile();
             }
             return mMediaPlayer.isPlaying();
         }
@@ -126,7 +123,6 @@ public class MediaService extends Service {
             isPlaying = mMediaPlayer.isPlaying();
             if (!isPlaying) {
                 mMediaPlayer.reset();
-                iniMediaPlayerFile();
             }
         }
 
@@ -149,7 +145,6 @@ public class MediaService extends Service {
             if (mMediaPlayer != null) {
                 //切换歌曲reset()很重要很重要很重要，没有会报IllegalStateException
                 mMediaPlayer.reset();
-                iniMediaPlayerFile();
                 playMusic();
             }
         }
@@ -160,7 +155,6 @@ public class MediaService extends Service {
         public void preciousMusic() {
             if (mMediaPlayer != null) {
                 mMediaPlayer.reset();
-                iniMediaPlayerFile();
                 playMusic();
             }
         }
@@ -198,23 +192,24 @@ public class MediaService extends Service {
             mMediaPlayer.seekTo(msec);
         }
 
-    }
-
-    /**
-     * 添加file文件到MediaPlayer对象并且准备播放音频
-     */
-    public void iniMediaPlayerFile() {
-        //获取文件路径
-        try {
-            //此处的两个方法需要捕获IO异常
-            //设置音频文件到MediaPlayer对象中
-            Uri uri = Uri.parse("android.resource://" + MyApplication.getGloableContext().getPackageName() + "/" + R.raw.music1);
-            mMediaPlayer.setDataSource(MyApplication.getGloableContext(), uri);
-            //让MediaPlayer对象准备
-            mMediaPlayer.prepare();
-        } catch (IOException e) {
-            //            Log.d(TAG, "设置资源，准备阶段出错");
-            e.printStackTrace();
+        /**
+         * 添加file文件到MediaPlayer对象并且准备播放音频
+         */
+        public void setMusicUrl(String musicUrl) {
+            mMusicUrl=musicUrl;
+            //获取文件路径
+            try {
+                //此处的两个方法需要捕获IO异常
+                //设置音频文件到MediaPlayer对象中
+                //            Uri uri = Uri.parse("android.resource://" + MyApplication.getGloableContext().getPackageName() + "/" + R.raw.music1);
+                mMediaPlayer.setDataSource(musicUrl);
+                //让MediaPlayer对象准备
+                mMediaPlayer.prepare();
+            } catch (IOException e) {
+                //            Log.d(TAG, "设置资源，准备阶段出错");
+                e.printStackTrace();
+            }
         }
     }
+
 }

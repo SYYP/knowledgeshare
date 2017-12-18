@@ -18,10 +18,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +34,11 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.SearchHistoryEntity;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HotBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SearchBean;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SoftKeyboardTool;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
@@ -44,15 +53,21 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private ImageView iv_delete;
     private RecyclerView recycler_lishi;
     private RecyclerView recycler_hot;
-    private List<String> hotList = new ArrayList<>();
+    private List<String> hotNameList = new ArrayList<>();
+    private List<String> hotIdsList = new ArrayList<>();
     private RecyclerHistoryAdapter mHistoryAdapter;
-//    private RecyclerHotAdapter mHotAdapter;
+    //    private RecyclerHotAdapter mHotAdapter;
     private LinearLayout ll_lishi, ll_hot, ll_root_view, ll_result;
     private List<SearchHistoryEntity> mHistoryList = new ArrayList<>();
     private int position;
     private RecyclerView recycler_dashiban;
     private RecyclerView recycler_yinyueke;
     private FluidLayout liushiview;
+    private List<SearchBean.XiaokeEntity> mXiaoke;
+    private List<SearchBean.ZhuanlanEntity> mZhuanlan;
+    private DaShiBanAdapter mDaShiBanAdapter;
+    private YinYueKeAdapter mYinYueKeAdapter;
+    private DaShiBanAdapter mMDaShiBanAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,26 +189,50 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void doSearch(final String content) {
-        ll_lishi.setVisibility(View.GONE);
-        ll_hot.setVisibility(View.GONE);
-        doSavehistory(content);
-        ll_result.setVisibility(View.VISIBLE);
-        DaShiBanAdapter daShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban, hotList);
-        recycler_dashiban.setAdapter(daShiBanAdapter);
-        daShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(SearchActivity.this,ZhuanLanActivity.class));
-            }
-        });
-        YinYueKeAdapter yinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, hotList);
-        recycler_yinyueke.setAdapter(yinYueKeAdapter);
-        yinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(SearchActivity.this,SoftMusicDetailActivity.class));
-            }
-        });
+        HttpParams params = new HttpParams();
+        params.put("keyword", content);
+        OkGo.<SearchBean>get(MyContants.LXKURL + "search")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<SearchBean>(SearchBean.class) {
+                    @Override
+                    public void onSuccess(Response<SearchBean> response) {
+                        int code = response.code();
+                        if (response.code() >= 200 && response.code() <= 204) {
+                            Logger.e(code + "");
+                            SearchBean searchBean = response.body();
+                            mXiaoke = searchBean.getXiaoke();
+                            mZhuanlan = searchBean.getZhuanlan();
+                            if (mZhuanlan.size() > 0 || mXiaoke.size() > 0) {
+                                ll_lishi.setVisibility(View.GONE);
+                                ll_hot.setVisibility(View.GONE);
+                                doSavehistory(content);
+                                ll_result.setVisibility(View.VISIBLE);
+                                mMDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban, mZhuanlan);
+                                recycler_dashiban.setAdapter(mMDaShiBanAdapter);
+                                mMDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                        Intent intent = new Intent(SearchActivity.this, ZhuanLanActivity.class);
+                                        intent.putExtra("id", mMDaShiBanAdapter.getData().get(position).getId() + "");
+                                        startActivity(intent);
+                                    }
+                                });
+                                mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, mXiaoke);
+                                recycler_yinyueke.setAdapter(mYinYueKeAdapter);
+                                mYinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                        Intent intent = new Intent(mContext, SoftMusicDetailActivity.class);
+                                        Intent intent1 = intent.putExtra("id", mYinYueKeAdapter.getData().get(position).getXk_id() + "");
+                                        startActivity(intent);
+                                    }
+                                });
+                            }
+                        } else {
+                        }
+                    }
+                });
     }
 
     private void initData() {
@@ -215,20 +254,37 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             iv_delete.setVisibility(View.GONE);
         }
 
-        hotList.add("轻松音乐课");
-        hotList.add("轻松音乐课");
-        hotList.add("轻松音乐课");
-        hotList.add("轻松音乐课");
-        hotList.add("轻松音乐课");
-        hotList.add("轻松音乐课");
-//        mHotAdapter = new RecyclerHotAdapter(R.layout.search_hot_item, hotList);
-//        recycler_hot.setAdapter(mHotAdapter);
-//        mHotAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-//            }
-//        });
-        setHot();
+
+        //        mHotAdapter = new RecyclerHotAdapter(R.layout.search_hot_item, hotNameList);
+        //        recycler_hot.setAdapter(mHotAdapter);
+        //        mHotAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        //            @Override
+        //            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        //            }
+        //        });
+        OkGo.<HotBean>get(MyContants.LXKURL + "hot")
+                .tag(this)
+                .execute(new JsonCallback<HotBean>(HotBean.class) {
+                    @Override
+                    public void onSuccess(Response<HotBean> response) {
+                        int code = response.code();
+                        if (response.code() >= 200 && response.code() <= 204) {
+                            Logger.e(code + "");
+                            HotBean hotBean = response.body();
+                            List<HotBean.DataEntity> hotBeanData = hotBean.getData();
+                            if (hotBeanData != null && hotBeanData.size() > 0) {
+                                for (int i = 0; i < hotBeanData.size(); i++) {
+                                    String name = hotBeanData.get(i).getName();
+                                    String id = hotBeanData.get(i).getId() + "";
+                                    hotNameList.add(name);
+                                    hotIdsList.add(id);
+                                }
+                                setHot();
+                            }
+                        } else {
+                        }
+                    }
+                });
     }
 
     class RecyclerHistoryAdapter extends BaseQuickAdapter<SearchHistoryEntity, BaseViewHolder> {
@@ -271,71 +327,66 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     private void setHot() {
         liushiview.removeAllViews();
-        for (int i = 0; i < hotList.size(); i++) {
+        for (int i = 0; i < hotNameList.size(); i++) {
             TextView tv = (TextView) View.inflate(this, R.layout.search_hot_item, null);
-            tv.setText(hotList.get(i));
+            tv.setText(hotNameList.get(i));
             FluidLayout.LayoutParams params = new FluidLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
             );
             params.setMargins(12, 12, 12, 12);
-            liushiview.addView(tv,params);
+            liushiview.addView(tv, params);
+            final int finalI = i;
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ll_lishi.setVisibility(View.GONE);
-                    ll_hot.setVisibility(View.GONE);
-                    ll_result.setVisibility(View.VISIBLE);
-                    DaShiBanAdapter daShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban, hotList);
-                    recycler_dashiban.setAdapter(daShiBanAdapter);
-                    daShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                            startActivity(new Intent(SearchActivity.this,ZhuanLanActivity.class));
-                        }
-                    });
-                    YinYueKeAdapter yinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, hotList);
-                    recycler_yinyueke.setAdapter(yinYueKeAdapter);
-                    yinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                            startActivity(new Intent(SearchActivity.this,SoftMusicDetailActivity.class));
-                        }
-                    });
+                    doSearch(hotNameList.get(finalI));
                 }
             });
         }
     }
 
-    private class DaShiBanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class DaShiBanAdapter extends BaseQuickAdapter<SearchBean.ZhuanlanEntity, BaseViewHolder> {
 
-        public DaShiBanAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public DaShiBanAdapter(@LayoutRes int layoutResId, @Nullable List<SearchBean.ZhuanlanEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, SearchBean.ZhuanlanEntity item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
             ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-            layoutParams.height = MyUtils.dip2px(SearchActivity.this,90);
+            layoutParams.height = MyUtils.dip2px(SearchActivity.this, 90);
             imageView.setLayoutParams(layoutParams);
-//            Glide.with(mContext).load().into(imageView);
+            Glide.with(mContext).load(item.getZl_img()).into(imageView);
+            helper.setText(R.id.tv_name, item.getZl_name())
+                    .setText(R.id.tv_introduce, item.getZl_introduce())
+                    .setText(R.id.tv_update_name, item.getZl_update_name())
+                    .setText(R.id.tv_update_time, item.getZl_update_time())
+                    .setText(R.id.tv_price, item.getZl_price());
         }
     }
 
-    private class YinYueKeAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class YinYueKeAdapter extends BaseQuickAdapter<SearchBean.XiaokeEntity, BaseViewHolder> {
 
-        public YinYueKeAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public YinYueKeAdapter(@LayoutRes int layoutResId, @Nullable List<SearchBean.XiaokeEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, SearchBean.XiaokeEntity item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
             ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-            layoutParams.height = MyUtils.dip2px(SearchActivity.this,130);
+            layoutParams.height = MyUtils.dip2px(SearchActivity.this, 130);
             imageView.setLayoutParams(layoutParams);
-//            Glide.with(mContext).load().into(imageView);
+            Glide.with(mContext).load(item.getXk_image()).into(imageView);
+            helper.setText(R.id.tv_buy_count, item.getBuy_count())
+                    .setText(R.id.tv_name, item.getXk_name())
+                    .setText(R.id.tv_jie_count, item.getNodule_count())
+                    .setText(R.id.tv_teacher_name, item.getTeacher_name())
+                    .setText(R.id.tv_price, item.getXk_price())
+                    .setText(R.id.tv_time, item.getTime_count())
+                    .setText(R.id.tv_teacher_tag, item.getXk_teacher_tags());
         }
     }
 

@@ -90,6 +90,7 @@
                         android:layout_height="150dp"
                         android:visibility="gone"></WebView>
                     <ImageView
+                        android:id="@+id/iv_beijing"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -97,6 +98,7 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/demo"/>
                     <TextView
+                        android:id="@+id/tv_content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
@@ -185,8 +187,10 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_liuyan"
                     android:layout_width="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_circle_white"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"></android.support.v7.widget.RecyclerView>
+                    ></android.support.v7.widget.RecyclerView>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
     </LinearLayout>
