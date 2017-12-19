@@ -38,6 +38,10 @@
                 android:layout_centerVertical="true"
                 android:src="@drawable/shopcar_white"/>
         </RelativeLayout>
+        <com.liaoinstan.springview.widget.SpringView
+            android:id="@+id/springview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/nestView"
             android:layout_width="match_parent"
@@ -55,7 +59,7 @@
                     <ImageView
                         android:id="@+id/iv_beijing"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="180dp"
                         android:scaleType="fitXY"
                         android:src="@drawable/demo"/>
                     <LinearLayout
@@ -328,6 +332,7 @@
                 </LinearLayout>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
+        </com.liaoinstan.springview.widget.SpringView>
     </LinearLayout>
     <LinearLayout
         android:layout_gravity="bottom"

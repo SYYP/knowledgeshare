@@ -269,7 +269,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             mLikeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    startActivity(new Intent(mContext, LikeDetailActivity.class));
+                                    Intent intent = new Intent(mContext, LikeDetailActivity.class);
+                                    intent.putExtra("id",mLikeAdapter.getData().get(position).getXk_id()+"");
+                                    startActivity(intent);
                                 }
                             });
                             Glide.with(mContext).load(mFree.getT_header()).into(iv_zhuanlan_head);

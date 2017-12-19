@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -18,20 +19,34 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.liaoinstan.springview.container.DefaultFooter;
+import com.liaoinstan.springview.widget.SpringView;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.ShoppingCartActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.CommentMoreBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicDetailBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
 public class LikeDetailActivity extends BaseActivity implements View.OnClickListener {
     private ImageView iv_back;
@@ -57,6 +72,17 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
     private NestedScrollView nestView;
     private boolean mIsCollected;
     private boolean mDianzan;
+    private SpringView springview;
+    private SoftMusicDetailBean mMusicDetailBean;
+    private SoftMusicDetailBean.TeacherEntity mTeacher;
+    private int mTeacher_zan_count;
+    private List<SoftMusicDetailBean.ChildEntity> mChild;
+    private LieBiaoAdapter mLieBiaoAdapter;
+    private List<CommentMoreBean.DataEntity> mComment;
+    private LiuYanAdapter mLiuYanAdapter;
+    private int lastID;
+    private TextView mTv_collect;
+    private TextView mTv_dianzan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +92,35 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         initDialog();
         initData();
         initMusic();
+        initListener();
+
+    }
+
+    private void initListener() {
+        springview.setType(SpringView.Type.FOLLOW);
+        springview.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        springview.onFinishFreshAndLoad();
+                    }
+                }, 2000);
+            }
+
+            @Override
+            public void onLoadmore() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadMoreComment(lastID + "");
+                    }
+                }, 500);
+            }
+        });
+        springview.setHeader(new MyHeader(this));
+        springview.setFooter(new DefaultFooter(this));
     }
 
     private void initView() {
@@ -103,6 +158,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         iv_guanzhu.setOnClickListener(this);
         iv_dianzan = (ImageView) findViewById(R.id.iv_dianzan);
         iv_dianzan.setOnClickListener(this);
+        springview = (SpringView) findViewById(R.id.springview);
         nestView = (NestedScrollView) findViewById(R.id.nestView);
         nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -117,70 +173,144 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
     }
 
     private void initData() {
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        LieBiaoAdapter lieBiaoAdapter = new LieBiaoAdapter(R.layout.item_like_liebiao, list);
-        recycler_free.setAdapter(lieBiaoAdapter);
-        lieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (position != 0) {
-                    showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
-                } else {
-                    //                    mMyBinder.playMusic();
-                    setISshow(true);
-                    ClickPopShow();
-                }
-            }
-        });
-        LiuYanAdapter liuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan, list);
-        recycler_liuyan.setAdapter(liuYanAdapter);
-        tv_teacher_intro.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
-                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
-        tv_shiyirenqun.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
-                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
-        tv_readxuzhi.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
-                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
+        String id = getIntent().getStringExtra("id");
+        HttpParams params = new HttpParams();
+        params.put("id", id);
+        params.put("userid", SpUtils.getString(this, "id", ""));
+        OkGo.<SoftMusicDetailBean>post(MyContants.LXKURL + "xk/show")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<SoftMusicDetailBean>(SoftMusicDetailBean.class) {
+                             @Override
+                             public void onSuccess(Response<SoftMusicDetailBean> response) {
+                                 int code = response.code();
+                                 mMusicDetailBean = response.body();
+                                 Glide.with(LikeDetailActivity.this).load(mMusicDetailBean.getImgurl()).into(iv_beijing);
+                                 mTeacher = mMusicDetailBean.getTeacher();
+                                 tv_teacher_intro.setText(mTeacher.getT_introduce());
+                                 isGuanzhu = mTeacher.isIsfollow();
+                                 if (isGuanzhu) {
+                                     iv_guanzhu.setImageResource(R.drawable.free_guanzhu);
+                                     tv_guanzhu.setText("已关注");
+                                 } else {
+                                     iv_guanzhu.setImageResource(R.drawable.free_quxiaoguanzhu);
+                                     tv_guanzhu.setText("关注");
+                                 }
+                                 isZan = mTeacher.isIslive();
+                                 if (isZan) {
+                                     iv_dianzan.setImageResource(R.drawable.free_yizan);
+                                 } else {
+                                     iv_dianzan.setImageResource(R.drawable.free_dianzan);
+                                 }
+                                 tv_buy.setText("购买："+mMusicDetailBean.getXk_price());
+                                 mTeacher_zan_count = mTeacher.getT_live();
+                                 tv_dianzan_count.setText(mTeacher_zan_count + "");
+                                 tv_shiyirenqun.setText(mMusicDetailBean.getXk_suitable());
+                                 tv_readxuzhi.setText(mMusicDetailBean.getXk_rss());
+                                 mChild = mMusicDetailBean.getChild();
+                                 mLieBiaoAdapter = new LieBiaoAdapter(R.layout.item_like_liebiao, mChild);
+                                 mLieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                     @Override
+                                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                         if (position != 0) {
+                                             showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
+                                         } else {
+                                             //                    mMyBinder.playMusic();
+                                             setISshow(true);
+                                             ClickPopShow();
+                                         }
+                                     }
+                                 });
+                                 recycler_free.setAdapter(mLieBiaoAdapter);
+                                 loadMoreComment("");
+                             }
+                         }
+                );
+    }
+
+    private void loadMoreComment(String after) {
+        HttpParams params = new HttpParams();
+        params.put("userid", SpUtils.getString(this, "id", ""));
+        params.put("after", after);
+        OkGo.<CommentMoreBean>post(MyContants.LXKURL + "xk/more-comment")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<CommentMoreBean>(CommentMoreBean.class) {
+                    @Override
+                    public void onSuccess(Response<CommentMoreBean> response) {
+                        int code = response.code();
+                        CommentMoreBean commentMoreBean = response.body();
+                        if (response.code() >= 200 && response.code() <= 204) {
+                            Logger.e(code + "");
+                            List<CommentMoreBean.DataEntity> data = commentMoreBean.getData();
+                            if (mComment == null || mComment.size() == 0) {
+                                mComment = data;
+                                mLiuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan, mComment);
+                                recycler_liuyan.setAdapter(mLiuYanAdapter);
+                            } else {
+                                if (data == null || data.size() == 0) {
+                                    Toast.makeText(LikeDetailActivity.this, "已无更多评论", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    mComment.addAll(data);
+                                    mLiuYanAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        } else {
+                        }
+                    }
+                });
+        springview.onFinishFreshAndLoad();
     }
 
     private void initDialog() {
         mBuilder = new BaseDialog.Builder(this);
     }
 
-    private class LieBiaoAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class LieBiaoAdapter extends BaseQuickAdapter<SoftMusicDetailBean.ChildEntity, BaseViewHolder> {
 
-        public LieBiaoAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public LieBiaoAdapter(@LayoutRes int layoutResId, @Nullable List<SoftMusicDetailBean.ChildEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
-            if (helper.getAdapterPosition() == 0) {
+        protected void convert(final BaseViewHolder helper, final SoftMusicDetailBean.ChildEntity item) {
+            if (item.getIs_try() == 1) {
                 helper.setVisible(R.id.tv_trylisten, true);
                 helper.setVisible(R.id.iv_wengao, true);
             } else {
                 helper.setVisible(R.id.tv_trylisten, false);
                 helper.setVisible(R.id.iv_wengao, false);
             }
+
+            helper.setText(R.id.tv_name, item.getVideo_old_name())
+                    .setText(R.id.tv_time, item.getCreated_at() + "发布")
+                    .setText(R.id.tv_look_count, item.getIs_view() == 0 ? item.getView_count() + "" : item.getView_count_true() + "")
+                    .setText(R.id.tv_collect_count, item.getIs_collect() == 0 ? item.getCollect_count() + "" : item.getCollect_count_true() + "")
+                    .setText(R.id.tv_dianzan_count, item.getIs_good() == 0 ? item.getGood_count() + "" : item.getGood_count_true() + "");
             helper.getView(R.id.iv_dian).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showListDialog();
+                    showListDialog(helper.getAdapterPosition(), item.isIsfav(), item.isIslive(), item.getId());
                 }
             });
             helper.getView(R.id.iv_wengao).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(LikeDetailActivity.this, WenGaoActivity.class));
+                    Intent intent = new Intent(LikeDetailActivity.this, WenGaoActivity.class);
+                    intent.putExtra("type", "softmusicdetail");
+                    intent.putExtra("t_name", mTeacher.getT_name());
+                    intent.putExtra("t_head", mTeacher.getT_header());
+                    intent.putExtra("video_name", item.getVideo_old_name());
+                    intent.putExtra("id", item.getId() + "");
+                    intent.putExtra("teacher_id", mMusicDetailBean.getXk_teacher_id() + "");
+                    startActivity(intent);
                 }
             });
-            helper.setText(R.id.tv_order,"0"+(helper.getAdapterPosition()+1));
+            helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
         }
     }
 
-    private void showListDialog() {
+    private void showListDialog(final int adapterPosition, boolean isfav, boolean islive, final int id) {
         mDialog = mBuilder.setViewId(R.layout.dialog_free)
                 //设置dialogpadding
                 .setPaddingdp(10, 0, 10, 0)
@@ -208,40 +338,42 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 showShareDialog();
             }
         });
-        final TextView tv_collect = mDialog.getView(R.id.tv_collect);
-        tv_collect.setOnClickListener(new View.OnClickListener() {
+        mTv_collect = mDialog.getView(R.id.tv_collect);
+        mIsCollected = isfav;
+        if (mIsCollected) {
+            Drawable drawable = getResources().getDrawable(R.drawable.collect_shixin);
+            /// 这一步必须要做,否则不会显示.
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            mTv_collect.setCompoundDrawables(null, drawable, null, null);
+        } else {
+            Drawable drawable = getResources().getDrawable(R.drawable.bofanglist_collect);
+            /// 这一步必须要做,否则不会显示.
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            mTv_collect.setCompoundDrawables(null, drawable, null, null);
+        }
+        mTv_collect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mIsCollected) {
-                    Drawable drawable = getResources().getDrawable(R.drawable.bofanglist_collect);
-                    /// 这一步必须要做,否则不会显示.
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    tv_collect.setCompoundDrawables(null, drawable, null, null);
-                } else {
-                    Drawable drawable = getResources().getDrawable(R.drawable.collect_shixin);
-                    /// 这一步必须要做,否则不会显示.
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    tv_collect.setCompoundDrawables(null, drawable, null, null);
-                }
-                mIsCollected = !mIsCollected;
+                changeCollect(adapterPosition, id);
             }
         });
-        final TextView tv_dianzan = mDialog.getView(R.id.tv_dianzan);
-        tv_dianzan.setOnClickListener(new View.OnClickListener() {
+        mTv_dianzan = mDialog.getView(R.id.tv_dianzan);
+        mDianzan = islive;
+        if (mDianzan) {
+            Drawable drawable = getResources().getDrawable(R.drawable.dianzan_shixin);
+            /// 这一步必须要做,否则不会显示.
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+        } else {
+            Drawable drawable = getResources().getDrawable(R.drawable.dianzan_yellow_big);
+            /// 这一步必须要做,否则不会显示.
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+        }
+        mTv_dianzan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mDianzan) {
-                    Drawable drawable = getResources().getDrawable(R.drawable.dianzan_yellow_big);
-                    /// 这一步必须要做,否则不会显示.
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    tv_dianzan.setCompoundDrawables(null, drawable, null, null);
-                } else {
-                    Drawable drawable = getResources().getDrawable(R.drawable.dianzan_shixin);
-                    /// 这一步必须要做,否则不会显示.
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    tv_dianzan.setCompoundDrawables(null, drawable, null, null);
-                }
-                mDianzan = !mDianzan;
+                changeDianzan(adapterPosition, id);
             }
         });
         mDialog.getView(R.id.tv_download).setOnClickListener(new View.OnClickListener() {
@@ -251,6 +383,89 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 mDialog.dismiss();
             }
         });
+    }
+
+    private void changeCollect(final int adapterPosition, int id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("id", id + "");
+        params.put("type", "1");
+        String url = "";
+        if (mIsCollected) {
+            url = MyContants.LXKURL + "xk/no-favorite";
+        } else {
+            url = MyContants.LXKURL + "xk/favorite";
+        }
+        OkGo.<DianZanbean>post(url)
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(LikeDetailActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 if (mIsCollected) {
+                                     Drawable drawable = getResources().getDrawable(R.drawable.bofanglist_collect);
+                                     /// 这一步必须要做,否则不会显示.
+                                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                     mTv_collect.setCompoundDrawables(null, drawable, null, null);
+                                 } else {
+                                     Drawable drawable = getResources().getDrawable(R.drawable.collect_shixin);
+                                     /// 这一步必须要做,否则不会显示.
+                                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                     mTv_collect.setCompoundDrawables(null, drawable, null, null);
+                                 }
+                                 mIsCollected = !mIsCollected;
+                                 mChild.get(adapterPosition).setIsfav(mIsCollected);
+                                 mLieBiaoAdapter.notifyDataSetChanged();
+                                 mDialog.dismiss();
+                             }
+                         }
+                );
+    }
+
+    private void changeDianzan(final int adapterPosition, int id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("id", id + "");
+        String url = "";
+        if (mDianzan) {
+            url = MyContants.LXKURL + "xk/no-dianzan";
+        } else {
+            url = MyContants.LXKURL + "xk/dianzan";
+        }
+        OkGo.<DianZanbean>post(url)
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(LikeDetailActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 if (mDianzan) {
+                                     Drawable drawable = getResources().getDrawable(R.drawable.dianzan_yellow_big);
+                                     /// 这一步必须要做,否则不会显示.
+                                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                     mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                                 } else {
+                                     Drawable drawable = getResources().getDrawable(R.drawable.dianzan_shixin);
+                                     /// 这一步必须要做,否则不会显示.
+                                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                     mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                                 }
+                                 mDianzan = !mDianzan;
+                                 mChild.get(adapterPosition).setIslive(mDianzan);
+                                 mLieBiaoAdapter.notifyDataSetChanged();
+                                 mDialog.dismiss();
+                             }
+                         }
+                );
     }
 
     private void showIsBuyDialog(int grary, int animationStyle) {
@@ -419,30 +634,95 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         });
     }
 
-    private class LiuYanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class LiuYanAdapter extends BaseQuickAdapter<CommentMoreBean.DataEntity, BaseViewHolder> {
 
-        public LiuYanAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public LiuYanAdapter(@LayoutRes int layoutResId, @Nullable List<CommentMoreBean.DataEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(final BaseViewHolder helper, final CommentMoreBean.DataEntity item) {
+            lastID = item.getId();
             final ImageView iv_dianzan = helper.getView(R.id.iv_dianzan);
+            final ImageView iv_head = helper.getView(R.id.iv_head);
+            if (item.isIslive()) {
+                iv_dianzan.setImageResource(R.drawable.free_yizan);
+            } else {
+                iv_dianzan.setImageResource(R.drawable.free_dianzan);
+            }
+            Glide.with(mContext).load(item.getUser_avatar()).into(iv_head);
+            helper.setText(R.id.tv_name, item.getUser_name())
+                    .setText(R.id.tv_time, item.getCreated_at())
+                    .setText(R.id.tv_content, item.getContent())
+                    .setText(R.id.tv_dainzan_count, item.getLive() + "");
+            if (item.getComment() != null && item.getComment().size() > 0) {
+                helper.setVisible(R.id.ll_author, true);
+                helper.setText(R.id.tv_author_content, item.getComment().get(0).getContent());
+            } else {
+                helper.setVisible(R.id.ll_author, false);
+            }
             helper.getView(R.id.ll_dianzan).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (isDianzan) {
-                        iv_dianzan.setImageResource(R.drawable.free_yizan);
+                    boolean islive = item.isIslive();
+                    if (islive) {
+                        mComment.get(helper.getAdapterPosition()).setIslive(false);
+                        nodianzan(helper.getAdapterPosition(), item.getId(), item.getLive());
                     } else {
-                        iv_dianzan.setImageResource(R.drawable.free_dianzan);
+                        mComment.get(helper.getAdapterPosition()).setIslive(true);
+                        dianzan(helper.getAdapterPosition(), item.getId(), item.getLive());
                     }
-                    isDianzan = !isDianzan;
+                    mLiuYanAdapter.notifyDataSetChanged();
                 }
             });
-            if (helper.getAdapterPosition()==2){
+            if (helper.getAdapterPosition() == mLiuYanAdapter.getData().size() - 1) {
                 helper.getView(R.id.view_line).setVisibility(View.GONE);
             }
         }
+    }
+
+    private void dianzan(final int adapterPosition, int id, final int count) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("comment_id", id);
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "free-comment/live")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(LikeDetailActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 mComment.get(adapterPosition).setLive(count + 1);
+                                 mLiuYanAdapter.notifyDataSetChanged();
+                             }
+                         }
+                );
+    }
+
+    private void nodianzan(final int adapterPosition, int id, final int count) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("comment_id", id);
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "free-comment/no-live")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(LikeDetailActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 mComment.get(adapterPosition).setLive(count - 1);
+                                 mLiuYanAdapter.notifyDataSetChanged();
+                             }
+                         }
+                );
     }
 
     private MediaService.MyBinder mMyBinder;
@@ -496,7 +776,11 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 Toast.makeText(this, "已成功加入购物车", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.tv_writeliuyan:
-                startActivity(new Intent(this, LiuYanActivity.class));
+                Intent intent = new Intent(this, LiuYanActivity.class);
+                intent.putExtra("teacher_id", mMusicDetailBean.getXk_teacher_id() + "");
+                intent.putExtra("type", "softmusicdetail-root");
+                intent.putExtra("xiaoke_id", mMusicDetailBean.getXk_class_id()+"");
+                startActivity(intent);
                 break;
             case R.id.tv_share:
                 showShareDialog();
@@ -508,8 +792,10 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
             case R.id.iv_guanzhu:
                 if (isGuanzhu) {
                     iv_guanzhu.setImageResource(R.drawable.free_quxiaoguanzhu);
+                    noguanzhu(mMusicDetailBean.getXk_teacher_id());
                 } else {
                     iv_guanzhu.setImageResource(R.drawable.free_guanzhu);
+                    guanzhu(mMusicDetailBean.getXk_teacher_id());
                 }
                 isGuanzhu = !isGuanzhu;
                 break;
@@ -517,11 +803,99 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
             case R.id.iv_dianzan:
                 if (isZan) {
                     iv_dianzan.setImageResource(R.drawable.free_dianzan);
+                    nodianzanTeacher(mMusicDetailBean.getXk_teacher_id());
                 } else {
                     iv_dianzan.setImageResource(R.drawable.free_yizan);
+                    dianzanTeacher(mMusicDetailBean.getXk_teacher_id());
                 }
                 isZan = !isZan;
                 break;
         }
+    }
+
+    private void guanzhu(int teacher_id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("teacher_id", teacher_id);
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "free-follow/attention")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 tv_guanzhu.setText("已关注");
+                                 Toast.makeText(LikeDetailActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                             }
+                         }
+                );
+    }
+
+    private void noguanzhu(int teacher_id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("teacher_id", teacher_id);
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "free-follow/no-attention")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 tv_guanzhu.setText("关注");
+                                 Toast.makeText(LikeDetailActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                             }
+                         }
+                );
+    }
+
+    private void dianzanTeacher(int teacher_id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("teacher_id", teacher_id);
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "free-teacher/live")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(LikeDetailActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 mTeacher_zan_count += 1;
+                                 tv_dianzan_count.setText(mTeacher_zan_count + "");
+                             }
+                         }
+                );
+    }
+
+    private void nodianzanTeacher(int teacher_id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("teacher_id", teacher_id);
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "free-teacher/no-live")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(LikeDetailActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 mTeacher_zan_count -= 1;
+                                 tv_dianzan_count.setText(mTeacher_zan_count + "");
+                             }
+                         }
+                );
     }
 }

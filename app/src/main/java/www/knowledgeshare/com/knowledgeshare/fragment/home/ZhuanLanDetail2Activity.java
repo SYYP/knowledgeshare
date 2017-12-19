@@ -113,6 +113,11 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                  mComment=mFreeTryReadDetailBean.getComment();
                                  mLiuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan, mComment);
                                  recycler_liuyan.setAdapter(mLiuYanAdapter);
+                                 if (mFreeTryReadDetailBean.isfollow()){
+                                     iv_collect.setImageResource(R.drawable.xinxin);
+                                 }else {
+                                     iv_collect.setImageResource(R.drawable.weiguanzhuxin);
+                                 }
                              }
                          }
                 );

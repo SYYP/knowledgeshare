@@ -13,11 +13,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 
@@ -25,12 +27,14 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.OrderBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.TimeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.ZhuanLanBean;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class ZhuanLanActivity extends BaseActivity implements View.OnClickListener {
 
@@ -96,6 +100,7 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
                                  tv_zhuanlanjianjie.setText(mZhuanLanBean.getZl_introduce());
                                  tv_readxuzhi.setText(mZhuanLanBean.getZl_look());
                                  tv_title.setText(mZhuanLanBean.getZl_name());
+                                 tv_buy.setText("订阅：" + mZhuanLanBean.getZl_price());
                                  tv_dignyue_count.setText(mZhuanLanBean.getZl_buy_count() + "人订阅");
                                  mLately = mZhuanLanBean.getLately();
                                  mLatelyAdapter = new LatelyAdapter(R.layout.item_lately, mLately);
@@ -116,47 +121,49 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void showBuyDialog() {
-        //        order/expire-time
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         OkGo.<TimeBean>get(MyContants.LXKURL + "order/expire-time")
                 .tag(this)
+                .headers(headers)
                 .execute(new JsonCallback<TimeBean>(TimeBean.class) {
                              @Override
                              public void onSuccess(Response<TimeBean> response) {
                                  int code = response.code();
                                  TimeBean timeBean = response.body();
                                  mTime = timeBean.getTime();
+                                 mDialog = mBuilder.setViewId(R.layout.dialog_dingyue)
+                                         //设置dialogpadding
+                                         .setPaddingdp(10, 0, 10, 0)
+                                         //设置显示位置
+                                         .setGravity(Gravity.BOTTOM)
+                                         //设置动画
+                                         .setAnimation(R.style.Bottom_Top_aniamtion)
+                                         //设置dialog的宽高
+                                         .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                                         //设置触摸dialog外围是否关闭
+                                         .isOnTouchCanceled(true)
+                                         //设置监听事件
+                                         .builder();
+                                 mDialog.show();
+                                 TextView tv_content = mDialog.getView(R.id.tv_content);
+                                 tv_content.setText("您将订阅从" + mTime + "时间内的《" + mZhuanLanBean.getZl_name() + "》");
+                                 mDialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+                                     @Override
+                                     public void onClick(View v) {
+                                         mDialog.dismiss();
+                                     }
+                                 });
+                                 mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                                     @Override
+                                     public void onClick(View v) {
+                                         mDialog.dismiss();
+                                         showPayStyleDialog();
+                                     }
+                                 });
                              }
                          }
                 );
-        mDialog = mBuilder.setViewId(R.layout.dialog_dingyue)
-                //设置dialogpadding
-                .setPaddingdp(10, 0, 10, 0)
-                //设置显示位置
-                .setGravity(Gravity.BOTTOM)
-                //设置动画
-                .setAnimation(R.style.Bottom_Top_aniamtion)
-                //设置dialog的宽高
-                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                //设置触摸dialog外围是否关闭
-                .isOnTouchCanceled(true)
-                //设置监听事件
-                .builder();
-        mDialog.show();
-        TextView tv_content = mDialog.getView(R.id.tv_content);
-        tv_content.setText("您将订阅从" + mTime + "时间内的《" + mZhuanLanBean.getZl_name() + "》");
-        mDialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-            }
-        });
-        mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-                showPayStyleDialog();
-            }
-        });
     }
 
     private void pushOrder(final String type) {
@@ -184,15 +191,20 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
         params.put("order_sn", order_sn);
         params.put("type", type);
         params.put("from", "android");
-        OkGo.<OrderBean>post(MyContants.LXKURL + "order/pay")
+        OkGo.<BaseBean>post(MyContants.LXKURL + "order/pay")
                 .tag(this)
                 .params(params)
-                .execute(new JsonCallback<OrderBean>(OrderBean.class) {
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
                              @Override
-                             public void onSuccess(Response<OrderBean> response) {
+                             public void onSuccess(Response<BaseBean> response) {
                                  int code = response.code();
-                                 OrderBean orderBean = response.body();
-
+                                 BaseBean baseBean = response.body();
+                                 String message = baseBean.getMessage();
+                                 if (message.equals("余额不足")){
+                                     showChongzhiDialog();
+                                 }else {
+                                     Toast.makeText(ZhuanLanActivity.this,message, Toast.LENGTH_SHORT).show();
+                                 }
                              }
                          }
                 );
@@ -247,7 +259,6 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
             public void onClick(View v) {
                 mDialog.dismiss();
                 pushOrder("1");
-                showChongzhiDialog();
             }
         });
         mDialog.getView(R.id.rl_weixin).setOnClickListener(new View.OnClickListener() {

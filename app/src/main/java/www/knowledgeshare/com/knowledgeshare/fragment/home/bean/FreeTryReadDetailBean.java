@@ -35,6 +35,15 @@ public class FreeTryReadDetailBean {
     private String created_at;
     private List<CommentEntity> comment;
     private int id;
+    private boolean isfollow;
+
+    public boolean isfollow() {
+        return isfollow;
+    }
+
+    public void setIsfollow(boolean isfollow) {
+        this.isfollow = isfollow;
+    }
 
     public String getImgurl() {
         return imgurl;

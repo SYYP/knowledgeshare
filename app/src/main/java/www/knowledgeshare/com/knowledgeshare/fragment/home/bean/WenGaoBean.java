@@ -15,6 +15,37 @@ public class WenGaoBean {
     private List<CommentEntity> comment;
     private boolean isfav;
     private String content;
+    private String video_name;
+    private String t_name;
+    private String t_header;
+
+    public boolean isfav() {
+        return isfav;
+    }
+
+    public String getVideo_name() {
+        return video_name;
+    }
+
+    public void setVideo_name(String video_name) {
+        this.video_name = video_name;
+    }
+
+    public String getT_name() {
+        return t_name;
+    }
+
+    public void setT_name(String t_name) {
+        this.t_name = t_name;
+    }
+
+    public String getT_header() {
+        return t_header;
+    }
+
+    public void setT_header(String t_header) {
+        this.t_header = t_header;
+    }
 
     public void setComment(List<CommentEntity> comment) {
         this.comment = comment;

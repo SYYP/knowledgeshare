@@ -206,6 +206,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                                  } else {
                                      iv_dianzan.setImageResource(R.drawable.free_dianzan);
                                  }
+                                 tv_buy.setText(mMusicDetailBean.getXk_price()+"  立即购买");
                                  mTeacher_zan_count = mTeacher.getT_live();
                                  tv_dianzan_count.setText(mTeacher_zan_count + "");
                                  tv_shiyirenqun.setText(mMusicDetailBean.getXk_suitable());
