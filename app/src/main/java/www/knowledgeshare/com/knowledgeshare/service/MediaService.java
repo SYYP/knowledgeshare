@@ -23,7 +23,7 @@ public class MediaService extends Service {
     public MediaPlayer mMediaPlayer = new MediaPlayer();
     private boolean isPlaying = false;
     private boolean isPrepared;
-    private String mMusicUrl;
+    private static String mMusicUrl;
 
     @Override
     public void onCreate() {
@@ -196,6 +196,9 @@ public class MediaService extends Service {
          * 添加file文件到MediaPlayer对象并且准备播放音频
          */
         public void setMusicUrl(String musicUrl) {
+            if (mMusicUrl.equals(musicUrl)){
+                return;
+            }
             mMusicUrl=musicUrl;
             //获取文件路径
             try {

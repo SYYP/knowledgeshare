@@ -260,7 +260,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(mContext, SoftMusicDetailActivity.class);
-                                    intent.putExtra("id",mYinYueKeAdapter.getData().get(position).getXk_id()+"");
+                                    intent.putExtra("id", mYinYueKeAdapter.getData().get(position).getXk_id() + "");
                                     startActivity(intent);
                                 }
                             });
@@ -270,7 +270,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(mContext, LikeDetailActivity.class);
-                                    intent.putExtra("id",mLikeAdapter.getData().get(position).getXk_id()+"");
+                                    intent.putExtra("id", mLikeAdapter.getData().get(position).getXk_id() + "");
                                     startActivity(intent);
                                 }
                             });
@@ -404,11 +404,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         @Override
         protected void convert(final BaseViewHolder helper, final HomeBean.FreeEntity.ChildEntity item) {
             final ImageView iv_pause = helper.getView(R.id.iv_pause);
-            //            if (item.isChecked()) {
-            //                iv_pause.setImageResource(R.drawable.bofang_yellow);
-            //            } else {
-            //                iv_pause.setImageResource(R.drawable.pause_yellow);
-            //            }
+            if (item.isChecked()) {
+                iv_pause.setImageResource(R.drawable.bofang_yellow);
+            } else {
+                iv_pause.setImageResource(R.drawable.pause_yellow);
+            }
             helper.setText(R.id.tv_video_name, item.getVideo_name());
             helper.getView(R.id.rl_root_view).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -430,11 +430,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         protected void convert(final BaseViewHolder helper, final HomeBean.DailyEntity item) {
             helper.getView(R.id.tv_teacher_name).setVisibility(View.VISIBLE);
             final ImageView iv_pause = helper.getView(R.id.iv_pause);
-            //            if (item.isChecked()) {
-            //                iv_pause.setImageResource(R.drawable.bofang_yellow);
-            //            } else {
-            //                iv_pause.setImageResource(R.drawable.pause_yellow);
-            //            }
+            if (item.isChecked()) {
+                iv_pause.setImageResource(R.drawable.bofang_yellow);
+            } else {
+                iv_pause.setImageResource(R.drawable.pause_yellow);
+            }
             helper.setText(R.id.tv_video_name, item.getVideo_name())
                     .setText(R.id.tv_teacher_name, item.getT_name());
             helper.getView(R.id.rl_root_view).setOnClickListener(new View.OnClickListener() {

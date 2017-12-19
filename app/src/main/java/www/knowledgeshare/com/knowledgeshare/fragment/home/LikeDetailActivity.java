@@ -37,6 +37,8 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.ShoppingCartActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.CommentMoreBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
@@ -202,7 +204,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                                  } else {
                                      iv_dianzan.setImageResource(R.drawable.free_dianzan);
                                  }
-                                 tv_buy.setText("购买："+mMusicDetailBean.getXk_price());
+                                 tv_buy.setText("购买：" + mMusicDetailBean.getXk_price());
                                  mTeacher_zan_count = mTeacher.getT_live();
                                  tv_dianzan_count.setText(mTeacher_zan_count + "");
                                  tv_shiyirenqun.setText(mMusicDetailBean.getXk_suitable());
@@ -773,13 +775,13 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 startActivity(new Intent(this, ShoppingCartActivity.class));
                 break;
             case R.id.tv_shopcar:
-                Toast.makeText(this, "已成功加入购物车", Toast.LENGTH_SHORT).show();
+                insertShopCar();
                 break;
             case R.id.tv_writeliuyan:
                 Intent intent = new Intent(this, LiuYanActivity.class);
                 intent.putExtra("teacher_id", mMusicDetailBean.getXk_teacher_id() + "");
                 intent.putExtra("type", "softmusicdetail-root");
-                intent.putExtra("xiaoke_id", mMusicDetailBean.getXk_class_id()+"");
+                intent.putExtra("xiaoke_id", mMusicDetailBean.getXk_class_id() + "");
                 startActivity(intent);
                 break;
             case R.id.tv_share:
@@ -811,6 +813,26 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 isZan = !isZan;
                 break;
         }
+    }
+
+    private void insertShopCar() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("id", mMusicDetailBean.getId());
+        OkGo.<BaseBean>post(MyContants.LXKURL + "order/add-cart")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<BaseBean>(LikeDetailActivity.this,BaseBean.class) {
+                             @Override
+                             public void onSuccess(Response<BaseBean> response) {
+                                 int code = response.code();
+                                 BaseBean baseBean = response.body();
+                                 Toast.makeText(LikeDetailActivity.this, baseBean.getMessage(), Toast.LENGTH_SHORT).show();
+                             }
+                         }
+                );
     }
 
     private void guanzhu(int teacher_id) {
