@@ -86,7 +86,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.title_setting_iv://设置
                 startActivity(new Intent(getActivity(),SettingActivity.class));
                 break;
-            case R.id.mine_face_iv:
+            case R.id.mine_face_iv://个人信息
                 startActivity(new Intent(getActivity(),PersonInfomationActivity.class));
                 break;
             case R.id.rwxq_ll://任务详情
@@ -111,6 +111,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(getActivity(), AccountSafeActivity.class));
                 break;
             case R.id.qiandao_btn://签到
+                qiandaoBtn.setBackground(mActivity.getResources().getDrawable(R.drawable.bg_qiandao_hui));
+                qiandaoBtn.setText("已签到");
+                qiandaoBtn.setClickable(false);
                 TUtils.showShort(getActivity(),"签到成功");
             default:
                 break;

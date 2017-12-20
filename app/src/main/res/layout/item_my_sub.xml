@@ -75,6 +75,8 @@
                     android:id="@+id/sub_zlmc_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:maxLength="10"
+                    android:ellipsize="end"
                     android:text="最新更新的专栏名称"
                     android:textSize="13dp" />
                 <TextView
@@ -84,7 +86,7 @@
                     android:text="￥198/年"
                     android:textColor="#b00505"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="15dp"/>
+                    android:layout_marginRight="10dp"/>
             </RelativeLayout>
         </LinearLayout>
         <View

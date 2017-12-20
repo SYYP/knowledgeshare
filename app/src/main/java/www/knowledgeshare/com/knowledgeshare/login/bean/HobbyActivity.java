@@ -76,18 +76,22 @@ public class HobbyActivity extends BaseActivity {
                             sb.append(list1.get(i).getId()+",");
                         }
                     }
-                //当循环结束后截取最后一个逗号
-                tag = sb.substring(0,sb.length()-1);
-                Logger.e(tag);
-                SpUtils.putString(HobbyActivity.this,"tag", tag);
-                sb.delete(0,sb.length());
-                if (TextUtils.equals("0",flag)){
-                    Intent intent = new Intent(HobbyActivity.this, MainActivity.class);
-                    intent.putExtra("tag",tag);
-                    startActivity(intent);
-                }else if (TextUtils.equals("1",flag)){
-                    requestRegistSetTwo();
-                }
+                    if (TextUtils.isEmpty(sb)){
+                        TUtils.showShort(HobbyActivity.this,"至少选择一项兴趣");
+                    }else {
+                        //当循环结束后截取最后一个逗号
+                        tag = sb.substring(0,sb.length()-1);
+                        SpUtils.putString(HobbyActivity.this,"tag", tag);
+                        sb.delete(0,sb.length());
+                        if (TextUtils.equals("0",flag)){
+                            Intent intent = new Intent(HobbyActivity.this, MainActivity.class);
+                            intent.putExtra("tag",tag);
+                            startActivity(intent);
+                        }else if (TextUtils.equals("1",flag)){
+                            requestRegistSetTwo();
+                        }
+                    }
+
             }
         });
     }

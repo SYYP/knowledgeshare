@@ -5,11 +5,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
+
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+
+import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.MainActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.GuidePageBean;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.ViewPagerIndicator;
 
 /**
  * Created by Administrator on 2017/8/24.
@@ -39,6 +50,7 @@ public class LancherActivity extends BaseActivity {
             }
         }
     };
+    private List<GuidePageBean.GuideBean> list;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,10 +89,34 @@ public class LancherActivity extends BaseActivity {
                 if (isguide) {
                     startActivity(new Intent(LancherActivity.this, MainActivity.class));
                 } else {
-                    startActivity(new Intent(LancherActivity.this, GuidePageActivity.class));
+//                    requestGuide();
+                    Intent intent = new Intent(LancherActivity.this, GuidePageActivity.class);
+                    startActivity(intent);
                 }
                 finish();
             }
-        }, 1500);
+        }, 3500);
+    }
+
+    private void requestGuide() {
+        HttpParams params = new HttpParams();
+        params.put("type","true");
+        params.put("from","android");
+
+        OkGo.<GuidePageBean>get(MyContants.bootstrappers)
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<GuidePageBean>(GuidePageBean.class) {
+                    @Override
+                    public void onSuccess(Response<GuidePageBean> response) {
+                        GuidePageBean guidePageBean = response.body();
+                        if ( response.code() >= 200 && response.code() <= 204){
+                            list = guidePageBean.getGuide();
+                            for (int i = 0; i < list.size(); i++) {
+                                SpUtils.putString(LancherActivity.this,"yindao"+i,list.get(i).getImgurl());
+                            }
+                        }
+                    }
+                });
     }
 }

@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
+import www.knowledgeshare.com.knowledgeshare.bean.MusicDownLoadBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.DownLoadBean;
 
 /**
@@ -63,7 +64,7 @@ public class DownLoadingFragment extends BaseFragment implements View.OnClickLis
     protected void initData() {
         recyclerXzz.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerXzz.setNestedScrollingEnabled(false);
-        list = new ArrayList<>();
+        /*list = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             DownLoadBean downLoadBean = new DownLoadBean();
             downLoadBean.setContent("如何成为一名合格的歌者");
@@ -71,7 +72,7 @@ public class DownLoadingFragment extends BaseFragment implements View.OnClickLis
             downLoadBean.setSize("2M/10M");
             downLoadBean.setZhuangtai("已暂停");
             list.add(downLoadBean);
-        }
+        }*/
         adapter = new DownLoadingAdapter(R.layout.item_down_loading, list);
         recyclerXzz.setAdapter(adapter);
     }

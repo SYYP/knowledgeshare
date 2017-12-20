@@ -10,11 +10,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+
 import org.zackratos.ultimatebar.UltimateBar;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.bean.VerifyCodesBean;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
  * date : ${Date}
@@ -30,6 +39,8 @@ public class ResetpwdActivity extends BaseActivity {
     private ImageView set_pwd;
     private EditText reset_forgetpwd;
     private TextView reset_ok;
+    private String mobile;
+    private String verify;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,6 +72,10 @@ public class ResetpwdActivity extends BaseActivity {
                 finish();
             }
         });
+        mobile = getIntent().getStringExtra("mobile");
+        verify = getIntent().getStringExtra("verify");
+
+
     }
 
     private void submit() {
@@ -76,13 +91,33 @@ public class ResetpwdActivity extends BaseActivity {
             Toast.makeText(this, "两次输入的密码不同，请重新输入", Toast.LENGTH_SHORT).show();
             return;
         }
-          /*
-             跳转登录
+        requestSetTwoPwd();
 
-           */
-        Intent intent=new Intent(ResetpwdActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
+    }
+
+    private void requestSetTwoPwd() {
+        HttpParams params = new HttpParams();
+        params.put("mobile",mobile);
+        params.put("password",new StringBuffer(reset_loginpwd.getText().toString()).reverse().toString());
+        params.put("verify",verify);
+
+        OkGo.<BaseBean>post(MyContants.getTwoPwd)
+                .tag(this)
+                .params(params)
+                .execute(new DialogCallback<BaseBean>(ResetpwdActivity.this,BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        BaseBean baseBean = response.body();
+                        if ( response.code() >= 200 && response.code() <= 204){
+                            TUtils.showShort(ResetpwdActivity.this,baseBean.getMessage());
+                            Intent intent=new Intent(ResetpwdActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }else {
+                            TUtils.showShort(ResetpwdActivity.this,baseBean.getMessage());
+                        }
+                    }
+                });
     }
 
 }

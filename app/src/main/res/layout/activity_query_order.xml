@@ -18,8 +18,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="50dp"
-        android:background="@drawable/bg_wanjiao2"/>
+        android:background="@drawable/bg_topwhite"/>
     <TextView
         android:id="@+id/gopay_tv"
         android:layout_width="match_parent"

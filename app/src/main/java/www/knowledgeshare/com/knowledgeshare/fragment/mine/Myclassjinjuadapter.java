@@ -10,6 +10,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.wevey.selector.dialog.DialogInterface;
+import com.wevey.selector.dialog.NormalAlertDialog;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,14 +55,49 @@ public class Myclassjinjuadapter extends RecyclerView.Adapter<Myclassjinjuadapte
             @Override
             public void onClick(View view) {
                 if (bool) {
-                   holder.jin_xinxin.setImageResource(R.drawable.weiguanzhuxin);
-
+                    showTips(holder);
                 } else {
                     holder.jin_xinxin.setImageResource(R.drawable.xinxin);
                 }
                 bool = !bool;
             }
         });
+    }
+
+    private void showTips(final Myviewholder holder) {
+        new NormalAlertDialog.Builder(context)
+                .setTitleVisible(true).setTitleText("提示")
+                .setTitleTextColor(R.color.text_black)
+                .setContentText("是否取消收藏？")
+                .setContentTextColor(R.color.text_black)
+                .setLeftButtonText("是")
+                .setLeftButtonTextColor(R.color.text_black)
+                .setRightButtonText("否")
+                .setRightButtonTextColor(R.color.text_black)
+                .setSingleButtonTextColor(R.color.text_black)
+                .setCanceledOnTouchOutside(false)
+                .setOnclickListener(new DialogInterface.OnLeftAndRightClickListener<NormalAlertDialog>() {
+                    @Override
+                    public void clickLeftButton(NormalAlertDialog dialog, View view) {
+
+                        holder.jin_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void clickRightButton(NormalAlertDialog dialog, View view) {
+
+                        dialog.dismiss();
+                    }
+                })
+                .setSingleListener(new DialogInterface.OnSingleClickListener<NormalAlertDialog>() {
+                    @Override
+                    public void clickSingleButton(NormalAlertDialog dialog, View view) {
+                        dialog.dismiss();
+                    }
+                })
+                .build()
+                .show();
     }
 
     @Override

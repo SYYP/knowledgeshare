@@ -14,8 +14,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -25,8 +30,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.ShoppingCartBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.SoftMusicDetailActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 public class ShoppingCartActivity extends BaseActivity implements View.OnClickListener {
 
@@ -38,7 +49,7 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
     @BindView(R.id.heji_tv) TextView hejiTv;
     @BindView(R.id.jiesuan_tv) TextView jiesuanTv;
     @BindView(R.id.null_rl) RelativeLayout nullRl;
-    private List<ShoppingCartBean> list;
+    private List<ShoppingCartBean.DataBean> list = new ArrayList<>();
     private ShoppingCartAdapter adapter;
     private float totalMoney;
     private int num;
@@ -78,24 +89,51 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
     private void initData() {
         recyclerGwc.setLayoutManager(new LinearLayoutManager(this));
         recyclerGwc.setNestedScrollingEnabled(false);
-        list = new ArrayList<>();
+        requestCartList();
+        /*list = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             ShoppingCartBean shoppingCartBean = new ShoppingCartBean();
             shoppingCartBean.setTitle("崔宗顺的男低音歌唱家秘籍");
             shoppingCartBean.setContent("男低音，一个神秘而又充满魅力的声部男低音，一个神秘而又充满魅力的声部");
             shoppingCartBean.setMoney("19"+i);
             list.add(shoppingCartBean);
-        }
-        adapter = new ShoppingCartAdapter(R.layout.item_shopping_cart, list);
-        recyclerGwc.setAdapter(adapter);
+        }*/
 
+    }
+
+    private void requestCartList() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+
+        OkGo.<ShoppingCartBean>post(MyContants.cartList)
+                .tag(this)
+                .headers(headers)
+                .execute(new DialogCallback<ShoppingCartBean>(ShoppingCartActivity.this,ShoppingCartBean.class) {
+                    @Override
+                    public void onSuccess(Response<ShoppingCartBean> response) {
+                        int code = response.code();
+                        ShoppingCartBean body = response.body();
+                        if (response.code() >= 200 && response.code() <= 204){
+                            list = response.body().getData();
+                            if (list.size() == 0){
+                                adapter.notifyDataSetChanged();
+                                recyclerGwc.setVisibility(View.GONE);
+                                nullRl.setVisibility(View.VISIBLE);
+                            }else {
+                                adapter = new ShoppingCartAdapter(R.layout.item_shopping_cart, list);
+                                recyclerGwc.setAdapter(adapter);
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                });
     }
 
     private void quanxuan() {
         totalMoney = 0;
         for (int i = 0; i < list.size(); i++) {
             list.get(i).setChecked(true);
-            String money = list.get(i).getMoney();
+            String money = list.get(i).getXk_price();
             int parseInt = Integer.parseInt(money);
             totalMoney += parseInt;
         }
@@ -145,7 +183,7 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                     if (TextUtils.equals("0",list.size()+""))
                     for (int i = 0; i < list.size(); i++) {
                         if (list.get(i).isChecked()){
-                            String money = list.get(i).getMoney();
+                            String money = list.get(i).getXk_price();
                             int parseInt = Integer.parseInt(money);
                             totalMoney += parseInt;
                             num += 1;
@@ -158,42 +196,85 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.jiesuan_tv:
                 if (TextUtils.equals("删除",jiesuanTv.getText().toString())){
-
+                    StringBuffer sb = new StringBuffer();
                     for (int i = list.size()-1; i >= 0; i--) {
                         if (list.get(i).isChecked()){
-                            list.remove(i);
-                            if (TextUtils.equals("0",list.size()+"")){
+                            list.get(i).getId();
+                            sb.append(list.get(i).getId()+",");
+                            /*if (TextUtils.equals("0",list.size()+"")){
                                 recyclerGwc.setVisibility(View.GONE);
                                 nullRl.setVisibility(View.VISIBLE);
                             }else {
                                 adapter.notifyDataSetChanged();
-                            }
+                            }*/
                         }
                     }
+                    //当循环结束后截取最后一个逗号
+                    String ids = sb.substring(0, sb.length() - 1);
+                    requestDelCart(ids);
+
                 }else {
-                    startActivity(new Intent(this,QueryOrderActivity.class));
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i).isChecked()){
+                            sb.append(list.get(i).getId()+",");
+                        }
+                    }
+                    if (TextUtils.isEmpty(sb)){
+                        TUtils.showShort(this,"购物车是空的");
+                    }else {
+                        //当循环结束后截取最后一个逗号
+                        String ids = sb.substring(0, sb.length() - 1);
+                        Intent intent = new Intent(this,QueryOrderActivity.class);
+                        intent.putExtra("ids",ids);
+                        startActivity(intent);
+                    }
                 }
                 break;
         }
     }
 
-    private class ShoppingCartAdapter extends BaseQuickAdapter<ShoppingCartBean,BaseViewHolder>{
+    private void requestDelCart(String ids) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("ids",ids);
 
-        public ShoppingCartAdapter(@LayoutRes int layoutResId, @Nullable List<ShoppingCartBean> data) {
+        OkGo.<BaseBean>post(MyContants.delCart)
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        int code = response.code();
+                        if (code >= 200 && code <= 204){
+                            requestCartList();
+                        }
+                    }
+                });
+
+    }
+
+    private class ShoppingCartAdapter extends BaseQuickAdapter<ShoppingCartBean.DataBean,BaseViewHolder>{
+
+        public ShoppingCartAdapter(@LayoutRes int layoutResId, @Nullable List<ShoppingCartBean.DataBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, final ShoppingCartBean item) {
+        protected void convert(BaseViewHolder helper, final ShoppingCartBean.DataBean item) {
             TextView title = helper.getView(R.id.item_title_tv);
             TextView content = helper.getView(R.id.item_content_tv);
             TextView money = helper.getView(R.id.item_money_tv);
+            ImageView face = helper.getView(R.id.item_face_iv);
             RelativeLayout itemRl = helper.getView(R.id.item_rl);
             final CheckBox item_checkBox = helper.getView(R.id.item_checkBox);
 
-            title.setText(item.getTitle());
-            content.setText(item.getContent());
-            money.setText("￥"+item.getMoney()+"/年");
+            Glide.with(mContext).load(item.getUrl()).into(face);
+            title.setText(item.getXk_name());
+            content.setText(item.getXk_teacher_tags());
+            money.setText("￥"+item.getXk_price()+"/年");
             item_checkBox.setChecked(item.isChecked());
 
             itemRl.setOnClickListener(new View.OnClickListener() {
@@ -213,7 +294,7 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                         totalMoney = 0;
                         for (int i = 0; i < list.size(); i++) {
                             if (list.get(i).isChecked()){
-                                String money = list.get(i).getMoney();
+                                String money = list.get(i).getXk_price();
                                 int parseInt = Integer.parseInt(money);
                                 totalMoney += parseInt;
                                 num += 1;
@@ -230,7 +311,7 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                             totalMoney = 0;
                             for (int i = 0; i < list.size(); i++) {
                                 if (list.get(i).isChecked()){
-                                    String money = list.get(i).getMoney();
+                                    String money = list.get(i).getXk_price();
                                     int parseInt = Integer.parseInt(money);
                                     totalMoney += parseInt;
                                     num += 1;
@@ -246,7 +327,7 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                             totalMoney = 0;
                             for (int i = 0; i < list.size(); i++) {
                                 list.get(i).setChecked(true);
-                                String money = list.get(i).getMoney();
+                                String money = list.get(i).getXk_price();
                                 int parseInt = Integer.parseInt(money);
                                 totalMoney += parseInt;
                             }

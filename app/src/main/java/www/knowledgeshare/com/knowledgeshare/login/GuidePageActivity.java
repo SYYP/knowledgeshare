@@ -54,7 +54,23 @@ public class GuidePageActivity extends BaseActivity {
         liner = (LinearLayout) findViewById(R.id.liner);
 
         requestGuide();
+        vp.setOnPageChangeListener(new ViewPagerIndicator(GuidePageActivity.this,vp,liner,list.size()));
+        vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private void requestGuide() {
@@ -75,27 +91,8 @@ public class GuidePageActivity extends BaseActivity {
                                 if (mGuidePagerAdapter == null) {
                                     mGuidePagerAdapter = new GuidePagerAdapter();
                                 }
-
                                 vp.setAdapter(mGuidePagerAdapter);
-                                vp.setOnPageChangeListener(new ViewPagerIndicator(GuidePageActivity.this,vp,liner,list.size()));
-                                vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                                    @Override
-                                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                                    }
-
-                                    @Override
-                                    public void onPageSelected(int position) {
-
-                                    }
-
-                                    @Override
-                                    public void onPageScrollStateChanged(int state) {
-
-                                    }
-                                });
                             }
-
                         }
                     }
                 });
@@ -124,6 +121,7 @@ public class GuidePageActivity extends BaseActivity {
             });
 //            imageView.setImageResource();
             Glide.with(GuidePageActivity.this).load(list.get(position).getImgurl()).into(imageView);
+//            Glide.with(GuidePageActivity.this).load(list.get(position).getImgurl()).into(imageView);
             container.addView(view);
             return view;
         }

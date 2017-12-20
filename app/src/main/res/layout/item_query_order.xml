@@ -33,10 +33,8 @@
         android:padding="15dp">
         <ImageView
             android:id="@+id/item_face_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/item_checkBox"
-            android:src="@drawable/power_gwc_touxiang"/>
+            android:layout_width="100dp"
+            android:layout_height="115dp" />
         <TextView
             android:id="@+id/item_title_tv"
             android:layout_width="wrap_content"
@@ -76,36 +74,4 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:background="@color/bg_mine"/>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp">
-        <TextView
-            android:id="@+id/item_zhekou_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="折扣优惠N折"
-            android:textColor="@color/text_black"/>
-        <TextView
-            android:id="@+id/item_chekou_money_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="XX元"
-            android:textColor="@color/text_black"
-            android:layout_alignParentRight="true"/>
-    </RelativeLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/bg_mine"/>
-    <TextView
-        android:id="@+id/item_heji_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="合计：192.00元"
-        android:textColor="@color/text_black"
-        android:gravity="end"/>
 </LinearLayout>

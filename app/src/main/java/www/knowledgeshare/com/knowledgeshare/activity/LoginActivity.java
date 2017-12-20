@@ -176,7 +176,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         params.put("mobile",login_phone.getText().toString());
         //字符串倒序
         params.put("password",new StringBuffer(login_pwd.getText().toString()).reverse().toString());
-        Logger.e(new StringBuffer(login_pwd.getText().toString()).reverse().toString());
         //0--手机号登录  1--微信登录
         params.put("type","0");
         params.put("device_token",uniqueId);
