@@ -20,7 +20,7 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
-import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicMoreBean;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 
@@ -43,7 +43,7 @@ public class SoftMusicActivity extends BaseActivity implements View.OnClickListe
     private void initData() {
         OkGo.<SoftMusicMoreBean>post(MyContants.LXKURL + "index/xk-more")
                 .tag(this)
-                .execute(new JsonCallback<SoftMusicMoreBean>(SoftMusicMoreBean.class) {
+                .execute(new DialogCallback<SoftMusicMoreBean>(SoftMusicActivity.this,SoftMusicMoreBean.class) {
                              @Override
                              public void onSuccess(Response<SoftMusicMoreBean> response) {
                                  int code = response.code();

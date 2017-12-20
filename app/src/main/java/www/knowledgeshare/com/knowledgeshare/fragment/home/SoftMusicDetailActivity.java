@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -36,10 +35,11 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicDetailBean;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.CommentMoreBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicDetailBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
@@ -85,6 +85,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
     private int lastID;
     private TextView mTv_collect;
     private TextView mTv_dianzan;
+    private boolean isRefreshing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,22 +113,13 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
         springview.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        springview.onFinishFreshAndLoad();
-                    }
-                }, 2000);
+                isRefreshing = true;
+                initData();
             }
 
             @Override
             public void onLoadmore() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadMoreComment(lastID + "");
-                    }
-                }, 500);
+                loadMoreComment(lastID + "");
             }
         });
         springview.setHeader(new MyHeader(this));
@@ -184,7 +176,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
         OkGo.<SoftMusicDetailBean>post(MyContants.LXKURL + "xk/show")
                 .tag(this)
                 .params(params)
-                .execute(new JsonCallback<SoftMusicDetailBean>(SoftMusicDetailBean.class) {
+                .execute(new DialogCallback<SoftMusicDetailBean>(SoftMusicDetailActivity.this,SoftMusicDetailBean.class) {
                              @Override
                              public void onSuccess(Response<SoftMusicDetailBean> response) {
                                  int code = response.code();
@@ -206,7 +198,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                                  } else {
                                      iv_dianzan.setImageResource(R.drawable.free_dianzan);
                                  }
-                                 tv_buy.setText(mMusicDetailBean.getXk_price()+"  立即购买");
+                                 tv_buy.setText(mMusicDetailBean.getXk_price() + "  立即购买");
                                  mTeacher_zan_count = mTeacher.getT_live();
                                  tv_dianzan_count.setText(mTeacher_zan_count + "");
                                  tv_shiyirenqun.setText(mMusicDetailBean.getXk_suitable());
@@ -226,7 +218,11 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                                          }
                                      }
                                  });
-                                 loadMoreComment("");
+                                 if (!isRefreshing) {
+                                     loadMoreComment("");
+                                 }
+                                 isRefreshing = false;
+                                 springview.onFinishFreshAndLoad();
                              }
                          }
                 );
@@ -256,7 +252,9 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                                     Toast.makeText(SoftMusicDetailActivity.this, "已无更多评论", Toast.LENGTH_SHORT).show();
                                 } else {
                                     mComment.addAll(data);
-                                    mLiuYanAdapter.notifyDataSetChanged();
+                                    mLiuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan, mComment);
+                                    recycler_liuyan.setAdapter(mLiuYanAdapter);
+                                    //                                    mLiuYanAdapter.notifyDataSetChanged();
                                 }
                             }
                         } else {
@@ -334,7 +332,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
 
         @Override
         protected void convert(final BaseViewHolder helper, final SoftMusicDetailBean.ChildEntity item) {
-            if (item.getIs_try()==1) {
+            if (item.getIs_try() == 1) {
                 helper.setVisible(R.id.tv_trylisten, true);
                 helper.setVisible(R.id.iv_wengao, true);
             } else {
@@ -828,7 +826,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 Intent intent = new Intent(this, LiuYanActivity.class);
                 intent.putExtra("teacher_id", mMusicDetailBean.getXk_teacher_id() + "");
                 intent.putExtra("type", "softmusicdetail-root");
-                intent.putExtra("xiaoke_id", mMusicDetailBean.getXk_class_id()+"");
+                intent.putExtra("xiaoke_id", mMusicDetailBean.getXk_class_id() + "");
                 startActivity(intent);
                 break;
             case R.id.tv_tryread:

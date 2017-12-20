@@ -62,10 +62,12 @@ public class LiuYanActivity extends BaseActivity implements View.OnClickListener
 
     private void initData() {
         mType = getIntent().getStringExtra("type");
+        String url = "";
         if (mType.equals("free-root")) {
             HttpHeaders headers = new HttpHeaders();
             headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
-            OkGo.<LiuYanListFree>get(MyContants.LXKURL + "free-comment/comment-list")
+            url = MyContants.LXKURL + "free-comment/comment-list";
+            OkGo.<LiuYanListFree>get(url)//get请求
                     .tag(this)
                     .headers(headers)
                     .execute(new JsonCallback<LiuYanListFree>(LiuYanListFree.class) {
@@ -82,108 +84,23 @@ public class LiuYanActivity extends BaseActivity implements View.OnClickListener
                             }
                         }
                     });
-        } else if (mType.equals("free-wengao")){
+        } else {
             HttpHeaders headers = new HttpHeaders();
             headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
             HttpParams params = new HttpParams();
             params.put("id", getIntent().getStringExtra("xiaoke_id"));
-            OkGo.<LiuYanListFree>post(MyContants.LXKURL + "free-comment/draft-comment")
-                    .tag(this)
-                    .headers(headers)
-                    .params(params)
-                    .execute(new JsonCallback<LiuYanListFree>(LiuYanListFree.class) {
-                        @Override
-                        public void onSuccess(Response<LiuYanListFree> response) {
-                            int code = response.code();
-                            LiuYanListFree liuYanListFree = response.body();
-                            if (response.code() >= 200 && response.code() <= 204) {
-                                Logger.e(code + "");
-                                mData = liuYanListFree.getData();
-                                MyAdapter myAdapter = new MyAdapter(R.layout.item_myliuyan, mData);
-                                recycler_list.setAdapter(myAdapter);
-                            } else {
-
-                            }
-                        }
-                    });
-        }else if (mType.equals("everydaycomment-wengao")){
-            HttpHeaders headers = new HttpHeaders();
-            headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
-            HttpParams params = new HttpParams();
-            params.put("id", getIntent().getStringExtra("xiaoke_id"));
-            OkGo.<LiuYanListFree>post(MyContants.LXKURL + "daily/comment-list")
-                    .tag(this)
-                    .headers(headers)
-                    .params(params)
-                    .execute(new JsonCallback<LiuYanListFree>(LiuYanListFree.class) {
-                        @Override
-                        public void onSuccess(Response<LiuYanListFree> response) {
-                            int code = response.code();
-                            LiuYanListFree liuYanListFree = response.body();
-                            if (response.code() >= 200 && response.code() <= 204) {
-                                Logger.e(code + "");
-                                mData = liuYanListFree.getData();
-                                MyAdapter myAdapter = new MyAdapter(R.layout.item_myliuyan, mData);
-                                recycler_list.setAdapter(myAdapter);
-                            } else {
-
-                            }
-                        }
-                    });
-        }else if (mType.equals("softmusicdetail-root")){
-            HttpHeaders headers = new HttpHeaders();
-            headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
-            HttpParams params = new HttpParams();
-            params.put("id", getIntent().getStringExtra("xiaoke_id"));
-            OkGo.<LiuYanListFree>post(MyContants.LXKURL + "xk/xk-commnet-list")
-                    .tag(this)
-                    .headers(headers)
-                    .params(params)
-                    .execute(new JsonCallback<LiuYanListFree>(LiuYanListFree.class) {
-                        @Override
-                        public void onSuccess(Response<LiuYanListFree> response) {
-                            int code = response.code();
-                            LiuYanListFree liuYanListFree = response.body();
-                            if (response.code() >= 200 && response.code() <= 204) {
-                                Logger.e(code + "");
-                                mData = liuYanListFree.getData();
-                                MyAdapter myAdapter = new MyAdapter(R.layout.item_myliuyan, mData);
-                                recycler_list.setAdapter(myAdapter);
-                            } else {
-
-                            }
-                        }
-                    });
-        } else if (mType.equals("softmusicdetail-wengao")){
-            HttpHeaders headers = new HttpHeaders();
-            headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
-            HttpParams params = new HttpParams();
-            params.put("id", getIntent().getStringExtra("xiaoke_id"));
-            OkGo.<LiuYanListFree>post(MyContants.LXKURL + "xk/draft-comment-list")
-                    .tag(this)
-                    .headers(headers)
-                    .params(params)
-                    .execute(new JsonCallback<LiuYanListFree>(LiuYanListFree.class) {
-                        @Override
-                        public void onSuccess(Response<LiuYanListFree> response) {
-                            int code = response.code();
-                            LiuYanListFree liuYanListFree = response.body();
-                            if (response.code() >= 200 && response.code() <= 204) {
-                                Logger.e(code + "");
-                                mData = liuYanListFree.getData();
-                                MyAdapter myAdapter = new MyAdapter(R.layout.item_myliuyan, mData);
-                                recycler_list.setAdapter(myAdapter);
-                            } else {
-
-                            }
-                        }
-                    });
-        } else if (mType.equals("zhuanlandetail")){
-            HttpHeaders headers = new HttpHeaders();
-            headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
-            HttpParams params = new HttpParams();
-            params.put("id", getIntent().getStringExtra("xiaoke_id"));
-            OkGo.<LiuYanListFree>post(MyContants.LXKURL + "zl/zl-commnet-list")
+            if (mType.equals("free-wengao")) {
+                url = MyContants.LXKURL + "free-comment/draft-comment";
+            } else if (mType.equals("everydaycomment-wengao")) {
+                url = MyContants.LXKURL + "daily/comment-list";
+            } else if (mType.equals("softmusicdetail-root")) {
+                url = MyContants.LXKURL + "xk/xk-commnet-list";
+            } else if (mType.equals("softmusicdetail-wengao")) {
+                url = MyContants.LXKURL + "xk/draft-comment-list";
+            } else if (mType.equals("zhuanlandetail")) {
+                url = MyContants.LXKURL + "zl/zl-commnet-list";
+            }
+            OkGo.<LiuYanListFree>post(url)//post请求
                     .tag(this)
                     .headers(headers)
                     .params(params)
@@ -238,19 +155,19 @@ public class LiuYanActivity extends BaseActivity implements View.OnClickListener
         String url = "";
         if (mType.equals("free-root")) {
             url = MyContants.LXKURL + "free-comment/submit";
-        } else if (mType.equals("free-wengao")){
+        } else if (mType.equals("free-wengao")) {
             params.put("id", getIntent().getStringExtra("xiaoke_id"));
             url = MyContants.LXKURL + "free-comment/draft";
-        }else if (mType.equals("everydaycomment-wengao")){
+        } else if (mType.equals("everydaycomment-wengao")) {
             params.put("id", getIntent().getStringExtra("xiaoke_id"));
             url = MyContants.LXKURL + "daily/submit-comment";
-        }else if (mType.equals("softmusicdetail-root")){
+        } else if (mType.equals("softmusicdetail-root")) {
             params.put("id", getIntent().getStringExtra("xiaoke_id"));
             url = MyContants.LXKURL + "xk/submit-comment";
-        }else if (mType.equals("softmusicdetail-wengao")){
+        } else if (mType.equals("softmusicdetail-wengao")) {
             params.put("id", getIntent().getStringExtra("xiaoke_id"));
             url = MyContants.LXKURL + "xk/draft-submit-comment";
-        } else if (mType.equals("zhuanlandetail")){
+        } else if (mType.equals("zhuanlandetail")) {
             params.put("id", getIntent().getStringExtra("xiaoke_id"));
             url = MyContants.LXKURL + "zl/zl-sumbit-comment";
         }

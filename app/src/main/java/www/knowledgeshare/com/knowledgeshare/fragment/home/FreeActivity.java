@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -37,6 +36,7 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.CommentMoreBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
@@ -85,6 +85,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
     private int mTeacher_zan_count;
     private TextView mTv_collect;
     private TextView mTv_dianzan;
+    private boolean isRefreshing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,22 +113,13 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
         springview.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        springview.onFinishFreshAndLoad();
-                    }
-                }, 2000);
+                isRefreshing = true;
+                initData();
             }
 
             @Override
             public void onLoadmore() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadMoreComment(lastID + "");
-                    }
-                }, 500);
+                loadMoreComment(lastID + "");
             }
         });
         springview.setHeader(new MyHeader(this));
@@ -158,14 +150,16 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                                     Toast.makeText(FreeActivity.this, "已无更多评论", Toast.LENGTH_SHORT).show();
                                 } else {
                                     mComment.addAll(data);
-                                    mLiuYanAdapter.notifyDataSetChanged();
+                                    mLiuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan, mComment);
+                                    recycler_liuyan.setAdapter(mLiuYanAdapter);
+                                    //                                    mLiuYanAdapter.notifyDataSetChanged();
                                 }
                             }
+                            springview.onFinishFreshAndLoad();
                         } else {
                         }
                     }
                 });
-        springview.onFinishFreshAndLoad();
     }
 
     private void initData() {
@@ -174,7 +168,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
         OkGo.<FreeBean>post(MyContants.LXKURL + "free")
                 .tag(this)
                 .params(params)
-                .execute(new JsonCallback<FreeBean>(FreeBean.class) {
+                .execute(new DialogCallback<FreeBean>(FreeActivity.this,FreeBean.class) {
                     @Override
                     public void onSuccess(Response<FreeBean> response) {
                         int code = response.code();
@@ -213,7 +207,11 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                                     addListenCount(mFreeAdapter.getData().get(position).getId() + "");
                                 }
                             });
-                            loadMoreComment("");
+                            if (!isRefreshing) {
+                                loadMoreComment("");
+                            }
+                            isRefreshing=false;
+                            springview.onFinishFreshAndLoad();
                         } else {
                         }
                     }
@@ -306,7 +304,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                     intent.putExtra("t_head", mTeacher_has.getT_header());
                     intent.putExtra("video_name", item.getVideo_name());
                     intent.putExtra("id", item.getId() + "");
-                    intent.putExtra("teacher_id",mFreeBean.getTeacher_id() + "");
+                    intent.putExtra("teacher_id", mFreeBean.getTeacher_id() + "");
                     startActivity(intent);
                 }
             });
@@ -335,11 +333,11 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                     .setText(R.id.tv_time, item.getCreated_at())
                     .setText(R.id.tv_content, item.getContent())
                     .setText(R.id.tv_dainzan_count, item.getLive() + "");
-            if (item.getComment()!=null && item.getComment().size()>0){
-                helper.setVisible(R.id.ll_author,true);
+            if (item.getComment() != null && item.getComment().size() > 0) {
+                helper.setVisible(R.id.ll_author, true);
                 helper.setText(R.id.tv_author_content, item.getComment().get(0).getContent());
-            }else {
-                helper.setVisible(R.id.ll_author,false);
+            } else {
+                helper.setVisible(R.id.ll_author, false);
             }
             helper.getView(R.id.ll_dianzan).setOnClickListener(new View.OnClickListener() {
                 @Override

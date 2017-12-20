@@ -28,6 +28,7 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.OrderBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.TimeBean;
@@ -90,7 +91,7 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
         OkGo.<ZhuanLanBean>post(MyContants.LXKURL + "zl/show")
                 .tag(this)
                 .params(params)
-                .execute(new JsonCallback<ZhuanLanBean>(ZhuanLanBean.class) {
+                .execute(new DialogCallback<ZhuanLanBean>(ZhuanLanActivity.this,ZhuanLanBean.class) {
                              @Override
                              public void onSuccess(Response<ZhuanLanBean> response) {
                                  int code = response.code();
@@ -126,7 +127,7 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
         OkGo.<TimeBean>get(MyContants.LXKURL + "order/expire-time")
                 .tag(this)
                 .headers(headers)
-                .execute(new JsonCallback<TimeBean>(TimeBean.class) {
+                .execute(new DialogCallback<TimeBean>(ZhuanLanActivity.this,TimeBean.class) {
                              @Override
                              public void onSuccess(Response<TimeBean> response) {
                                  int code = response.code();
@@ -167,12 +168,15 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void pushOrder(final String type) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
         params.put("id", mId);
         params.put("type", "zhuanlan");
         params.put("from", "android");
         OkGo.<OrderBean>post(MyContants.LXKURL + "order/buy")
                 .tag(this)
+                .headers(headers)
                 .params(params)
                 .execute(new JsonCallback<OrderBean>(OrderBean.class) {
                              @Override
@@ -187,14 +191,17 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void goPay(String order_sn, String type) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
         params.put("order_sn", order_sn);
         params.put("type", type);
         params.put("from", "android");
         OkGo.<BaseBean>post(MyContants.LXKURL + "order/pay")
                 .tag(this)
+                .headers(headers)
                 .params(params)
-                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
+                .execute(new DialogCallback<BaseBean>(ZhuanLanActivity.this,BaseBean.class) {
                              @Override
                              public void onSuccess(Response<BaseBean> response) {
                                  int code = response.code();

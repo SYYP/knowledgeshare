@@ -5,11 +5,10 @@
               android:gravity="center">
 
     <ImageView
-        android:id="@+id/iv_anim_refresh"
+        android:id="@+id/iv_refresh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:adjustViewBounds="true"
     />
 
     <TextView

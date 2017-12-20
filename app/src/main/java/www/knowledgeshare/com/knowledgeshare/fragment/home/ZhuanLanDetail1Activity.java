@@ -21,7 +21,7 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
-import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeTryReadListBean;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 
@@ -50,7 +50,7 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
         OkGo.<FreeTryReadListBean>post(MyContants.LXKURL + "zl/free-trials")
                 .tag(this)
                 .params(params)
-                .execute(new JsonCallback<FreeTryReadListBean>(FreeTryReadListBean.class) {
+                .execute(new DialogCallback<FreeTryReadListBean>(ZhuanLanDetail1Activity.this,FreeTryReadListBean.class) {
                              @Override
                              public void onSuccess(Response<FreeTryReadListBean> response) {
                                  int code = response.code();
@@ -63,6 +63,7 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                          Intent intent = new Intent(ZhuanLanDetail1Activity.this, ZhuanLanDetail2Activity.class);
                                          intent.putExtra("id",mData.get(position).getId()+"");
+                                         intent.putExtra("title",getIntent().getStringExtra("title"));
                                          startActivity(intent);
                                      }
                                  });

@@ -23,7 +23,6 @@ public class FreeTryReadDetailBean {
      * id : 1
      */
     private String video_time;
-    private String imgurl;
     private String zl_price;
     private int zl_id;
     private String video_url;
@@ -31,7 +30,7 @@ public class FreeTryReadDetailBean {
     private int teacher_id;
     private String t_name;
     private String name;
-    private String description;
+    private String content;
     private String created_at;
     private List<CommentEntity> comment;
     private int id;
@@ -41,16 +40,16 @@ public class FreeTryReadDetailBean {
         return isfollow;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public void setIsfollow(boolean isfollow) {
         this.isfollow = isfollow;
-    }
-
-    public String getImgurl() {
-        return imgurl;
-    }
-
-    public void setImgurl(String imgurl) {
-        this.imgurl = imgurl;
     }
 
     public void setVideo_time(String video_time) {
@@ -83,10 +82,6 @@ public class FreeTryReadDetailBean {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public void setCreated_at(String created_at) {
@@ -131,10 +126,6 @@ public class FreeTryReadDetailBean {
 
     public String getName() {
         return name;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public String getCreated_at() {

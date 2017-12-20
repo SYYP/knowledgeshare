@@ -26,7 +26,7 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
-import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.GuDianBean;
 import www.knowledgeshare.com.knowledgeshare.utils.BannerUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
@@ -56,6 +56,7 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
     private List<GuDianBean.XiaokeEntity> mXiaoke;
     private List<GuDianBean.ZhuanlanEntity> mZhuanlan;
     private DaShiBanAdapter mDaShiBanAdapter;
+    private YinYueKeAdapter mYinYueKeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +111,7 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
         banner.setLayoutParams(layoutParams);
         OkGo.<GuDianBean>post(MyContants.LXKURL + "index/"+type)
                 .tag(this)
-                .execute(new JsonCallback<GuDianBean>(GuDianBean.class) {
+                .execute(new DialogCallback<GuDianBean>(GuDianActivity.this,GuDianBean.class) {
                              @Override
                              public void onSuccess(Response<GuDianBean> response) {
                                  int code = response.code();
@@ -131,15 +132,20 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
                                  mDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                         startActivity(new Intent(GuDianActivity.this, ZhuanLanDetail1Activity.class));
+                                         Intent intent = new Intent(GuDianActivity.this, ZhuanLanDetail1Activity.class);
+                                         intent.putExtra("title",mDaShiBanAdapter.getData().get(position).getZl_name());
+                                         intent.putExtra("id", mDaShiBanAdapter.getData().get(position).getId() + "");
+                                         startActivity(intent);
                                      }
                                  });
-                                 YinYueKeAdapter yinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke2, mXiaoke);
-                                 recycler_yinyueke.setAdapter(yinYueKeAdapter);
-                                 yinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                 mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke2, mXiaoke);
+                                 recycler_yinyueke.setAdapter(mYinYueKeAdapter);
+                                 mYinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                         startActivity(new Intent(GuDianActivity.this, SoftMusicDetailActivity.class));
+                                         Intent intent = new Intent(GuDianActivity.this, SoftMusicDetailActivity.class);
+                                         intent.putExtra("id", mYinYueKeAdapter.getData().get(position).getXk_id() + "");
+                                         startActivity(intent);
                                      }
                                  });
                              }

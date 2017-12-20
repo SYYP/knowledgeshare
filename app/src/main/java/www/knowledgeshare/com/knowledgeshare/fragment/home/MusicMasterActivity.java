@@ -23,7 +23,7 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
-import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicMasterMoreBean;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 
@@ -70,7 +70,7 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
         OkGo.<MusicMasterMoreBean>post(MyContants.LXKURL + "index/zl-more")
                 .tag(this)
                 .params(params)
-                .execute(new JsonCallback<MusicMasterMoreBean>(MusicMasterMoreBean.class) {
+                .execute(new DialogCallback<MusicMasterMoreBean>(MusicMasterActivity.this,MusicMasterMoreBean.class) {
                              @Override
                              public void onSuccess(Response<MusicMasterMoreBean> response) {
                                  int code = response.code();

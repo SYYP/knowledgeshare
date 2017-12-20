@@ -33,6 +33,7 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.EveryDayBean;
@@ -78,7 +79,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
         OkGo.<EveryDayBean>post(MyContants.LXKURL + "daily")
                 .tag(this)
                 .params(params)
-                .execute(new JsonCallback<EveryDayBean>(EveryDayBean.class) {
+                .execute(new DialogCallback<EveryDayBean>(EveryDayCommentActivity.this,EveryDayBean.class) {
                     @Override
                     public void onSuccess(Response<EveryDayBean> response) {
                         int code = response.code();

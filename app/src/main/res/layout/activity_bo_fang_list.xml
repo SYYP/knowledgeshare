@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="播放列表"
+            android:text="播放历史"
             android:textColor="@color/white"
             android:textSize="17sp"/>
     </RelativeLayout>

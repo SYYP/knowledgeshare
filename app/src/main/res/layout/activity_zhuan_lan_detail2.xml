@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             android:background="#edecea"
 >
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +38,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#edecea"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:orientation="vertical">
@@ -96,7 +96,8 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:scaleType="fitXY"
-                        android:src="@drawable/demo"/>
+                        android:src="@drawable/demo"
+                        android:visibility="gone"/>
                     <TextView
                         android:id="@+id/tv_content"
                         android:layout_width="match_parent"
@@ -105,7 +106,8 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="撒旦撒旦就撒旦就撒的链接撒的链接老实交代发了多少空间发的杀戮空间发了多少风陵渡口手机发了肯定是减肥的杀戮空间法拉利"
-                        android:textColor="@color/textblack"/>
+                        android:textColor="@color/textblack"
+                        android:visibility="gone"/>
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
@@ -187,10 +189,10 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_liuyan"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/bg_circle_white"
-                    android:layout_height="wrap_content"
-                    ></android.support.v7.widget.RecyclerView>
+                ></android.support.v7.widget.RecyclerView>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
     </LinearLayout>

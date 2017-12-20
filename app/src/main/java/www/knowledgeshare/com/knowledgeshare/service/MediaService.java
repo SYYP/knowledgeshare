@@ -23,7 +23,7 @@ public class MediaService extends Service {
     public MediaPlayer mMediaPlayer = new MediaPlayer();
     private boolean isPlaying = false;
     private boolean isPrepared;
-    private static String mMusicUrl;
+    private static String mMusicUrl = "";
 
     @Override
     public void onCreate() {
@@ -86,6 +86,13 @@ public class MediaService extends Service {
                 //                Toast.makeText(MyApplication.getGloableContext(), "异常", Toast.LENGTH_SHORT).show();
                 mMediaPlayer = null;
                 mMediaPlayer = new MediaPlayer();
+                try {
+                    mMediaPlayer.setDataSource(mMusicUrl);
+                    mMediaPlayer.prepare();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                //让MediaPlayer对象准备
                 isPlaying = mMediaPlayer.isPlaying();
             }
             if (!isPlaying) {
@@ -196,15 +203,15 @@ public class MediaService extends Service {
          * 添加file文件到MediaPlayer对象并且准备播放音频
          */
         public void setMusicUrl(String musicUrl) {
-            if (mMusicUrl.equals(musicUrl)){
+            if (mMusicUrl.equals(musicUrl)) {
                 return;
             }
-            mMusicUrl=musicUrl;
-            //获取文件路径
+            mMusicUrl = musicUrl;
             try {
                 //此处的两个方法需要捕获IO异常
                 //设置音频文件到MediaPlayer对象中
                 //            Uri uri = Uri.parse("android.resource://" + MyApplication.getGloableContext().getPackageName() + "/" + R.raw.music1);
+                mMediaPlayer.reset();
                 mMediaPlayer.setDataSource(musicUrl);
                 //让MediaPlayer对象准备
                 mMediaPlayer.prepare();

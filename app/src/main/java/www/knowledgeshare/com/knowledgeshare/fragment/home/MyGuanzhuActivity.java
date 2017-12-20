@@ -54,7 +54,7 @@ public class MyGuanzhuActivity extends BaseActivity implements View.OnClickListe
     private void initData() {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
-        OkGo.<MyFollowBean>post(MyContants.LXKURL + "index/my-follow")
+        OkGo.<MyFollowBean>get(MyContants.LXKURL + "index/my-follow")
                 .tag(this)
                 .headers(headers)
                 .execute(new DialogCallback<MyFollowBean>(MyGuanzhuActivity.this, MyFollowBean.class) {
@@ -68,7 +68,9 @@ public class MyGuanzhuActivity extends BaseActivity implements View.OnClickListe
                                  mGuanzhuAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                         startActivity(new Intent(MyGuanzhuActivity.this, TeacherDetailActivity.class));
+                                         Intent intent = new Intent(MyGuanzhuActivity.this, TeacherDetailActivity.class);
+                                         intent.putExtra("teacher_id",mData.get(position).getId()+"");
+                                         startActivity(intent);
                                      }
                                  });
                              }

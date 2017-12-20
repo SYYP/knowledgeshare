@@ -50,7 +50,7 @@ import static com.taobao.accs.ACCSManager.mContext;
 public class SearchActivity extends BaseActivity implements View.OnClickListener {
     private EditText et_search;
     private TextView tv_back;
-    private ImageView iv_delete;
+    private ImageView iv_delete,iv_delete_text;
     private RecyclerView recycler_lishi;
     private RecyclerView recycler_hot;
     private List<String> hotNameList = new ArrayList<>();
@@ -77,6 +77,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         et_search = (EditText) findViewById(R.id.et_search);
         tv_back = (TextView) findViewById(R.id.tv_back);
         tv_back.setOnClickListener(this);
+        iv_delete_text = (ImageView) findViewById(R.id.iv_delete_text);
+        iv_delete_text.setOnClickListener(this);
         iv_delete = (ImageView) findViewById(R.id.iv_delete);
         iv_delete.setOnClickListener(this);
         recycler_lishi = (RecyclerView) findViewById(R.id.recycler_lishi);
@@ -168,7 +170,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             public void afterTextChanged(Editable s) {
                 if (!TextUtils.isEmpty(et_search.getText().toString())) {
                     doSearch(et_search.getText().toString());
+                    iv_delete_text.setVisibility(View.VISIBLE);
                 } else {
+                    iv_delete_text.setVisibility(View.GONE);
                     ll_lishi.setVisibility(View.VISIBLE);
                     ll_hot.setVisibility(View.VISIBLE);
                     ll_result.setVisibility(View.GONE);
@@ -399,6 +403,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.iv_delete:
                 showDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
+                break;
+            case R.id.iv_delete_text:
+                et_search.setText("");
                 break;
         }
     }

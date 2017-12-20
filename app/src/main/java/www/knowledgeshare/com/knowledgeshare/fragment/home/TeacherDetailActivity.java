@@ -12,14 +12,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.TeacherDetailBean;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class TeacherDetailActivity extends BaseActivity implements View.OnClickListener {
 
@@ -32,12 +40,18 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
     private LinearLayout ll_yinyueke;
     private LinearLayout activity_gu_dian;
     private NestedScrollView nestView;
+    private TeacherDetailBean mTeacherDetailBean;
+    private List<TeacherDetailBean.XiaokeEntity> mXiaoke;
+    private List<TeacherDetailBean.ZhuanlanEntity> mZhuanlan;
+    private DaShiBanAdapter mDaShiBanAdapter;
+    private YinYueKeAdapter mYinYueKeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_detail);
         initView();
+        initData();
     }
 
     private void initView() {
@@ -65,58 +79,101 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
                 }
             }
         });
-        initData();
     }
 
     private void initData() {
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        DaShiBanAdapter daShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban2, list);
-        recycler_dashiban.setAdapter(daShiBanAdapter);
-        daShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(TeacherDetailActivity.this,ZhuanLanActivity.class));
-            }
-        });
-        YinYueKeAdapter yinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke2, list);
-        recycler_yinyueke.setAdapter(yinYueKeAdapter);
-        yinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(TeacherDetailActivity.this,SoftMusicDetailActivity.class));
-            }
-        });
-        tv_teacher_intro.setText("法撒旦撒多撒多撒旦撒海带丝哦啊湖附近很大佛诞节搜附近" +
-                "哦都是奇偶发奇偶及欧冠大佛结构辅导机构奇偶辅导机构");
+        final String teacher_id = getIntent().getStringExtra("teacher_id");
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("teacher_id", teacher_id);
+        OkGo.<TeacherDetailBean>post(MyContants.LXKURL + "teacher/list")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<TeacherDetailBean>(TeacherDetailActivity.this,TeacherDetailBean.class) {
+                             @Override
+                             public void onSuccess(Response<TeacherDetailBean> response) {
+                                 int code = response.code();
+                                 mTeacherDetailBean = response.body();
+                                 Glide.with(TeacherDetailActivity.this).load(mTeacherDetailBean.getT_img()).into(iv_bigphoto);
+                                 tv_teacher_intro.setText(mTeacherDetailBean.getT_introduce());
+                                 mXiaoke = mTeacherDetailBean.getXiaoke();
+                                 mZhuanlan = mTeacherDetailBean.getZhuanlan();
+                                 mDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban2, mZhuanlan);
+                                 recycler_dashiban.setAdapter(mDaShiBanAdapter);
+                                 mDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                     @Override
+                                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                         Intent intent = new Intent(TeacherDetailActivity.this, ZhuanLanDetail1Activity.class);
+                                         intent.putExtra("title",mDaShiBanAdapter.getData().get(position).getZl_name());
+                                         intent.putExtra("id", mDaShiBanAdapter.getData().get(position).getId() + "");
+                                         startActivity(intent);
+                                     }
+                                 });
+                                 mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke2, mXiaoke);
+                                 recycler_yinyueke.setAdapter(mYinYueKeAdapter);
+                                 mYinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                     @Override
+                                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                         Intent intent = new Intent(TeacherDetailActivity.this, SoftMusicDetailActivity.class);
+                                         intent.putExtra("id", mYinYueKeAdapter.getData().get(position).getXk_id() + "");
+                                         startActivity(intent);
+                                     }
+                                 });
+                             }
+                         }
+                );
+
     }
 
-    private class DaShiBanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class DaShiBanAdapter extends BaseQuickAdapter<TeacherDetailBean.ZhuanlanEntity, BaseViewHolder> {
 
-        public DaShiBanAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public DaShiBanAdapter(@LayoutRes int layoutResId, @Nullable List<TeacherDetailBean.ZhuanlanEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, TeacherDetailBean.ZhuanlanEntity item) {
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-//            Glide.with(mContext).load().into(imageView);
-            helper.setVisible(R.id.iv_bofang,false);
+            Glide.with(mContext).load(item.getZl_img()).into(imageView);
+            helper.setText(R.id.tv_name, item.getZl_name())
+                    .setText(R.id.tv_introduce, item.getZl_introduce())
+                    .setText(R.id.tv_update_name, item.getZl_update_name())
+                    .setText(R.id.tv_update_time, item.getZl_update_time())
+                    .setText(R.id.tv_price, item.getZl_price());
+            helper.getView(R.id.iv_bofang).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(TeacherDetailActivity.this, ZhuanLanDetail2Activity.class));
+                }
+            });
         }
     }
 
-    private class YinYueKeAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class YinYueKeAdapter extends BaseQuickAdapter<TeacherDetailBean.XiaokeEntity, BaseViewHolder> {
 
-        public YinYueKeAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public YinYueKeAdapter(@LayoutRes int layoutResId, @Nullable List<TeacherDetailBean.XiaokeEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, TeacherDetailBean.XiaokeEntity item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-//            Glide.with(mContext).load().into(imageView);
-            helper.setVisible(R.id.iv_bofang,false);
+            Glide.with(mContext).load(item.getXk_image()).into(imageView);
+            helper.setText(R.id.tv_buy_count, item.getBuy_count())
+                    .setText(R.id.tv_name, item.getXk_name())
+                    .setText(R.id.tv_jie_count, item.getNodule_count())
+                    .setText(R.id.tv_teacher_name, item.getTeacher_name())
+                    .setText(R.id.tv_price, item.getXk_price())
+                    .setText(R.id.tv_time, item.getTime_count())
+                    .setText(R.id.tv_teacher_tag, item.getXk_teacher_tags());
+            helper.getView(R.id.iv_bofang).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(TeacherDetailActivity.this, ZhuanLanDetail2Activity.class));
+                }
+            });
         }
     }
 

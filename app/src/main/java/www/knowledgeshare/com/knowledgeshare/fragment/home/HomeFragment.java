@@ -44,6 +44,7 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.DownLoadActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBannerBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBean;
@@ -232,7 +233,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         OkGo.<HomeBean>post(MyContants.LXKURL + "index")
                 .tag(this)
                 .params(params)
-                .execute(new JsonCallback<HomeBean>(HomeBean.class) {
+                .execute(new DialogCallback<HomeBean>(mActivity, HomeBean.class) {
                     @Override
                     public void onSuccess(Response<HomeBean> response) {
                         int code = response.code();
@@ -284,6 +285,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         } else {
 
                         }
+
                     }
                 });
         OkGo.<HomeBannerBean>post(MyContants.LXKURL + "bootstrappers")
@@ -366,16 +368,16 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
             @Override
             public void onLoadmore() {
-                //                new Handler().postDelayed(new Runnable() {
-                //                    @Override
-                //                    public void run() {
-                //                        springview.onFinishFreshAndLoad();
-                //                    }
-                //                }, 2000);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        springview.onFinishFreshAndLoad();
+                    }
+                }, 2000);
             }
         });
         springview.setHeader(new MyHeader(mContext));
-        //        springview.setFooter(new MyFooter(mContext));
+//        springview.setFooter(new MyFooter(mContext));
     }
 
     private void initDialog() {

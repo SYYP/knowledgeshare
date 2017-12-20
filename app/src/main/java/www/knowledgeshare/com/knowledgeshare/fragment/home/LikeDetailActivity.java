@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
@@ -48,6 +46,7 @@ import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
 import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
 public class LikeDetailActivity extends BaseActivity implements View.OnClickListener {
@@ -85,6 +84,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
     private int lastID;
     private TextView mTv_collect;
     private TextView mTv_dianzan;
+    private boolean isRefreshing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,26 +103,17 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         springview.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        springview.onFinishFreshAndLoad();
-                    }
-                }, 2000);
+                isRefreshing = true;
+                initData();
             }
 
             @Override
             public void onLoadmore() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadMoreComment(lastID + "");
-                    }
-                }, 500);
+                loadMoreComment(lastID + "");
             }
         });
         springview.setHeader(new MyHeader(this));
-        springview.setFooter(new DefaultFooter(this));
+        springview.setFooter(new MyFooter(this));
     }
 
     private void initView() {
@@ -182,7 +173,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         OkGo.<SoftMusicDetailBean>post(MyContants.LXKURL + "xk/show")
                 .tag(this)
                 .params(params)
-                .execute(new JsonCallback<SoftMusicDetailBean>(SoftMusicDetailBean.class) {
+                .execute(new DialogCallback<SoftMusicDetailBean>(LikeDetailActivity.this,SoftMusicDetailBean.class) {
                              @Override
                              public void onSuccess(Response<SoftMusicDetailBean> response) {
                                  int code = response.code();
@@ -211,6 +202,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                                  tv_readxuzhi.setText(mMusicDetailBean.getXk_rss());
                                  mChild = mMusicDetailBean.getChild();
                                  mLieBiaoAdapter = new LieBiaoAdapter(R.layout.item_like_liebiao, mChild);
+                                 recycler_free.setAdapter(mLieBiaoAdapter);
                                  mLieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -223,8 +215,11 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                                          }
                                      }
                                  });
-                                 recycler_free.setAdapter(mLieBiaoAdapter);
-                                 loadMoreComment("");
+                                 if (!isRefreshing) {
+                                     loadMoreComment("");
+                                 }
+                                 isRefreshing = false;
+                                 springview.onFinishFreshAndLoad();
                              }
                          }
                 );
@@ -254,7 +249,9 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                                     Toast.makeText(LikeDetailActivity.this, "已无更多评论", Toast.LENGTH_SHORT).show();
                                 } else {
                                     mComment.addAll(data);
-                                    mLiuYanAdapter.notifyDataSetChanged();
+                                    mLiuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan, mComment);
+                                    recycler_liuyan.setAdapter(mLiuYanAdapter);
+                                    //                                    mLiuYanAdapter.notifyDataSetChanged();
                                 }
                             }
                         } else {
@@ -824,7 +821,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<BaseBean>(LikeDetailActivity.this,BaseBean.class) {
+                .execute(new DialogCallback<BaseBean>(LikeDetailActivity.this, BaseBean.class) {
                              @Override
                              public void onSuccess(Response<BaseBean> response) {
                                  int code = response.code();

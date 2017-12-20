@@ -29,6 +29,7 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.WenGaoBean;
@@ -136,7 +137,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
         OkGo.<WenGaoBean>post(url)
                 .tag(this)
                 .params(params)
-                .execute(new JsonCallback<WenGaoBean>(WenGaoBean.class) {
+                .execute(new DialogCallback<WenGaoBean>(WenGaoActivity.this,WenGaoBean.class) {
                     @Override
                     public void onSuccess(Response<WenGaoBean> response) {
                         int code = response.code();

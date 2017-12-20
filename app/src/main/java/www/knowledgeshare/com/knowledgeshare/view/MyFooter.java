@@ -34,8 +34,6 @@ public class MyFooter extends BaseFooter {
             R.drawable.refresh19, R.drawable.refresh20, R.drawable.refresh21,
             R.drawable.refresh22, R.drawable.refresh23, R.drawable.refresh24};
     private AnimationDrawable animationRefresh;
-
-
     private TextView headerTitle;
 
     public MyFooter(Context context) {
@@ -61,15 +59,16 @@ public class MyFooter extends BaseFooter {
     @Override
     public View getView(LayoutInflater inflater, ViewGroup viewGroup) {
         View view = inflater.inflate(R.layout.my_footer, viewGroup, true);
-        mIv_anim_refresh = view.findViewById(R.id.iv_anim_refresh);
-        mIv_anim_refresh.setImageResource(R.drawable.refresh25);
         headerTitle = view.findViewById(R.id.default_header_title);
+        mIv_anim_refresh = view.findViewById(R.id.iv_refresh);
+        mIv_anim_refresh.setImageResource(R.drawable.refresh25);
         return view;
     }
 
     //拖拽开始前回调
     @Override
     public void onPreDrag(View rootView) {
+
     }
 
     //手指拖拽过程中不断回调，dy为拖拽的距离，可以根据拖动的距离添加拖动过程动画

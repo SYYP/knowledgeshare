@@ -35,8 +35,6 @@ public class MyHeader extends BaseHeader {
             R.drawable.refresh19, R.drawable.refresh20, R.drawable.refresh21,
             R.drawable.refresh22, R.drawable.refresh23, R.drawable.refresh24};
     private AnimationDrawable animationRefresh;
-
-
     private long freshTime;
     private TextView headerTitle;
     private TextView headerTime;
@@ -64,7 +62,7 @@ public class MyHeader extends BaseHeader {
     @Override
     public View getView(LayoutInflater inflater, ViewGroup viewGroup) {
         View inflate = inflater.inflate(R.layout.refresh_layout, viewGroup, true);
-        mIv_anim_refresh = inflate.findViewById(R.id.iv_anim_refresh);
+        mIv_anim_refresh = inflate.findViewById(R.id.iv_refresh);
         mIv_anim_refresh.setImageResource(R.drawable.refresh25);
         headerTitle = (TextView) inflate.findViewById(R.id.default_header_title);
         headerTime = (TextView) inflate.findViewById(R.id.default_header_time);
