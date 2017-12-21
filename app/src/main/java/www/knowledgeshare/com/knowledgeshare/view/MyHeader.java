@@ -34,6 +34,7 @@ public class MyHeader extends BaseHeader {
             R.drawable.refresh16, R.drawable.refresh17, R.drawable.refresh18,
             R.drawable.refresh19, R.drawable.refresh20, R.drawable.refresh21,
             R.drawable.refresh22, R.drawable.refresh23, R.drawable.refresh24};
+    private int[] pullAnimSrcs = new int[]{R.drawable.refresh25, R.drawable.refresh24};
     private AnimationDrawable animationRefresh;
     private long freshTime;
     private TextView headerTitle;
@@ -63,9 +64,10 @@ public class MyHeader extends BaseHeader {
     public View getView(LayoutInflater inflater, ViewGroup viewGroup) {
         View inflate = inflater.inflate(R.layout.refresh_layout, viewGroup, true);
         mIv_anim_refresh = inflate.findViewById(R.id.iv_refresh);
-        mIv_anim_refresh.setImageResource(R.drawable.refresh25);
         headerTitle = (TextView) inflate.findViewById(R.id.default_header_title);
         headerTime = (TextView) inflate.findViewById(R.id.default_header_time);
+        if (pullAnimSrcs != null && pullAnimSrcs.length > 0)
+            mIv_anim_refresh.setImageResource(pullAnimSrcs[0]);
         return inflate;
     }
 
@@ -121,8 +123,9 @@ public class MyHeader extends BaseHeader {
     //头部已经全部弹回时回调
     @Override
     public void onFinishAnim() {
-//        headerTitle.setText("刷新完成");
+        //        headerTitle.setText("刷新完成");
         animationRefresh.stop();
-        mIv_anim_refresh.setImageResource(R.drawable.refresh25);
+        if (pullAnimSrcs != null && pullAnimSrcs.length > 0)
+            mIv_anim_refresh.setImageResource(pullAnimSrcs[0]);
     }
 }

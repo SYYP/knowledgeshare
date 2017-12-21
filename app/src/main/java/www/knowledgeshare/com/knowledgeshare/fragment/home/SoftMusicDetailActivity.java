@@ -34,11 +34,14 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.MyAccountActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.CommentMoreBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.OrderBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicDetailBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
@@ -86,6 +89,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
     private TextView mTv_collect;
     private TextView mTv_dianzan;
     private boolean isRefreshing;
+    private String mId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,9 +173,9 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
     }
 
     private void initData() {
-        String id = getIntent().getStringExtra("id");
+        mId = getIntent().getStringExtra("id");
         HttpParams params = new HttpParams();
-        params.put("id", id);
+        params.put("id", mId);
         params.put("userid", SpUtils.getString(this, "id", ""));
         OkGo.<SoftMusicDetailBean>post(MyContants.LXKURL + "xk/show")
                 .tag(this)
@@ -720,9 +724,75 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                showChongzhiDialog();
+                pushOrder("1");
             }
         });
+        mDialog.getView(R.id.rl_weixin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+                pushOrder("2");
+            }
+        });
+        mDialog.getView(R.id.rl_alipay).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+                pushOrder("3");
+            }
+        });
+    }
+
+    private void pushOrder(final String type) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("id", mId);
+        params.put("type", "xiaoke");
+        params.put("from", "android");
+        OkGo.<OrderBean>post(MyContants.LXKURL + "order/buy")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<OrderBean>(SoftMusicDetailActivity.this,OrderBean.class) {
+                             @Override
+                             public void onSuccess(Response<OrderBean> response) {
+                                 int code = response.code();
+                                 OrderBean orderBean = response.body();
+                                 String order_sn = orderBean.getOrder_sn();
+                                 goPay(order_sn, type);
+                             }
+                         }
+                );
+    }
+
+    private void goPay(String order_sn, String type) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("order_sn", order_sn);
+        params.put("type", type);
+        params.put("from", "android");
+        OkGo.<BaseBean>post(MyContants.LXKURL + "order/pay")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<BaseBean>(SoftMusicDetailActivity.this,BaseBean.class) {
+                             @Override
+                             public void onSuccess(Response<BaseBean> response) {
+                                 int code = response.code();
+                                 BaseBean baseBean = response.body();
+                                 String message = baseBean.getMessage();
+                                 if (message.equals("余额不足")){
+                                     showChongzhiDialog();
+                                 }else if (message.equals("支付成功")){
+                                     showPaySuccessDialog();
+                                 }else {
+                                     Toast.makeText(SoftMusicDetailActivity.this,message, Toast.LENGTH_SHORT).show();
+                                 }
+                             }
+                         }
+                );
     }
 
     private void showChongzhiDialog() {
@@ -750,7 +820,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                showPaySuccessDialog();
+                startActivity(new Intent(SoftMusicDetailActivity.this, MyAccountActivity.class));
             }
         });
     }

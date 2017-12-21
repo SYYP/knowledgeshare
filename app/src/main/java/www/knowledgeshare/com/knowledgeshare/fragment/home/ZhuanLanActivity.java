@@ -26,6 +26,7 @@ import com.lzy.okgo.model.Response;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.MyAccountActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
@@ -209,6 +210,8 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
                                  String message = baseBean.getMessage();
                                  if (message.equals("余额不足")){
                                      showChongzhiDialog();
+                                 }else if (message.equals("支付成功")){
+                                     showPaySuccessDialog();
                                  }else {
                                      Toast.makeText(ZhuanLanActivity.this,message, Toast.LENGTH_SHORT).show();
                                  }
@@ -332,7 +335,7 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                showPaySuccessDialog();
+                startActivity(new Intent(ZhuanLanActivity.this, MyAccountActivity.class));
             }
         });
     }

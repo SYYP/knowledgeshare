@@ -20,7 +20,7 @@ import www.knowledgeshare.com.knowledgeshare.R;
  */
 public class MyFooter extends BaseFooter {
 
-    private ImageView mIv_anim_refresh;
+    private ImageView footer_img;
     private Context mContext;
     private RotateAnimation mRotateUpAnim;
     private RotateAnimation mRotateDownAnim;
@@ -33,7 +33,7 @@ public class MyFooter extends BaseFooter {
             R.drawable.refresh16, R.drawable.refresh17, R.drawable.refresh18,
             R.drawable.refresh19, R.drawable.refresh20, R.drawable.refresh21,
             R.drawable.refresh22, R.drawable.refresh23, R.drawable.refresh24};
-    private AnimationDrawable animationRefresh;
+    private AnimationDrawable animationLoading;
     private TextView headerTitle;
 
     public MyFooter(Context context) {
@@ -48,10 +48,10 @@ public class MyFooter extends BaseFooter {
                 0.5f);
         mRotateDownAnim.setDuration(ROTATE_ANIM_DURATION);
         mRotateDownAnim.setFillAfter(true);
-        animationRefresh = new AnimationDrawable();
+        animationLoading = new AnimationDrawable();
         for (int src : this.refreshAnimSrcs) {
-            animationRefresh.addFrame(ContextCompat.getDrawable(mContext, src), 100);
-            animationRefresh.setOneShot(false);
+            animationLoading.addFrame(ContextCompat.getDrawable(mContext, src), 100);
+            animationLoading.setOneShot(false);
         }
     }
 
@@ -59,16 +59,20 @@ public class MyFooter extends BaseFooter {
     @Override
     public View getView(LayoutInflater inflater, ViewGroup viewGroup) {
         View view = inflater.inflate(R.layout.my_footer, viewGroup, true);
-        headerTitle = view.findViewById(R.id.default_header_title);
-        mIv_anim_refresh = view.findViewById(R.id.iv_refresh);
-        mIv_anim_refresh.setImageResource(R.drawable.refresh25);
+        headerTitle = (TextView) view.findViewById(R.id.header_title);
+        footer_img = (ImageView) view.findViewById(R.id.footer_img);
+        if (animationLoading != null)
+            footer_img.setImageDrawable(animationLoading);
         return view;
     }
 
     //拖拽开始前回调
     @Override
     public void onPreDrag(View rootView) {
-
+        animationLoading.stop();
+        if (animationLoading != null && animationLoading.getNumberOfFrames() > 0)
+            footer_img.setImageResource(R.drawable.refresh25);
+//            footer_img.setImageDrawable(animationLoading.getFrame(24));
     }
 
     //手指拖拽过程中不断回调，dy为拖拽的距离，可以根据拖动的距离添加拖动过程动画
@@ -82,10 +86,10 @@ public class MyFooter extends BaseFooter {
     public void onLimitDes(View rootView, boolean upORdown) {
         if (upORdown) {
             headerTitle.setText("松开载入更多");
-            mIv_anim_refresh.startAnimation(mRotateUpAnim);
+            footer_img.startAnimation(mRotateUpAnim);
         } else {
             headerTitle.setText("查看更多");
-            mIv_anim_refresh.startAnimation(mRotateDownAnim);
+            footer_img.startAnimation(mRotateDownAnim);
         }
     }
 
@@ -93,15 +97,17 @@ public class MyFooter extends BaseFooter {
     @Override
     public void onStartAnim() {
         headerTitle.setText("正在加载...");
-        mIv_anim_refresh.clearAnimation();
-        mIv_anim_refresh.setImageDrawable(animationRefresh);
-        animationRefresh.start();
+        footer_img.clearAnimation();
+        if (animationLoading != null)
+        footer_img.setImageDrawable(animationLoading);
+        animationLoading.start();
     }
 
     //头部已经全部弹回时回调
     @Override
     public void onFinishAnim() {
-        animationRefresh.stop();
-        mIv_anim_refresh.setImageResource(R.drawable.refresh25);
+        animationLoading.stop();
+//        if (animationLoading != null && animationLoading.getNumberOfFrames() > 0)
+//            footer_img.setImageDrawable(animationLoading.getFrame(0));
     }
 }
