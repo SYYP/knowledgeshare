@@ -44,6 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:padding="5dp"
+        android:lineSpacingMultiplier="1.3"
         android:text="崔宗顺,旅美男低音歌唱家撒旦好几年撒旦就撒空当接龙就撒娇的撒绝对路径撒及逻辑"
         android:textColor="@color/textblack"
         android:textSize="15sp"/>

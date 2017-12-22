@@ -1,11 +1,10 @@
 package www.knowledgeshare.com.knowledgeshare.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -23,7 +22,6 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanDetail1Activity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 

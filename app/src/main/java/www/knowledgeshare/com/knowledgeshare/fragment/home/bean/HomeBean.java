@@ -8,13 +8,12 @@ import java.util.List;
 
 public class HomeBean {
 
-
     /**
-     * xiaoke : [{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","teacher_name":"张老师","nodule_count":"2节","xk_name":"如何成为一个合格的歌唱者5","buy_count":"0人","xk_id":7,"xk_teacher_tags":"好声音","time_count":"0:7:2","xk_price":"￥180/年"},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","teacher_name":"张老师","nodule_count":"2节","xk_name":"如何成为一个合格的歌唱者4","buy_count":"0人","xk_id":6,"xk_teacher_tags":"好声音","time_count":"0:7:2","xk_price":"￥180/年"},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","teacher_name":"张老师","nodule_count":"2节","xk_name":"如何成为一个合格的歌唱者3","buy_count":"0人","xk_id":5,"xk_teacher_tags":"好声音","time_count":"0:7:2","xk_price":"￥180/年"},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","teacher_name":"张老师","nodule_count":"2节","xk_name":"如何成为一个合格的歌唱者2","buy_count":"0人","xk_id":4,"xk_teacher_tags":"好声音","time_count":"0:7:2","xk_price":"￥180/年"}]
-     * daily : [{"video_name":"女高音，一个神秘又充满魅力的声音3","video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","teacher_id":1,"t_name":"张老师","id":3},{"video_name":"女高音，一个神秘又充满魅力的声音2","video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music2.mp3","teacher_id":1,"t_name":"张老师","id":2},{"video_name":"女高音，一个神秘又充满魅力的声音1","video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","teacher_id":1,"t_name":"张老师","id":1}]
-     * free : {"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/18x7.png","t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","teacher_id":1,"id":1,"child":[{"good_count":0,"video_name":"女高音，一个神秘又充满魅力的声音3","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"collect_count_true":0,"is_collect":1,"good_count_true":1,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":11,"send_time":0,"id":3,"view_count":0},{"good_count":0,"video_name":"女高音，一个神秘又充满魅力的声音2","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"collect_count_true":3,"is_collect":1,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music2.mp3","view_count_true":4,"send_time":0,"id":2,"view_count":0},{"good_count":0,"video_name":"女高音，一个神秘又充满魅力的声音1","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"collect_count_true":3,"is_collect":1,"good_count_true":2,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":1,"send_time":0,"id":1,"view_count":0}]}
-     * zhuanlan : [{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音2","zl_update_time":"9天前更新","zl_name":"崔宗顺的男低音歌唱家的秘密3","id":3,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"},{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音2","zl_update_time":"9天前更新","zl_name":"崔宗顺的男低音歌唱家的秘密4","id":4,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"},{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音2","zl_update_time":"9天前更新","zl_name":"崔宗顺的男低音歌唱家的秘密2","id":2,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"},{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音2","zl_update_time":"9天前更新","zl_name":"崔宗顺的男低音歌唱家的秘密1","id":1,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"}]
-     * live : [{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/5x7.png","xk_name":"如何成为一个合格的歌唱者4","xk_id":6},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/5x7.png","xk_name":"如何成为一个合格的歌唱者2","xk_id":4},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/5x7.png","xk_name":"如何成为一个合格的歌唱者5","xk_id":7}]
+     * xiaoke : [{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","teacher_name":"张老师","nodule_count":"2节","xk_name":"如何成为一个合格的歌唱者5","buy_count":"2人","xk_id":7,"xk_teacher_tags":"好声音","time_count":"00:07:02","xk_price":"￥180/年"},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","teacher_name":"张老师","nodule_count":"2节","xk_name":"如何成为一个合格的歌唱者4","buy_count":"0人","xk_id":6,"xk_teacher_tags":"好声音","time_count":"00:07:02","xk_price":"￥180/年"},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","teacher_name":"张老师","nodule_count":"2节","xk_name":"如何成为一个合格的歌唱者3","buy_count":"0人","xk_id":5,"xk_teacher_tags":"好声音","time_count":"00:07:02","xk_price":"￥180/年"},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","teacher_name":"张老师","nodule_count":"2节","xk_name":"如何成为一个合格的歌唱者2","buy_count":"2人","xk_id":4,"xk_teacher_tags":"好声音","time_count":"00:07:02","xk_price":"￥180/年"}]
+     * daily : [{"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音3","video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","teacher_id":1,"t_name":"张老师","id":3,"video_type":"daily"},{"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音2","video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music2.mp3","t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","teacher_id":1,"t_name":"张老师","id":2,"video_type":"daily"},{"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音1","video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","teacher_id":1,"t_name":"张老师","id":1,"video_type":"daily"}]
+     * free : {"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/18x7.png","t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","teacher_id":1,"id":1,"teacher_has":{"t_tag":"中国好声音","t_header":"user/20171208/1275610854404958.jpg","t_name":"张老师","t_img":"zhuanlan/20171208/17x8.png","t_live":2,"created_at":"2017-12-08 01:08:06","id":1,"t_mobile":"15250735030","t_introduce":"毕业于四川师范大学音乐系,音乐教育本科,现任四川省泸县第二中学一级专职音乐教师。泸县音乐家协会常任理事。"},"child":[{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音3","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":0,"is_collect":1,"good_count_true":1,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":48,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":3,"view_count":0},{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音2","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":3,"is_collect":1,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music2.mp3","view_count_true":10,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":2,"view_count":0},{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音1","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":2,"is_collect":1,"good_count_true":2,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":5,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":1,"view_count":0}]}
+     * zhuanlan : [{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音2","zl_update_time":"13天前更新","zl_name":"崔宗顺的男低音歌唱家的秘密1","id":1,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"},{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音2","zl_update_time":"13天前更新","zl_name":"崔宗顺的男低音歌唱家的秘密3","id":3,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"},{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音2","zl_update_time":"13天前更新","zl_name":"崔宗顺的男低音歌唱家的秘密5","id":5,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"},{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音2","zl_update_time":"13天前更新","zl_name":"崔宗顺的男低音歌唱家的秘密4","id":4,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"}]
+     * live : [{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/5x7.png","xk_name":"如何成为一个合格的歌唱者3","xk_id":5},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/5x7.png","xk_name":"如何成为一个合格的歌唱者2","xk_id":4},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/5x7.png","xk_name":"如何成为一个合格的歌唱者4","xk_id":6}]
      */
     private List<XiaokeEntity> xiaoke;
     private List<DailyEntity> daily;
@@ -68,10 +67,10 @@ public class HomeBean {
          * teacher_name : 张老师
          * nodule_count : 2节
          * xk_name : 如何成为一个合格的歌唱者5
-         * buy_count : 0人
+         * buy_count : 2人
          * xk_id : 7
          * xk_teacher_tags : 好声音
-         * time_count : 0:7:2
+         * time_count : 00:07:02
          * xk_price : ￥180/年
          */
         private String xk_image;
@@ -159,17 +158,23 @@ public class HomeBean {
 
     public static class DailyEntity {
         /**
+         * t_tag : 中国好声音
          * video_name : 女高音，一个神秘又充满魅力的声音3
          * video_url : http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3
+         * t_header : http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg
          * teacher_id : 1
          * t_name : 张老师
          * id : 3
+         * video_type : daily
          */
+        private String t_tag;
         private String video_name;
         private String video_url;
+        private String t_header;
         private int teacher_id;
         private String t_name;
         private int id;
+        private String video_type;
         private boolean isChecked;
 
         public boolean isChecked() {
@@ -180,12 +185,20 @@ public class HomeBean {
             isChecked = checked;
         }
 
+        public void setT_tag(String t_tag) {
+            this.t_tag = t_tag;
+        }
+
         public void setVideo_name(String video_name) {
             this.video_name = video_name;
         }
 
         public void setVideo_url(String video_url) {
             this.video_url = video_url;
+        }
+
+        public void setT_header(String t_header) {
+            this.t_header = t_header;
         }
 
         public void setTeacher_id(int teacher_id) {
@@ -200,12 +213,24 @@ public class HomeBean {
             this.id = id;
         }
 
+        public void setVideo_type(String video_type) {
+            this.video_type = video_type;
+        }
+
+        public String getT_tag() {
+            return t_tag;
+        }
+
         public String getVideo_name() {
             return video_name;
         }
 
         public String getVideo_url() {
             return video_url;
+        }
+
+        public String getT_header() {
+            return t_header;
         }
 
         public int getTeacher_id() {
@@ -219,6 +244,10 @@ public class HomeBean {
         public int getId() {
             return id;
         }
+
+        public String getVideo_type() {
+            return video_type;
+        }
     }
 
     public static class FreeEntity {
@@ -227,12 +256,14 @@ public class HomeBean {
          * t_header : http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg
          * teacher_id : 1
          * id : 1
-         * child : [{"good_count":0,"video_name":"女高音，一个神秘又充满魅力的声音3","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"collect_count_true":0,"is_collect":1,"good_count_true":1,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":11,"send_time":0,"id":3,"view_count":0},{"good_count":0,"video_name":"女高音，一个神秘又充满魅力的声音2","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"collect_count_true":3,"is_collect":1,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music2.mp3","view_count_true":4,"send_time":0,"id":2,"view_count":0},{"good_count":0,"video_name":"女高音，一个神秘又充满魅力的声音1","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"collect_count_true":3,"is_collect":1,"good_count_true":2,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":1,"send_time":0,"id":1,"view_count":0}]
+         * teacher_has : {"t_tag":"中国好声音","t_header":"user/20171208/1275610854404958.jpg","t_name":"张老师","t_img":"zhuanlan/20171208/17x8.png","t_live":2,"created_at":"2017-12-08 01:08:06","id":1,"t_mobile":"15250735030","t_introduce":"毕业于四川师范大学音乐系,音乐教育本科,现任四川省泸县第二中学一级专职音乐教师。泸县音乐家协会常任理事。"}
+         * child : [{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音3","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":0,"is_collect":1,"good_count_true":1,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":48,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":3,"view_count":0},{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音2","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":3,"is_collect":1,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music2.mp3","view_count_true":10,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":2,"view_count":0},{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音1","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":2,"is_collect":1,"good_count_true":2,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":5,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":1,"view_count":0}]
          */
         private String imgurl;
         private String t_header;
         private int teacher_id;
         private int id;
+        private TeacherHasEntity teacher_has;
         private List<ChildEntity> child;
 
         public void setImgurl(String imgurl) {
@@ -249,6 +280,10 @@ public class HomeBean {
 
         public void setId(int id) {
             this.id = id;
+        }
+
+        public void setTeacher_has(TeacherHasEntity teacher_has) {
+            this.teacher_has = teacher_has;
         }
 
         public void setChild(List<ChildEntity> child) {
@@ -271,13 +306,113 @@ public class HomeBean {
             return id;
         }
 
+        public TeacherHasEntity getTeacher_has() {
+            return teacher_has;
+        }
+
         public List<ChildEntity> getChild() {
             return child;
+        }
+
+        public static class TeacherHasEntity {
+            /**
+             * t_tag : 中国好声音
+             * t_header : user/20171208/1275610854404958.jpg
+             * t_name : 张老师
+             * t_img : zhuanlan/20171208/17x8.png
+             * t_live : 2
+             * created_at : 2017-12-08 01:08:06
+             * id : 1
+             * t_mobile : 15250735030
+             * t_introduce : 毕业于四川师范大学音乐系,音乐教育本科,现任四川省泸县第二中学一级专职音乐教师。泸县音乐家协会常任理事。
+             */
+            private String t_tag;
+            private String t_header;
+            private String t_name;
+            private String t_img;
+            private int t_live;
+            private String created_at;
+            private int id;
+            private String t_mobile;
+            private String t_introduce;
+
+            public void setT_tag(String t_tag) {
+                this.t_tag = t_tag;
+            }
+
+            public void setT_header(String t_header) {
+                this.t_header = t_header;
+            }
+
+            public void setT_name(String t_name) {
+                this.t_name = t_name;
+            }
+
+            public void setT_img(String t_img) {
+                this.t_img = t_img;
+            }
+
+            public void setT_live(int t_live) {
+                this.t_live = t_live;
+            }
+
+            public void setCreated_at(String created_at) {
+                this.created_at = created_at;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public void setT_mobile(String t_mobile) {
+                this.t_mobile = t_mobile;
+            }
+
+            public void setT_introduce(String t_introduce) {
+                this.t_introduce = t_introduce;
+            }
+
+            public String getT_tag() {
+                return t_tag;
+            }
+
+            public String getT_header() {
+                return t_header;
+            }
+
+            public String getT_name() {
+                return t_name;
+            }
+
+            public String getT_img() {
+                return t_img;
+            }
+
+            public int getT_live() {
+                return t_live;
+            }
+
+            public String getCreated_at() {
+                return created_at;
+            }
+
+            public int getId() {
+                return id;
+            }
+
+            public String getT_mobile() {
+                return t_mobile;
+            }
+
+            public String getT_introduce() {
+                return t_introduce;
+            }
         }
 
         public static class ChildEntity {
             /**
              * good_count : 0
+             * t_tag : 中国好声音
              * video_name : 女高音，一个神秘又充满魅力的声音3
              * is_good : 1
              * txt_url : http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt
@@ -286,16 +421,19 @@ public class HomeBean {
              * created_at : 2017-12-08 08:35:30
              * video_old_name : 女高音.mp3
              * collect_count : 0
+             * video_type : free
              * collect_count_true : 0
              * is_collect : 1
              * good_count_true : 1
              * video_url : http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3
-             * view_count_true : 11
+             * view_count_true : 48
              * send_time : 0
+             * t_header : http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg
              * id : 3
              * view_count : 0
              */
             private int good_count;
+            private String t_tag;
             private String video_name;
             private int is_good;
             private String txt_url;
@@ -304,12 +442,14 @@ public class HomeBean {
             private String created_at;
             private String video_old_name;
             private int collect_count;
+            private String video_type;
             private int collect_count_true;
             private int is_collect;
             private int good_count_true;
             private String video_url;
             private int view_count_true;
             private int send_time;
+            private String t_header;
             private int id;
             private int view_count;
             private boolean isChecked;
@@ -324,6 +464,10 @@ public class HomeBean {
 
             public void setGood_count(int good_count) {
                 this.good_count = good_count;
+            }
+
+            public void setT_tag(String t_tag) {
+                this.t_tag = t_tag;
             }
 
             public void setVideo_name(String video_name) {
@@ -358,6 +502,10 @@ public class HomeBean {
                 this.collect_count = collect_count;
             }
 
+            public void setVideo_type(String video_type) {
+                this.video_type = video_type;
+            }
+
             public void setCollect_count_true(int collect_count_true) {
                 this.collect_count_true = collect_count_true;
             }
@@ -382,6 +530,10 @@ public class HomeBean {
                 this.send_time = send_time;
             }
 
+            public void setT_header(String t_header) {
+                this.t_header = t_header;
+            }
+
             public void setId(int id) {
                 this.id = id;
             }
@@ -392,6 +544,10 @@ public class HomeBean {
 
             public int getGood_count() {
                 return good_count;
+            }
+
+            public String getT_tag() {
+                return t_tag;
             }
 
             public String getVideo_name() {
@@ -426,6 +582,10 @@ public class HomeBean {
                 return collect_count;
             }
 
+            public String getVideo_type() {
+                return video_type;
+            }
+
             public int getCollect_count_true() {
                 return collect_count_true;
             }
@@ -450,6 +610,10 @@ public class HomeBean {
                 return send_time;
             }
 
+            public String getT_header() {
+                return t_header;
+            }
+
             public int getId() {
                 return id;
             }
@@ -464,9 +628,9 @@ public class HomeBean {
         /**
          * zl_price : ￥160/年
          * zl_update_name : 专栏小节，如何成为男高音2
-         * zl_update_time : 9天前更新
-         * zl_name : 崔宗顺的男低音歌唱家的秘密3
-         * id : 3
+         * zl_update_time : 13天前更新
+         * zl_name : 崔宗顺的男低音歌唱家的秘密1
+         * id : 1
          * zl_img : http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png
          * zl_introduce : 韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。
          */
@@ -538,8 +702,8 @@ public class HomeBean {
     public static class LiveEntity {
         /**
          * xk_image : http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/5x7.png
-         * xk_name : 如何成为一个合格的歌唱者4
-         * xk_id : 6
+         * xk_name : 如何成为一个合格的歌唱者3
+         * xk_id : 5
          */
         private String xk_image;
         private String xk_name;

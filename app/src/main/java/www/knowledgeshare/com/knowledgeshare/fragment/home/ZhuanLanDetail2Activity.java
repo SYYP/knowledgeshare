@@ -1,7 +1,10 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -36,8 +39,10 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeTryReadDetailBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.OrderBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.TimeBean;
+import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
@@ -70,6 +75,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     private FreeTryReadDetailBean mFreeTryReadDetailBean;
     private String mTime;
     private String mId;
+    private BaseDialog mNetDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +84,35 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         initView();
         initDialog();
         initData();
+        initMusic();
         initListener();
+        initNETDialog();
     }
+
+    private MediaService.MyBinder mMyBinder;
+    //“绑定”服务的intent
+    private Intent MediaServiceIntent;
+
+    private void initMusic() {
+        MediaServiceIntent = new Intent(this, MediaService.class);
+        //        startService(MediaServiceIntent);
+        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+    }
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mMyBinder = (MediaService.MyBinder) service;
+            if (mMyBinder.isPlaying()) {
+            } else {
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     private void initListener() {
         nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
@@ -92,6 +125,62 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 }
             }
         });
+    }
+
+    private void initNETDialog() {
+        BaseDialog.Builder builder = new BaseDialog.Builder(this);
+        mNetDialog = builder.setViewId(R.layout.dialog_iswifi)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+    }
+
+    private void gobofang(final String video_url) {
+        int apnType = NetWorkUtils.getAPNType(this);
+        if (apnType == 0) {
+            Toast.makeText(this, "没有网络呢~", Toast.LENGTH_SHORT).show();
+        } else if (apnType == 2 || apnType == 3 || apnType == 4) {
+            if (SpUtils.getBoolean(this, "nowifiallowlisten", false)) {//记住用户允许流量播放
+                mMyBinder.setMusicUrl(video_url);
+                //                    Glide.with(mContext).load().into(iv_bo_head);
+                mNetDialog.dismiss();
+                ClickPopShow();
+                SpUtils.putBoolean(this, "nowifiallowlisten", true);
+            } else {
+                mNetDialog.show();
+                mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mMyBinder.setMusicUrl(video_url);
+                        //                    Glide.with(mContext).load().into(iv_bo_head);
+                        mNetDialog.dismiss();
+                        ClickPopShow();
+                        SpUtils.putBoolean(ZhuanLanDetail2Activity.this, "nowifiallowlisten", true);
+                    }
+                });
+                mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mNetDialog.dismiss();
+                    }
+                });
+            }
+        } else if (NetWorkUtils.isMobileConnected(ZhuanLanDetail2Activity.this)) {
+            Toast.makeText(this, "wifi不可用呢~", Toast.LENGTH_SHORT).show();
+        } else {
+            //        Glide.with(mContext).load().into(iv_bo_head);
+            mMyBinder.setMusicUrl(video_url);
+            ClickPopShow();
+        }
     }
 
     private void initData() {
@@ -427,12 +516,12 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                  int code = response.code();
                                  BaseBean baseBean = response.body();
                                  String message = baseBean.getMessage();
-                                 if (message.equals("余额不足")){
+                                 if (message.equals("余额不足")) {
                                      showChongzhiDialog();
-                                 }else if (message.equals("支付成功")){
+                                 } else if (message.equals("支付成功")) {
                                      showPaySuccessDialog();
-                                 }else {
-                                     Toast.makeText(ZhuanLanDetail2Activity.this,message, Toast.LENGTH_SHORT).show();
+                                 } else {
+                                     Toast.makeText(ZhuanLanDetail2Activity.this, message, Toast.LENGTH_SHORT).show();
                                  }
                              }
                          }
@@ -512,7 +601,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 if (!isBofang) {
                     iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
                     setISshow(true);
-                    ClickPopShow();
+                    gobofang(mFreeTryReadDetailBean.getVideo_url());
                 } else {
                     iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
                     ClickPauseMusic();

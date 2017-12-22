@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -47,6 +48,7 @@ import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
 import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
@@ -88,6 +90,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
     private TextView mTv_dianzan;
     private boolean isRefreshing;
     private String mId;
+    private BaseDialog mNetDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +101,63 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         initData();
         initMusic();
         initListener();
+        initNETDialog();
+    }
+
+    private void initNETDialog() {
+        BaseDialog.Builder builder = new BaseDialog.Builder(this);
+        mNetDialog = builder.setViewId(R.layout.dialog_iswifi)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+    }
+
+    private void gobofang(final String video_url) {
+        int apnType = NetWorkUtils.getAPNType(this);
+        if (apnType == 0) {
+            Toast.makeText(this, "没有网络呢~", Toast.LENGTH_SHORT).show();
+        } else if (apnType == 2 || apnType == 3 || apnType == 4) {
+            if (SpUtils.getBoolean(this, "nowifiallowlisten", false)) {//记住用户允许流量播放
+                mMyBinder.setMusicUrl(video_url);
+                //                    Glide.with(mContext).load().into(iv_bo_head);
+                mNetDialog.dismiss();
+                ClickPopShow();
+                SpUtils.putBoolean(this, "nowifiallowlisten", true);
+            } else {
+                mNetDialog.show();
+                mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mMyBinder.setMusicUrl(video_url);
+                        //                    Glide.with(mContext).load().into(iv_bo_head);
+                        mNetDialog.dismiss();
+                        ClickPopShow();
+                        SpUtils.putBoolean(LikeDetailActivity.this, "nowifiallowlisten", true);
+                    }
+                });
+                mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mNetDialog.dismiss();
+                    }
+                });
+            }
+        } else if (NetWorkUtils.isMobileConnected(LikeDetailActivity.this)) {
+            Toast.makeText(this, "wifi不可用呢~", Toast.LENGTH_SHORT).show();
+        } else {
+            //        Glide.with(mContext).load().into(iv_bo_head);
+            mMyBinder.setMusicUrl(video_url);
+            ClickPopShow();
+        }
     }
 
     private void initListener() {
@@ -106,7 +166,13 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onRefresh() {
                 isRefreshing = true;
-                initData();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        initData();
+                        springview.onFinishFreshAndLoad();
+                    }
+                }, 2000);
             }
 
             @Override
@@ -175,7 +241,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
         OkGo.<SoftMusicDetailBean>post(MyContants.LXKURL + "xk/show")
                 .tag(this)
                 .params(params)
-                .execute(new DialogCallback<SoftMusicDetailBean>(LikeDetailActivity.this,SoftMusicDetailBean.class) {
+                .execute(new DialogCallback<SoftMusicDetailBean>(LikeDetailActivity.this, SoftMusicDetailBean.class) {
                              @Override
                              public void onSuccess(Response<SoftMusicDetailBean> response) {
                                  int code = response.code();
@@ -208,12 +274,11 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                                  mLieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                         if (position != 0) {
+                                         if (mLieBiaoAdapter.getData().get(position).getIs_try() != 1) {
                                              showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
                                          } else {
-                                             //                    mMyBinder.playMusic();
                                              setISshow(true);
-                                             ClickPopShow();
+                                             gobofang(mLieBiaoAdapter.getData().get(position).getVideo_url());
                                          }
                                      }
                                  });
@@ -660,7 +725,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<OrderBean>(LikeDetailActivity.this,OrderBean.class) {
+                .execute(new DialogCallback<OrderBean>(LikeDetailActivity.this, OrderBean.class) {
                              @Override
                              public void onSuccess(Response<OrderBean> response) {
                                  int code = response.code();
@@ -683,23 +748,24 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<BaseBean>(LikeDetailActivity.this,BaseBean.class) {
+                .execute(new DialogCallback<BaseBean>(LikeDetailActivity.this, BaseBean.class) {
                              @Override
                              public void onSuccess(Response<BaseBean> response) {
                                  int code = response.code();
                                  BaseBean baseBean = response.body();
                                  String message = baseBean.getMessage();
-                                 if (message.equals("余额不足")){
+                                 if (message.equals("余额不足")) {
                                      showChongzhiDialog();
-                                 }else if (message.equals("支付成功")){
+                                 } else if (message.equals("支付成功")) {
                                      showPaySuccessDialog();
-                                 }else {
-                                     Toast.makeText(LikeDetailActivity.this,message, Toast.LENGTH_SHORT).show();
+                                 } else {
+                                     Toast.makeText(LikeDetailActivity.this, message, Toast.LENGTH_SHORT).show();
                                  }
                              }
                          }
                 );
     }
+
     private class LiuYanAdapter extends BaseQuickAdapter<CommentMoreBean.DataEntity, BaseViewHolder> {
 
         public LiuYanAdapter(@LayoutRes int layoutResId, @Nullable List<CommentMoreBean.DataEntity> data) {
@@ -796,9 +862,9 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
     private Intent MediaServiceIntent;
 
     private void initMusic() {
-        //        MediaServiceIntent = new Intent(this, MediaService.class);
-        //        startService(MediaServiceIntent);
-        //        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        MediaServiceIntent = new Intent(this, MediaService.class);
+//        startService(MediaServiceIntent);
+        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {

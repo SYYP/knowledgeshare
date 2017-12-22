@@ -252,11 +252,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     tv_study.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                     tv_mine.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
 
-
                 }
                 break;
             case R.id.ll_listen:
-
                 if (isPause) {
                     iv_listen.setImageResource(R.drawable.tab_listen_bo);
                     if (mRotate_anim != null) {

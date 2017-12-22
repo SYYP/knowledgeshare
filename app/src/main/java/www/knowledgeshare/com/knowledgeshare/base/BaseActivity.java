@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -26,7 +27,7 @@ import www.knowledgeshare.com.knowledgeshare.view.CustomPopupWindow;
 
 public class BaseActivity extends AppCompatActivity {
     private static List<Activity> activityList = new ArrayList<>();
-    private boolean isshow = true;
+    private boolean isshow = true;//默认所有界面都显示
     private CustomPopupWindow musicPop;
     private MediaService.MyBinder mMyBinder;
     //“绑定”服务的intent
@@ -42,6 +43,7 @@ public class BaseActivity extends AppCompatActivity {
             musicPop = new CustomPopupWindow(this);
             initMusic();
         }
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
     }
 
     private void initMusic() {

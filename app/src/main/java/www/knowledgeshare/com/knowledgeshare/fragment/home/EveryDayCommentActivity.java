@@ -40,6 +40,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.EveryDayBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class EveryDayCommentActivity extends BaseActivity implements View.OnClickListener {
@@ -61,6 +62,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
     private boolean mDianzan;
     private LieBiaoAdapter mLieBiaoAdapter;
     private List<EveryDayBean.DailysEntity> mDailys;
+    private BaseDialog mNetDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,63 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
         initDialog();
         initMusic();
         initListener();
+        initNETDialog();
+    }
+
+    private void initNETDialog() {
+        BaseDialog.Builder builder = new BaseDialog.Builder(this);
+        mNetDialog = builder.setViewId(R.layout.dialog_iswifi)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+    }
+
+    private void gobofang(final String video_url) {
+        int apnType = NetWorkUtils.getAPNType(this);
+        if (apnType == 0) {
+            Toast.makeText(this, "没有网络呢~", Toast.LENGTH_SHORT).show();
+        } else if (apnType == 2 || apnType == 3 || apnType == 4) {
+            if (SpUtils.getBoolean(this, "nowifiallowlisten", false)) {//记住用户允许流量播放
+                mMyBinder.setMusicUrl(video_url);
+                //                    Glide.with(mContext).load().into(iv_bo_head);
+                mNetDialog.dismiss();
+                ClickPopShow();
+                SpUtils.putBoolean(this, "nowifiallowlisten", true);
+            } else {
+                mNetDialog.show();
+                mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mMyBinder.setMusicUrl(video_url);
+                        //                    Glide.with(mContext).load().into(iv_bo_head);
+                        mNetDialog.dismiss();
+                        ClickPopShow();
+                        SpUtils.putBoolean(EveryDayCommentActivity.this, "nowifiallowlisten", true);
+                    }
+                });
+                mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mNetDialog.dismiss();
+                    }
+                });
+            }
+        } else if (NetWorkUtils.isMobileConnected(EveryDayCommentActivity.this)) {
+            Toast.makeText(this, "wifi不可用呢~", Toast.LENGTH_SHORT).show();
+        } else {
+            //        Glide.with(mContext).load().into(iv_bo_head);
+            mMyBinder.setMusicUrl(video_url);
+            ClickPopShow();
+        }
     }
 
     private void initData() {
@@ -79,7 +138,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
         OkGo.<EveryDayBean>post(MyContants.LXKURL + "daily")
                 .tag(this)
                 .params(params)
-                .execute(new DialogCallback<EveryDayBean>(EveryDayCommentActivity.this,EveryDayBean.class) {
+                .execute(new DialogCallback<EveryDayBean>(EveryDayCommentActivity.this, EveryDayBean.class) {
                     @Override
                     public void onSuccess(Response<EveryDayBean> response) {
                         int code = response.code();
@@ -88,16 +147,16 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                         if (response.code() >= 200 && response.code() <= 204) {
                             Logger.e(code + "");
                             Glide.with(EveryDayCommentActivity.this).load(everyDayBean.getImgurl()).into(iv_beijing);
-                            tv_jie_count.setText("已更新："+everyDayBean.getUpdate_count()+"节");
-                            tv_look_count.setText("浏览次数："+everyDayBean.getView_count()+"");
-                            tv_collect_count.setText("收藏次数："+everyDayBean.getCollect_count()+"");
+                            tv_jie_count.setText("已更新：" + everyDayBean.getUpdate_count() + "节");
+                            tv_look_count.setText("浏览次数：" + everyDayBean.getView_count() + "");
+                            tv_collect_count.setText("收藏次数：" + everyDayBean.getCollect_count() + "");
                             mLieBiaoAdapter = new LieBiaoAdapter(R.layout.item_free, mDailys);
                             recycler_liebiao.setAdapter(mLieBiaoAdapter);
                             mLieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     setISshow(true);
-                                    ClickPopShow();
+                                    gobofang(mLieBiaoAdapter.getData().get(position).getVideo_url());
                                 }
                             });
                         } else {
@@ -157,7 +216,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
         tv_collect_count = (TextView) findViewById(R.id.tv_collect_count);
         recycler_liebiao = (RecyclerView) findViewById(R.id.recycler_liebiao);
         activity_free = (LinearLayout) findViewById(R.id.activity_free);
-        nestView= (NestedScrollView) findViewById(R.id.nestView);
+        nestView = (NestedScrollView) findViewById(R.id.nestView);
         recycler_liebiao.setLayoutManager(new LinearLayoutManager(this));
         recycler_liebiao.setNestedScrollingEnabled(false);
     }
@@ -172,9 +231,9 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
         protected void convert(final BaseViewHolder helper, final EveryDayBean.DailysEntity item) {
             helper.setText(R.id.tv_name, item.getVideo_name())
                     .setText(R.id.tv_time, item.getCreated_at() + "发布")
-                    .setText(R.id.tv_look_count, item.getIs_view()==0?item.getView_count() + "":item.getView_count_true()+"")
-                    .setText(R.id.tv_collect_count, item.getIs_collect()==0?item.getCollect_count() + "":item.getCollect_count_true()+"")
-                    .setText(R.id.tv_dianzan_count, item.getIs_good()==0?item.getGood_count() + "":item.getGood_count_true()+"");
+                    .setText(R.id.tv_look_count, item.getIs_view() == 0 ? item.getView_count() + "" : item.getView_count_true() + "")
+                    .setText(R.id.tv_collect_count, item.getIs_collect() == 0 ? item.getCollect_count() + "" : item.getCollect_count_true() + "")
+                    .setText(R.id.tv_dianzan_count, item.getIs_good() == 0 ? item.getGood_count() + "" : item.getGood_count_true() + "");
             helper.getView(R.id.iv_dian).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -189,15 +248,17 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                     intent.putExtra("t_name", item.getTeacher_to().getT_name());
                     intent.putExtra("t_head", item.getTeacher_to().getT_header());
                     intent.putExtra("video_name", item.getVideo_name());
-                    intent.putExtra("teacher_id", item.getTeacher_id()+"");
+                    intent.putExtra("teacher_id", item.getTeacher_id() + "");
                     intent.putExtra("id", item.getId() + "");
                     startActivity(intent);
                 }
             });
-            helper.setText(R.id.tv_order,"0"+(helper.getAdapterPosition()+1));
+            helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
         }
     }
-    private TextView mTv_collect,mTv_dianzan;
+
+    private TextView mTv_collect, mTv_dianzan;
+
     private void showListDialog(final int adapterPosition, boolean isfav, boolean islive, final int id) {
         mDialog = mBuilder.setViewId(R.layout.dialog_free)
                 //设置dialogpadding
@@ -412,6 +473,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
     private MediaService.MyBinder mMyBinder;
     //“绑定”服务的intent
     private Intent MediaServiceIntent;
+
     private void initMusic() {
         MediaServiceIntent = new Intent(this, MediaService.class);
         //        startService(MediaServiceIntent);
@@ -422,8 +484,8 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMyBinder = (MediaService.MyBinder) service;
-            if (mMyBinder.isPlaying()){
-            }else {
+            if (mMyBinder.isPlaying()) {
+            } else {
             }
         }
 
@@ -450,10 +512,10 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 showShareDialog();
                 break;
             case R.id.tv_search:
-                startActivity(new Intent(this,SearchActivity.class));
+                startActivity(new Intent(this, SearchActivity.class));
                 break;
             case R.id.tv_download:
-                startActivity(new Intent(this,DownLoadListActivity.class));
+                startActivity(new Intent(this, DownLoadListActivity.class));
                 break;
         }
     }

@@ -9,29 +9,30 @@
         android:padding="10dp">
         <TextView
             android:id="@+id/tv_name"
-            android:text="如何成为男高音"
-            android:textColor="@color/textblack"
-            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="如何成为男高音"
+            android:textColor="@color/textblack"/>
         <TextView
             android:id="@+id/tv_time"
-            android:text="今天"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="今天"/>
     </RelativeLayout>
     <TextView
         android:id="@+id/tv_description"
-        android:text="如何成为男高音。。。。。。。"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:lineSpacingMultiplier="1.3"
+        android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingBottom="10dp"
-        android:layout_alignParentRight="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:text="如何成为男高音。。。。。。。"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

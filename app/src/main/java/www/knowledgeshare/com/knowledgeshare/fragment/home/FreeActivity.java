@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -21,7 +22,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
@@ -44,7 +44,9 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
 import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
 import static www.knowledgeshare.com.knowledgeshare.R.id.tv_collect;
@@ -67,6 +69,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
     private RecyclerView recycler_liuyan;
     private LinearLayout activity_free;
     private BaseDialog mDialog;
+    private BaseDialog mNetDialog;
     private BaseDialog.Builder mBuilder;
     private boolean isGuanzhu;
     private boolean isZan;
@@ -96,6 +99,24 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
         initDialog();
         initMusic();
         initListener();
+        initNETDialog();
+    }
+
+    private void initNETDialog() {
+        BaseDialog.Builder builder = new BaseDialog.Builder(this);
+        mNetDialog = builder.setViewId(R.layout.dialog_iswifi)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
     }
 
     private void initListener() {
@@ -114,7 +135,13 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onRefresh() {
                 isRefreshing = true;
-                initData();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        initData();
+                        springview.onFinishFreshAndLoad();
+                    }
+                }, 2000);
             }
 
             @Override
@@ -123,7 +150,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
             }
         });
         springview.setHeader(new MyHeader(this));
-        springview.setFooter(new DefaultFooter(this));
+        springview.setFooter(new MyFooter(this));
     }
 
     private void loadMoreComment(String after) {
@@ -168,7 +195,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
         OkGo.<FreeBean>post(MyContants.LXKURL + "free")
                 .tag(this)
                 .params(params)
-                .execute(new DialogCallback<FreeBean>(FreeActivity.this,FreeBean.class) {
+                .execute(new DialogCallback<FreeBean>(FreeActivity.this, FreeBean.class) {
                     @Override
                     public void onSuccess(Response<FreeBean> response) {
                         int code = response.code();
@@ -203,15 +230,14 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     setISshow(true);
-                                    ClickPopShow();
+                                    gobofang(mFreeAdapter.getData().get(position).getVideo_url());
                                     addListenCount(mFreeAdapter.getData().get(position).getId() + "");
                                 }
                             });
                             if (!isRefreshing) {
                                 loadMoreComment("");
                             }
-                            isRefreshing=false;
-                            springview.onFinishFreshAndLoad();
+                            isRefreshing = false;
                         } else {
                         }
                     }
@@ -222,6 +248,45 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                         Logger.e(response.getException().getMessage());
                     }
                 });
+    }
+
+    private void gobofang(final String video_url) {
+        int apnType = NetWorkUtils.getAPNType(this);
+        if (apnType == 0) {
+            Toast.makeText(this, "没有网络呢~", Toast.LENGTH_SHORT).show();
+        } else if (apnType == 2 || apnType == 3 || apnType == 4) {
+            if (SpUtils.getBoolean(this, "nowifiallowlisten", false)) {//记住用户允许流量播放
+                mMyBinder.setMusicUrl(video_url);
+                //                    Glide.with(mContext).load().into(iv_bo_head);
+                mNetDialog.dismiss();
+                ClickPopShow();
+                SpUtils.putBoolean(this, "nowifiallowlisten", true);
+            } else {
+                mNetDialog.show();
+                mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mMyBinder.setMusicUrl(video_url);
+                        //                    Glide.with(mContext).load().into(iv_bo_head);
+                        mNetDialog.dismiss();
+                        ClickPopShow();
+                        SpUtils.putBoolean(FreeActivity.this, "nowifiallowlisten", true);
+                    }
+                });
+                mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mNetDialog.dismiss();
+                    }
+                });
+            }
+        } else if (NetWorkUtils.isMobileConnected(FreeActivity.this)) {
+            Toast.makeText(this, "wifi不可用呢~", Toast.LENGTH_SHORT).show();
+        } else {
+            //        Glide.with(mContext).load().into(iv_bo_head);
+            mMyBinder.setMusicUrl(video_url);
+            ClickPopShow();
+        }
     }
 
     private void addListenCount(String id) {
@@ -619,9 +684,9 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
     private Intent MediaServiceIntent;
 
     private void initMusic() {
-        //        MediaServiceIntent = new Intent(this, MediaService.class);
-        //        startService(MediaServiceIntent);
-        //        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        MediaServiceIntent = new Intent(this, MediaService.class);
+//        startService(MediaServiceIntent);
+        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {

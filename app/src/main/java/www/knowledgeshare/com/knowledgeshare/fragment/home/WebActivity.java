@@ -1,7 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -12,9 +11,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 
 
-public class WebActivity extends AppCompatActivity {
+public class WebActivity extends BaseActivity {
     private WebView webView;
     private ProgressBar pb;
     private String url;

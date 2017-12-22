@@ -83,7 +83,6 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
             case R.id.iv_delete:
                 this.dismiss();
                 isBofang = false;
-                rl_bofang.setVisibility(View.GONE);
                 EventBean eventBean = new EventBean("norotate");
                 EventBus.getDefault().postSticky(eventBean);
                 EventBean eventBean2 = new EventBean("close");

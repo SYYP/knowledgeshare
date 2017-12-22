@@ -50,6 +50,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBannerBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeDaShiBanNewBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.LikeMoreBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BannerUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
@@ -377,7 +378,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             }
         });
         springview.setHeader(new MyHeader(mContext));
-//        springview.setFooter(new MyFooter(mContext));
     }
 
     private void initDialog() {
@@ -416,7 +416,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 @Override
                 public void onClick(View view) {
                     refreshbofang("zhuanlan", helper.getAdapterPosition());
-                    gobofang(item.getVideo_url());
+                    PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
+                    gobofang(playerBean);
                 }
             });
         }
@@ -443,7 +444,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 @Override
                 public void onClick(View view) {
                     refreshbofang("comment", helper.getAdapterPosition());
-                    gobofang(item.getVideo_url());
+                    PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
+                    gobofang(playerBean);
                 }
             });
         }
@@ -548,7 +550,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         }
     }
 
-    private void gobofang(final String video_url) {
+    private void gobofang(final PlayerBean playerBean) {
         isBofang = false;
         int apnType = NetWorkUtils.getAPNType(mContext);
         if (apnType == 0) {
@@ -557,9 +559,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             if (SpUtils.getBoolean(mContext, "nowifiallowlisten", false)) {//记住用户允许流量播放
                 isBofang = true;
                 rl_bofang.setVisibility(View.VISIBLE);
-                mMyBinder.setMusicUrl(video_url);
-                //                    Glide.with(mContext).load().into(iv_bo_head);
-                mMyBinder.playMusic();
+                mMyBinder.setMusicUrl(playerBean.getVideo_url());
+                Glide.with(mContext).load(playerBean.getTeacher_head()).into(iv_bo_head);
+                tv_title.setText(playerBean.getTitle());
+                tv_subtitle.setText(playerBean.getSubtitle());
+                mMyBinder.playMusic(playerBean);
                 mDialog.dismiss();
                 EventBean eventBean = new EventBean("rotate");
                 EventBus.getDefault().postSticky(eventBean);
@@ -571,9 +575,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     public void onClick(View v) {
                         isBofang = true;
                         rl_bofang.setVisibility(View.VISIBLE);
-                        mMyBinder.setMusicUrl(video_url);
-                        //                    Glide.with(mContext).load().into(iv_bo_head);
-                        mMyBinder.playMusic();
+                        mMyBinder.setMusicUrl(playerBean.getVideo_url());
+                        Glide.with(mContext).load(playerBean.getTeacher_head()).into(iv_bo_head);
+                        tv_title.setText(playerBean.getTitle());
+                        tv_subtitle.setText(playerBean.getSubtitle());
+                        mMyBinder.playMusic(playerBean);
                         mDialog.dismiss();
                         EventBean eventBean = new EventBean("rotate");
                         EventBus.getDefault().postSticky(eventBean);
@@ -592,11 +598,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         } else {
             isBofang = true;
             rl_bofang.setVisibility(View.VISIBLE);
-            //        Glide.with(mContext).load().into(iv_bo_head);
+            mMyBinder.setMusicUrl(playerBean.getVideo_url());
+            Glide.with(mContext).load(playerBean.getTeacher_head()).into(iv_bo_head);
+            tv_title.setText(playerBean.getTitle());
+            tv_subtitle.setText(playerBean.getSubtitle());
+            mMyBinder.playMusic(playerBean);
             EventBean eventBean = new EventBean("rotate");
             EventBus.getDefault().postSticky(eventBean);
-            mMyBinder.setMusicUrl(video_url);
-            mMyBinder.playMusic();
         }
     }
 
