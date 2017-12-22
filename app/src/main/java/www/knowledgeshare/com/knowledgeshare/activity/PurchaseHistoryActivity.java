@@ -11,6 +11,10 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +23,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.PurchaseHistoryBean;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
  * 购买记录
@@ -32,7 +40,7 @@ public class PurchaseHistoryActivity extends BaseActivity implements View.OnClic
     TextView titleContentTv;
     @BindView(R.id.recycler_gmjl)
     RecyclerView recyclerGmjl;
-    private List<PurchaseHistoryBean> list;
+    private List<PurchaseHistoryBean.DataBean> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +56,8 @@ public class PurchaseHistoryActivity extends BaseActivity implements View.OnClic
         titleContentTv.setText("购买记录");
         recyclerGmjl.setLayoutManager(new LinearLayoutManager(this));
         recyclerGmjl.setNestedScrollingEnabled(false);
-        list = new ArrayList<>();
+        requestBuyHistory();
+        /*list = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
             PurchaseHistoryBean purchaseHistoryBean = new PurchaseHistoryBean();
             purchaseHistoryBean.setBianhao("123456789"+i);
@@ -56,9 +65,29 @@ public class PurchaseHistoryActivity extends BaseActivity implements View.OnClic
             purchaseHistoryBean.setName("《凌晨4点的北京》");
             purchaseHistoryBean.setMoney("￥198.00");
             list.add(purchaseHistoryBean);
-        }
-        PurchaseHistoryAdapter adapter = new PurchaseHistoryAdapter(R.layout.item_purchase_history,list);
-        recyclerGmjl.setAdapter(adapter);
+        }*/
+
+    }
+
+    private void requestBuyHistory() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        OkGo.<PurchaseHistoryBean>post(MyContants.buyHistory)
+                .tag(this)
+                .headers(headers)
+                .execute(new DialogCallback<PurchaseHistoryBean>(this,PurchaseHistoryBean.class) {
+                    @Override
+                    public void onSuccess(Response<PurchaseHistoryBean> response) {
+                        int code = response.code();
+                        if (code >= 200 && code <= 204){
+                            list = response.body().getData();
+                            PurchaseHistoryAdapter adapter = new PurchaseHistoryAdapter(R.layout.item_purchase_history,list);
+                            recyclerGmjl.setAdapter(adapter);
+                        }else {
+                            TUtils.showShort(PurchaseHistoryActivity.this,response.body().getMessage());
+                        }
+                    }
+                });
     }
 
     @Override
@@ -70,23 +99,24 @@ public class PurchaseHistoryActivity extends BaseActivity implements View.OnClic
         }
     }
 
-    private class PurchaseHistoryAdapter extends BaseQuickAdapter<PurchaseHistoryBean,BaseViewHolder>{
+    private class PurchaseHistoryAdapter extends BaseQuickAdapter<PurchaseHistoryBean.DataBean,BaseViewHolder>{
 
-        public PurchaseHistoryAdapter(@LayoutRes int layoutResId, @Nullable List<PurchaseHistoryBean> data) {
+        public PurchaseHistoryAdapter(@LayoutRes int layoutResId, @Nullable List<PurchaseHistoryBean.DataBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, PurchaseHistoryBean item) {
+        protected void convert(BaseViewHolder helper, PurchaseHistoryBean.DataBean item) {
             TextView bianhaoTv = helper.getView(R.id.danhao_tv);
             TextView dateTv = helper.getView(R.id.date_tv);
             TextView nameTv = helper.getView(R.id.name_tv);
             TextView moneyTv = helper.getView(R.id.money_tv);
 
-            bianhaoTv.setText(item.getBianhao());
-            dateTv.setText(item.getDate());
+            bianhaoTv.setText(item.getOrder_sn());
+            dateTv.setText(item.getPayment_time());
             nameTv.setText(item.getName());
-            moneyTv.setText(item.getMoney());
+            moneyTv.setText(item.getOrder_amount());
+
         }
     }
 }

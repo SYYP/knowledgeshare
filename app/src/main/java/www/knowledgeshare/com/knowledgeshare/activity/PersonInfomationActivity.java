@@ -30,9 +30,16 @@ import com.luck.picture.lib.compress.Luban;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalSelectionDialog;
 
+import java.io.File;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,43 +50,65 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.bean.UserInfoBean;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseSelectPopupWindow;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TimeUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
 public class PersonInfomationActivity extends BaseActivity implements View.OnClickListener {
 
-    @BindView(R.id.title_back_iv) ImageView titleBackIv;
-    @BindView(R.id.title_content_tv) TextView titleContentTv;
-    @BindView(R.id.face_iv) CircleImageView faceIv;
-    @BindView(R.id.person_face_rl) RelativeLayout personFaceRl;
-    @BindView(R.id.zhye_tv) TextView nameTv;
-    @BindView(R.id.person_name_rl) RelativeLayout personNameRl;
-    @BindView(R.id.sex_tv) TextView sexTv;
-    @BindView(R.id.person_sex_rl) RelativeLayout personSexRl;
-    @BindView(R.id.date_tv) TextView dateTv;
-    @BindView(R.id.person_date_rl) RelativeLayout personDateRl;
-    @BindView(R.id.xueli_tv) TextView xueliTv;
-    @BindView(R.id.person_xueli_rl) RelativeLayout personXueliRl;
-    @BindView(R.id.hangye_tv) TextView hangyeTv;
-    @BindView(R.id.person_hangye_rl) RelativeLayout personHangyeRl;
-    @BindView(R.id.zhiye_tv) TextView zhiyeTv;
-    @BindView(R.id.person_zhiye_rl) RelativeLayout personZhiyeRl;
-    private List<String> cameraList;
-    private List<LocalMedia> selectList = new ArrayList<>();
-    private String cutPath;
-    private BaseSelectPopupWindow popWiw;// 昵称 编辑框
-    private List<String> sexLiset;
-    private TimePickerView pvCustomLunar;
-    private OptionsPickerView pvCustomOptions;
-    private List<String> xueliItem, hangyeItem, zhiyeItem;
+    @BindView(R.id.title_back_iv) ImageView titleBackIv;@BindView(R.id.title_content_tv) TextView titleContentTv;
+    @BindView(R.id.face_iv) CircleImageView faceIv;@BindView(R.id.person_face_rl) RelativeLayout personFaceRl;
+    @BindView(R.id.zhye_tv) TextView nameTv;@BindView(R.id.person_name_rl) RelativeLayout personNameRl;
+    @BindView(R.id.sex_tv) TextView sexTv;@BindView(R.id.person_sex_rl) RelativeLayout personSexRl;
+    @BindView(R.id.date_tv) TextView dateTv;@BindView(R.id.person_date_rl) RelativeLayout personDateRl;
+    @BindView(R.id.xueli_tv) TextView xueliTv;@BindView(R.id.person_xueli_rl) RelativeLayout personXueliRl;
+    @BindView(R.id.hangye_tv) TextView hangyeTv;@BindView(R.id.person_hangye_rl) RelativeLayout personHangyeRl;
+    private List<String> cameraList;private List<LocalMedia> selectList = new ArrayList<>();
+    private String cutPath;private BaseSelectPopupWindow popWiw;// 昵称 编辑框
+    private List<String> sexLiset;private TimePickerView pvCustomLunar;
+    private OptionsPickerView pvCustomOptions;private List<String> xueliItem, hangyeItem;
+    private int NAME = 0, SEX = 1, BIRTHDAY = 2, EDUCATION = 3, INDUSTRY = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_infomation);
         ButterKnife.bind(this);
+
+        sexLiset = new ArrayList<>();
+        sexLiset.add("男");
+        sexLiset.add("女");
+
+        xueliItem = new ArrayList<>();
+        xueliItem.add("小学");
+        xueliItem.add("初中");
+        xueliItem.add("高中（中专）");
+        xueliItem.add("大专（高职）");
+        xueliItem.add("本科");
+        xueliItem.add("硕士研究生");
+        xueliItem.add("博士研究生");
+
+        hangyeItem = new ArrayList<>();
+        hangyeItem.add("农、林、牧、渔、水利业");
+        hangyeItem.add("工业");
+        hangyeItem.add("地质普查和勘探业");
+        hangyeItem.add("建筑业");
+        hangyeItem.add("交通运输业、邮电通信业");
+        hangyeItem.add("商业、公共饮食业、物资供应和仓储业");
+        hangyeItem.add("房地产管理、公用事业、居民服务和咨询服务业");
+        hangyeItem.add("卫生、体育和社会福利事业");
+        hangyeItem.add("教育、文化艺术和广播电视业");
+        hangyeItem.add("科学研究和综合技术服务业");
+        hangyeItem.add("金融、保险业");
+        hangyeItem.add("国家机关、党政机关和社会团体");
+        hangyeItem.add("其他行业");
         initView();
     }
 
@@ -93,10 +122,97 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
         personDateRl.setOnClickListener(this);
         personXueliRl.setOnClickListener(this);
         personHangyeRl.setOnClickListener(this);
-        personZhiyeRl.setOnClickListener(this);
 
         initLunarPicker();//初始化时间选择器
 
+        String url = getIntent().getStringExtra("url");
+        Glide.with(this).load(url).into(faceIv);
+        String name = getIntent().getStringExtra("name");
+        nameTv.setText(name);
+        String sex = getIntent().getStringExtra("sex");
+        if (TextUtils.equals("1",sex)){
+            sexTv.setText("男");
+        }else {
+            sexTv.setText("女");
+        }
+        String brithday = getIntent().getStringExtra("brithday");
+        dateTv.setText(brithday);
+        String education = getIntent().getStringExtra("education");
+        int educationInt = Integer.parseInt(education);
+        getEducation(educationInt);
+        String industry = getIntent().getStringExtra("industry");
+        int industryInt = Integer.parseInt(industry);
+        getIndustry(industryInt);
+    }
+
+    private void getIndustry(int industry) {
+        switch (industry){
+            case 1:
+                hangyeTv.setText(hangyeItem.get(0));
+                break;
+            case 2:
+                hangyeTv.setText(hangyeItem.get(1));
+                break;
+            case 3:
+                hangyeTv.setText(hangyeItem.get(2));
+                break;
+            case 4:
+                hangyeTv.setText(hangyeItem.get(3));
+                break;
+            case 5:
+                hangyeTv.setText(hangyeItem.get(4));
+                break;
+            case 6:
+                hangyeTv.setText(hangyeItem.get(5));
+                break;
+            case 7:
+                hangyeTv.setText(hangyeItem.get(6));
+                break;
+            case 8:
+                hangyeTv.setText(hangyeItem.get(7));
+                break;
+            case 9:
+                hangyeTv.setText(hangyeItem.get(8));
+                break;
+            case 10:
+                hangyeTv.setText(hangyeItem.get(9));
+                break;
+            case 11:
+                hangyeTv.setText(hangyeItem.get(10));
+                break;
+            case 12:
+                hangyeTv.setText(hangyeItem.get(11));
+                break;
+            case 13:
+                hangyeTv.setText(hangyeItem.get(12));
+                break;
+        }
+    }
+
+    private void getEducation(int education) {
+        switch (education){
+            case 1:
+                xueliTv.setText(xueliItem.get(0));
+                break;
+            case 2:
+                xueliTv.setText(xueliItem.get(1));
+                break;
+            case 3:
+                xueliTv.setText(xueliItem.get(2));
+                break;
+            case 4:
+                xueliTv.setText(xueliItem.get(3));
+                break;
+            case 5:
+                xueliTv.setText(xueliItem.get(4));
+                break;
+            case 6:
+                xueliTv.setText(xueliItem.get(5));
+                break;
+            case 7:
+                xueliTv.setText(xueliItem.get(6));
+                break;
+        }
     }
 
     @Override
@@ -115,51 +231,17 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                 showNickName();
                 break;
             case R.id.person_sex_rl://性别
-                sexLiset = new ArrayList<>();
-                sexLiset.add("男");
-                sexLiset.add("女");
                 showSex();
                 break;
             case R.id.person_date_rl://出生年月
                 pvCustomLunar.show();
                 break;
             case R.id.person_xueli_rl://学历
-                xueliItem = new ArrayList<>();
-                xueliItem.add("小学");
-                xueliItem.add("初中");
-                xueliItem.add("高中");
-                xueliItem.add("专科");
-                xueliItem.add("本科");
-                xueliItem.add("研究生");
-                xueliItem.add("博士");
                 initCustomOptionPicker(xueliItem,0);
                 pvCustomOptions.show();
                 break;
             case R.id.person_hangye_rl://行业
-                hangyeItem = new ArrayList<>();
-                hangyeItem.add("农业、林业、牧业、渔业、水利业");
-                hangyeItem.add("工业");
-                hangyeItem.add("地质普查和勘探业");
-                hangyeItem.add("建筑业");
-                hangyeItem.add("交通运输业、邮电通信业");
-                hangyeItem.add("商业、公共饮食业、物资供应和仓储业");
-                hangyeItem.add("房地产管理、公用事业、居民服务和咨询服务业");
-                hangyeItem.add("卫生、体育和社会福利事业");
-                hangyeItem.add("教育、文化艺术和广播电视业");
-                hangyeItem.add("科学研究和综合技术服务业");
-                hangyeItem.add("金融、保险业");
-                hangyeItem.add("国家机关、党政机关和社会团体");
-                hangyeItem.add("其他行业");
-
                 initCustomOptionPicker(hangyeItem,1);
-                pvCustomOptions.show();
-                break;
-            case R.id.person_zhiye_rl://职业
-                zhiyeItem = new ArrayList<>();
-                for (int i = 0; i < 10; i++) {
-                    zhiyeItem.add("职业"+i);
-                }
-                initCustomOptionPicker(zhiyeItem,2);
                 pvCustomOptions.show();
                 break;
         }
@@ -266,10 +348,31 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                     // 图片选择结果回调
                     selectList = PictureSelector.obtainMultipleResult(data);
                     cutPath = selectList.get(0).getCutPath();
-                    Glide.with(this).load(cutPath).into(faceIv);
+                    File file = new File(cutPath);
+                    requestUploadAvatar(file);
                     break;
             }
         }
+    }
+
+    private void requestUploadAvatar(File file) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("upload_file",file);
+        OkGo.<BaseBean>post(MyContants.uploadAvatar)
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        int code = response.code();
+                        if (code >= 200 && code <= 204){
+                            Glide.with(PersonInfomationActivity.this).load(response.body().getUrl()).into(faceIv);
+                        }
+                    }
+                });
     }
 
     private void showNickName() {
@@ -316,37 +419,16 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
 
             }
         });
-        /*edt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
-            @Override
-            public boolean onEditorAction(TextView v, int actionId,
-                                          KeyEvent event) {
-
-                //输入法软键盘的控制
-                if (actionId == EditorInfo.IME_ACTION_SEND
-                        || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-
-                    if (!TextUtils.isEmpty(edt.getText().toString().trim())) {
-
-                        // /提交内容
-                        String content = edt.getText().toString().trim();
-//                        nameTv.setText(content);
-                        popWiw.dismiss();
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });*/
         send.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(edt.getText().toString().trim())) {
-
                     // 昵称
                     String content = edt.getText().toString().trim();
                     nameTv.setText(content);
+                    requestEditInfo(NAME,content);
                     popWiw.dismiss();
                 }
             }
@@ -360,6 +442,46 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
 
         popWiw.showAtLocation(personNameRl, Gravity.BOTTOM
                 | Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    private void requestEditInfo(int flag, String param) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        Logger.e(param);
+        switch (flag){
+            case 0:
+                params.put("user_name",param);
+                break;
+            case 1:
+                params.put("user_sex",param);
+                break;
+            case 2:
+                params.put("user_birthday",param);
+                break;
+            case 3:
+                params.put("user_education",param);
+                break;
+            case 4:
+                params.put("user_industry",param);
+                break;
+        }
+
+        OkGo.<BaseBean>post(MyContants.editInfo)
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<BaseBean>(this,BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        int code = response.code();
+                        if (code >= 200 && code <= 204){
+                            TUtils.showShort(PersonInfomationActivity.this,response.body().getMessage());
+                        }else {
+                            TUtils.showShort(PersonInfomationActivity.this,response.body().getMessage());
+                        }
+                    }
+                });
     }
 
     private void showSex() {
@@ -377,9 +499,11 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                         switch (position){
                             case 0://男
                                 sexTv.setText("男");
+                                requestEditInfo(SEX,"1");
                                 break;
                             case 1://女
                                 sexTv.setText("女");
+                                requestEditInfo(SEX,"2");
                                 break;
                         }
                         dialog.dismiss();
@@ -410,6 +534,7 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                     return;
                 }*/
                 dateTv.setText(getTime(date));
+                requestEditInfo(BIRTHDAY,getTime(date));
             }
         })
                 .setDate(selectedDate)
@@ -464,12 +589,11 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                 switch (flag){
                     case 0:
                         xueliTv.setText(tx);
+                        requestEditInfo(EDUCATION,options1+1+"");
                         break;
                     case 1:
                         hangyeTv.setText(tx);
-                        break;
-                    case 2:
-                        zhiyeTv.setText(tx);
+                        requestEditInfo(INDUSTRY,options1+1+"");
                         break;
                 }
             }

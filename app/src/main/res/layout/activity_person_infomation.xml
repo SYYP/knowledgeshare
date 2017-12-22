@@ -36,7 +36,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/face"
+                android:src="@drawable/power_moren_touxiang"
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>
         <View
@@ -204,40 +204,6 @@
                 android:src="@drawable/power_back"
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/bg_mine"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"/>
-        <RelativeLayout
-            android:id="@+id/person_zhiye_rl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="15dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:textColor="@color/text_black"
-                android:text="职业"/>
-            <TextView
-                android:id="@+id/zhiye_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="请选择"
-                android:layout_toLeftOf="@+id/view_06"
-                android:layout_marginRight="10dp"/>
-            <ImageView
-                android:id="@+id/view_06"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:src="@drawable/power_back"
-                android:layout_alignParentRight="true"/>
-        </RelativeLayout>
-
     </LinearLayout>
 
 </LinearLayout>

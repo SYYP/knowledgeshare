@@ -12,7 +12,8 @@
     android:layout_marginLeft="10dp"
     android:textColor="@color/textblack"
     android:textSize="14sp"
-    android:text="凌晨四点的北京"
+    android:maxLength="12"
+    android:ellipsize="end"
     android:drawablePadding="10dp"
     android:drawableLeft="@drawable/yuan"
     android:layout_width="wrap_content"
@@ -23,12 +24,14 @@
         android:layout_alignParentRight="true"
         android:textSize="14sp"
         android:text="编辑"
+        android:drawableLeft="@drawable/study_bianji"
+        android:drawablePadding="10dp"
         android:layout_centerVertical="true"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-    <ImageView
+    <!--<ImageView
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
         android:id="@+id/item_imgcompile"
@@ -36,18 +39,20 @@
         android:layout_toLeftOf="@id/item_compile"
         android:src="@drawable/study_bianji"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" />-->
     <TextView
         android:layout_marginRight="15dp"
         android:id="@+id/item_delete"
         android:textColor="@color/textblack"
         android:textSize="14sp"
         android:text="删除"
+        android:drawableLeft="@drawable/study_delete"
+        android:drawablePadding="10dp"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/item_imgcompile"/>
-    <ImageView
+        android:layout_toLeftOf="@id/item_compile"/>
+    <!--<ImageView
         android:id="@+id/item_img_delete"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
@@ -55,7 +60,7 @@
         android:layout_toLeftOf="@id/item_delete"
         android:src="@drawable/study_delete"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" />-->
 
 </RelativeLayout>
     <LinearLayout
@@ -77,8 +82,6 @@
             android:textSize="13sp"
             android:lineSpacingMultiplier="1.1"
             android:lineSpacingExtra="3dp"
-            android:text="喜欢聆听，风吹过的声只为等待风中夹杂着你的笑声，这不是我想要的结局忧伤的漩涡伴随着天使羽翼煽动着声响,你渐渐远去，从此风中的声音叫做静谧，每一次错过都是忘记，只有每晚的辗转反侧让我记得我的梦你曾来过！
-            "
             android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

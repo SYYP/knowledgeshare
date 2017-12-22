@@ -40,5 +40,23 @@ public class MyContants {
     public static final String buyZl = BASEURL + "api/v2/user/buy-zl";
     //添加笔记
     public static final String addNote = BASEURL + "api/v2/note/add";
+    //学习列表
+    public static final String noteList = BASEURL + "api/v2/note";
+    //历史今天收藏
+    public static final String dayFavorite = BASEURL + "api/v2/note/day-favorite";
+    //历史今天取消收藏
+    public static final String dayNoFacorite = BASEURL + "api/v2/note/day-no-favorite";
+    //编辑笔记
+    public static final String editNote = BASEURL + "api/v2/note/edit";
+    //删除笔记
+    public static final String delNote = BASEURL + "api/v2/note/del";
+    //个人信息
+    public static final String userInfo = BASEURL + "api/v2/user/info";
+    //更换头像
+    public static final String uploadAvatar = BASEURL + "api/v2/user/upload-avatar";
+    //个人信息更新
+    public static final String editInfo = BASEURL + "api/v2/user/edit-info";
+    //购买记录
+    public static final String buyHistory = BASEURL + "api/v2/user/buy-history";
 
 }

@@ -2,6 +2,7 @@ package www.knowledgeshare.com.knowledgeshare.fragment.buy;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -10,10 +11,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
@@ -30,10 +34,14 @@ import www.knowledgeshare.com.knowledgeshare.activity.BuyZhuanLanActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.BuyXkBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
+import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.BuyZlBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.EasyLessonBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
+import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
+import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
 /**
  * Created by Administrator on 2017/11/23.
@@ -43,9 +51,12 @@ import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 public class MaestroClassFragment extends BaseFragment {
     @BindView(R.id.recycler_meastro)
     RecyclerView recyclerMeastro;
+    @BindView(R.id.springview)
+    SpringView springView;
     Unbinder unbinder;
-    private List<BuyXkBean> list = new ArrayList<>();
-
+    private List<BuyZlBean.DataBean> list = new ArrayList<>();
+    private List<BuyZlBean.DataBean> listAll = new ArrayList<>();
+    private int lastId;
 
     @Override
     protected void lazyLoad() {
@@ -56,44 +67,68 @@ public class MaestroClassFragment extends BaseFragment {
     protected View initView() {
         View inflate = View.inflate(mContext, R.layout.fragment_meastro_class, null);
         unbinder = ButterKnife.bind(this, inflate);
-
+        initLoadMore();
         return inflate;
+    }
+
+    private void initLoadMore() {
+        springView.setType(SpringView.Type.FOLLOW);
+        springView.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        listAll.clear();
+                        requestBuyZl("");
+                    }
+                }, 2000);
+            }
+
+            @Override
+            public void onLoadmore() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        requestBuyZl(lastId+"");
+                        springView.onFinishFreshAndLoad();
+                    }
+                }, 2000);
+            }
+        });
+        springView.setHeader(new MyHeader(mContext));
+        springView.setFooter(new MyFooter(mContext));
     }
 
     @Override
     protected void initData() {
         recyclerMeastro.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerMeastro.setNestedScrollingEnabled(false);
-        requestBuyZl();
-        /*List<EasyLessonBean> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            EasyLessonBean easyLessonBean = new EasyLessonBean();
-            easyLessonBean.setTitle("崔宗顺的男低音歌唱家秘籍");
-            easyLessonBean.setDesc("男低音，一个神秘又充满魅力的音部");
-            easyLessonBean.setUpdata(i + "小时前更新");
-            easyLessonBean.setZlmc("最新更新的专栏名称");
-            list.add(easyLessonBean);
-        }*/
-
+        requestBuyZl("");
     }
 
-    private void requestBuyZl() {
+    private void requestBuyZl(String after) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("after","");
+        params.put("after",after);
 
-        OkGo.<BuyXkBean>get(MyContants.buyZl)
+        OkGo.<BuyZlBean>get(MyContants.buyZl)
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<BuyXkBean>(mActivity,BuyXkBean.class) {
+                .execute(new DialogCallback<BuyZlBean>(mActivity,BuyZlBean.class) {
                     @Override
-                    public void onSuccess(Response<BuyXkBean> response) {
+                    public void onSuccess(Response<BuyZlBean> response) {
                         int code = response.code();
                         if (code >= 200 && code <= 204){
-                            list.add(response.body());
-                            MeastroClassAdapter adapter = new MeastroClassAdapter(R.layout.item_meastro_class, list);
+                            list = response.body().getData();
+                            if (list.size() > 0){
+                                listAll.addAll(list);
+                            }else {
+                                TUtils.showShort(mContext,"没有更多数据了");
+                            }
+                            MeastroClassAdapter adapter = new MeastroClassAdapter(R.layout.item_meastro_class, listAll);
                             recyclerMeastro.setAdapter(adapter);
                             adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
@@ -101,6 +136,7 @@ public class MaestroClassFragment extends BaseFragment {
                                     startActivity(new Intent(mContext, BuyZhuanLanActivity.class));
                                 }
                             });
+                            springView.onFinishFreshAndLoad();
                         }
                     }
                 });
@@ -117,23 +153,28 @@ public class MaestroClassFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    private class MeastroClassAdapter extends BaseQuickAdapter<BuyXkBean, BaseViewHolder> {
+    private class MeastroClassAdapter extends BaseQuickAdapter<BuyZlBean.DataBean, BaseViewHolder> {
 
-        public MeastroClassAdapter(@LayoutRes int layoutResId, @Nullable List<BuyXkBean> data) {
+        public MeastroClassAdapter(@LayoutRes int layoutResId, @Nullable List<BuyZlBean.DataBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, BuyXkBean item) {
+        protected void convert(BaseViewHolder helper, BuyZlBean.DataBean item) {
             TextView classTitleTv = helper.getView(R.id.class_title_tv);
             TextView classDescTv = helper.getView(R.id.class_desc_tv);
             TextView classUpdataTv = helper.getView(R.id.class_updata_tv);
             TextView classZlmcTv = helper.getView(R.id.class_zlmc_tv);
+            ImageView classFaceIv = helper.getView(R.id.class_face_iv);
 
-            /*classTitleTv.setText(item.getTitle());
-            classDescTv.setText(item.getDesc());
-            classUpdataTv.setText(item.getUpdata());
-            classZlmcTv.setText(item.getZlmc());*/
+            lastId = item.getId();
+
+            Glide.with(mContext).load(item.getZl_img()).into(classFaceIv);
+            classTitleTv.setText(item.getZl_name());
+            classDescTv.setText(item.getZl_teacher_tags());
+            classUpdataTv.setText(item.getZl_update_time());
+            classZlmcTv.setText(item.getZl_update_name());
+
         }
     }
 }
