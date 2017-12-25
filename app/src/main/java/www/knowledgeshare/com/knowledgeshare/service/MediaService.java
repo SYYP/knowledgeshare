@@ -104,6 +104,8 @@ public class MediaService extends Service {
                 return;
             }
             mPlayerBean = playerBean;
+//            RequestBuilder<Bitmap> load = Glide.with(MyApplication.getGloableContext()).asBitmap().load(playerBean.getTeacher_head());
+
             // 为解决第二次播放时抛出的IllegalStateException，这里做了try-catch处理
             try {
                 isPlaying = mMediaPlayer.isPlaying();
