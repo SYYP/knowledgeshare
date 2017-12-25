@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +23,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.HeleCenterBean;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 
 /**
@@ -31,6 +37,9 @@ public class HelpCenterActivity extends BaseActivity implements View.OnClickList
     @BindView(R.id.title_back_iv) ImageView titleBackIv;
     @BindView(R.id.title_content_tv) TextView titleContentTv;
     @BindView(R.id.recycler_bzzx) RecyclerView recyclerBzzx;
+    private List<HeleCenterBean> list = new ArrayList<>();
+    private HelpCenterAdapter adapter;
+    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,20 +59,43 @@ public class HelpCenterActivity extends BaseActivity implements View.OnClickList
     private void initData() {
         recyclerBzzx.setLayoutManager(new LinearLayoutManager(this));
         recyclerBzzx.setNestedScrollingEnabled(false);
-        List<HeleCenterBean> list = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
+        requestHelp();
+        /*for (int i = 0; i < 6; i++) {
             HeleCenterBean heleCenterBean = new HeleCenterBean();
             heleCenterBean.setTitle("如何使用app？");
             list.add(heleCenterBean);
-        }
-        HelpCenterAdapter adapter = new HelpCenterAdapter(R.layout.item_help_center,list);
-        recyclerBzzx.setAdapter(adapter);
-        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(HelpCenterActivity.this,HelpCenterDetailActivity.class));
-            }
-        });
+        }*/
+
+
+    }
+
+    private void requestHelp() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+
+        OkGo.<HeleCenterBean>get(MyContants.help)
+                .tag(this)
+                .headers(headers)
+                .execute(new JsonCallback<HeleCenterBean>(HeleCenterBean.class) {
+                    @Override
+                    public void onSuccess(Response<HeleCenterBean> response) {
+                        int code = response.code();
+                        if (code >= 200 && code <= 204){
+                            list.add(response.body());
+                            adapter = new HelpCenterAdapter(R.layout.item_help_center, list);
+                            recyclerBzzx.setAdapter(adapter);
+                            adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                    Intent intent = new Intent(HelpCenterActivity.this,HelpCenterDetailActivity.class);
+                                    intent.putExtra("id",id);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    }
+                });
+
     }
 
     @Override
@@ -84,8 +116,8 @@ public class HelpCenterActivity extends BaseActivity implements View.OnClickList
         @Override
         protected void convert(BaseViewHolder helper, HeleCenterBean item) {
             TextView titleTv = helper.getView(R.id.title_tv);
-
-
+            titleTv.setText(item.getData().get(helper.getPosition()).getTitle());
+            id = item.getData().get(helper.getPosition()).getId();
         }
     }
 }

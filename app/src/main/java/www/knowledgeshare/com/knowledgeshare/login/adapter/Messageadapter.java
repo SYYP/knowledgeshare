@@ -10,10 +10,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.bean.NoticeBean;
 
 /**
  * date : ${Date}
@@ -22,13 +25,13 @@ import www.knowledgeshare.com.knowledgeshare.R;
 
 public class Messageadapter extends RecyclerView.Adapter<Messageadapter.Myviewholder> {
     private Context context;
-    private List<String> list = new ArrayList<>();
     private View line;
     private OnItemClickListener mOnItemClickListener = null;
+    private List<NoticeBean.DataBean> list = new ArrayList<>();
 
-    public Messageadapter(Context context) {
+    public Messageadapter(Context context,List<NoticeBean.DataBean> list) {
+        this.list = list;
         this.context = context;
-        initdata();
     }
 
     @Override
@@ -49,7 +52,11 @@ public class Messageadapter extends RecyclerView.Adapter<Messageadapter.Myviewho
                           }
                       });
                   }
-         holder.mesg_text.setText(list.get(position).toString());
+         holder.createTv.setText(list.get(position).getCreated_at());
+        holder.mesg_title.setText(list.get(position).getName());
+        holder.mesg_text.setText(list.get(position).getDescription());
+        String imgurl = list.get(position).getImgurl();
+        Glide.with(context).load(imgurl).into(holder.mesg_img);
     }
 
     @Override
@@ -65,6 +72,7 @@ public class Messageadapter extends RecyclerView.Adapter<Messageadapter.Myviewho
         public TextView mesg_text;
         public LinearLayout mesg_recl;
         public LinearLayout liner_message;
+        TextView createTv;
         public Myviewholder(View rootView) {
             super(rootView);
             line = (View) rootView.findViewById(R.id.line);
@@ -74,14 +82,10 @@ public class Messageadapter extends RecyclerView.Adapter<Messageadapter.Myviewho
             mesg_text = (TextView) rootView.findViewById(R.id.mesg_text);
             mesg_recl = (LinearLayout) rootView.findViewById(R.id.mesg_recl);
             liner_message = (LinearLayout) rootView.findViewById(R.id.liner_message);
+            createTv = rootView.findViewById(R.id.create_at_tv);
         }
     }
 
-    public void initdata() {
-        list.add("我大概是没救了，但我不需要解药。我那些没由来的情绪低落、闷闷不乐、沉默，我也不知道它从哪里来，什么时候走。");
-        list.add("听到你的名字会突然变得沉默，独自一人在夜里时会想你想到失眠。");
-        list.add("我总在问自己为什么还坚持，可能没有答案，但我只知道，放下你、我做不到。");
-    }
 /*
   创建接口用来回调
  */

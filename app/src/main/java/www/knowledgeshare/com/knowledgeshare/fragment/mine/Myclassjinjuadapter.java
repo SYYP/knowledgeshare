@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
 
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.bean.GoldBean;
 
 /**
  * date : ${Date}
@@ -25,20 +27,12 @@ import www.knowledgeshare.com.knowledgeshare.R;
 
 public class Myclassjinjuadapter extends RecyclerView.Adapter<Myclassjinjuadapter.Myviewholder> {
     private Context context;
-    private List<String> list = new ArrayList<>();
+    private List<GoldBean.DataBean> list = new ArrayList<>();
     boolean bool;
 
-    public Myclassjinjuadapter(Context context) {
+    public Myclassjinjuadapter(Context context,List<GoldBean.DataBean> list) {
         this.context = context;
-        data();
-    }
-
-    private void data() {
-         list.add("2017-11-30 星期一");
-        list.add("2017-11-25 星期三");
-        for (int i = 0; i <5 ; i++) {
-            list.add("2017-11-22 星期四");
-        }
+        this.list = list;
     }
 
     @Override
@@ -50,7 +44,8 @@ public class Myclassjinjuadapter extends RecyclerView.Adapter<Myclassjinjuadapte
 
     @Override
     public void onBindViewHolder(final Myviewholder holder, int position) {
-      holder.jin_date.setText(list.get(position).toString());
+      holder.jin_date.setText(list.get(position).getDisplay_at()+" "+list.get(position).getDay());
+        holder.study_count.setText(list.get(position).getContent());
         holder.jin_xinxin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

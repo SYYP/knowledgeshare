@@ -6,10 +6,22 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
+import www.knowledgeshare.com.knowledgeshare.bean.FavoriteBean;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.SoftMusicDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 /**
  * date : ${Date}
@@ -19,6 +31,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
 public class MyClassfragment extends BaseFragment {
 
     private RecyclerView recyclerView;
+    private List<FavoriteBean.DataBean> list = new ArrayList<>();
 
     @Override
     protected void lazyLoad() {
@@ -30,24 +43,44 @@ public class MyClassfragment extends BaseFragment {
         View inflate = View.inflate(mContext, R.layout.fragment_myclass, null);
         recyclerView = inflate.findViewById(R.id.class_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        Myclassadapter myclassadapter=new Myclassadapter(getActivity());
-       myclassadapter.setOnItemClickListener(new Myclassadapter.OnItemClickListener() {
-           @Override
-           public void onItemClick(View view, int position, int type) {
-               Log.d("ccc",type+"");
-                   if(type==1){
-                       Intent intent=new Intent(getActivity(), SoftMusicDetailActivity.class);
-                       startActivity(intent);
-                   }
-                 else if(type==2){
-                       Intent intent=new Intent(getActivity(), ZhuanLanActivity.class);
-                       startActivity(intent);
-               }
-           }
-       });
-        recyclerView.setAdapter(myclassadapter);
+        requestFavorite();
         return inflate;
+    }
+
+    private void requestFavorite() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("after","");
+        OkGo.<FavoriteBean>get(MyContants.favorite)
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<FavoriteBean>(mActivity,FavoriteBean.class) {
+                    @Override
+                    public void onSuccess(Response<FavoriteBean> response) {
+                        int code = response.code();
+                        if (code >= 200 && code <= 204){
+                            list = response.body().getData();
+                            Myclassadapter myclassadapter=new Myclassadapter(getActivity(),list);
+                            myclassadapter.setOnItemClickListener(new Myclassadapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(View view, int position, int type) {
+                                    Log.d("ccc",type+"");
+                                    if(type==1){
+                                        Intent intent=new Intent(getActivity(), SoftMusicDetailActivity.class);
+                                        startActivity(intent);
+                                    }
+                                    else if(type==2){
+                                        Intent intent=new Intent(getActivity(), ZhuanLanActivity.class);
+                                        startActivity(intent);
+                                    }
+                                }
+                            });
+                            recyclerView.setAdapter(myclassadapter);
+                        }
+                    }
+                });
     }
 
     @Override

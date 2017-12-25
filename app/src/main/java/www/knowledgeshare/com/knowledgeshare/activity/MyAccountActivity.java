@@ -2,14 +2,17 @@ package www.knowledgeshare.com.knowledgeshare.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 
 /**
  * 我的账户
@@ -29,6 +32,8 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
     @BindView(R.id.query_tv) TextView queryTv;
     @BindView(R.id.gmjl_tv) TextView gmjlTv;
     @BindView(R.id.gwc_tv) TextView gwcTv;
+    private BaseDialog mDialog;
+    private BaseDialog.Builder mBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +46,7 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
         titleContentTv.setText("我的账户");
+        mBuilder = new BaseDialog.Builder(this);
         oneMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow3));
         oneMoneyTv.setTextColor(getResources().getColor(R.color.white));
         titleBackIv.setOnClickListener(this);
@@ -92,6 +98,7 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
                 clear(6);
                 break;
             case R.id.query_tv:
+                showBuyDialog(Gravity.BOTTOM, R.style.Bottom_Top_aniamtion);
                 break;
             case R.id.gmjl_tv://购买记录
                 startActivity(new Intent(this,PurchaseHistoryActivity.class));
@@ -177,5 +184,36 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
                 fiveMoneyTv.setTextColor(getResources().getColor(R.color.yellow));
                 break;
         }
+    }
+
+    private void showBuyDialog(int grary, int animationStyle) {
+        mDialog = mBuilder.setViewId(R.layout.dialog_buy)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(grary)
+                //设置动画
+                .setAnimation(animationStyle)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.rl_yuezhifu).setVisibility(View.GONE);
+       /* mDialog.getView(R.id.rl_yuezhifu).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+                showChongzhiDialog();
+            }
+        });*/
     }
 }

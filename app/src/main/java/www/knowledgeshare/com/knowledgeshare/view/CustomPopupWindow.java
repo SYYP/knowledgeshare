@@ -44,7 +44,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
     private static String header;
     private static CustomPopupWindow customPopupWindow;
 
-    private CustomPopupWindow(Activity context) {
+    public CustomPopupWindow(Activity context) {
         super(context);
         this.mContext = context;
         init(context);

@@ -58,5 +58,24 @@ public class MyContants {
     public static final String editInfo = BASEURL + "api/v2/user/edit-info";
     //购买记录
     public static final String buyHistory = BASEURL + "api/v2/user/buy-history";
-
+    //意见反馈
+    public static final String feedBack = BASEURL + "api/v2/user/feedback";
+    //帮助中心
+    public static final String help = BASEURL + "api/v2/help";
+    //帮助中心详情
+    public static final String helpShow = BASEURL + "api/v2/help/show";
+    //注册协议
+    public static final String registration = BASEURL + "api/v2/registration";
+    //关于我们
+    public static final String aboutUs = BASEURL + "api/v2/about";
+    //学习，右上角专栏课程通知
+    public static final String notice = BASEURL + "api/v2/note/notices";
+    //充值
+    public static final String recharge = BASEURL + "api/v2/user/recharge";
+    //我的收藏
+    public static final String favorite = BASEURL + "api/v2/user/favorite";
+    //我的金句
+    public static final String gold = BASEURL + "api/v2/user/gold";
+    //下载数据获取接口
+    public static final String downLoad = BASEURL + "api/v2/down";
 }
