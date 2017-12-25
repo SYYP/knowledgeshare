@@ -84,7 +84,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
             alreadyDlDetailBean.setTitle("男低音，一个神秘又充满魅力的声部");
             alreadyDlDetailBean.setName("崔宗顺");
             alreadyDlDetailBean.setTime("05:00");
-            alreadyDlDetailBean.setSize(i+"");
+            alreadyDlDetailBean.setSize(i+1+"");
             list.add(alreadyDlDetailBean);
         }
         adapter = new AlreadyDlDetailAdapter(R.layout.item_alreadydl_detail, list);

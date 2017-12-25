@@ -53,6 +53,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private RecyclerView recycler_dashiban;
     private RecyclerView recycler_yinyueke;
     private FluidLayout liushiview;
+    private ImageView iv_delete_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         recycler_yinyueke.setLayoutManager(new GridLayoutManager(mContext, 2));
         recycler_yinyueke.setNestedScrollingEnabled(false);
         liushiview = (FluidLayout) findViewById(R.id.liushiview);
+        iv_delete_text = (ImageView) findViewById(R.id.iv_delete_text);
+        iv_delete_text.setOnClickListener(this);
         initData();
         initListener();
     }
@@ -153,7 +156,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             public void afterTextChanged(Editable s) {
                 if (!TextUtils.isEmpty(et_search.getText().toString())) {
                     doSearch(et_search.getText().toString());
+                    iv_delete_text.setVisibility(View.VISIBLE);
                 } else {
+                    iv_delete_text.setVisibility(View.GONE);
                     ll_lishi.setVisibility(View.VISIBLE);
                     ll_hot.setVisibility(View.VISIBLE);
                     ll_result.setVisibility(View.GONE);
@@ -348,6 +353,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.iv_delete:
                 showDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
+                break;
+            case R.id.iv_delete_text:
+                et_search.setText("");
                 break;
         }
     }

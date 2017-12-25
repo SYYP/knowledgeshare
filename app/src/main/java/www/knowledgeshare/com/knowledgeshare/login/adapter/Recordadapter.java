@@ -14,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.wevey.selector.dialog.DialogInterface;
+import com.wevey.selector.dialog.NormalAlertDialog;
+
 import java.lang.reflect.Field;
 import java.util.List;
 
@@ -64,10 +67,10 @@ public class Recordadapter extends RecyclerView.Adapter<Recordadapter.Myadapter>
         holder.item_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                  list.remove(position);
-                notifyDataSetChanged();
+                showTips(position);
             }
         });
+
         /*
           编辑
          */
@@ -124,6 +127,36 @@ public class Recordadapter extends RecyclerView.Adapter<Recordadapter.Myadapter>
             }
         });
 
+    }
+
+    private void showTips(final int position) {
+        new NormalAlertDialog.Builder(context)
+                .setTitleVisible(true).setTitleText("提示")
+                .setTitleTextColor(R.color.text_black)
+                .setContentText("是否删除笔记？")
+                .setContentTextColor(R.color.text_black)
+                .setLeftButtonText("是")
+                .setLeftButtonTextColor(R.color.text_black)
+                .setRightButtonText("否")
+                .setRightButtonTextColor(R.color.text_black)
+                .setSingleButtonTextColor(R.color.text_black)
+                .setCanceledOnTouchOutside(false)
+                .setOnclickListener(new DialogInterface.OnLeftAndRightClickListener<NormalAlertDialog>() {
+                    @Override
+                    public void clickLeftButton(NormalAlertDialog dialog, View view) {
+                        list.remove(position);
+                        notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void clickRightButton(NormalAlertDialog dialog, View view) {
+
+                        dialog.dismiss();
+                    }
+                })
+                .build()
+                .show();
     }
 
     @Override

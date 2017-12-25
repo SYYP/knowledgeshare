@@ -50,6 +50,7 @@
                 android:layout_margin="10dp"
                 android:background="@drawable/bg_wanjiao"
                 android:padding="10dp"
+                android:lineSpacingMultiplier="1.3"
                 android:textColor="@color/textblack"/>
             <LinearLayout
                 android:id="@+id/ll_dashiban"

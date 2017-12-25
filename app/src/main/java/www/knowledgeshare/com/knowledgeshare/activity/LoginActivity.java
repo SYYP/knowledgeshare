@@ -77,7 +77,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.login_sso:
                 //                login();
-                startActivity(new Intent(this, HobbyActivity.class));
+                startActivity(new Intent(this, MainActivity.class));
                 //存一个值判断登录过
                 SpUtils.putBoolean(this, "abool", true);
                 finish();

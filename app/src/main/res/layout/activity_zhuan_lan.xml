@@ -119,6 +119,7 @@
                         android:id="@+id/tv_zhuanlanjianjie"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:lineSpacingMultiplier="1.3"
                         android:paddingBottom="15dp"
                         android:paddingTop="10dp"
                         android:paddingLeft="10dp"
@@ -158,6 +159,7 @@
                         android:paddingBottom="15dp"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
+                        android:lineSpacingMultiplier="1.3"
                         android:textColor="@color/textblack"/>
                 </LinearLayout>
                 <LinearLayout
@@ -193,6 +195,7 @@
                         android:paddingBottom="15dp"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
+                        android:lineSpacingMultiplier="1.3"
                         android:textColor="@color/textblack"/>
                 </LinearLayout>
                 <LinearLayout

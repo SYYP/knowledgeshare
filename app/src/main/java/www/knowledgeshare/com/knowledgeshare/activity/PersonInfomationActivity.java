@@ -64,8 +64,6 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
     @BindView(R.id.person_xueli_rl) RelativeLayout personXueliRl;
     @BindView(R.id.hangye_tv) TextView hangyeTv;
     @BindView(R.id.person_hangye_rl) RelativeLayout personHangyeRl;
-    @BindView(R.id.zhiye_tv) TextView zhiyeTv;
-    @BindView(R.id.person_zhiye_rl) RelativeLayout personZhiyeRl;
     private List<String> cameraList;
     private List<LocalMedia> selectList = new ArrayList<>();
     private String cutPath;
@@ -73,7 +71,7 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
     private List<String> sexLiset;
     private TimePickerView pvCustomLunar;
     private OptionsPickerView pvCustomOptions;
-    private List<String> xueliItem, hangyeItem, zhiyeItem;
+    private List<String> xueliItem, hangyeItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +91,6 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
         personDateRl.setOnClickListener(this);
         personXueliRl.setOnClickListener(this);
         personHangyeRl.setOnClickListener(this);
-        personZhiyeRl.setOnClickListener(this);
 
         initLunarPicker();//初始化时间选择器
 
@@ -125,30 +122,32 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                 break;
             case R.id.person_xueli_rl://学历
                 xueliItem = new ArrayList<>();
-                xueliItem.add("高中");
-                xueliItem.add("专科");
+                xueliItem.add("小学");
+                xueliItem.add("初中");
+                xueliItem.add("高中（中专）");
+                xueliItem.add("大专（高职）");
                 xueliItem.add("本科");
-                xueliItem.add("研究生");
-                xueliItem.add("硕士");
-                xueliItem.add("博士");
-                xueliItem.add("博士后");
+                xueliItem.add("硕士研究生");
+                xueliItem.add("博士研究生");
                 initCustomOptionPicker(xueliItem,0);
                 pvCustomOptions.show();
                 break;
             case R.id.person_hangye_rl://行业
                 hangyeItem = new ArrayList<>();
-                for (int i = 0; i < 10; i++) {
-                    hangyeItem.add("行业"+i);
-                }
+                hangyeItem.add("农、林、牧、渔、水利业");
+                hangyeItem.add("工业");
+                hangyeItem.add("地质普查和勘探业");
+                hangyeItem.add("建筑业");
+                hangyeItem.add("交通运输业、邮电通信业");
+                hangyeItem.add("商业、公共饮食业、物资供应和仓储业");
+                hangyeItem.add("房地产管理、公用事业、居民服务和咨询服务业");
+                hangyeItem.add("卫生、体育和社会福利事业");
+                hangyeItem.add("教育、文化艺术和广播电视业");
+                hangyeItem.add("科学研究和综合技术服务业");
+                hangyeItem.add("金融、保险业");
+                hangyeItem.add("国家机关、党政机关和社会团体");
+                hangyeItem.add("其他行业");
                 initCustomOptionPicker(hangyeItem,1);
-                pvCustomOptions.show();
-                break;
-            case R.id.person_zhiye_rl://职业
-                zhiyeItem = new ArrayList<>();
-                for (int i = 0; i < 10; i++) {
-                    zhiyeItem.add("职业"+i);
-                }
-                initCustomOptionPicker(zhiyeItem,2);
                 pvCustomOptions.show();
                 break;
         }
@@ -456,9 +455,6 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                         break;
                     case 1:
                         hangyeTv.setText(tx);
-                        break;
-                    case 2:
-                        zhiyeTv.setText(tx);
                         break;
                 }
             }

@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.wevey.selector.dialog.DialogInterface;
+import com.wevey.selector.dialog.NormalAlertDialog;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +33,9 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private OnItemClickListener mOnItemClickListener = null;
 //    private OnClickListener mOnClickListener = null;
     boolean bool;
+    private Myviewholder1 myviewhiodler1;
+    private Myviewholder2 myviewhiodler2;
+    private Myviewholder3 myviewhiodler3;
 
     public Myclassadapter(Context context) {
         this.context = context;
@@ -83,6 +89,52 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return viewHolder;
     }
 
+    private void showTips(final int flag, String title, String content) {
+        new NormalAlertDialog.Builder(context)
+                .setTitleVisible(true).setTitleText(title)
+                .setTitleTextColor(R.color.text_black)
+                .setContentText(content)
+                .setContentTextColor(R.color.text_black)
+                .setLeftButtonText("是")
+                .setLeftButtonTextColor(R.color.text_black)
+                .setRightButtonText("否")
+                .setRightButtonTextColor(R.color.text_black)
+                .setSingleButtonTextColor(R.color.text_black)
+                .setCanceledOnTouchOutside(false)
+                .setOnclickListener(new DialogInterface.OnLeftAndRightClickListener<NormalAlertDialog>() {
+                    @Override
+                    public void clickLeftButton(NormalAlertDialog dialog, View view) {
+                        switch (flag){
+                            case ONE:
+                                myviewhiodler1.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                                break;
+                            case TWO:
+                                myviewhiodler2.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                                break;
+                            case THREE:
+                                myviewhiodler3.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                                break;
+                        }
+
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void clickRightButton(NormalAlertDialog dialog, View view) {
+
+                        dialog.dismiss();
+                    }
+                })
+                .setSingleListener(new DialogInterface.OnSingleClickListener<NormalAlertDialog>() {
+                    @Override
+                    public void clickSingleButton(NormalAlertDialog dialog, View view) {
+                        dialog.dismiss();
+                    }
+                })
+                .build()
+                .show();
+    }
+
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         final int itemViewType = getItemViewType(position);
@@ -99,7 +151,7 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         switch (itemViewType) {
 
             case ONE:
-             final    Myviewholder1 myviewhiodler1 = (Myviewholder1) holder;
+                myviewhiodler1 = (Myviewholder1) holder;
                 myviewhiodler1.class_title.setText(list.get(position).getTitle());
                 myviewhiodler1.imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -112,8 +164,7 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     @Override
                     public void onClick(View view) {
                         if (bool) {
-                         myviewhiodler1.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
-
+                            showTips(ONE,"提示","是否取消收藏？");
                         } else {
                             myviewhiodler1.class_xinxin.setImageResource(R.drawable.xinxin);
                         }
@@ -123,14 +174,14 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 });
                 break;
             case TWO:
-                final Myviewholder2 myviewhiodler2 = (Myviewholder2) holder;
+                myviewhiodler2 = (Myviewholder2) holder;
 
                 myviewhiodler2.class_titles.setText(list.get(position).getTitle());
                 myviewhiodler2.class_xinxin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (bool) {
-                        myviewhiodler2.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                        showTips(TWO,"提示","是否取消收藏？");
 
                     } else {
                         myviewhiodler2.class_xinxin.setImageResource(R.drawable.xinxin);
@@ -141,12 +192,12 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             });
                 break;
             case THREE:
-              final   Myviewholder3 myviewhiodler3 = (Myviewholder3) holder;
+                myviewhiodler3 = (Myviewholder3) holder;
                 myviewhiodler3.class_xinxin.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (bool) {
-                            myviewhiodler3.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                            showTips(THREE,"提示","是否取消收藏？");
 
                         } else {
                             myviewhiodler3.class_xinxin.setImageResource(R.drawable.xinxin);

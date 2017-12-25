@@ -187,6 +187,8 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
                     return;
                 } else {
                     deleteCollect();
+                    message_bianji.setText("编辑");
+                    layout.setVisibility(View.GONE);
                 }
 
                 break;

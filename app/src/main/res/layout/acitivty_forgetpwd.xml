@@ -36,7 +36,7 @@
         <ImageView
             android:src="@drawable/login_title"
             android:id="@+id/register_headimg"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
             android:layout_width="80dp"
             android:layout_height="80dp" />

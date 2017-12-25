@@ -81,6 +81,6 @@ public class LancherActivity extends BaseActivity {
                 }
                 finish();
             }
-        }, 1500);
+        }, 3500);
     }
 }

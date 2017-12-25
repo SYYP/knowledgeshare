@@ -22,6 +22,7 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.adapter.BuyTabAdapter;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.AlreadyDownLoadFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.DownLoadingFragment;
+import www.knowledgeshare.com.knowledgeshare.fragment.mine.MusicDownLoadingFragment;
 import www.knowledgeshare.com.knowledgeshare.view.NoScrollViewPager;
 
 public class DownLoadActivity extends BaseActivity implements View.OnClickListener {
@@ -55,7 +56,7 @@ public class DownLoadActivity extends BaseActivity implements View.OnClickListen
 
     private void initData() {
         AlreadyDownLoadFragment alreadyDownLoadFragment = new AlreadyDownLoadFragment();
-        DownLoadingFragment downLoadingFragment = new DownLoadingFragment();
+        MusicDownLoadingFragment downLoadingFragment = new MusicDownLoadingFragment();
 
         fragmentList = new ArrayList<>();
         fragmentList.add(alreadyDownLoadFragment);
