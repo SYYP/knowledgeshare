@@ -71,9 +71,6 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
         });
     }
 
-    /*
-          添加数据
-        */
     private void data() {
         for (int i = 0; i < 6; i++) {
             msssagebean = new Messagebean();
@@ -156,9 +153,6 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
             if (list.get(i).isaBoolean()){
                 list.remove(i);
             }
-
-
-
         }
         messageadapter.notifyDataSetChanged();
         Log.d("aaa", list.size() + "");
@@ -189,6 +183,7 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
                     deleteCollect();
                     message_bianji.setText("编辑");
                     layout.setVisibility(View.GONE);
+                    isEditing = !isEditing;
                 }
 
                 break;

@@ -81,7 +81,9 @@ public class Myclassjinjuadapter extends RecyclerView.Adapter<Myclassjinjuadapte
                     @Override
                     public void clickLeftButton(NormalAlertDialog dialog, View view) {
 
-                        holder.jin_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+//                        holder.jin_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                        list.remove(holder.getAdapterPosition());
+                        notifyDataSetChanged();
                         dialog.dismiss();
                     }
 

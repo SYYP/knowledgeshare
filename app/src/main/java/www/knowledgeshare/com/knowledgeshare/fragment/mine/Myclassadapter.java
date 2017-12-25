@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
 
@@ -37,32 +38,9 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private Myviewholder2 myviewhiodler2;
     private Myviewholder3 myviewhiodler3;
 
-    public Myclassadapter(Context context) {
+    public Myclassadapter(Context context, List<Collectbean> list) {
         this.context = context;
-
-        data();
-    }
-
-    private void data() {
-
-        Collectbean coll = new Collectbean();
-        coll.setTitle("知道我在等你吗");
-        list.add(coll);
-        Collectbean coll1 = new Collectbean();
-        coll1.setTitle("其实我很喜欢");
-        list.add(coll1);
-        Collectbean coll2 = new Collectbean();
-        coll2.setTitle("知道我在等你吗升水");
-        list.add(coll2);
-        Collectbean coll3 = new Collectbean();
-        coll3.setTitle("知道我在等你吗升水");
-        list.add(coll3);
-        Collectbean coll4 = new Collectbean();
-        coll4.setTitle("好可惜真的不能");
-        list.add(coll4);
-        Collectbean coll5 = new Collectbean();
-        coll5.setTitle("好可惜真的不能在一起");
-        list.add(coll5);
+        this.list = list;
     }
 
     @Override
@@ -106,16 +84,22 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     public void clickLeftButton(NormalAlertDialog dialog, View view) {
                         switch (flag){
                             case ONE:
-                                myviewhiodler1.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+//                                myviewhiodler1.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                                list.remove(myviewhiodler1.getAdapterPosition());
+
+                                Logger.e(myviewhiodler1.getAdapterPosition()+"");
                                 break;
                             case TWO:
-                                myviewhiodler2.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+//                                myviewhiodler2.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                                list.remove(myviewhiodler2.getAdapterPosition());
+                                Logger.e(myviewhiodler2.getAdapterPosition()+"");
                                 break;
                             case THREE:
-                                myviewhiodler3.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+//                                myviewhiodler3.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                                list.remove(myviewhiodler3.getAdapterPosition());
+                                Logger.e(myviewhiodler3.getAdapterPosition()+"");
                                 break;
                         }
-
                         dialog.dismiss();
                     }
 
@@ -163,12 +147,13 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 myviewhiodler1.class_xinxin.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (bool) {
+//                        if (bool) {
                             showTips(ONE,"提示","是否取消收藏？");
-                        } else {
+//                        }
+                        /*else {
                             myviewhiodler1.class_xinxin.setImageResource(R.drawable.xinxin);
                         }
-                        bool = !bool;
+                        bool = !bool;*/
                     }
 
                 });
@@ -180,13 +165,13 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 myviewhiodler2.class_xinxin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (bool) {
+//                    if (bool) {
                         showTips(TWO,"提示","是否取消收藏？");
-
-                    } else {
+//                    }
+                    /*else {
                         myviewhiodler2.class_xinxin.setImageResource(R.drawable.xinxin);
                     }
-                    bool = !bool;
+                    bool = !bool;*/
                 }
 
             });
@@ -196,13 +181,13 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 myviewhiodler3.class_xinxin.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (bool) {
+//                        if (bool) {
                             showTips(THREE,"提示","是否取消收藏？");
-
-                        } else {
+//                        }
+                       /* else {
                             myviewhiodler3.class_xinxin.setImageResource(R.drawable.xinxin);
                         }
-                        bool = !bool;
+                        bool = !bool;*/
                     }
 
                 });
