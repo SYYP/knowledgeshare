@@ -41,6 +41,7 @@ import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.CommentMoreBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
@@ -230,7 +231,9 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     setISshow(true);
-                                    gobofang(mFreeAdapter.getData().get(position).getVideo_url());
+                                    FreeBean.ChildEntity item = mChild.get(position);
+                                    PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
+                                    gobofang(playerBean);
                                     addListenCount(mFreeAdapter.getData().get(position).getId() + "");
                                 }
                             });
@@ -250,14 +253,16 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 });
     }
 
-    private void gobofang(final String video_url) {
+    private void gobofang(final PlayerBean playerBean) {
         int apnType = NetWorkUtils.getAPNType(this);
         if (apnType == 0) {
             Toast.makeText(this, "没有网络呢~", Toast.LENGTH_SHORT).show();
         } else if (apnType == 2 || apnType == 3 || apnType == 4) {
             if (SpUtils.getBoolean(this, "nowifiallowlisten", false)) {//记住用户允许流量播放
-                mMyBinder.setMusicUrl(video_url);
-                //                    Glide.with(mContext).load().into(iv_bo_head);
+                playerBean.setMsg("refreshplayer");
+                EventBus.getDefault().postSticky(playerBean);
+                mMyBinder.setMusicUrl(playerBean.getVideo_url());
+                mMyBinder.playMusic(playerBean);
                 mNetDialog.dismiss();
                 ClickPopShow();
                 SpUtils.putBoolean(this, "nowifiallowlisten", true);
@@ -266,8 +271,10 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mMyBinder.setMusicUrl(video_url);
-                        //                    Glide.with(mContext).load().into(iv_bo_head);
+                        playerBean.setMsg("refreshplayer");
+                        EventBus.getDefault().postSticky(playerBean);
+                        mMyBinder.setMusicUrl(playerBean.getVideo_url());
+                        mMyBinder.playMusic(playerBean);
                         mNetDialog.dismiss();
                         ClickPopShow();
                         SpUtils.putBoolean(FreeActivity.this, "nowifiallowlisten", true);
@@ -283,8 +290,10 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
         } else if (NetWorkUtils.isMobileConnected(FreeActivity.this)) {
             Toast.makeText(this, "wifi不可用呢~", Toast.LENGTH_SHORT).show();
         } else {
-            //        Glide.with(mContext).load().into(iv_bo_head);
-            mMyBinder.setMusicUrl(video_url);
+            playerBean.setMsg("refreshplayer");
+            EventBus.getDefault().postSticky(playerBean);
+            mMyBinder.setMusicUrl(playerBean.getVideo_url());
+            mMyBinder.playMusic(playerBean);
             ClickPopShow();
         }
     }

@@ -35,7 +35,6 @@ public class Notifier {
     }
 
     public static void showPlay(PlayerBean music) {
-        notificationManager.notify(NOTIFICATION_ID, buildNotification(playService, music, true));
         playService.startForeground(NOTIFICATION_ID, buildNotification(playService, music, true));
     }
 

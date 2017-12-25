@@ -12,12 +12,17 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.BoFangListActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.MusicActivity;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 
 /**
  * Created by Administrator on 2017/12/5.
@@ -34,16 +39,40 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
     private ImageView iv_mulu;
     private RelativeLayout rl_bofang;
     private boolean isBofang;
+    private static String title;
+    private static String subtitle;
+    private static String header;
+    private static CustomPopupWindow customPopupWindow;
 
-    public CustomPopupWindow(Activity context) {
+    private CustomPopupWindow(Activity context) {
         super(context);
-        this.mContext=context;
+        this.mContext = context;
         init(context);
         setPopupWindow();
+        EventBus.getDefault().register(this);
+    }
+
+//    public static CustomPopupWindow getInstance(){
+//        if (customPopupWindow==null){
+//
+//        }
+//    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(PlayerBean playerBean) {
+        if (playerBean.getMsg().equals("refreshplayer")) {
+            title=playerBean.getTitle();
+            subtitle=playerBean.getSubtitle();
+            header=playerBean.getTeacher_head();
+            Glide.with(mContext).load(header).into(iv_bo_head);
+            tv_title.setText(title);
+            tv_subtitle.setText(subtitle);
+        }
     }
 
     /**
      * 初始化
+     *
      * @param context
      */
     private void init(Context context) {
@@ -61,6 +90,9 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
         iv_mulu = (ImageView) mPopView.findViewById(R.id.iv_mulu);
         iv_mulu.setOnClickListener(this);
         rl_bofang = (RelativeLayout) mPopView.findViewById(R.id.rl_bofang);
+        Glide.with(mContext).load(header).into(iv_bo_head);
+        tv_title.setText(title);
+        tv_subtitle.setText(subtitle);
     }
 
     /**
@@ -79,7 +111,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.iv_delete:
                 this.dismiss();
                 isBofang = false;

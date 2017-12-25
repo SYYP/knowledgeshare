@@ -11,12 +11,15 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.Actions;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.Notifier;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
@@ -73,8 +76,10 @@ public class MediaService extends Service {
     public void playPause() {
         if (mBinder.isPlaying()) {
             mBinder.pauseMusic();
+            EventBean eventBean = new EventBean("zanting");
+            EventBus.getDefault().postSticky(eventBean);
         } else {
-            mBinder.playMusic();
+            mBinder.playMusic(mPlayerBean);
         }
     }
 
@@ -104,7 +109,7 @@ public class MediaService extends Service {
                 return;
             }
             mPlayerBean = playerBean;
-//            RequestBuilder<Bitmap> load = Glide.with(MyApplication.getGloableContext()).asBitmap().load(playerBean.getTeacher_head());
+            //            RequestBuilder<Bitmap> load = Glide.with(MyApplication.getGloableContext()).asBitmap().load(playerBean.getTeacher_head());
 
             // 为解决第二次播放时抛出的IllegalStateException，这里做了try-catch处理
             try {
@@ -121,43 +126,51 @@ public class MediaService extends Service {
                     e1.printStackTrace();
                 }
             }
-            //如果还没开始播放，就开始
-            new AsyncTask<String, Void, Bitmap>() {
-                @Override
-                protected Bitmap doInBackground(String... params) {
-                    try {
-                        URL url = new URL(params[0]);
-                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                        conn.setConnectTimeout(6000);//设置超时
-                        conn.setDoInput(true);
-                        conn.setUseCaches(false);//不缓存
-                        conn.connect();
-                        int code = conn.getResponseCode();
-                        Bitmap bitmap = null;
-                        if (code == 200) {
-                            InputStream is = conn.getInputStream();//获得图片的数据流
-                            bitmap = BitmapFactory.decodeStream(is);
+            if (mPlayerBean.getBitmap() == null) {
+                //如果还没开始播放，就开始
+                new AsyncTask<String, Void, Bitmap>() {
+                    @Override
+                    protected Bitmap doInBackground(String... params) {
+                        try {
+                            URL url = new URL(params[0]);
+                            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                            conn.setConnectTimeout(6000);//设置超时
+                            conn.setDoInput(true);
+                            conn.setUseCaches(false);//不缓存
+                            conn.connect();
+                            int code = conn.getResponseCode();
+                            Bitmap bitmap = null;
+                            if (code == 200) {
+                                InputStream is = conn.getInputStream();//获得图片的数据流
+                                bitmap = BitmapFactory.decodeStream(is);
+                            }
+                            return bitmap;
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                            return null;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return null;
                         }
-                        return bitmap;
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                        return null;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        return null;
                     }
-                }
 
-                @Override
-                protected void onPostExecute(Bitmap result) {
-                    super.onPostExecute(result);
-                    if (result != null) {
-                        mMediaPlayer.setOnPreparedListener(mPreparedListener);
-                        playerBean.setBitmap(result);
-                        Notifier.showPlay(playerBean);
+                    @Override
+                    protected void onPostExecute(Bitmap result) {
+                        super.onPostExecute(result);
+                        if (result != null) {
+                            mMediaPlayer.setOnPreparedListener(mPreparedListener);
+                            mPlayerBean.setBitmap(result);
+                            Notifier.showPlay(mPlayerBean);
+                        }
                     }
+                }.execute(playerBean.getTeacher_head());
+            } else {
+                if (!mMediaPlayer.isPlaying()) {
+                    Notifier.showPlay(mPlayerBean);
+                    EventBean eventBean = new EventBean("rotate");
+                    EventBus.getDefault().postSticky(eventBean);
                 }
-            }.execute(playerBean.getTeacher_head());
+            }
         }
 
         /**
@@ -184,6 +197,7 @@ public class MediaService extends Service {
             if (!isPlaying) {
                 //如果还没开始播放，就开始
                 mMediaPlayer.start();
+                Notifier.showPlay(mPlayerBean);
             }
         }
 

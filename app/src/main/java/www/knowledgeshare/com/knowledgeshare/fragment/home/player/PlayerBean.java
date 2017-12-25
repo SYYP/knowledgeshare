@@ -12,6 +12,15 @@ public class PlayerBean {
     private String subtitle;
     private String video_url;
     private Bitmap mBitmap;
+    private String msg;
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
 
     public Bitmap getBitmap() {
         return mBitmap;

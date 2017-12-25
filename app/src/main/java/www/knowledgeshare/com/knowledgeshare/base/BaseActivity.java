@@ -28,7 +28,7 @@ import www.knowledgeshare.com.knowledgeshare.view.CustomPopupWindow;
 public class BaseActivity extends AppCompatActivity {
     private static List<Activity> activityList = new ArrayList<>();
     private boolean isshow = true;//默认所有界面都显示
-    private CustomPopupWindow musicPop;
+    protected CustomPopupWindow musicPop;
     private MediaService.MyBinder mMyBinder;
     //“绑定”服务的intent
     private Intent MediaServiceIntent;
@@ -36,6 +36,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
         //在这里判断是否token是否存在、是否过期之类的
         if (activityList != null)
             activityList.add(this);
@@ -43,7 +44,6 @@ public class BaseActivity extends AppCompatActivity {
             musicPop = new CustomPopupWindow(this);
             initMusic();
         }
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
     }
 
     private void initMusic() {

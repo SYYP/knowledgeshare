@@ -214,7 +214,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             isBofang = true;
             rl_bofang.setVisibility(View.VISIBLE);
             iv_delete.setVisibility(View.GONE);
-            //            Glide.with(mContext).load("").into(iv_bo_head);
         } else if (eventBean.getMsg().equals("pause")) {
             isBofang = false;
             iv_delete.setVisibility(View.VISIBLE);
@@ -223,6 +222,15 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             isBofang = false;
             rl_bofang.setVisibility(View.GONE);
             allpause();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(PlayerBean playerBean) {
+        if (playerBean.getMsg().equals("refreshplayer")) {
+            Glide.with(mContext).load(playerBean.getTeacher_head()).into(iv_bo_head);
+            tv_title.setText(playerBean.getTitle());
+            tv_subtitle.setText(playerBean.getSubtitle());
         }
     }
 
