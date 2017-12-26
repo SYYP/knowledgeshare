@@ -22,6 +22,7 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.BoFangListActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.MusicActivity;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 
 /**
@@ -42,7 +43,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
     private static String title;
     private static String subtitle;
     private static String header;
-    private static CustomPopupWindow customPopupWindow;
+    private static MusicTypeBean mMusicTypeBean;
 
     public CustomPopupWindow(Activity context) {
         super(context);
@@ -52,21 +53,22 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
         EventBus.getDefault().register(this);
     }
 
-//    public static CustomPopupWindow getInstance(){
-//        if (customPopupWindow==null){
-//
-//        }
-//    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(PlayerBean playerBean) {
         if (playerBean.getMsg().equals("refreshplayer")) {
-            title=playerBean.getTitle();
-            subtitle=playerBean.getSubtitle();
-            header=playerBean.getTeacher_head();
+            title = playerBean.getTitle();
+            subtitle = playerBean.getSubtitle();
+            header = playerBean.getTeacher_head();
             Glide.with(mContext).load(header).into(iv_bo_head);
             tv_title.setText(title);
             tv_subtitle.setText(subtitle);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(MusicTypeBean musicTypeBean) {
+        if (musicTypeBean.getMsg().equals("musicplayertype")) {
+            mMusicTypeBean = musicTypeBean;
         }
     }
 
@@ -122,6 +124,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
                 break;
             case R.id.iv_arrow_top:
                 Intent intent1 = new Intent(mContext, MusicActivity.class);
+                intent1.putExtra("data",mMusicTypeBean);
                 mContext.startActivity(intent1);
                 mContext.overridePendingTransition(R.anim.bottom_in, 0);
                 break;

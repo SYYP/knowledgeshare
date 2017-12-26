@@ -40,7 +40,7 @@ public class BaseActivity extends AppCompatActivity {
         //在这里判断是否token是否存在、是否过期之类的
         if (activityList != null)
             activityList.add(this);
-        if (musicPop == null) {
+        if (musicPop == null && isshow) {
             musicPop = new CustomPopupWindow(this);
             initMusic();
         }

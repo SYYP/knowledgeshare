@@ -460,6 +460,33 @@ public class SoftMusicDetailBean {
         private String name;
         private int id;
         private int view_count;
+        private String t_header;
+        private String t_tag;
+        private String t_name;
+
+        public String getT_name() {
+            return t_name;
+        }
+
+        public void setT_name(String t_name) {
+            this.t_name = t_name;
+        }
+
+        public String getT_header() {
+            return t_header;
+        }
+
+        public void setT_header(String t_header) {
+            this.t_header = t_header;
+        }
+
+        public String getT_tag() {
+            return t_tag;
+        }
+
+        public void setT_tag(String t_tag) {
+            this.t_tag = t_tag;
+        }
 
         public void setVideo_time(int video_time) {
             this.video_time = video_time;

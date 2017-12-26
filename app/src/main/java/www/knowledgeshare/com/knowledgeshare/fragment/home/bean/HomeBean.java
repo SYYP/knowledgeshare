@@ -9,11 +9,11 @@ import java.util.List;
 public class HomeBean {
 
     /**
-     * xiaoke : [{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","teacher_name":"张老师","nodule_count":"2节","xk_name":"如何成为一个合格的歌唱者5","buy_count":"2人","xk_id":7,"xk_teacher_tags":"好声音","time_count":"00:07:02","xk_price":"￥180/年"},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","teacher_name":"张老师","nodule_count":"2节","xk_name":"如何成为一个合格的歌唱者4","buy_count":"0人","xk_id":6,"xk_teacher_tags":"好声音","time_count":"00:07:02","xk_price":"￥180/年"},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","teacher_name":"张老师","nodule_count":"2节","xk_name":"如何成为一个合格的歌唱者3","buy_count":"0人","xk_id":5,"xk_teacher_tags":"好声音","time_count":"00:07:02","xk_price":"￥180/年"},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","teacher_name":"张老师","nodule_count":"2节","xk_name":"如何成为一个合格的歌唱者2","buy_count":"2人","xk_id":4,"xk_teacher_tags":"好声音","time_count":"00:07:02","xk_price":"￥180/年"}]
+     * xiaoke : [{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","teacher_name":"张老师","nodule_count":"节","xk_name":"如何成为一个合格的歌唱者1","buy_count":"人","xk_id":8,"xk_teacher_tags":"好声音","time_count":"00:00","xk_price":"￥180/年"},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","teacher_name":"张老师","nodule_count":"2节","xk_name":"如何成为一个合格的歌唱者5","buy_count":"3人","xk_id":7,"xk_teacher_tags":"好声音","time_count":"07:02","xk_price":"￥180/年"},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","teacher_name":"张老师","nodule_count":"2节","xk_name":"如何成为一个合格的歌唱者4","buy_count":"1人","xk_id":6,"xk_teacher_tags":"好声音","time_count":"07:02","xk_price":"￥180/年"},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","teacher_name":"张老师","nodule_count":"2节","xk_name":"如何成为一个合格的歌唱者3","buy_count":"0人","xk_id":5,"xk_teacher_tags":"好声音","time_count":"07:02","xk_price":"￥180/年"}]
      * daily : [{"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音3","video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","teacher_id":1,"t_name":"张老师","id":3,"video_type":"daily"},{"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音2","video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music2.mp3","t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","teacher_id":1,"t_name":"张老师","id":2,"video_type":"daily"},{"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音1","video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","teacher_id":1,"t_name":"张老师","id":1,"video_type":"daily"}]
-     * free : {"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/18x7.png","t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","teacher_id":1,"id":1,"teacher_has":{"t_tag":"中国好声音","t_header":"user/20171208/1275610854404958.jpg","t_name":"张老师","t_img":"zhuanlan/20171208/17x8.png","t_live":2,"created_at":"2017-12-08 01:08:06","id":1,"t_mobile":"15250735030","t_introduce":"毕业于四川师范大学音乐系,音乐教育本科,现任四川省泸县第二中学一级专职音乐教师。泸县音乐家协会常任理事。"},"child":[{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音3","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":0,"is_collect":1,"good_count_true":1,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":48,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":3,"view_count":0},{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音2","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":3,"is_collect":1,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music2.mp3","view_count_true":10,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":2,"view_count":0},{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音1","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":2,"is_collect":1,"good_count_true":2,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":5,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":1,"view_count":0}]}
-     * zhuanlan : [{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音2","zl_update_time":"13天前更新","zl_name":"崔宗顺的男低音歌唱家的秘密1","id":1,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"},{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音2","zl_update_time":"13天前更新","zl_name":"崔宗顺的男低音歌唱家的秘密3","id":3,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"},{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音2","zl_update_time":"13天前更新","zl_name":"崔宗顺的男低音歌唱家的秘密5","id":5,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"},{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音2","zl_update_time":"13天前更新","zl_name":"崔宗顺的男低音歌唱家的秘密4","id":4,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"}]
-     * live : [{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/5x7.png","xk_name":"如何成为一个合格的歌唱者3","xk_id":5},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/5x7.png","xk_name":"如何成为一个合格的歌唱者2","xk_id":4},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/5x7.png","xk_name":"如何成为一个合格的歌唱者4","xk_id":6}]
+     * free : {"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/18x7.png","t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","teacher_id":1,"id":1,"teacher_has":{"t_tag":"中国好声音","t_header":"user/20171208/1275610854404958.jpg","t_name":"张老师","t_img":"zhuanlan/20171208/17x8.png","t_live":2,"created_at":"2017-12-08 01:08:06","id":1,"t_mobile":"15250735030","t_introduce":"毕业于四川师范大学音乐系,音乐教育本科,现任四川省泸县第二中学一级专职音乐教师。泸县音乐家协会常任理事。"},"child":[{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音3","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":1,"is_collect":1,"good_count_true":1,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":66,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":3,"view_count":0},{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音2","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":3,"is_collect":1,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music2.mp3","view_count_true":15,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":2,"view_count":0},{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音1","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":2,"is_collect":1,"good_count_true":2,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":9,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":1,"view_count":0}]}
+     * zhuanlan : [{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音2","zl_update_time":"17天前更新","zl_name":"崔宗顺的男低音歌唱家的秘密5","id":5,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"},{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音2","zl_update_time":"3小时前更新","zl_name":"崔宗顺的男低音歌唱家的秘密2","id":6,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"},{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音2","zl_update_time":"17天前更新","zl_name":"崔宗顺的男低音歌唱家的秘密2","id":2,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"},{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音2","zl_update_time":"17天前更新","zl_name":"崔宗顺的男低音歌唱家的秘密4","id":4,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"}]
+     * live : [{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/5x7.png","xk_name":"如何成为一个合格的歌唱者1","xk_id":8},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/5x7.png","xk_name":"如何成为一个合格的歌唱者2","xk_id":4},{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/5x7.png","xk_name":"如何成为一个合格的歌唱者4","xk_id":6}]
      */
     private List<XiaokeEntity> xiaoke;
     private List<DailyEntity> daily;
@@ -65,12 +65,12 @@ public class HomeBean {
         /**
          * xk_image : http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png
          * teacher_name : 张老师
-         * nodule_count : 2节
-         * xk_name : 如何成为一个合格的歌唱者5
-         * buy_count : 2人
-         * xk_id : 7
+         * nodule_count : 节
+         * xk_name : 如何成为一个合格的歌唱者1
+         * buy_count : 人
+         * xk_id : 8
          * xk_teacher_tags : 好声音
-         * time_count : 00:07:02
+         * time_count : 00:00
          * xk_price : ￥180/年
          */
         private String xk_image;
@@ -176,6 +176,15 @@ public class HomeBean {
         private int id;
         private String video_type;
         private boolean isChecked;
+        private boolean isfav;
+
+        public boolean isfav() {
+            return isfav;
+        }
+
+        public void setIsfav(boolean isfav) {
+            this.isfav = isfav;
+        }
 
         public boolean isChecked() {
             return isChecked;
@@ -257,7 +266,7 @@ public class HomeBean {
          * teacher_id : 1
          * id : 1
          * teacher_has : {"t_tag":"中国好声音","t_header":"user/20171208/1275610854404958.jpg","t_name":"张老师","t_img":"zhuanlan/20171208/17x8.png","t_live":2,"created_at":"2017-12-08 01:08:06","id":1,"t_mobile":"15250735030","t_introduce":"毕业于四川师范大学音乐系,音乐教育本科,现任四川省泸县第二中学一级专职音乐教师。泸县音乐家协会常任理事。"}
-         * child : [{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音3","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":0,"is_collect":1,"good_count_true":1,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":48,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":3,"view_count":0},{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音2","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":3,"is_collect":1,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music2.mp3","view_count_true":10,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":2,"view_count":0},{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音1","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":2,"is_collect":1,"good_count_true":2,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":5,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":1,"view_count":0}]
+         * child : [{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音3","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":1,"is_collect":1,"good_count_true":1,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":66,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":3,"view_count":0},{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音2","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":3,"is_collect":1,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music2.mp3","view_count_true":15,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":2,"view_count":0},{"good_count":0,"t_tag":"中国好声音","video_name":"女高音，一个神秘又充满魅力的声音1","is_good":1,"txt_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1.txt","txt_old_name":"女高音.txt","is_view":1,"created_at":"2017-12-08 08:35:30","video_old_name":"女高音.mp3","collect_count":0,"video_type":"free","collect_count_true":2,"is_collect":1,"good_count_true":2,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","view_count_true":9,"send_time":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg","id":1,"view_count":0}]
          */
         private String imgurl;
         private String t_header;
@@ -422,11 +431,11 @@ public class HomeBean {
              * video_old_name : 女高音.mp3
              * collect_count : 0
              * video_type : free
-             * collect_count_true : 0
+             * collect_count_true : 1
              * is_collect : 1
              * good_count_true : 1
              * video_url : http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3
-             * view_count_true : 48
+             * view_count_true : 66
              * send_time : 0
              * t_header : http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171208/1275610854404958.jpg
              * id : 3
@@ -628,9 +637,9 @@ public class HomeBean {
         /**
          * zl_price : ￥160/年
          * zl_update_name : 专栏小节，如何成为男高音2
-         * zl_update_time : 13天前更新
-         * zl_name : 崔宗顺的男低音歌唱家的秘密1
-         * id : 1
+         * zl_update_time : 17天前更新
+         * zl_name : 崔宗顺的男低音歌唱家的秘密5
+         * id : 5
          * zl_img : http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/17x12.png
          * zl_introduce : 韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。
          */
@@ -702,8 +711,8 @@ public class HomeBean {
     public static class LiveEntity {
         /**
          * xk_image : http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/5x7.png
-         * xk_name : 如何成为一个合格的歌唱者3
-         * xk_id : 5
+         * xk_name : 如何成为一个合格的歌唱者1
+         * xk_id : 8
          */
         private String xk_image;
         private String xk_name;

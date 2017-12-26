@@ -59,7 +59,9 @@ public class SoftMusicActivity extends BaseActivity implements View.OnClickListe
                                  mYinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                         startActivity(new Intent(SoftMusicActivity.this, SoftMusicDetailActivity.class));
+                                         Intent intent = new Intent(SoftMusicActivity.this, SoftMusicDetailActivity.class);
+                                         intent.putExtra("id", mYinYueKeAdapter.getData().get(position).getXk_id() + "");
+                                         startActivity(intent);
                                      }
                                  });
                              }

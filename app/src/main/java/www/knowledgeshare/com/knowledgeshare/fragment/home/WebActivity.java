@@ -52,20 +52,13 @@ public class WebActivity extends BaseActivity {
             }
         });
         WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setJavaScriptEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setUseWideViewPort(true);//关键点
-
-        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-
         webSettings.setDisplayZoomControls(false);
         webSettings.setJavaScriptEnabled(true); // 设置支持javascript脚本
         webSettings.setAllowFileAccess(true); // 允许访问文件
         webSettings.setBuiltInZoomControls(true); // 设置显示缩放按钮
         webSettings.setSupportZoom(true); // 支持缩放
-
-
         webSettings.setLoadWithOverviewMode(true);
 
         DisplayMetrics metrics = new DisplayMetrics();
@@ -85,8 +78,6 @@ public class WebActivity extends BaseActivity {
         } else {
             webSettings.setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
         }
-
-
         /**
          * 用WebView显示图片，可使用这个参数 设置网页布局类型： 1、LayoutAlgorithm.NARROW_COLUMNS ：
          * 适应内容大小 2、LayoutAlgorithm.SINGLE_COLUMN:适应屏幕，内容将自动缩放

@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -100,7 +101,17 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
                 super.onPageFinished(view, url);
             }
         });
-        webview.loadUrl("http://www.baidu.com");
+//        webview.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View view) {
+//                return true;
+//            }
+//        });
+        WebSettings webSettings = webview.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        webSettings.setUseWideViewPort(true);//关键点
+        webview.loadUrl("http://wady.s1.natapp.cc/test.html");
         nestView = (NestedScrollView) findViewById(R.id.nestView);
         nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -131,13 +142,13 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
             url = MyContants.LXKURL + "free/draft-show";
         } else if (mType.equals("everydaycomment")) {
             url = MyContants.LXKURL + "daily/draft-show";
-        }else if (mType.equals("softmusicdetail")){
+        } else if (mType.equals("softmusicdetail")) {
             url = MyContants.LXKURL + "xk/draft-show";
         }
         OkGo.<WenGaoBean>post(url)
                 .tag(this)
                 .params(params)
-                .execute(new DialogCallback<WenGaoBean>(WenGaoActivity.this,WenGaoBean.class) {
+                .execute(new DialogCallback<WenGaoBean>(WenGaoActivity.this, WenGaoBean.class) {
                     @Override
                     public void onSuccess(Response<WenGaoBean> response) {
                         int code = response.code();
@@ -220,13 +231,13 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
             } else {
                 url = MyContants.LXKURL + "free/favorite";
             }
-        }else if (mType.equals("everydaycomment")) {
+        } else if (mType.equals("everydaycomment")) {
             if (isGuanzhu) {
                 url = MyContants.LXKURL + "daily/no-favorite";
             } else {
                 url = MyContants.LXKURL + "daily/favorite";
             }
-        }else if (mType.equals("softmusicdetail")) {
+        } else if (mType.equals("softmusicdetail")) {
             if (isGuanzhu) {
                 url = MyContants.LXKURL + "xk/no-favorite";
             } else {
@@ -356,7 +367,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.ll_liuyan:
                 Intent intent = new Intent(this, LiuYanActivity.class);
-                intent.putExtra("type", mType+"-wengao");
+                intent.putExtra("type", mType + "-wengao");
                 intent.putExtra("xiaoke_id", mId);
                 intent.putExtra("teacher_id", getIntent().getStringExtra("teacher_id"));
                 startActivity(intent);

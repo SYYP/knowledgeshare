@@ -31,13 +31,22 @@ public class FreeTryReadDetailBean {
     private String t_name;
     private String name;
     private String content;
+    private String t_tag;
     private String created_at;
     private List<CommentEntity> comment;
     private int id;
-    private boolean isfollow;
+    private boolean isfav;
 
-    public boolean isfollow() {
-        return isfollow;
+    public String getT_tag() {
+        return t_tag;
+    }
+
+    public void setT_tag(String t_tag) {
+        this.t_tag = t_tag;
+    }
+
+    public boolean isfav() {
+        return isfav;
     }
 
     public String getContent() {
@@ -48,8 +57,8 @@ public class FreeTryReadDetailBean {
         this.content = content;
     }
 
-    public void setIsfollow(boolean isfollow) {
-        this.isfollow = isfollow;
+    public void setIsfav(boolean isfav) {
+        this.isfav = isfav;
     }
 
     public void setVideo_time(String video_time) {

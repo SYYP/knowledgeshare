@@ -41,6 +41,7 @@ import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.CommentMoreBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
@@ -235,6 +236,11 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
                                     gobofang(playerBean);
                                     addListenCount(mFreeAdapter.getData().get(position).getId() + "");
+                                    MusicTypeBean musicTypeBean= new MusicTypeBean("free",mFreeBean.getTeacher_has().getT_name(),
+                                            mFreeBean.getTeacher_has().getT_header(),item.getVideo_name(),item.getId()+"",
+                                            mFreeBean.getTeacher_has().getId()+"",item.isIsfav());
+                                    musicTypeBean.setMsg("musicplayertype");
+                                    EventBus.getDefault().postSticky(musicTypeBean);
                                 }
                             });
                             if (!isRefreshing) {

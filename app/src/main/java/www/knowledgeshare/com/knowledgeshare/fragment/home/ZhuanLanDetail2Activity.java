@@ -27,6 +27,8 @@ import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
@@ -37,8 +39,10 @@ import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeTryReadDetailBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.OrderBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.TimeBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
@@ -144,14 +148,16 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 .builder();
     }
 
-    private void gobofang(final String video_url) {
+    private void gobofang(final PlayerBean playerBean) {
         int apnType = NetWorkUtils.getAPNType(this);
         if (apnType == 0) {
             Toast.makeText(this, "没有网络呢~", Toast.LENGTH_SHORT).show();
         } else if (apnType == 2 || apnType == 3 || apnType == 4) {
             if (SpUtils.getBoolean(this, "nowifiallowlisten", false)) {//记住用户允许流量播放
-                mMyBinder.setMusicUrl(video_url);
-                //                    Glide.with(mContext).load().into(iv_bo_head);
+                playerBean.setMsg("refreshplayer");
+                EventBus.getDefault().postSticky(playerBean);
+                mMyBinder.setMusicUrl(playerBean.getVideo_url());
+                mMyBinder.playMusic(playerBean);
                 mNetDialog.dismiss();
                 ClickPopShow();
                 SpUtils.putBoolean(this, "nowifiallowlisten", true);
@@ -160,8 +166,10 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mMyBinder.setMusicUrl(video_url);
-                        //                    Glide.with(mContext).load().into(iv_bo_head);
+                        playerBean.setMsg("refreshplayer");
+                        EventBus.getDefault().postSticky(playerBean);
+                        mMyBinder.setMusicUrl(playerBean.getVideo_url());
+                        mMyBinder.playMusic(playerBean);
                         mNetDialog.dismiss();
                         ClickPopShow();
                         SpUtils.putBoolean(ZhuanLanDetail2Activity.this, "nowifiallowlisten", true);
@@ -177,8 +185,10 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         } else if (NetWorkUtils.isMobileConnected(ZhuanLanDetail2Activity.this)) {
             Toast.makeText(this, "wifi不可用呢~", Toast.LENGTH_SHORT).show();
         } else {
-            //        Glide.with(mContext).load().into(iv_bo_head);
-            mMyBinder.setMusicUrl(video_url);
+            playerBean.setMsg("refreshplayer");
+            EventBus.getDefault().postSticky(playerBean);
+            mMyBinder.setMusicUrl(playerBean.getVideo_url());
+            mMyBinder.playMusic(playerBean);
             ClickPopShow();
         }
     }
@@ -207,7 +217,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                  mComment = mFreeTryReadDetailBean.getComment();
                                  mLiuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan, mComment);
                                  recycler_liuyan.setAdapter(mLiuYanAdapter);
-                                 if (mFreeTryReadDetailBean.isfollow()) {
+                                 if (mFreeTryReadDetailBean.isfav()) {
                                      iv_collect.setImageResource(R.drawable.xinxin);
                                  } else {
                                      iv_collect.setImageResource(R.drawable.weiguanzhuxin);
@@ -590,10 +600,10 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
             case R.id.iv_collect:
                 if (isCollected) {
                     iv_collect.setImageResource(R.drawable.weiguanzhuxin);
-                    noguanzhu(mFreeTryReadDetailBean.getTeacher_id());
+                    noCollect();
                 } else {
                     iv_collect.setImageResource(R.drawable.xinxin);
-                    guanzhu(mFreeTryReadDetailBean.getTeacher_id());
+                    collect();
                 }
                 isCollected = !isCollected;
                 break;
@@ -601,7 +611,14 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 if (!isBofang) {
                     iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
                     setISshow(true);
-                    gobofang(mFreeTryReadDetailBean.getVideo_url());
+                    PlayerBean playerBean = new PlayerBean(mFreeTryReadDetailBean.getT_header(),
+                            mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getT_tag(), mFreeTryReadDetailBean.getVideo_url());
+                    gobofang(playerBean);
+                    MusicTypeBean musicTypeBean = new MusicTypeBean("zhuanlandetail", mFreeTryReadDetailBean.getT_name(),
+                            mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getName(), mId,
+                            "", mFreeTryReadDetailBean.isfav());
+                    musicTypeBean.setMsg("musicplayertype");
+                    EventBus.getDefault().postSticky(musicTypeBean);
                 } else {
                     iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
                     ClickPauseMusic();
@@ -624,12 +641,13 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         }
     }
 
-    private void guanzhu(int teacher_id) {
+    private void collect() {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("teacher_id", teacher_id);
-        OkGo.<DianZanbean>post(MyContants.LXKURL + "free-follow/attention")
+        params.put("id", mId);
+        params.put("fav_type", "1");
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "zl/favorite")
                 .tag(this)
                 .headers(headers)
                 .params(params)
@@ -644,12 +662,13 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 );
     }
 
-    private void noguanzhu(int teacher_id) {
+    private void noCollect() {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("teacher_id", teacher_id);
-        OkGo.<DianZanbean>post(MyContants.LXKURL + "free-follow/no-attention")
+        params.put("id", mId);
+        params.put("fav_type", "0");
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "zl/favorite")
                 .tag(this)
                 .headers(headers)
                 .params(params)

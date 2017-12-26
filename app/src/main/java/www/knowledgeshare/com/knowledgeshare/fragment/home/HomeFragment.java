@@ -50,6 +50,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBannerBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeDaShiBanNewBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.LikeMoreBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BannerUtils;
@@ -117,6 +118,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private DaShiBanNewAdapter mDaShiBanNewAdapter;
     private LikeNewAdapter mLikeNewAdapter;
     private List<HomeBean.FreeEntity.ChildEntity> mMFreeChild;
+    private MusicTypeBean mMusicTypeBean;
 
     @Override
     protected void lazyLoad() {
@@ -405,6 +407,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 .builder();
     }
 
+
     private class ZhuanLanAdapter extends BaseQuickAdapter<HomeBean.FreeEntity.ChildEntity, BaseViewHolder> {
 
         public ZhuanLanAdapter(@LayoutRes int layoutResId, @Nullable List<HomeBean.FreeEntity.ChildEntity> data) {
@@ -426,6 +429,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     refreshbofang("zhuanlan", helper.getAdapterPosition());
                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
                     gobofang(playerBean);
+                    mMusicTypeBean= new MusicTypeBean("free",mFree.getTeacher_has().getT_name(),
+                            item.getT_header(),item.getVideo_name(),item.getId()+"",
+                            mFree.getTeacher_has().getId()+"",item.getIs_collect()==0?false:true);
+                    mMusicTypeBean.setMsg("musicplayertype");
+                    EventBus.getDefault().postSticky(mMusicTypeBean);
                 }
             });
         }
@@ -454,6 +462,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     refreshbofang("comment", helper.getAdapterPosition());
                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
                     gobofang(playerBean);
+                    mMusicTypeBean = new MusicTypeBean("everydaycomment",item.getT_name(),
+                            item.getT_header(),item.getVideo_name(),item.getId()+"",
+                            item.getTeacher_id()+"",item.isfav());
+                    mMusicTypeBean.setMsg("musicplayertype");
+                    EventBus.getDefault().postSticky(mMusicTypeBean);
                 }
             });
         }
@@ -724,6 +737,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.iv_arrow_top:
                 Intent intent1 = new Intent(mContext, MusicActivity.class);
+                intent1.putExtra("data",mMusicTypeBean);
                 startActivity(intent1);
                 mActivity.overridePendingTransition(R.anim.bottom_in, 0);
                 break;
