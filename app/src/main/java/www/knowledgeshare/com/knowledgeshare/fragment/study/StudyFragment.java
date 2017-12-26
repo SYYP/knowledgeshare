@@ -26,6 +26,8 @@ import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.orhanobut.logger.Logger;
+import com.wevey.selector.dialog.DialogInterface;
+import com.wevey.selector.dialog.NormalAlertDialog;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.SearchActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.CollectActivity;
+import www.knowledgeshare.com.knowledgeshare.fragment.mine.Myclassjinjuadapter;
 import www.knowledgeshare.com.knowledgeshare.login.MessageActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SoftKeyboardTool;
@@ -324,7 +327,9 @@ public class StudyFragment extends BaseFragment {
             holder.item_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    requestDelNote(list.get(position).getId(),position);
+                    showTips(list.get(position).getId(),position);
+
+
                 }
             });
 
@@ -386,6 +391,41 @@ public class StudyFragment extends BaseFragment {
                     });
                 }
             });
+        }
+
+        private void showTips(final int id, final int position) {
+            new NormalAlertDialog.Builder(context)
+                    .setTitleVisible(true).setTitleText("提示")
+                    .setTitleTextColor(R.color.text_black)
+                    .setContentText("是否取消收藏？")
+                    .setContentTextColor(R.color.text_black)
+                    .setLeftButtonText("是")
+                    .setLeftButtonTextColor(R.color.text_black)
+                    .setRightButtonText("否")
+                    .setRightButtonTextColor(R.color.text_black)
+                    .setSingleButtonTextColor(R.color.text_black)
+                    .setCanceledOnTouchOutside(false)
+                    .setOnclickListener(new DialogInterface.OnLeftAndRightClickListener<NormalAlertDialog>() {
+                        @Override
+                        public void clickLeftButton(NormalAlertDialog dialog, View view) {
+                            requestDelNote(id,position);
+                            dialog.dismiss();
+                        }
+
+                        @Override
+                        public void clickRightButton(NormalAlertDialog dialog, View view) {
+
+                            dialog.dismiss();
+                        }
+                    })
+                    .setSingleListener(new DialogInterface.OnSingleClickListener<NormalAlertDialog>() {
+                        @Override
+                        public void clickSingleButton(NormalAlertDialog dialog, View view) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .build()
+                    .show();
         }
 
         private void requestDelNote(int id, final int position) {

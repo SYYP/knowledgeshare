@@ -66,7 +66,7 @@ public class MessageActivity extends BaseActivity {
                 .headers(headers)
                 .execute(new DialogCallback<NoticeBean>(this,NoticeBean.class) {
                     @Override
-                    public void onSuccess(Response<NoticeBean> response) {
+                    public void onSuccess(final Response<NoticeBean> response) {
                         int code = response.code();
                         if (code >= 200 && code <= 204){
                             list = response.body().getData();
@@ -76,7 +76,9 @@ public class MessageActivity extends BaseActivity {
                             messageadapter.setOnItemClickListener(new Messageadapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(View view, int position) {
-                                    Intent intent=new Intent(MessageActivity.this, ZhuanLanActivity.class);
+                                    int id = response.body().getData().get(position).getId();
+                                    Intent intent = new Intent(MessageActivity.this, ZhuanLanActivity.class);
+                                    intent.putExtra("id",id+"");
                                     startActivity(intent);
                                 }
                             });

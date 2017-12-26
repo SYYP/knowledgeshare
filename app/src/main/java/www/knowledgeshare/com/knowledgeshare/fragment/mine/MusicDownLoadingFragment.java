@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -15,6 +16,9 @@ import com.lzy.okgo.model.Progress;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.OkDownload;
 import com.lzy.okserver.task.XExecutor;
+import com.wevey.selector.dialog.DialogInterface;
+import com.wevey.selector.dialog.NormalAlertDialog;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -148,11 +152,11 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
         recyclerXzz.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerXzz.setNestedScrollingEnabled(false);
         recyclerXzz.setAdapter(adapter);
-        initBind();
+//        initBind();
         okDownload.addOnAllTaskEndListener(this);
     }
 
-    private void initBind() {
+    /*private void initBind() {
         //为RecycleView绑定触摸事件
         ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
 
@@ -173,8 +177,8 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 //滑动事件
-                /*Collections.swap(apks, viewHolder.getAdapterPosition(), target.getAdapterPosition());
-                adapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());*/
+                *//*Collections.swap(apks, viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                adapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());*//*
                 adapter.onItemMove(viewHolder.getAdapterPosition(),target.getAdapterPosition());
                 return true;
             }
@@ -182,8 +186,8 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 //侧滑事件
-                /*apks.remove(viewHolder.getAdapterPosition());
-                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());*/
+                *//*apks.remove(viewHolder.getAdapterPosition());
+                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());*//*
                 //onItemDissmiss是接口方法
                 adapter.onItemDissmiss(viewHolder.getAdapterPosition());
             }
@@ -196,7 +200,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                /*if (dY != 0 && dX == 0) {
+                *//*if (dY != 0 && dX == 0) {
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
                 }
 
@@ -206,7 +210,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                     //最多偏移 mActionContainer 的宽度
                     dX =- holder.getShanchuTv().getWidth();
                 }
-                holder.getContentLl().setTranslationX(dX);*/
+                holder.getContentLl().setTranslationX(dX);*//*
                 //仅对侧滑状态下的效果做出改变
                 if (actionState ==ItemTouchHelper.ACTION_STATE_SWIPE){
                     //如果dX小于等于删除方块的宽度，那么我们把该方块滑出来
@@ -231,16 +235,16 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
 
             }
 
-            /**
+            *//**
              * 获取删除方块的宽度
-             */
+             *//*
             public int getSlideLimitation(RecyclerView.ViewHolder viewHolder){
                 ViewGroup viewGroup = (ViewGroup) viewHolder.itemView;
                 return viewGroup.getChildAt(1).getLayoutParams().width;
             }
         });
         helper.attachToRecyclerView(recyclerXzz);
-    }
+    }*/
 
     @Override
     public void onResume() {
@@ -264,8 +268,45 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.qbks_ll:
-
+                if (TextUtils.equals("全部开始",kaishiTv.getText().toString())){
+                    kaishiTv.setText("全部暂停");
+                    okDownload.startAll();
+                }else {
+                    okDownload.pauseAll();
+                    kaishiTv.setText("全部开始");
+                }
                 break;
+            case R.id.qbsc_ll:
+                showTips();
         }
+    }
+
+    private void showTips() {
+        new NormalAlertDialog.Builder(getActivity())
+                .setTitleVisible(true).setTitleText("提示")
+                .setTitleTextColor(R.color.text_black)
+                .setContentText("确认要全部删除吗？")
+                .setContentTextColor(R.color.text_black)
+                .setLeftButtonText("是")
+                .setLeftButtonTextColor(R.color.text_black)
+                .setRightButtonText("否")
+                .setRightButtonTextColor(R.color.text_black)
+                .setCanceledOnTouchOutside(false)
+                .setOnclickListener(new DialogInterface.OnLeftAndRightClickListener<NormalAlertDialog>() {
+                    @Override
+                    public void clickLeftButton(NormalAlertDialog dialog, View view) {
+                        dialog.dismiss();
+                        okDownload.removeAll();
+                        adapter.updateData(DownloadAdapter.TYPE_ALL);
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void clickRightButton(NormalAlertDialog dialog, View view) {
+                        dialog.dismiss();
+                    }
+                })
+                .build()
+                .show();
     }
 }

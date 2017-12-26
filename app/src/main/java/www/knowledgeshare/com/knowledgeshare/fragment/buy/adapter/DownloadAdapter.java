@@ -58,7 +58,7 @@ import www.knowledgeshare.com.knowledgeshare.utils.NumberProgressBar;
  * 修订历史：
  * ================================================
  */
-public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHolder> implements ItemTouchHelperAdapter{
+public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHolder>{
 
     public static final int TYPE_ALL = 0;
     public static final int TYPE_FINISH = 1;
@@ -93,7 +93,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         DownloadTask task = values.get(position);
         String tag = createTag(task);
         task.register(new ListDownloadListener(tag, holder))//
@@ -102,6 +102,14 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
         holder.setTask(task);
         holder.bind();
         holder.refresh(task.progress);
+        holder.shanchuTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int adapterPosition = holder.getAdapterPosition();
+                values.remove(adapterPosition);
+                notifyItemRemoved(adapterPosition);
+            }
+        });
     }
 
     public void unRegister() {
@@ -120,7 +128,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
         return values == null ? 0 : values.size();
     }
 
-    @Override
+   /* @Override
     public void onItemMove(int fromPosition, int toPosition) {
         //交换位置
         Collections.swap(values,fromPosition,toPosition);
@@ -132,7 +140,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
         //移除数据
         values.remove(position);
         notifyItemRemoved(position);
-    }
+    }*/
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -146,10 +154,6 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
         @BindView(R.id.content_ll) LinearLayout contentLl;
         private DownloadTask task;
         private String tag;
-
-        public TextView getShanchuTv() {
-            return shanchuTv;
-        }
 
         public LinearLayout getContentLl() {
             return contentLl;
