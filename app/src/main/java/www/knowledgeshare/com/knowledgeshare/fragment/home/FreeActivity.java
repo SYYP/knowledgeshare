@@ -236,7 +236,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
                                     gobofang(playerBean);
                                     addListenCount(mFreeAdapter.getData().get(position).getId() + "");
-                                    MusicTypeBean musicTypeBean= new MusicTypeBean("free",mFreeBean.getTeacher_has().getT_name(),
+                                    MusicTypeBean musicTypeBean= new MusicTypeBean("free",
                                             mFreeBean.getTeacher_has().getT_header(),item.getVideo_name(),item.getId()+"",
                                             mFreeBean.getTeacher_has().getId()+"",item.isIsfav());
                                     musicTypeBean.setMsg("musicplayertype");
@@ -380,11 +380,11 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 public void onClick(View view) {
                     Intent intent = new Intent(FreeActivity.this, WenGaoActivity.class);
                     intent.putExtra("type", "free");
-                    intent.putExtra("t_name", mTeacher_has.getT_name());
-                    intent.putExtra("t_head", mTeacher_has.getT_header());
-                    intent.putExtra("video_name", item.getVideo_name());
+//                    intent.putExtra("t_name", mTeacher_has.getT_name());
+//                    intent.putExtra("t_head", mTeacher_has.getT_header());
+//                    intent.putExtra("video_name", item.getVideo_name());
+//                    intent.putExtra("teacher_id", mFreeBean.getTeacher_id() + "");
                     intent.putExtra("id", item.getId() + "");
-                    intent.putExtra("teacher_id", mFreeBean.getTeacher_id() + "");
                     startActivity(intent);
                 }
             });

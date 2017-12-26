@@ -22,6 +22,8 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
 
@@ -30,6 +32,7 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HuanChongBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
@@ -71,9 +74,33 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
         setISshow(false);
+        EventBus.getDefault().register(this);
         initView();
         initDialog();
         initMusic();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(HuanChongBean eventBean) {
+        if (eventBean.getMsg().equals("huanchong")) {
+            play_seek.setSecondaryProgress(play_seek.getMax() * eventBean.getPercent()/100);
+//            play_seek.setSecondaryProgress(play_seek.getMax() * 100 / eventBean.getPercent());
+//            System.out.println("ssssssssssssssssssssss"+play_seek.getMax()+"   "+eventBean.getPercent());
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("isplaying")) {
+            if (mMyBinder.isPlaying()) {
+                iv_pause.setImageResource(R.drawable.bofang_yellow_big);
+            } else {
+                iv_pause.setImageResource(R.drawable.pause_yellow_big);
+            }
+            play_seek.setMax(mMyBinder.getProgress());
+            music_duration.setText(time.format(mMyBinder.getProgress()) + "");
+            mMyBinder.refreshhuanchong();
+        }
     }
 
     private void initMusic() {
@@ -87,6 +114,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
         //我们的handler发送是定时1000s发送的，如果不关闭，MediaPlayer release掉了还在获取getCurrentPosition就会爆IllegalStateException错误
         mHandler.removeCallbacks(mRunnable);
         unbindService(mServiceConnection);
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -129,6 +157,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
             }
             play_seek.setMax(mMyBinder.getProgress());
             music_duration.setText(time.format(mMyBinder.getProgress()) + "");
+            mMyBinder.refreshhuanchong();
             play_seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -316,11 +345,11 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
             case R.id.tv_wengao:
                 Intent intent = new Intent(this, WenGaoActivity.class);
                 intent.putExtra("type", mMusicTypeBean.getType());
-                intent.putExtra("t_name", mMusicTypeBean.getT_name());
-                intent.putExtra("t_head", mMusicTypeBean.getT_head());
-                intent.putExtra("video_name", mMusicTypeBean.getVideo_name());
+                //                intent.putExtra("t_name", mMusicTypeBean.getT_name());
+                //                intent.putExtra("t_head", mMusicTypeBean.getT_head());
+                //                intent.putExtra("video_name", mMusicTypeBean.getVideo_name());
                 intent.putExtra("id", mMusicTypeBean.getId());
-                intent.putExtra("teacher_id", mMusicTypeBean.getTeacher_id());
+                //                intent.putExtra("teacher_id", mMusicTypeBean.getTeacher_id());
                 startActivity(intent);
                 break;
             case R.id.tv_download:

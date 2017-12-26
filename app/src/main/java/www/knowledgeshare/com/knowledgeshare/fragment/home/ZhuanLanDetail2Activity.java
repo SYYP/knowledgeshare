@@ -614,7 +614,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                     PlayerBean playerBean = new PlayerBean(mFreeTryReadDetailBean.getT_header(),
                             mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getT_tag(), mFreeTryReadDetailBean.getVideo_url());
                     gobofang(playerBean);
-                    MusicTypeBean musicTypeBean = new MusicTypeBean("zhuanlandetail", mFreeTryReadDetailBean.getT_name(),
+                    MusicTypeBean musicTypeBean = new MusicTypeBean("zhuanlandetail",
                             mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getName(), mId,
                             "", mFreeTryReadDetailBean.isfav());
                     musicTypeBean.setMsg("musicplayertype");

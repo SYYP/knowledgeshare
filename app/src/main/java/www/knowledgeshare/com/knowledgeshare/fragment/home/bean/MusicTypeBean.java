@@ -6,9 +6,8 @@ import java.io.Serializable;
  * Created by Administrator on 2017/12/25.
  */
 
-public class MusicTypeBean implements Serializable{
+public class MusicTypeBean implements Serializable {
     private String type;
-    private String t_name;
     private String t_head;
     private String video_name;
     private String id;
@@ -30,14 +29,6 @@ public class MusicTypeBean implements Serializable{
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getT_name() {
-        return t_name;
-    }
-
-    public void setT_name(String t_name) {
-        this.t_name = t_name;
     }
 
     public String getT_head() {
@@ -80,9 +71,8 @@ public class MusicTypeBean implements Serializable{
         isCollected = collected;
     }
 
-    public MusicTypeBean(String type, String t_name, String t_head, String video_name, String id, String teacher_id, boolean isCollected) {
+    public MusicTypeBean(String type, String t_head, String video_name, String id, String teacher_id, boolean isCollected) {
         this.type = type;
-        this.t_name = t_name;
         this.t_head = t_head;
         this.video_name = video_name;
         this.id = id;

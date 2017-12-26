@@ -167,7 +167,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                                     EveryDayBean.DailysEntity item = mDailys.get(position);
                                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
                                     gobofang(playerBean);
-                                    MusicTypeBean musicTypeBean= new MusicTypeBean("everydaycomment",item.getT_name(),
+                                    MusicTypeBean musicTypeBean= new MusicTypeBean("everydaycomment",
                                             item.getT_header(),item.getVideo_name(),item.getId()+"",
                                             item.getTeacher_id()+"",item.isIsfav());
                                     musicTypeBean.setMsg("musicplayertype");
@@ -260,10 +260,10 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 public void onClick(View view) {
                     Intent intent = new Intent(EveryDayCommentActivity.this, WenGaoActivity.class);
                     intent.putExtra("type", "everydaycomment");
-                    intent.putExtra("t_name", item.getT_name());
-                    intent.putExtra("t_head", item.getT_header());
-                    intent.putExtra("video_name", item.getVideo_name());
-                    intent.putExtra("teacher_id", item.getTeacher_id() + "");
+//                    intent.putExtra("t_name", item.getT_name());
+//                    intent.putExtra("t_head", item.getT_header());
+//                    intent.putExtra("video_name", item.getVideo_name());
+//                    intent.putExtra("teacher_id", item.getTeacher_id() + "");
                     intent.putExtra("id", item.getId() + "");
                     startActivity(intent);
                 }
