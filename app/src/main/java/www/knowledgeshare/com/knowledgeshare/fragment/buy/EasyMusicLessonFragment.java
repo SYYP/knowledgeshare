@@ -133,7 +133,9 @@ public class EasyMusicLessonFragment extends BaseFragment {
                             adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    startActivity(new Intent(mContext, SoftMusicDetailActivity.class));
+                                    Intent intent = new Intent(mContext, SoftMusicDetailActivity.class);
+                                    intent.putExtra("id",list.get(position).getId()+"");
+                                    startActivity(intent);
                                 }
                             });
 

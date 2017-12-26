@@ -133,7 +133,9 @@ public class MaestroClassFragment extends BaseFragment {
                             adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    startActivity(new Intent(mContext, BuyZhuanLanActivity.class));
+                                    Intent intent = new Intent(mContext, ZhuanLanActivity.class);
+                                    intent.putExtra("id",list.get(position).getId()+"");
+                                    startActivity(intent);
                                 }
                             });
                             springView.onFinishFreshAndLoad();

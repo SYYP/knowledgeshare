@@ -121,7 +121,7 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         final int itemViewType = getItemViewType(position);
         int type = list.get(position).getType();
         if (mOnItemClickListener != null) {
@@ -130,7 +130,7 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 public void onClick(View view) {
                     int layoutPosition = holder.getLayoutPosition();
                     Log.d("tag", layoutPosition + "");
-                    mOnItemClickListener.onItemClick(holder.itemView, layoutPosition, itemViewType);
+                    mOnItemClickListener.onItemClick(holder.itemView, layoutPosition, itemViewType,list.get(position).getId());
                 }
             });
         }
@@ -288,7 +288,7 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
        接口回调用来item点击
      */
     public interface OnItemClickListener {
-        void onItemClick(View view, int position, int type);
+        void onItemClick(View view, int position, int type,int id);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {

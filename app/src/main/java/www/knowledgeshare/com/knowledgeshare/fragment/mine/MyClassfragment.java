@@ -65,14 +65,16 @@ public class MyClassfragment extends BaseFragment {
                             Myclassadapter myclassadapter=new Myclassadapter(getActivity(),list);
                             myclassadapter.setOnItemClickListener(new Myclassadapter.OnItemClickListener() {
                                 @Override
-                                public void onItemClick(View view, int position, int type) {
+                                public void onItemClick(View view, int position, int type,int id) {
                                     Log.d("ccc",type+"");
                                     if(type==1){
-                                        Intent intent=new Intent(getActivity(), SoftMusicDetailActivity.class);
+                                        Intent intent = new Intent(getActivity(), SoftMusicDetailActivity.class);
+                                        intent.putExtra("id",id+"");
                                         startActivity(intent);
                                     }
                                     else if(type==2){
-                                        Intent intent=new Intent(getActivity(), ZhuanLanActivity.class);
+                                        Intent intent = new Intent(getActivity(), ZhuanLanActivity.class);
+                                        intent.putExtra("id",id+"");
                                         startActivity(intent);
                                     }
                                 }
