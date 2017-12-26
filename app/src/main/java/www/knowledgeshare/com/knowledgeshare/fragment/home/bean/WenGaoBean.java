@@ -18,6 +18,24 @@ public class WenGaoBean {
     private String video_name;
     private String t_name;
     private String t_header;
+    private int t_id;
+    private int id;
+
+    public int getT_id() {
+        return t_id;
+    }
+
+    public void setT_id(int t_id) {
+        this.t_id = t_id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public boolean isfav() {
         return isfav;
@@ -162,6 +180,7 @@ public class WenGaoBean {
         public List<ChildCommentEntity> getComment() {
             return comment;
         }
+
         public static class ChildCommentEntity {
             /**
              * id : 2

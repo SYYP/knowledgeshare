@@ -429,9 +429,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     refreshbofang("zhuanlan", helper.getAdapterPosition());
                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
                     gobofang(playerBean);
-                    mMusicTypeBean= new MusicTypeBean("free",mFree.getTeacher_has().getT_name(),
+                    mMusicTypeBean= new MusicTypeBean("free",
                             item.getT_header(),item.getVideo_name(),item.getId()+"",
-                            mFree.getTeacher_has().getId()+"",item.getIs_collect()==0?false:true);
+                            mFree.getTeacher_id()+"",item.getIs_collect()==0?false:true);
                     mMusicTypeBean.setMsg("musicplayertype");
                     EventBus.getDefault().postSticky(mMusicTypeBean);
                 }
@@ -462,9 +462,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     refreshbofang("comment", helper.getAdapterPosition());
                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
                     gobofang(playerBean);
-                    mMusicTypeBean = new MusicTypeBean("everydaycomment",item.getT_name(),
+                    mMusicTypeBean = new MusicTypeBean("everydaycomment",
                             item.getT_header(),item.getVideo_name(),item.getId()+"",
-                            item.getTeacher_id()+"",item.isfav());
+                            item.getTeacher_id()+"",item.isIsfav());
                     mMusicTypeBean.setMsg("musicplayertype");
                     EventBus.getDefault().postSticky(mMusicTypeBean);
                 }
@@ -589,6 +589,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 EventBean eventBean = new EventBean("rotate");
                 EventBus.getDefault().postSticky(eventBean);
                 SpUtils.putBoolean(mContext, "nowifiallowlisten", true);
+                playerBean.setMsg("refreshplayer");
+                EventBus.getDefault().postSticky(playerBean);
             } else {
                 mDialog.show();
                 mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
@@ -605,6 +607,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         EventBean eventBean = new EventBean("rotate");
                         EventBus.getDefault().postSticky(eventBean);
                         SpUtils.putBoolean(mContext, "nowifiallowlisten", true);
+                        playerBean.setMsg("refreshplayer");
+                        EventBus.getDefault().postSticky(playerBean);
                     }
                 });
                 mDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
@@ -626,6 +630,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             mMyBinder.playMusic(playerBean);
             EventBean eventBean = new EventBean("rotate");
             EventBus.getDefault().postSticky(eventBean);
+            playerBean.setMsg("refreshplayer");
+            EventBus.getDefault().postSticky(playerBean);
         }
     }
 

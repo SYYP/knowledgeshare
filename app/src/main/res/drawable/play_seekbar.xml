@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/background">
         <shape>
-            <solid android:color="@color/textcolor" />
+            <solid android:color="#e5e5e5" />
         </shape>
     </item>
     <!--第二进度颜色-->
     <item android:id="@android:id/secondaryProgress">
         <clip>
             <shape>
-                <solid android:color="@color/textcolor" />
+                <solid android:color="#cdcdcd" />
             </shape>
         </clip>
     </item>

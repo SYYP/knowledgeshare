@@ -294,7 +294,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                                              SoftMusicDetailBean.ChildEntity item = mChild.get(position);
                                              PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_old_name(), item.getT_tag(), item.getVideo_url());
                                              gobofang(playerBean);
-                                             MusicTypeBean musicTypeBean= new MusicTypeBean("softmusicdetail",item.getT_name(),
+                                             MusicTypeBean musicTypeBean= new MusicTypeBean("softmusicdetail",
                                                      item.getT_header(),item.getVideo_old_name(),item.getId()+"",
                                                      mMusicDetailBean.getXk_teacher_id()+"",item.isIsfav());
                                              musicTypeBean.setMsg("musicplayertype");
@@ -440,11 +440,11 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 public void onClick(View view) {
                     Intent intent = new Intent(SoftMusicDetailActivity.this, WenGaoActivity.class);
                     intent.putExtra("type", "softmusicdetail");
-                    intent.putExtra("t_name", mTeacher.getT_name());
-                    intent.putExtra("t_head", mTeacher.getT_header());
-                    intent.putExtra("video_name", item.getVideo_old_name());
+//                    intent.putExtra("t_name", mTeacher.getT_name());
+//                    intent.putExtra("t_head", mTeacher.getT_header());
+//                    intent.putExtra("video_name", item.getVideo_old_name());
+//                    intent.putExtra("teacher_id", mMusicDetailBean.getXk_teacher_id() + "");
                     intent.putExtra("id", item.getId() + "");
-                    intent.putExtra("teacher_id", mMusicDetailBean.getXk_teacher_id() + "");
                     startActivity(intent);
                 }
             });

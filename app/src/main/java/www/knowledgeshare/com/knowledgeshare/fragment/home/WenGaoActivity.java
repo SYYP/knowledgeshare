@@ -61,6 +61,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
     private LiuYanAdapter mLiuYanAdapter;
     private String mId, mType;
     private WenGaoBean mWenGaoBean;
+    private int mT_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,14 +127,8 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void initData() {
-        String t_name = getIntent().getStringExtra("t_name");
-        String t_head = getIntent().getStringExtra("t_head");
-        String video_name = getIntent().getStringExtra("video_name");
         mId = getIntent().getStringExtra("id");
         mType = getIntent().getStringExtra("type");
-        Glide.with(this).load(t_head).into(iv_teacher_head);
-        tv_teacher_name.setText(t_name);
-        tv_ke_name.setText(video_name);
         HttpParams params = new HttpParams();
         params.put("userid", SpUtils.getString(this, "id", ""));
         params.put("id", mId);
@@ -155,7 +150,11 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
                         mWenGaoBean = response.body();
                         if (response.code() >= 200 && response.code() <= 204) {
                             Logger.e(code + "");
+                            Glide.with(WenGaoActivity.this).load(mWenGaoBean.getT_header()).into(iv_teacher_head);
+                            tv_teacher_name.setText(mWenGaoBean.getT_name());
+                            tv_ke_name.setText(mWenGaoBean.getVideo_name());
                             tv_content.setText(mWenGaoBean.getContent());
+                            mT_id = mWenGaoBean.getT_id();
                             mComment = mWenGaoBean.getComment();
                             isGuanzhu = mWenGaoBean.isIsfav();
                             if (isGuanzhu) {
@@ -369,7 +368,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
                 Intent intent = new Intent(this, LiuYanActivity.class);
                 intent.putExtra("type", mType + "-wengao");
                 intent.putExtra("xiaoke_id", mId);
-                intent.putExtra("teacher_id", getIntent().getStringExtra("teacher_id"));
+                intent.putExtra("teacher_id", mT_id+"");
                 startActivity(intent);
                 break;
             case R.id.ll_guanzhu:

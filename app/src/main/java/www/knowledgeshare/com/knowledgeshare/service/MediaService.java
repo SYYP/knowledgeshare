@@ -3,8 +3,10 @@ package www.knowledgeshare.com.knowledgeshare.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Binder;
@@ -20,7 +22,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HuanChongBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.Actions;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.player.AudioFocusManager;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.player.NoisyAudioStreamReceiver;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.Notifier;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 
@@ -34,11 +39,15 @@ public class MediaService extends Service {
     private boolean isPrepared;
     private static String mMusicUrl = "";
     private PlayerBean mPlayerBean;
+    private AudioFocusManager mAudioFocusManager;
+    private final NoisyAudioStreamReceiver mNoisyReceiver = new NoisyAudioStreamReceiver();
+    private final IntentFilter mNoisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 
     @Override
     public void onCreate() {
         super.onCreate();
         Notifier.init(this);
+        mAudioFocusManager = new AudioFocusManager(this);
     }
 
     public static void startCommand(Context context, String action) {
@@ -51,9 +60,44 @@ public class MediaService extends Service {
         @Override
         public void onPrepared(MediaPlayer mp) {
             isPrepared = true;
-            mMediaPlayer.start();
+            start();
         }
     };
+
+    void start() {
+        if (mAudioFocusManager.requestAudioFocus()) {
+            mMediaPlayer.start();
+            registerReceiver(mNoisyReceiver, mNoisyFilter);
+            EventBus.getDefault().postSticky(new EventBean("isplaying"));
+            mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
+        }
+    }
+
+    private int mPercent;
+    private MediaPlayer.OnBufferingUpdateListener mBufferingUpdateListener = new MediaPlayer.OnBufferingUpdateListener() {
+        @Override
+        public void onBufferingUpdate(MediaPlayer mp, int percent) {
+            mPercent=percent;
+            EventBus.getDefault().postSticky(new HuanChongBean("huanchong", percent));
+        }
+    };
+
+    public boolean isPlaying() {
+        return mBinder.isPlaying();
+    }
+
+    public boolean isPreparing() {
+        return isPrepared;
+    }
+
+    public void stop() {
+        pause();
+        mMediaPlayer.reset();
+    }
+
+    public void pause() {
+        mBinder.pauseMusic();
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -86,6 +130,11 @@ public class MediaService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mMediaPlayer.reset();
+        mMediaPlayer.release();
+        mMediaPlayer = null;
+        mAudioFocusManager.abandonAudioFocus();
+        Notifier.cancelAll();
     }
 
     @Nullable
@@ -126,6 +175,7 @@ public class MediaService extends Service {
                     e1.printStackTrace();
                 }
             }
+            mMediaPlayer.setOnPreparedListener(mPreparedListener);
             if (mPlayerBean.getBitmap() == null) {
                 //如果还没开始播放，就开始
                 new AsyncTask<String, Void, Bitmap>() {
@@ -158,7 +208,7 @@ public class MediaService extends Service {
                     protected void onPostExecute(Bitmap result) {
                         super.onPostExecute(result);
                         if (result != null) {
-                            mMediaPlayer.setOnPreparedListener(mPreparedListener);
+                            //                            mMediaPlayer.setOnPreparedListener(mPreparedListener);
                             mPlayerBean.setBitmap(result);
                             Notifier.showPlay(mPlayerBean);
                         }
@@ -181,7 +231,6 @@ public class MediaService extends Service {
             try {
                 isPlaying = mMediaPlayer.isPlaying();
             } catch (IllegalStateException e) {
-                //                Toast.makeText(MyApplication.getGloableContext(), "异常", Toast.LENGTH_SHORT).show();
                 mMediaPlayer = null;
                 mMediaPlayer = new MediaPlayer();
                 try {
@@ -196,7 +245,7 @@ public class MediaService extends Service {
             }
             if (!isPlaying) {
                 //如果还没开始播放，就开始
-                mMediaPlayer.start();
+                start();
                 Notifier.showPlay(mPlayerBean);
             }
         }
@@ -221,6 +270,7 @@ public class MediaService extends Service {
                 //如果正在播放，就暂停
                 mMediaPlayer.pause();
                 Notifier.showPause(mPlayerBean);
+                unregisterReceiver(mNoisyReceiver);
             }
         }
 
@@ -332,6 +382,10 @@ public class MediaService extends Service {
                 //            Log.d(TAG, "设置资源，准备阶段出错");
                 e.printStackTrace();
             }
+        }
+
+        public void refreshhuanchong(){
+            EventBus.getDefault().postSticky(new HuanChongBean("huanchong", mPercent));
         }
     }
 
