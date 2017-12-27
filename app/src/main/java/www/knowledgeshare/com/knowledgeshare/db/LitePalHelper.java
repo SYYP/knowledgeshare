@@ -1,4 +1,4 @@
-package www.knowledgeshare.com.knowledgeshare.fragment.home.db;
+package www.knowledgeshare.com.knowledgeshare.db;
 
 /**
  * Created by lxk on 2017/7/6.

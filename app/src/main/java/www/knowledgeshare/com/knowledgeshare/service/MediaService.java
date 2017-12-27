@@ -92,6 +92,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             SpUtils.putString(MyApplication.getGloableContext(), "subtitle", mPlayerBean.getSubtitle());
             SpUtils.putString(MyApplication.getGloableContext(), "t_head", mPlayerBean.getTeacher_head());
             isClosed = false;
+            Notifier.showPlay(mPlayerBean);
         }
     }
 
@@ -106,9 +107,9 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             SpUtils.putString(MyApplication.getGloableContext(), "subtitle", mPlayerBean.getSubtitle());
             SpUtils.putString(MyApplication.getGloableContext(), "t_head", mPlayerBean.getTeacher_head());
             isClosed = false;
+            Notifier.showPlay(mPlayerBean);
         }
     }
-
 
     private int mPercent;
     private MediaPlayer.OnBufferingUpdateListener mBufferingUpdateListener = new MediaPlayer.OnBufferingUpdateListener() {
@@ -144,7 +145,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                     playPause();
                     break;
                 case Actions.ACTION_MEDIA_NEXT:
-                    //                    next();
+                    mBinder.nextMusic();
                     break;
                 case Actions.ACTION_MEDIA_PREVIOUS:
                     //                    prev();
@@ -200,13 +201,10 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 return;
             }
             mPlayerBean = playerBean;
-            //            RequestBuilder<Bitmap> load = Glide.with(MyApplication.getGloableContext()).asBitmap().load(playerBean.getTeacher_head());
-
             // 为解决第二次播放时抛出的IllegalStateException，这里做了try-catch处理
             try {
                 isPlaying = mMediaPlayer.isPlaying();
             } catch (IllegalStateException e) {
-                //                Toast.makeText(MyApplication.getGloableContext(), "异常", Toast.LENGTH_SHORT).show();
                 mMediaPlayer = null;
                 mMediaPlayer = new MediaPlayer();
                 try {
@@ -217,7 +215,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                     e1.printStackTrace();
                 }
             }
-            mMediaPlayer.setOnPreparedListener(mPreparedListener);
+            mMediaPlayer.setOnPreparedListener(mPreparedListener);//好像是暂停之后再走这个方法就不会执行了
             if (mPlayerBean.getBitmap() == null) {
                 //如果还没开始播放，就开始
                 new AsyncTask<String, Void, Bitmap>() {
@@ -250,7 +248,6 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                     protected void onPostExecute(Bitmap result) {
                         super.onPostExecute(result);
                         if (result != null) {
-                            //                            mMediaPlayer.setOnPreparedListener(mPreparedListener);
                             mPlayerBean.setBitmap(result);
                             Notifier.showPlay(mPlayerBean);
                         }
@@ -258,9 +255,10 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 }.execute(playerBean.getTeacher_head());
             } else {
                 if (!mBinder.isPlaying()) {
-                    Notifier.showPlay(mPlayerBean);
-                    EventBean eventBean = new EventBean("rotate");
-                    EventBus.getDefault().postSticky(eventBean);
+                    //                    Notifier.showPlay(mPlayerBean);
+                    //                    EventBean eventBean = new EventBean("rotate");
+                    //                    EventBus.getDefault().postSticky(eventBean);
+                    start();
                 }
             }
         }
@@ -330,6 +328,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 mMediaPlayer.release();
                 isPlaying = false;
                 isClosed = true;
+                Notifier.showPause(mPlayerBean);
                 //                mMediaPlayer = null;
             }
         }

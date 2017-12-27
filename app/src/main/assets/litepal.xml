@@ -4,7 +4,7 @@
     <version value="1" /><!--version不用想也知道是指定数据库的版本了-->
     <list>
         <!--list节点下的mapping是我们建立的实体类。实体类的类名对应数据库的表的名称，字段对应了数据库中的字段 -->
-        <mapping class="www.knowledgeshare.com.knowledgeshare.fragment.home.db.BofangHistroyBean" />
+        <mapping class="www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean" />
         <!--mapping 标签主要是用于做映射对象的，一个对象对应一张表，每个实体类是对应一张表的。
         创建实体类，就相当于创建了一张表。-->
     </list>

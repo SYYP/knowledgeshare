@@ -1,4 +1,4 @@
-package www.knowledgeshare.com.knowledgeshare.fragment.home.db;
+package www.knowledgeshare.com.knowledgeshare.db;
 
 import org.litepal.crud.DataSupport;
 

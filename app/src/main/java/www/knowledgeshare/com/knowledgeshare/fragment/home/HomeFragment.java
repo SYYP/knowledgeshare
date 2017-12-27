@@ -249,6 +249,14 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(MusicTypeBean musicTypeBean) {
+        if (musicTypeBean.getMsg().equals("musicplayertype")) {
+            //因为homefragment和其他界面的popupwindow不是一个，所以这边也要接收一下，免得返回的时候点击进入音乐播放主界面出现错误
+            mMusicTypeBean = musicTypeBean;
+        }
+    }
+
     @Override
     protected void initData() {
         HttpParams params = new HttpParams();
