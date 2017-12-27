@@ -1,36 +1,56 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.mine;
 
+import java.util.List;
+
 /**
  * date : ${Date}
  * author:衣鹏宇(ypu)
  */
 
 public class Messagebean {
-       private String time;
-       private String count;
-      private boolean aBoolean;
 
-    public String getTime() {
-        return time;
+    private List<DataBean> data;
+
+    public List<DataBean> getData() {
+        return data;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setData(List<DataBean> data) {
+        this.data = data;
     }
 
-    public String getCount() {
-        return count;
-    }
+    public static class DataBean {
+        /**
+         * created_at : 2017-12-26 08:36:40
+         * content : 每天首次评论获得10点
+         */
 
-    public void setCount(String count) {
-        this.count = count;
-    }
+        private String created_at;
+        private String content;
+        private boolean aBoolean;
 
-    public boolean isaBoolean() {
-        return aBoolean;
-    }
+        public boolean isaBoolean() {
+            return aBoolean;
+        }
 
-    public void setaBoolean(boolean aBoolean) {
-        this.aBoolean = aBoolean;
+        public void setaBoolean(boolean aBoolean) {
+            this.aBoolean = aBoolean;
+        }
+
+        public String getCreated_at() {
+            return created_at;
+        }
+
+        public void setCreated_at(String created_at) {
+            this.created_at = created_at;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
     }
 }

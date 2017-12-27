@@ -78,4 +78,9 @@ public class MyContants {
     public static final String gold = BASEURL + "api/v2/user/gold";
     //下载数据获取接口
     public static final String downLoad = BASEURL + "api/v2/down";
+    //消息通知
+    public static final String nitification = BASEURL + "api/v2/user/notifications";
+    //学习笔记
+    public static final String notes = BASEURL + "api/v2/user/notes";
+
 }

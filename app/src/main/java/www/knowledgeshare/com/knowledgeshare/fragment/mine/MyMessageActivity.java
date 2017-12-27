@@ -16,12 +16,18 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.Response;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 /**
  * date : ${Date}
@@ -34,7 +40,7 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
     private TextView message_bianji;
     private RelativeLayout rela;
     private RecyclerView message_recy;
-    private List<Messagebean> list = new ArrayList<>();
+    private List<Messagebean.DataBean> list = new ArrayList<>();
     private Messagebean msssagebean;
     private LinearLayout msg_delete;
     private CheckBox checkall;
@@ -72,39 +78,45 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void data() {
-        for (int i = 0; i < 6; i++) {
-            msssagebean = new Messagebean();
-            msssagebean.setCount("系统消息： 恭喜行走的肉夹馍获得金牌用户勋章，再接再厉成为钻石用户");
-            msssagebean.setTime("2017-10-10  10:10");
-            list.add(msssagebean);
-            messageadapter = new Messageadapter(R.layout.item_my_message, list);
-            message_recy.setLayoutManager(new LinearLayoutManager(this));
+        requestNotification();
+    }
 
-            messageadapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    list.get(position).setaBoolean(!list.get(position).isaBoolean());
-                    if (isEditing){
-                        if (isAllItemChecked()) {
-                            //如果所有item都选中了，就让全选按钮变红
-                            checkall.setChecked(true);
-                        } else {
-                            checkall.setChecked(false);
+    private void requestNotification() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        OkGo.<Messagebean>get(MyContants.nitification)
+                .tag(this)
+                .headers(headers)
+                .execute(new DialogCallback<Messagebean>(this,Messagebean.class) {
+                    @Override
+                    public void onSuccess(Response<Messagebean> response) {
+                        int code = response.code();
+                        if (code >= 200 && code <= 204){
+                            list = response.body().getData();
+                            messageadapter = new Messageadapter(R.layout.item_my_message, list);
+                            message_recy.setLayoutManager(new LinearLayoutManager(MyMessageActivity.this));
+                            messageadapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                    list.get(position).setaBoolean(!list.get(position).isaBoolean());
+                                    if (isEditing){
+                                        if (isAllItemChecked()) {
+                                            //如果所有item都选中了，就让全选按钮变红
+                                            checkall.setChecked(true);
+                                        } else {
+                                            checkall.setChecked(false);
+                                        }
+                                    }else {
+                                        startActivity(new Intent(MyMessageActivity.this,MessageDetailActivity.class));
+                                    }
+                                    messageadapter.notifyDataSetChanged();
+                                }
+                            });
+                            //设置分割线
+                            message_recy.setAdapter(messageadapter);
                         }
-                    }else {
-                        startActivity(new Intent(MyMessageActivity.this,MessageDetailActivity.class));
                     }
-
-                    messageadapter.notifyDataSetChanged();
-                }
-            });
-            //设置分割线
-            message_recy.setAdapter(messageadapter);
-            //    message_recy.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
-
-        }
-
-
+                });
     }
 
     private boolean hasItemChecked() {
@@ -129,33 +141,25 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
         if (isAllChecked) {
             for (int i = 0; i < list.size(); i++) {
                 list.get(i).setaBoolean(false);
-                Log.d("ddd", list.get(i).isaBoolean() + "");
-
             }
             checkall.setChecked(false);
         } else {
             for (int i = 0; i < list.size(); i++) {
-
                 list.get(i).setaBoolean(true);
-                Log.d("ddd", list.get(i).isaBoolean() + "");
             }
             checkall.setChecked(true);
         }
         isAllChecked = !isAllChecked;
-        Log.d("tag", list.size() + "");
         messageadapter.notifyDataSetChanged();
     }
 
     private void deleteCollect() {
-        Log.d("bbb", list.size() + "");
-
         for (int i = list.size()-1; i >= 0; i--) {
             if (list.get(i).isaBoolean()){
                 list.remove(i);
             }
         }
         messageadapter.notifyDataSetChanged();
-        Log.d("aaa", list.size() + "");
     }
 
     @Override
@@ -198,21 +202,21 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    class Messageadapter extends BaseQuickAdapter<Messagebean, BaseViewHolder> {
-        public Messageadapter(@LayoutRes int layoutResId, @Nullable List<Messagebean> data) {
+    class Messageadapter extends BaseQuickAdapter<Messagebean.DataBean, BaseViewHolder> {
+        public Messageadapter(@LayoutRes int layoutResId, @Nullable List<Messagebean.DataBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, Messagebean item) {
+        protected void convert(BaseViewHolder helper, Messagebean.DataBean item) {
             if (isEditing) {
                 helper.setVisible(R.id.msg_check, true);
             } else if (!isEditing) {
                 helper.setVisible(R.id.msg_check, false);
             }
             helper.setIsRecyclable(false);
-            helper.setText(R.id.message_count, item.getCount())
-                    .setText(R.id.message_date, item.getTime())
+            helper.setText(R.id.message_count, item.getContent())
+                    .setText(R.id.message_date, item.getCreated_at())
                     .setChecked(R.id.msg_check, item.isaBoolean());
         }
     }

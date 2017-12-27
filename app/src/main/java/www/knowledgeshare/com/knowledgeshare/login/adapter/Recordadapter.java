@@ -19,6 +19,7 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.fragment.mine.DemoBean;
 import www.knowledgeshare.com.knowledgeshare.login.bean.StudyRecordbean;
 import www.knowledgeshare.com.knowledgeshare.utils.SoftKeyboardTool;
 
@@ -30,9 +31,9 @@ import www.knowledgeshare.com.knowledgeshare.utils.SoftKeyboardTool;
 public class Recordadapter extends RecyclerView.Adapter<Recordadapter.Myadapter> {
 
     private Context context;
-    private List<StudyRecordbean> list;
+    private List<DemoBean> list;
     boolean bool;
-    public Recordadapter(Context context, List<StudyRecordbean> list) {
+    public Recordadapter(Context context, List<DemoBean> list) {
         this.context = context;
         this.list = list;
     }
@@ -47,7 +48,7 @@ public class Recordadapter extends RecyclerView.Adapter<Recordadapter.Myadapter>
     @Override
     public void onBindViewHolder(final Myadapter holder, final int position) {
 
-           //添加数据
+         /*  //添加数据
          if(list.get(position).getTime()==null||list.get(position).getTime().equals("")){
             holder.record_time.setVisibility(View.GONE);
 
@@ -56,7 +57,15 @@ public class Recordadapter extends RecyclerView.Adapter<Recordadapter.Myadapter>
              holder.record_time.setText(list.get(position).getTime());
          }
 
-        holder.item_title.setText(list.get(position).getTitle());
+        holder.item_title.setText(list.get(position).getTitle());*/
+         holder.item_title.setText(list.get(position).getCreated_at()+"  "+list.get(position).getTitle());
+        holder.item_count.setText(list.get(position).getContent());
+        if(list.get(position).getTime()==null||list.get(position).getTime().equals("")){
+            holder.record_time.setVisibility(View.GONE);
+        }else {
+            holder.record_time.setText(list.get(position).getTime());
+        }
+
         /*
            设置监听
          */
