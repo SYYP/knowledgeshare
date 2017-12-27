@@ -28,13 +28,17 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.MyAccountActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
@@ -85,12 +89,27 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zhuan_lan_detail2);
+        EventBus.getDefault().register(this);
         initView();
         initDialog();
         initData();
         initMusic();
         initListener();
         initNETDialog();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {//当这个界面的小型播放器点击了叉号的时候，播放按钮成暂停
+        if (eventBean.getMsg().equals("norotate")) {
+            isBofang = false;
+            iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
+        }
     }
 
     private MediaService.MyBinder mMyBinder;
@@ -609,19 +628,32 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 break;
             case R.id.iv_bofang:
                 if (!isBofang) {
+                    //                    Toast.makeText(this, "播放", Toast.LENGTH_SHORT).show();
                     iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
                     setISshow(true);
-                    PlayerBean playerBean = new PlayerBean(mFreeTryReadDetailBean.getT_header(),
-                            mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getT_tag(), mFreeTryReadDetailBean.getVideo_url());
-                    gobofang(playerBean);
-                    MusicTypeBean musicTypeBean = new MusicTypeBean("zhuanlandetail",
-                            mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getName(), mId,
-                            "", mFreeTryReadDetailBean.isfav());
-                    musicTypeBean.setMsg("musicplayertype");
-                    EventBus.getDefault().postSticky(musicTypeBean);
+                    if (mMyBinder.isClosed()) {
+                        PlayerBean playerBean = new PlayerBean(mFreeTryReadDetailBean.getT_header(),
+                                mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getT_tag(), mFreeTryReadDetailBean.getVideo_url());
+                        gobofang(playerBean);
+                        MusicTypeBean musicTypeBean = new MusicTypeBean("zhuanlandetail",
+                                mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getName(), mId,
+                                "", mFreeTryReadDetailBean.isfav());
+                        musicTypeBean.setMsg("musicplayertype");
+                        EventBus.getDefault().postSticky(musicTypeBean);
+                        List<PlayerBean> list = new ArrayList<PlayerBean>();
+                        list.add(playerBean);
+                        MediaService.insertMusicList(list);
+                    } else {
+                        mMyBinder.playMusic();
+                    }
                 } else {
+                    //                    Toast.makeText(this, "暂停", Toast.LENGTH_SHORT).show();
                     iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
-                    ClickPauseMusic();
+                    mMyBinder.pauseMusic();
+                    EventBean eventBean = new EventBean("main_pause");
+                    EventBus.getDefault().postSticky(eventBean);
+                    EventBean eventBean2 = new EventBean("home_pause");
+                    EventBus.getDefault().postSticky(eventBean2);
                 }
                 isBofang = !isBofang;
                 break;

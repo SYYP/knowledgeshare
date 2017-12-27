@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -29,6 +30,7 @@ import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.BuyFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.HomeFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.WebActivity;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.MineFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.study.StudyFragment;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
@@ -122,7 +124,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             public void onClick(View v) {
                 mDialog.dismiss();
                 Intent intent = new Intent(MainActivity.this, WebActivity.class);
-                intent.putExtra("lxk","lxk");
+                intent.putExtra("lxk", "lxk");
                 startActivity(intent);
             }
         });
@@ -175,7 +177,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             iv_listen.setImageResource(R.drawable.tab_listen_pause);
             //homefragment传来这个的时候就是点了叉了
             mMyBinder.closeMedia();
-        } else if (eventBean.getMsg().equals("zanting")) {
+        } else if (eventBean.getMsg().equals("main_pause")) {
             isPause = true;
             iv_listen.clearAnimation();
             iv_listen.setImageResource(R.drawable.tab_listen_pause);
@@ -185,7 +187,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
+        //        super.onSaveInstanceState(outState);
     }
 
     private void initListener() {
@@ -257,16 +259,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.ll_listen:
                 if (isPause) {
                     iv_listen.setImageResource(R.drawable.tab_listen_bo);
-                    if (mRotate_anim != null) {
-                        iv_listen.startAnimation(mRotate_anim);  //开始动画
+                    if (mMyBinder.isClosed()) {
+                        String musicurl = SpUtils.getString(this, "musicurl", "");
+                        if (!TextUtils.isEmpty(musicurl)) {
+                            String title = SpUtils.getString(this, "title", "");
+                            String subtitle = SpUtils.getString(this, "subtitle", "");
+                            String t_head = SpUtils.getString(this, "t_head", "");
+                            PlayerBean playerBean = new PlayerBean(t_head, title, subtitle, musicurl);
+                            playerBean.setMsg("lastbofang");
+                            EventBus.getDefault().postSticky(playerBean);
+                        } else {
+                            EventBus.getDefault().post(new EventBean("morenbofang"));
+                        }
+                    } else {
+                        if (mRotate_anim != null) {
+                            iv_listen.startAnimation(mRotate_anim);  //开始动画
+                        }
+                        mMyBinder.playMusic();
+                        EventBean eventBean = new EventBean("home_bofang");
+                        EventBus.getDefault().postSticky(eventBean);
                     }
-                    EventBean eventBean = new EventBean("bofang");
-                    EventBus.getDefault().postSticky(eventBean);
-                    mMyBinder.playMusic();
                 } else {
                     iv_listen.clearAnimation();
                     iv_listen.setImageResource(R.drawable.tab_listen_pause);
-                    EventBean eventBean = new EventBean("pause");
+                    EventBean eventBean = new EventBean("home_pause");
                     EventBus.getDefault().postSticky(eventBean);
                     mMyBinder.pauseMusic();
                 }
@@ -314,6 +330,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
         }
     }
+
 
     private void addFragments(BaseFragment f) {
         // 第一步：得到fragment管理类

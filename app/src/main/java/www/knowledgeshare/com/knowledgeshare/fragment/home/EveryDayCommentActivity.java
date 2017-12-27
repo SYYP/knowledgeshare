@@ -29,6 +29,7 @@ import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
@@ -172,6 +173,13 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                                             item.getTeacher_id()+"",item.isIsfav());
                                     musicTypeBean.setMsg("musicplayertype");
                                     EventBus.getDefault().postSticky(musicTypeBean);
+                                    List<PlayerBean> list = new ArrayList<PlayerBean>();
+                                    for (int i = 0; i < mDailys.size(); i++) {
+                                        EveryDayBean.DailysEntity entity = mDailys.get(i);
+                                        PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getT_tag(), entity.getVideo_url());
+                                        list.add(playerBean1);
+                                    }
+                                    MediaService.insertMusicList(list);
                                 }
                             });
                         } else {

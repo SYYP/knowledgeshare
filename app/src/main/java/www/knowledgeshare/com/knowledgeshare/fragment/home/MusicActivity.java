@@ -92,6 +92,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("isplaying")) {
+            //防止当小型播放器出现但还没有播放的时候，用户点击进入了播放主界面，进入了主界面之后音乐播放了但界面UI没变化
             if (mMyBinder.isPlaying()) {
                 iv_pause.setImageResource(R.drawable.bofang_yellow_big);
             } else {
@@ -358,26 +359,28 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                 changeCollect();
                 break;
             case R.id.iv_previous:
+                mMyBinder.preciousMusic();
                 break;
             case R.id.iv_pause:
                 if (isbofang) {
                     mMyBinder.pauseMusic();
                     iv_pause.setImageResource(R.drawable.pause_yellow_big);
-                    EventBean eventBean = new EventBean("zanting");
+                    EventBean eventBean = new EventBean("main_pause");
                     EventBus.getDefault().postSticky(eventBean);
-                    EventBean eventBean2 = new EventBean("pause");
+                    EventBean eventBean2 = new EventBean("home_pause");
                     EventBus.getDefault().postSticky(eventBean2);
                 } else {
                     mMyBinder.playMusic();
                     iv_pause.setImageResource(R.drawable.bofang_yellow_big);
                     EventBean eventBean = new EventBean("rotate");
                     EventBus.getDefault().postSticky(eventBean);
-                    EventBean eventBean2 = new EventBean("bofang");
+                    EventBean eventBean2 = new EventBean("home_bofang");
                     EventBus.getDefault().postSticky(eventBean2);
                 }
                 isbofang = !isbofang;
                 break;
             case R.id.iv_next:
+                mMyBinder.nextMusic();
                 break;
         }
     }

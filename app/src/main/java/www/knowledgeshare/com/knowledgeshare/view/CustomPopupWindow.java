@@ -55,7 +55,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(PlayerBean playerBean) {
-        if (playerBean.getMsg().equals("refreshplayer")) {
+        if (playerBean.getMsg().equals("refreshplayer")) {//刷新所有具有popupwindow的界面，让popupwindow上显示的图片和文字改变
             title = playerBean.getTitle();
             subtitle = playerBean.getSubtitle();
             header = playerBean.getTeacher_head();
@@ -67,7 +67,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(MusicTypeBean musicTypeBean) {
-        if (musicTypeBean.getMsg().equals("musicplayertype")) {
+        if (musicTypeBean.getMsg().equals("musicplayertype")) {//把播放的数据封装成bean传来，方便进入播放主界面
             mMusicTypeBean = musicTypeBean;
         }
     }
@@ -119,7 +119,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
                 isBofang = false;
                 EventBean eventBean = new EventBean("norotate");
                 EventBus.getDefault().postSticky(eventBean);
-                EventBean eventBean2 = new EventBean("close");
+                EventBean eventBean2 = new EventBean("home_close");
                 EventBus.getDefault().postSticky(eventBean2);
                 break;
             case R.id.iv_arrow_top:

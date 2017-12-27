@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -20,7 +21,10 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HuanChongBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.Actions;
@@ -28,26 +32,35 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.player.AudioFocusMana
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.NoisyAudioStreamReceiver;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.Notifier;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
-public class MediaService extends Service {
+public class MediaService extends Service implements MediaPlayer.OnCompletionListener {
 
     private MyBinder mBinder = new MyBinder();
 
     //初始化MediaPlayer
     public MediaPlayer mMediaPlayer = new MediaPlayer();
-    private boolean isPlaying = false;
+    private boolean isPlaying;
     private boolean isPrepared;
+    private boolean isClosed = true;
     private static String mMusicUrl = "";
     private PlayerBean mPlayerBean;
     private AudioFocusManager mAudioFocusManager;
     private final NoisyAudioStreamReceiver mNoisyReceiver = new NoisyAudioStreamReceiver();
     private final IntentFilter mNoisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+    private static List<PlayerBean> musicList = new ArrayList<>();
+    private int currPosition;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Notifier.init(this);
         mAudioFocusManager = new AudioFocusManager(this);
+        mMediaPlayer.setOnCompletionListener(this);
+    }
+
+    public static void insertMusicList(List<PlayerBean> musiclist) {
+        musicList = musiclist;
     }
 
     public static void startCommand(Context context, String action) {
@@ -64,20 +77,44 @@ public class MediaService extends Service {
         }
     };
 
-    void start() {
+    private void start() {
+        if (mAudioFocusManager.requestAudioFocus()) {
+            mMediaPlayer.start();
+            EventBean eventBean = new EventBean("rotate");
+            EventBus.getDefault().postSticky(eventBean);
+            EventBean eventBean2 = new EventBean("home_bofang");
+            EventBus.getDefault().postSticky(eventBean2);
+            registerReceiver(mNoisyReceiver, mNoisyFilter);
+            EventBus.getDefault().postSticky(new EventBean("isplaying"));
+            mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
+            SpUtils.putString(MyApplication.getGloableContext(), "musicurl", mMusicUrl);
+            SpUtils.putString(MyApplication.getGloableContext(), "title", mPlayerBean.getTitle());
+            SpUtils.putString(MyApplication.getGloableContext(), "subtitle", mPlayerBean.getSubtitle());
+            SpUtils.putString(MyApplication.getGloableContext(), "t_head", mPlayerBean.getTeacher_head());
+            isClosed = false;
+        }
+    }
+
+    private void start2() {
         if (mAudioFocusManager.requestAudioFocus()) {
             mMediaPlayer.start();
             registerReceiver(mNoisyReceiver, mNoisyFilter);
             EventBus.getDefault().postSticky(new EventBean("isplaying"));
             mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
+            SpUtils.putString(MyApplication.getGloableContext(), "musicurl", mMusicUrl);
+            SpUtils.putString(MyApplication.getGloableContext(), "title", mPlayerBean.getTitle());
+            SpUtils.putString(MyApplication.getGloableContext(), "subtitle", mPlayerBean.getSubtitle());
+            SpUtils.putString(MyApplication.getGloableContext(), "t_head", mPlayerBean.getTeacher_head());
+            isClosed = false;
         }
     }
+
 
     private int mPercent;
     private MediaPlayer.OnBufferingUpdateListener mBufferingUpdateListener = new MediaPlayer.OnBufferingUpdateListener() {
         @Override
         public void onBufferingUpdate(MediaPlayer mp, int percent) {
-            mPercent=percent;
+            mPercent = percent;
             EventBus.getDefault().postSticky(new HuanChongBean("huanchong", percent));
         }
     };
@@ -120,7 +157,7 @@ public class MediaService extends Service {
     public void playPause() {
         if (mBinder.isPlaying()) {
             mBinder.pauseMusic();
-            EventBean eventBean = new EventBean("zanting");
+            EventBean eventBean = new EventBean("main_pause");
             EventBus.getDefault().postSticky(eventBean);
         } else {
             mBinder.playMusic(mPlayerBean);
@@ -141,6 +178,11 @@ public class MediaService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        mBinder.nextMusic();
     }
 
     public class MyBinder extends Binder {
@@ -215,7 +257,7 @@ public class MediaService extends Service {
                     }
                 }.execute(playerBean.getTeacher_head());
             } else {
-                if (!mMediaPlayer.isPlaying()) {
+                if (!mBinder.isPlaying()) {
                     Notifier.showPlay(mPlayerBean);
                     EventBean eventBean = new EventBean("rotate");
                     EventBus.getDefault().postSticky(eventBean);
@@ -245,7 +287,7 @@ public class MediaService extends Service {
             }
             if (!isPlaying) {
                 //如果还没开始播放，就开始
-                start();
+                start2();
                 Notifier.showPlay(mPlayerBean);
             }
         }
@@ -271,17 +313,12 @@ public class MediaService extends Service {
                 mMediaPlayer.pause();
                 Notifier.showPause(mPlayerBean);
                 unregisterReceiver(mNoisyReceiver);
+                isClosed = false;
             }
         }
 
-        /**
-         * reset
-         */
-        public void resetMusic() {
-            isPlaying = mMediaPlayer.isPlaying();
-            if (!isPlaying) {
-                mMediaPlayer.reset();
-            }
+        public boolean isClosed() {
+            return isClosed;
         }
 
         /**
@@ -292,6 +329,7 @@ public class MediaService extends Service {
                 mMediaPlayer.stop();
                 mMediaPlayer.release();
                 isPlaying = false;
+                isClosed = true;
                 //                mMediaPlayer = null;
             }
         }
@@ -302,8 +340,14 @@ public class MediaService extends Service {
         public void nextMusic() {
             if (mMediaPlayer != null) {
                 //切换歌曲reset()很重要很重要很重要，没有会报IllegalStateException
-                mMediaPlayer.reset();
-                //                playMusic();
+                if (currPosition == musicList.size() - 1) {
+                    Toast.makeText(MyApplication.getGloableContext(), "已是最后一首", Toast.LENGTH_SHORT).show();
+                } else {
+                    currPosition++;
+                    mMediaPlayer.reset();
+                    mBinder.setMusicUrl(musicList.get(currPosition).getVideo_url());
+                    mBinder.playMusic(musicList.get(currPosition));
+                }
             }
         }
 
@@ -312,8 +356,14 @@ public class MediaService extends Service {
          */
         public void preciousMusic() {
             if (mMediaPlayer != null) {
-                mMediaPlayer.reset();
-                //                playMusic();
+                if (currPosition == 0) {
+                    Toast.makeText(MyApplication.getGloableContext(), "已是第一首", Toast.LENGTH_SHORT).show();
+                } else {
+                    currPosition--;
+                    mMediaPlayer.reset();
+                    mBinder.setMusicUrl(musicList.get(currPosition).getVideo_url());
+                    mBinder.playMusic(musicList.get(currPosition));
+                }
             }
         }
 
@@ -355,6 +405,7 @@ public class MediaService extends Service {
          */
         public void setMusicUrl(String musicUrl) {
             if (mMusicUrl.equals(musicUrl) && isPlaying()) {
+                Toast.makeText(MyApplication.getGloableContext(), "音频正在播放中", Toast.LENGTH_SHORT).show();
                 return;
             }
             mMusicUrl = musicUrl;
@@ -367,7 +418,6 @@ public class MediaService extends Service {
                 //让MediaPlayer对象准备
                 mMediaPlayer.prepareAsync();
             } catch (IllegalStateException e) {
-                //                Toast.makeText(MyApplication.getGloableContext(), "异常", Toast.LENGTH_SHORT).show();
                 mMediaPlayer = null;
                 mMediaPlayer = new MediaPlayer();
                 try {
@@ -384,7 +434,7 @@ public class MediaService extends Service {
             }
         }
 
-        public void refreshhuanchong(){
+        public void refreshhuanchong() {
             EventBus.getDefault().postSticky(new HuanChongBean("huanchong", mPercent));
         }
     }

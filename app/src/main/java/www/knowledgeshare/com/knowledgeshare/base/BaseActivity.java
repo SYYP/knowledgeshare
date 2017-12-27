@@ -67,20 +67,12 @@ public class BaseActivity extends AppCompatActivity {
     public void ClickPopShow() {
         if (isshow && !musicPop.isShowing()) {
             musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
-            mMyBinder.playMusic();
-            EventBean eventBean = new EventBean("rotate");
-            EventBus.getDefault().postSticky(eventBean);
-            EventBean eventBean2 = new EventBean("bofang");
-            EventBus.getDefault().postSticky(eventBean2);
+//            mMyBinder.playMusic();
+//            EventBean eventBean = new EventBean("rotate");
+//            EventBus.getDefault().postSticky(eventBean);
+//            EventBean eventBean2 = new EventBean("bofang");
+//            EventBus.getDefault().postSticky(eventBean2);
         }
-    }
-
-    public void ClickPauseMusic() {
-        mMyBinder.pauseMusic();
-        EventBean eventBean = new EventBean("norotate");
-        EventBus.getDefault().postSticky(eventBean);
-        EventBean eventBean2 = new EventBean("pause");
-        EventBus.getDefault().postSticky(eventBean2);
     }
 
     public void SlidePopShow() {
@@ -88,7 +80,7 @@ public class BaseActivity extends AppCompatActivity {
             musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
             EventBean eventBean = new EventBean("rotate");
             EventBus.getDefault().postSticky(eventBean);
-            EventBean eventBean2 = new EventBean("bofang");
+            EventBean eventBean2 = new EventBean("home_bofang");
             EventBus.getDefault().postSticky(eventBean2);
         }
     }
