@@ -8,17 +8,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
-import www.knowledgeshare.com.knowledgeshare.bean.DownLoadBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 
 public class DownLoadListActivity extends BaseActivity implements View.OnClickListener {
 
@@ -27,7 +26,7 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
     private ImageView iv_quanxuan;
     private TextView tv_quanxuan;
     private TextView tv_download;
-    private List<DownLoadBean> mList;
+    private List<DownLoadListBean> mList;
     private MyAdapter mMyAdapter;
     private boolean isAllChecked = true;
 
@@ -50,26 +49,25 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
         tv_download = (TextView) findViewById(R.id.tv_download);
         tv_download.setOnClickListener(this);
         recycler_list.setLayoutManager(new LinearLayoutManager(this));
-        mList = new ArrayList<>();
-        mList.add(new DownLoadBean());
-        mList.add(new DownLoadBean());
-        mList.add(new DownLoadBean());
-        mMyAdapter = new MyAdapter(R.layout.item_download, mList);
-        recycler_list.setAdapter(mMyAdapter);
-        mMyAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                //                Toast.makeText(DownLoadListActivity.this, "触发", Toast.LENGTH_SHORT).show();
-                mList.get(position).setChecked(!mList.get(position).isChecked());
-                //                mMyAdapter.setNewData(mList);
-                mMyAdapter.notifyDataSetChanged();
-                if (!isAllChecked()) {
-                    iv_quanxuan.setImageResource(R.drawable.noquanxuan);
-                } else {
-                    iv_quanxuan.setImageResource(R.drawable.quanxuan_red);
+        mList = DownUtils.search();
+        if (mList != null && mList.size() > 0) {
+            mMyAdapter = new MyAdapter(R.layout.item_download, mList);
+            recycler_list.setAdapter(mMyAdapter);
+            mMyAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                    //                Toast.makeText(DownLoadListActivity.this, "触发", Toast.LENGTH_SHORT).show();
+                    mList.get(position).setChecked(!mList.get(position).isChecked());
+                    //                mMyAdapter.setNewData(mList);
+                    mMyAdapter.notifyDataSetChanged();
+                    if (!isAllChecked()) {
+                        iv_quanxuan.setImageResource(R.drawable.noquanxuan);
+                    } else {
+                        iv_quanxuan.setImageResource(R.drawable.quanxuan_red);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void quanxuan() {
@@ -100,14 +98,14 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
         iv_quanxuan.setImageResource(R.drawable.noquanxuan);
     }
 
-    private class MyAdapter extends BaseQuickAdapter<DownLoadBean, BaseViewHolder> {
+    private class MyAdapter extends BaseQuickAdapter<DownLoadListBean, BaseViewHolder> {
 
-        public MyAdapter(@LayoutRes int layoutResId, @Nullable List<DownLoadBean> data) {
+        public MyAdapter(@LayoutRes int layoutResId, @Nullable List<DownLoadListBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(final BaseViewHolder helper, DownLoadBean item) {
+        protected void convert(final BaseViewHolder helper, DownLoadListBean item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_ischeck);
             if (item.isChecked()) {
                 //                Glide.with(mContext).load(R.drawable.quanxuan_red).into(imageView);//glide加载图片会有闪烁
@@ -115,6 +113,10 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
             } else {
                 imageView.setImageResource(R.drawable.noquanxuan);
             }
+            helper.setText(R.id.tv_name,item.getName())
+                    .setText(R.id.tv_date,item.getDate())
+                    .setText(R.id.tv_time,item.getTime())
+                    .setText(R.id.tv_order,helper.getAdapterPosition()+1+"");
         }
     }
 
@@ -134,7 +136,6 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
                 isAllChecked = !isAllChecked;
                 break;
             case R.id.tv_download:
-                Toast.makeText(this, "成功加入下载列表", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

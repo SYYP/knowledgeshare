@@ -41,6 +41,8 @@ import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeTryReadDetailBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
@@ -658,7 +660,11 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 isBofang = !isBofang;
                 break;
             case R.id.iv_download:
-                Toast.makeText(this, "已成功加入下载列表", Toast.LENGTH_SHORT).show();
+                String created_at = mFreeTryReadDetailBean.getCreated_at();
+                String video_time = mFreeTryReadDetailBean.getVideo_time();
+                DownLoadListBean downLoadListBean = new DownLoadListBean(mFreeTryReadDetailBean.getName(),
+                        created_at, video_time, mFreeTryReadDetailBean.getVideo_url(), mFreeTryReadDetailBean.getContent());
+                DownUtils.add(downLoadListBean);
                 break;
             case R.id.tv_writeliuyan:
                 Intent intent = new Intent(this, LiuYanActivity.class);

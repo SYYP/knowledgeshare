@@ -66,7 +66,7 @@ public class DownLoadingFragment extends BaseFragment implements View.OnClickLis
         recyclerXzz.setNestedScrollingEnabled(false);
         /*list = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
-            DownLoadBean downLoadBean = new DownLoadBean();
+            DownLoadListBean downLoadBean = new DownLoadListBean();
             downLoadBean.setContent("如何成为一名合格的歌者");
             downLoadBean.setJindu(i+"");
             downLoadBean.setSize("2M/10M");

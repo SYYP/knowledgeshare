@@ -40,6 +40,8 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.CommentMoreBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
@@ -673,7 +675,12 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
         mDialog.getView(R.id.tv_download).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(SoftMusicDetailActivity.this, "已加入下载列表", Toast.LENGTH_SHORT).show();
+                SoftMusicDetailBean.ChildEntity childEntity = mChild.get(adapterPosition);
+                String created_at = childEntity.getCreated_at();
+                String[] split = created_at.split(" ");
+                DownLoadListBean downLoadListBean = new DownLoadListBean(childEntity.getVideo_old_name(),
+                        split[0], split[1], childEntity.getVideo_url(), childEntity.getTxt_url());
+                DownUtils.add(downLoadListBean);
                 mDialog.dismiss();
             }
         });
