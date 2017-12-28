@@ -1,12 +1,13 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by lxk on 2017/12/17.
  */
 
-public class SoftMusicDetailBean {
+public class SoftMusicDetailBean implements Serializable{
 
     /**
      * xk_sale : 1
@@ -151,7 +152,7 @@ public class SoftMusicDetailBean {
         return child;
     }
 
-    public static class TeacherEntity {
+    public static class TeacherEntity implements Serializable{
         /**
          * t_tag : 中国好声音
          * islive : true
@@ -266,7 +267,7 @@ public class SoftMusicDetailBean {
         }
     }
 
-    public static class CommentEntity {
+    public static class CommentEntity implements Serializable{
         /**
          * user_avatar :
          * islive : false
@@ -291,7 +292,7 @@ public class SoftMusicDetailBean {
         private int state;
         private String content;
         private int live;
-        public static class ChildCommentEntity {
+        public static class ChildCommentEntity implements Serializable {
             /**
              * id : 2
              * comment_id : 6
@@ -415,7 +416,7 @@ public class SoftMusicDetailBean {
         }
     }
 
-    public static class ChildEntity {
+    public static class ChildEntity implements Serializable{
         /**
          * video_time : 140
          * good_count : 0
@@ -463,6 +464,15 @@ public class SoftMusicDetailBean {
         private String t_header;
         private String t_tag;
         private String t_name;
+        private boolean isChecked=true;
+
+        public boolean isChecked() {
+            return isChecked;
+        }
+
+        public void setChecked(boolean checked) {
+            isChecked = checked;
+        }
 
         public String getT_name() {
             return t_name;

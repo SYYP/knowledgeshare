@@ -627,9 +627,11 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 FreeBean.ChildEntity childEntity = mChild.get(adapterPosition);
                 String created_at = childEntity.getCreated_at();
                 String[] split = created_at.split(" ");
-                DownLoadListBean downLoadListBean = new DownLoadListBean(childEntity.getVideo_name(),
-                        split[0], split[1], childEntity.getVideo_url(), childEntity.getTxt_url());
-                DownUtils.add(downLoadListBean);
+                //TODO 免费专区 父类id固定为-1 音频时长写死了  接口调完记得改
+                DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(),-1,
+                        "4:30",childEntity.getVideo_old_name(), split[0], split[1],
+                        childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
+                DownUtils.add(DownLoadListBean);
                 mDialog.dismiss();
             }
         });

@@ -489,9 +489,11 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 SoftMusicDetailBean.ChildEntity childEntity = mChild.get(adapterPosition);
                 String created_at = childEntity.getCreated_at();
                 String[] split = created_at.split(" ");
-                DownLoadListBean downLoadListBean = new DownLoadListBean(childEntity.getVideo_old_name(),
-                        split[0], split[1], childEntity.getVideo_url(), childEntity.getTxt_url());
-                DownUtils.add(downLoadListBean);
+                //TODO 猜你喜欢 父类id固定为-3 音频时长写死了  接口调完记得改
+                DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(),-3,
+                        "4:30",childEntity.getVideo_old_name(), split[0], split[1],
+                        childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
+                DownUtils.add(DownLoadListBean);
                 mDialog.dismiss();
             }
         });

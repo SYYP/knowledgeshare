@@ -44,8 +44,6 @@ import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
-import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
-import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeTryReadDetailBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
@@ -694,9 +692,9 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
             case R.id.iv_download:
                 String created_at = mFreeTryReadDetailBean.getCreated_at();
                 String video_time = mFreeTryReadDetailBean.getVideo_time();
-                DownLoadListBean downLoadListBean = new DownLoadListBean(mFreeTryReadDetailBean.getName(),
+                /*DownLoadListBean DownLoadListBean = new DownLoadListBean(mFreeTryReadDetailBean.getName(),
                         created_at, video_time, mFreeTryReadDetailBean.getVideo_url(), mFreeTryReadDetailBean.getContent());
-                DownUtils.add(downLoadListBean);
+                DownUtils.add(DownLoadListBean);*/
                 break;
             case R.id.tv_writeliuyan:
                 Intent intent = new Intent(this, LiuYanActivity.class);

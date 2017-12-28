@@ -63,15 +63,13 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
         qbscLl.setOnClickListener(this);
         qbksLl.setOnClickListener(this);
         okDownload = OkDownload.getInstance();
-        okDownload.setFolder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/");
-        okDownload.getThreadPool().setCorePoolSize(5);
 
         return inflate;
     }
 
     @Override
     protected void initData() {
-        apks = new ArrayList<>();
+        /*apks = new ArrayList<>();
         MusicDownLoadBean apk1 = new MusicDownLoadBean();
         apk1.name = "爱奇艺";
         apk1.iconUrl = "http://file.market.xiaomi.com/thumbnail/PNG/l114/AppStore/0c10c4c0155c9adf1282af008ed329378d54112ac";
@@ -137,7 +135,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                     .save()//
                     .register(new LogDownloadListener());//
 //                    .start();
-        }
+        }*/
 
         initAdapter();
     }
@@ -152,99 +150,8 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
         recyclerXzz.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerXzz.setNestedScrollingEnabled(false);
         recyclerXzz.setAdapter(adapter);
-//        initBind();
         okDownload.addOnAllTaskEndListener(this);
     }
-
-    /*private void initBind() {
-        //为RecycleView绑定触摸事件
-        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
-
-            //限制ImageView长度所能增加的最大值
-            private double ICON_MAX_SIZE = 50;
-            //ImageView的初始长宽
-            private int fixedWidth = 150;
-
-            @Override
-            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                //侧滑删除
-                int swipeFlags = ItemTouchHelper.LEFT;
-                //首先回调的方法 返回int表示是否监听该方向
-                int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;//拖拽
-                return makeMovementFlags(dragFlags, swipeFlags);
-            }
-
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                //滑动事件
-                *//*Collections.swap(apks, viewHolder.getAdapterPosition(), target.getAdapterPosition());
-                adapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());*//*
-                adapter.onItemMove(viewHolder.getAdapterPosition(),target.getAdapterPosition());
-                return true;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                //侧滑事件
-                *//*apks.remove(viewHolder.getAdapterPosition());
-                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());*//*
-                //onItemDissmiss是接口方法
-                adapter.onItemDissmiss(viewHolder.getAdapterPosition());
-            }
-
-            @Override
-            public boolean isLongPressDragEnabled() {
-                //是否可拖拽
-                return true;
-            }
-
-            @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                *//*if (dY != 0 && dX == 0) {
-                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                }
-
-                DownloadAdapter.ViewHolder holder = (DownloadAdapter.ViewHolder) viewHolder;
-
-                if (dX < -holder.getShanchuTv().getWidth()) {
-                    //最多偏移 mActionContainer 的宽度
-                    dX =- holder.getShanchuTv().getWidth();
-                }
-                holder.getContentLl().setTranslationX(dX);*//*
-                //仅对侧滑状态下的效果做出改变
-                if (actionState ==ItemTouchHelper.ACTION_STATE_SWIPE){
-                    //如果dX小于等于删除方块的宽度，那么我们把该方块滑出来
-                    if (Math.abs(dX) <= getSlideLimitation(viewHolder)){
-                        viewHolder.itemView.scrollTo(-(int) dX,0);
-                    }
-
-                }else {
-                    //拖拽状态下不做改变，需要调用父类的方法
-                    super.onChildDraw(c,recyclerView,viewHolder,dX,dY,actionState,isCurrentlyActive);
-                }
-
-            }
-
-            @Override
-            public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                //重置改变，防止由于复用而导致的显示问题
-                super.clearView(recyclerView, viewHolder);
-                viewHolder.itemView.setScrollX(0);
-                DownloadAdapter.ViewHolder holder = (DownloadAdapter.ViewHolder) viewHolder;
-                holder.getShanchuTv().setText("左滑删除");
-
-            }
-
-            *//**
-             * 获取删除方块的宽度
-             *//*
-            public int getSlideLimitation(RecyclerView.ViewHolder viewHolder){
-                ViewGroup viewGroup = (ViewGroup) viewHolder.itemView;
-                return viewGroup.getChildAt(1).getLayoutParams().width;
-            }
-        });
-        helper.attachToRecyclerView(recyclerXzz);
-    }*/
 
     @Override
     public void onResume() {

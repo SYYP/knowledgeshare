@@ -365,9 +365,11 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 EveryDayBean.DailysEntity childEntity = mDailys.get(adapterPosition);
                 String created_at = childEntity.getCreated_at();
                 String[] split = created_at.split(" ");
-                DownLoadListBean downLoadListBean = new DownLoadListBean(childEntity.getVideo_name(),
-                        split[0], split[1], childEntity.getVideo_url(), childEntity.getTxt_url());
-                DownUtils.add(downLoadListBean);
+                //TODO 每日推荐 父类id固定为-2 音频时长写死了  接口调完记得改
+                DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(),-2,
+                        "4:30",childEntity.getVideo_old_name(), split[0], split[1],
+                        childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
+                DownUtils.add(DownLoadListBean);
                 mDialog.dismiss();
             }
         });

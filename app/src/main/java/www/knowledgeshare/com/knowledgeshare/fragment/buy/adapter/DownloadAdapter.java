@@ -21,7 +21,6 @@ import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -36,7 +35,6 @@ import com.lzy.okserver.download.DownloadListener;
 import com.lzy.okserver.download.DownloadTask;
 import java.io.File;
 import java.text.NumberFormat;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -44,10 +42,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.bean.MusicDownLoadBean;
-import www.knowledgeshare.com.knowledgeshare.fragment.mine.ItemTouchHelperAdapter;
+import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
-import www.knowledgeshare.com.knowledgeshare.utils.NumberProgressBar;
 
 /**
  * ================================================
@@ -94,7 +90,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        DownloadTask task = values.get(position);
+        final DownloadTask task = values.get(position);
         String tag = createTag(task);
         task.register(new ListDownloadListener(tag, holder))//
                 .register(new LogDownloadListener());
@@ -107,6 +103,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
             public void onClick(View view) {
                 int adapterPosition = holder.getAdapterPosition();
                 values.remove(adapterPosition);
+                task.remove(true);
                 notifyItemRemoved(adapterPosition);
             }
         });
@@ -127,20 +124,6 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
     public int getItemCount() {
         return values == null ? 0 : values.size();
     }
-
-   /* @Override
-    public void onItemMove(int fromPosition, int toPosition) {
-        //交换位置
-        Collections.swap(values,fromPosition,toPosition);
-        notifyItemMoved(fromPosition,toPosition);
-    }
-
-    @Override
-    public void onItemDissmiss(int position) {
-        //移除数据
-        values.remove(position);
-        notifyItemRemoved(position);
-    }*/
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -170,13 +153,20 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
 
         public void bind() {
             Progress progress = task.progress;
-            MusicDownLoadBean apk = (MusicDownLoadBean) progress.extra1;
+            DownLoadListBean downLoadListBean = (DownLoadListBean) progress.extra3;
+            if (downLoadListBean != null) {
+                Glide.with(context).load(downLoadListBean.getIconUrl()).into(icon);
+                name.setText(downLoadListBean.getName());
+            } else {
+                name.setText(progress.fileName);
+            }
+            /*MusicDownLoadBean apk = (MusicDownLoadBean) progress.extra1;
             if (apk != null) {
                 Glide.with(context).load(apk.iconUrl).into(icon);
                 name.setText(apk.name);
             } else {
                 name.setText(progress.fileName);
-            }
+            }*/
         }
 
         public void refresh(Progress progress) {

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.os.Environment;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
@@ -16,6 +17,7 @@ import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
+import com.lzy.okserver.OkDownload;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
@@ -230,6 +232,11 @@ public class MyApplication extends LitePalApplication {
                 .setRetryCount(3)//全局统一超时重连次数，默认为三次，那么最差的情况会请求4次(一次原始请求，三次重连请求)，不需要可以设置为0
                 .addCommonHeaders(headers)                         //全局公共头
                 .addCommonParams(params);                          //全局公共参数
+
+        //全局下载配置---如果每个任务不设置下载路径，将默认使用这个路径
+        OkDownload okDownload = OkDownload.getInstance();
+        okDownload.setFolder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/");
+        okDownload.getThreadPool().setCorePoolSize(5);
     }
 }
 

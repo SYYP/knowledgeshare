@@ -1,6 +1,8 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,13 +13,21 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.request.GetRequest;
+import com.lzy.okserver.OkDownload;
+import com.orhanobut.logger.Logger;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicDetailBean;
+import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 
 public class DownLoadListActivity extends BaseActivity implements View.OnClickListener {
 
@@ -26,9 +36,10 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
     private ImageView iv_quanxuan;
     private TextView tv_quanxuan;
     private TextView tv_download;
-    private List<DownLoadListBean> mList;
     private MyAdapter mMyAdapter;
     private boolean isAllChecked = true;
+    private SoftMusicDetailBean childEntity;
+    private List<SoftMusicDetailBean.ChildEntity> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,15 +60,17 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
         tv_download = (TextView) findViewById(R.id.tv_download);
         tv_download.setOnClickListener(this);
         recycler_list.setLayoutManager(new LinearLayoutManager(this));
-        mList = DownUtils.search();
-        if (mList != null && mList.size() > 0) {
-            mMyAdapter = new MyAdapter(R.layout.item_download, mList);
+
+        childEntity = (SoftMusicDetailBean) getIntent().getExtras().getSerializable("model");
+        list = childEntity.getChild();
+        if (list != null && list.size() > 0){
+            mMyAdapter = new MyAdapter(R.layout.item_download, list);
             recycler_list.setAdapter(mMyAdapter);
             mMyAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     //                Toast.makeText(DownLoadListActivity.this, "触发", Toast.LENGTH_SHORT).show();
-                    mList.get(position).setChecked(!mList.get(position).isChecked());
+                    list.get(position).setChecked(!list.get(position).isChecked());
                     //                mMyAdapter.setNewData(mList);
                     mMyAdapter.notifyDataSetChanged();
                     if (!isAllChecked()) {
@@ -71,8 +84,8 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void quanxuan() {
-        for (int i = 0; i < mList.size(); i++) {
-            mList.get(i).setChecked(true);
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i).setChecked(true);
         }
         //        mMyAdapter.setNewData(mList);
         mMyAdapter.notifyDataSetChanged();
@@ -80,8 +93,8 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
     }
 
     private boolean isAllChecked() {
-        for (int i = 0; i < mList.size(); i++) {
-            boolean checked = mList.get(i).isChecked();
+        for (int i = 0; i < list.size(); i++) {
+            boolean checked = list.get(i).isChecked();
             if (!checked) {
                 return false;
             }
@@ -90,22 +103,22 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void noquanxuan() {
-        for (int i = 0; i < mList.size(); i++) {
-            mList.get(i).setChecked(false);
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i).setChecked(false);
         }
         //        mMyAdapter.setNewData(mList);
         mMyAdapter.notifyDataSetChanged();
         iv_quanxuan.setImageResource(R.drawable.noquanxuan);
     }
 
-    private class MyAdapter extends BaseQuickAdapter<DownLoadListBean, BaseViewHolder> {
+    private class MyAdapter extends BaseQuickAdapter<SoftMusicDetailBean.ChildEntity, BaseViewHolder> {
 
-        public MyAdapter(@LayoutRes int layoutResId, @Nullable List<DownLoadListBean> data) {
+        public MyAdapter(@LayoutRes int layoutResId, @Nullable List<SoftMusicDetailBean.ChildEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(final BaseViewHolder helper, DownLoadListBean item) {
+        protected void convert(final BaseViewHolder helper, SoftMusicDetailBean.ChildEntity item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_ischeck);
             if (item.isChecked()) {
                 //                Glide.with(mContext).load(R.drawable.quanxuan_red).into(imageView);//glide加载图片会有闪烁
@@ -113,9 +126,12 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
             } else {
                 imageView.setImageResource(R.drawable.noquanxuan);
             }
+            String created_at = item.getCreated_at();
+            Logger.e(created_at);
+            String[] split = created_at.split(" ");
             helper.setText(R.id.tv_name,item.getName())
-                    .setText(R.id.tv_date,item.getDate())
-                    .setText(R.id.tv_time,item.getTime())
+                    .setText(R.id.tv_date,split[0])
+                    .setText(R.id.tv_time,item.getVideo_time())
                     .setText(R.id.tv_order,helper.getAdapterPosition()+1+"");
         }
     }
@@ -136,6 +152,25 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
                 isAllChecked = !isAllChecked;
                 break;
             case R.id.tv_download:
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).isChecked()){
+                        SoftMusicDetailBean.ChildEntity childEntity = list.get(i);
+                        String created_at = childEntity.getCreated_at();
+                        String[] split = created_at.split(" ");
+                        DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(),childEntity.getXk_id(),
+                                childEntity.getName(),childEntity.getVideo_time(), split[0], split[1],
+                                childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
+                        DownUtils.add(DownLoadListBean);
+                        GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
+                        OkDownload.request(childEntity.getXk_id()+"_"+childEntity.getId(), request)
+                                .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download")
+                                .fileName(childEntity.getName()+childEntity.getXk_id()+"_"+childEntity.getId())
+                                .extra3(DownLoadListBean)//额外数据
+                                .save()
+                                .register(new LogDownloadListener())//当前任务的回调监听
+                                .start();
+                    }
+                }
                 break;
         }
     }

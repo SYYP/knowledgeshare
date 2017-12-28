@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
@@ -27,10 +28,14 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.GetRequest;
+import com.lzy.okserver.OkDownload;
 import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +59,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicDetailB
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
@@ -63,45 +69,27 @@ import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
 public class SoftMusicDetailActivity extends BaseActivity implements View.OnClickListener {
 
-    private ImageView iv_back;
-    private ImageView iv_beijing;
-    private TextView tv_download;
-    private TextView tv_search;
-    private TextView tv_share;
-    private TextView tv_guanzhu;
-    private TextView tv_dianzan_count;
-    private TextView tv_teacher_intro;
-    private RecyclerView recycler_free;
-    private TextView tv_shiyirenqun;
-    private TextView tv_readxuzhi;
-    private TextView tv_writeliuyan;
-    private RecyclerView recycler_liuyan;
-    private LinearLayout activity_free;
-    private TextView tv_tryread;
-    private TextView tv_buy;
-    private BaseDialog mDialog;
-    private BaseDialog.Builder mBuilder;
-    private boolean isDianzan;
-    private boolean isGuanzhu = true;
-    private boolean isZan = true;
-    private ImageView iv_guanzhu, iv_dianzan;
-    private NestedScrollView nestView;
-    private boolean mIsCollected;
-    private boolean mDianzan;
-    private SoftMusicDetailBean.TeacherEntity mTeacher;
-    private int mTeacher_zan_count;
-    private List<SoftMusicDetailBean.ChildEntity> mChild;
-    private LieBiaoAdapter mLieBiaoAdapter;
-    private LiuYanAdapter mLiuYanAdapter;
-    private List<CommentMoreBean.DataEntity> mComment;
-    private SoftMusicDetailBean mMusicDetailBean;
-    private SpringView springview;
-    private int lastID;
-    private TextView mTv_collect;
-    private TextView mTv_dianzan;
-    private boolean isRefreshing;
-    private String mId;
+    private ImageView iv_back;private ImageView iv_beijing;
+    private TextView tv_download;private TextView tv_search;
+    private TextView tv_share;private TextView tv_guanzhu;
+    private TextView tv_dianzan_count;private TextView tv_teacher_intro;
+    private RecyclerView recycler_free;private TextView tv_shiyirenqun;
+    private TextView tv_readxuzhi;private TextView tv_writeliuyan;
+    private RecyclerView recycler_liuyan;private LinearLayout activity_free;
+    private TextView tv_tryread;private TextView tv_buy;
+    private BaseDialog mDialog;private BaseDialog.Builder mBuilder;
+    private boolean isDianzan;private boolean isGuanzhu = true;
+    private boolean isZan = true;private ImageView iv_guanzhu, iv_dianzan;
+    private NestedScrollView nestView;private boolean mIsCollected;
+    private boolean mDianzan;private SoftMusicDetailBean.TeacherEntity mTeacher;
+    private int mTeacher_zan_count;private List<SoftMusicDetailBean.ChildEntity> mChild;
+    private LieBiaoAdapter mLieBiaoAdapter;private LiuYanAdapter mLiuYanAdapter;
+    private List<CommentMoreBean.DataEntity> mComment;private SoftMusicDetailBean mMusicDetailBean;
+    private SpringView springview;private int lastID;
+    private TextView mTv_collect;private TextView mTv_dianzan;
+    private boolean isRefreshing;private String mId;
     private BaseDialog mNetDialog;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,36 +200,21 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
     }
 
     private void initView() {
-        iv_back = (ImageView) findViewById(R.id.iv_back);
-        iv_back.setOnClickListener(this);
-        iv_beijing = (ImageView) findViewById(R.id.iv_beijing);
-        tv_download = (TextView) findViewById(R.id.tv_download);
-        tv_download.setOnClickListener(this);
-        tv_search = (TextView) findViewById(R.id.tv_search);
-        tv_search.setOnClickListener(this);
-        tv_share = (TextView) findViewById(R.id.tv_share);
-        tv_share.setOnClickListener(this);
-        tv_guanzhu = (TextView) findViewById(R.id.tv_guanzhu);
-        tv_guanzhu.setOnClickListener(this);
-        tv_dianzan_count = (TextView) findViewById(R.id.tv_dianzan_count);
-        tv_dianzan_count.setOnClickListener(this);
-        tv_teacher_intro = (TextView) findViewById(R.id.tv_teacher_intro);
-        recycler_free = (RecyclerView) findViewById(R.id.recycler_free);
-        tv_shiyirenqun = (TextView) findViewById(R.id.tv_shiyirenqun);
-        tv_readxuzhi = (TextView) findViewById(R.id.tv_readxuzhi);
-        tv_writeliuyan = (TextView) findViewById(R.id.tv_writeliuyan);
-        tv_writeliuyan.setOnClickListener(this);
-        recycler_liuyan = (RecyclerView) findViewById(R.id.recycler_liuyan);
-        activity_free = (LinearLayout) findViewById(R.id.activity_free);
-        tv_tryread = (TextView) findViewById(R.id.tv_tryread);
-        tv_tryread.setOnClickListener(this);
-        tv_buy = (TextView) findViewById(R.id.tv_buy);
-        tv_buy.setOnClickListener(this);
-        iv_guanzhu = (ImageView) findViewById(R.id.iv_guanzhu);
-        iv_guanzhu.setOnClickListener(this);
-        iv_dianzan = (ImageView) findViewById(R.id.iv_dianzan);
-        iv_dianzan.setOnClickListener(this);
-        nestView = (NestedScrollView) findViewById(R.id.nestView);
+        iv_back = (ImageView) findViewById(R.id.iv_back);iv_back.setOnClickListener(this);
+        iv_beijing = (ImageView) findViewById(R.id.iv_beijing);tv_download = (TextView) findViewById(R.id.tv_download);
+        tv_download.setOnClickListener(this);tv_search = (TextView) findViewById(R.id.tv_search);
+        tv_search.setOnClickListener(this);tv_share = (TextView) findViewById(R.id.tv_share);
+        tv_share.setOnClickListener(this);tv_guanzhu = (TextView) findViewById(R.id.tv_guanzhu);
+        tv_guanzhu.setOnClickListener(this);tv_dianzan_count = (TextView) findViewById(R.id.tv_dianzan_count);
+        tv_dianzan_count.setOnClickListener(this);tv_teacher_intro = (TextView) findViewById(R.id.tv_teacher_intro);
+        recycler_free = (RecyclerView) findViewById(R.id.recycler_free);tv_shiyirenqun = (TextView) findViewById(R.id.tv_shiyirenqun);
+        tv_readxuzhi = (TextView) findViewById(R.id.tv_readxuzhi);tv_writeliuyan = (TextView) findViewById(R.id.tv_writeliuyan);
+        tv_writeliuyan.setOnClickListener(this);recycler_liuyan = (RecyclerView) findViewById(R.id.recycler_liuyan);
+        activity_free = (LinearLayout) findViewById(R.id.activity_free);tv_tryread = (TextView) findViewById(R.id.tv_tryread);
+        tv_tryread.setOnClickListener(this);tv_buy = (TextView) findViewById(R.id.tv_buy);
+        tv_buy.setOnClickListener(this);iv_guanzhu = (ImageView) findViewById(R.id.iv_guanzhu);
+        iv_guanzhu.setOnClickListener(this);iv_dianzan = (ImageView) findViewById(R.id.iv_dianzan);
+        iv_dianzan.setOnClickListener(this);nestView = (NestedScrollView) findViewById(R.id.nestView);
         recycler_free.setLayoutManager(new LinearLayoutManager(this));
         recycler_free.setNestedScrollingEnabled(false);
         recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
@@ -694,9 +667,18 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 SoftMusicDetailBean.ChildEntity childEntity = mChild.get(adapterPosition);
                 String created_at = childEntity.getCreated_at();
                 String[] split = created_at.split(" ");
-                DownLoadListBean downLoadListBean = new DownLoadListBean(childEntity.getVideo_old_name(),
-                        split[0], split[1], childEntity.getVideo_url(), childEntity.getTxt_url());
-                DownUtils.add(downLoadListBean);
+                DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(),childEntity.getXk_id(),
+                        childEntity.getName(),childEntity.getVideo_time(), split[0], split[1],
+                        childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
+                DownUtils.add(DownLoadListBean);
+                GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
+                OkDownload.request(childEntity.getXk_id()+"_"+childEntity.getId(), request)
+                        .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download")
+                        .fileName(childEntity.getName()+childEntity.getXk_id()+"_"+childEntity.getId())
+                        .extra3(DownLoadListBean)
+                        .save()
+                        .register(new LogDownloadListener())//当前任务的回调监听
+                        .start();
                 mDialog.dismiss();
             }
         });
@@ -973,7 +955,11 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 finish();
                 break;
             case R.id.tv_download:
-                startActivity(new Intent(this, DownLoadListActivity.class));
+                SoftMusicDetailBean model = mMusicDetailBean;
+                Logger.e(model.getChild().size()+"");
+                intent = new Intent(this, DownLoadListActivity.class);
+                intent.putExtra("model", model);
+                startActivity(intent);
                 break;
             case R.id.tv_search:
                 startActivity(new Intent(this, SearchActivity.class));

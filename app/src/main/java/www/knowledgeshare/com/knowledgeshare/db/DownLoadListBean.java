@@ -2,40 +2,40 @@ package www.knowledgeshare.com.knowledgeshare.db;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2017/11/30.
  */
 
-public class DownLoadListBean extends DataSupport{
+public class DownLoadListBean extends DataSupport implements Serializable{
 
+    private int id;
+    private int xkId;
     private String name;
+    private String videoTime;
     private String date;
     private String time;
-    private String downUrl;
-    private String content;
+    private String videoUrl;
+    private String txtUrl;
+    private String iconUrl;
+    private boolean save;
+    private boolean isChecked=true;
 
-    public String getName() {
-        return name;
+    public boolean isSave() {
+        return save;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSave(boolean save) {
+        this.save = save;
     }
 
-    public String getDownUrl() {
-        return downUrl;
+    public String getIconUrl() {
+        return iconUrl;
     }
 
-    public void setDownUrl(String downUrl) {
-        this.downUrl = downUrl;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
     }
 
     public String getDate() {
@@ -46,15 +46,61 @@ public class DownLoadListBean extends DataSupport{
         this.date = date;
     }
 
-    public String getContent() {
-        return content;
+    public int getId() {
+        return id;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    private boolean isChecked=true;
+    public int getXkId() {
+        return xkId;
+    }
+
+    public void setXkId(int xkId) {
+        this.xkId = xkId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getVideoTime() {
+        return videoTime;
+    }
+
+    public void setVideoTime(String videoTime) {
+        this.videoTime = videoTime;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
+    }
+
+    public String getTxtUrl() {
+        return txtUrl;
+    }
+
+    public void setTxtUrl(String txtUrl) {
+        this.txtUrl = txtUrl;
+    }
 
     public boolean isChecked() {
         return isChecked;
@@ -64,11 +110,12 @@ public class DownLoadListBean extends DataSupport{
         isChecked = checked;
     }
 
-    public DownLoadListBean(String name, String date, String time, String downUrl, String content) {
+    public DownLoadListBean(int id, int xkId, String name, String videoTime, String date, String time, String videoUrl, String txtUrl, String iconUrl) {
         this.name = name;
-        this.date = date;
+        this.videoTime = videoTime;
         this.time = time;
-        this.downUrl = downUrl;
-        this.content = content;
+        this.videoUrl = videoUrl;
+        this.txtUrl = txtUrl;
+        this.iconUrl = iconUrl;
     }
 }
