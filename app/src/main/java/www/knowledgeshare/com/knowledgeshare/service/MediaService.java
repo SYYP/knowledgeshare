@@ -34,7 +34,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.player.Notifier;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
-public class MediaService extends Service implements MediaPlayer.OnCompletionListener {
+public class MediaService extends Service implements MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
 
     private MyBinder mBinder = new MyBinder();
 
@@ -49,7 +49,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
     private final NoisyAudioStreamReceiver mNoisyReceiver = new NoisyAudioStreamReceiver();
     private final IntentFilter mNoisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
     private static List<PlayerBean> musicList = new ArrayList<>();
-    private int currPosition;
+    private static int currPosition;
 
     @Override
     public void onCreate() {
@@ -57,9 +57,11 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         Notifier.init(this);
         mAudioFocusManager = new AudioFocusManager(this);
         mMediaPlayer.setOnCompletionListener(this);
+        mMediaPlayer.setOnErrorListener(this);
     }
 
     public static void insertMusicList(List<PlayerBean> musiclist) {
+        currPosition=0;
         musicList = musiclist;
     }
 
@@ -184,6 +186,12 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         mBinder.nextMusic();
+    }
+
+    @Override
+    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+//        Toast.makeText(this, "播放错误", Toast.LENGTH_SHORT).show();很诡异的bug
+        return true;//要设置为true
     }
 
     public class MyBinder extends Binder {

@@ -220,7 +220,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             rl_bofang.setVisibility(View.VISIBLE);
             iv_delete.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(mytype)) {
-                refreshbofang(mytype, myposition);
+                refreshbofang();
             }
         } else if (eventBean.getMsg().equals("home_pause")) {
             isBofang = false;
@@ -449,7 +449,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             helper.getView(R.id.rl_root_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    refreshbofang("zhuanlan", helper.getAdapterPosition());
+                    mytype = "zhuanlan";
+                    myposition = helper.getAdapterPosition();
                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
                     gobofang(playerBean);
                     mMusicTypeBean = new MusicTypeBean("free",
@@ -496,7 +497,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             helper.getView(R.id.rl_root_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    refreshbofang("comment", helper.getAdapterPosition());
+                    mytype = "comment";
+                    myposition = helper.getAdapterPosition();
                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
                     gobofang(playerBean);
                     mMusicTypeBean = new MusicTypeBean("everydaycomment",
@@ -640,6 +642,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 SpUtils.putBoolean(mContext, "nowifiallowlisten", true);
                 playerBean.setMsg("refreshplayer");
                 EventBus.getDefault().postSticky(playerBean);
+                refreshbofang();
             } else {
                 mDialog.show();
                 mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
@@ -656,6 +659,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         SpUtils.putBoolean(mContext, "nowifiallowlisten", true);
                         playerBean.setMsg("refreshplayer");
                         EventBus.getDefault().postSticky(playerBean);
+                        refreshbofang();
                     }
                 });
                 mDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
@@ -677,18 +681,17 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             mMyBinder.playMusic(playerBean);
             playerBean.setMsg("refreshplayer");
             EventBus.getDefault().postSticky(playerBean);
+            refreshbofang();
         }
     }
 
-    private void refreshbofang(String type, int adapterPosition) {
-        mytype = type;
-        myposition = adapterPosition;
-        if (type.equals("comment")) {
+    private void refreshbofang() {
+        if (mytype.equals("comment")) {
             for (int i = 0; i < mMFreeChild.size(); i++) {
                 mMFreeChild.get(i).setChecked(false);
             }
             for (int i = 0; i < mDaily.size(); i++) {
-                if (i == adapterPosition) {
+                if (i == myposition) {
                     mDaily.get(i).setChecked(true);
                 } else {
                     mDaily.get(i).setChecked(false);
@@ -696,7 +699,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             }
         } else {
             for (int i = 0; i < mMFreeChild.size(); i++) {
-                if (i == adapterPosition) {
+                if (i == myposition) {
                     mMFreeChild.get(i).setChecked(true);
                 } else {
                     mMFreeChild.get(i).setChecked(false);
