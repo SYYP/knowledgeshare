@@ -1,6 +1,7 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -9,7 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
-import android.webkit.WebSettings;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -26,6 +28,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.orhanobut.logger.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
@@ -34,6 +37,8 @@ import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.WenGaoBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.web.ActionSelectListener;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.web.CustomActionWebView;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
@@ -54,7 +59,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private boolean isGuanzhu;
-    private WebView webview;
+    private CustomActionWebView webview;
     private boolean isDianzan;
     private NestedScrollView nestView;
     private List<WenGaoBean.CommentEntity> mComment;
@@ -71,6 +76,84 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
         initDialog();
         showTanchuangDialog();
         initData();
+        initWebView();
+    }
+
+    private void initWebView() {
+        List<String> list = new ArrayList<>();
+        list.add("添加笔记");
+        webview.setWebViewClient(new CustomWebViewClient());
+        //设置item
+        webview.setActionList(list);
+        //链接js注入接口，使能选中返回数据
+        webview.linkJSInterface();
+        webview.getSettings().setBuiltInZoomControls(true);
+        webview.getSettings().setDisplayZoomControls(false);
+        //使用javascript
+        webview.getSettings().setJavaScriptEnabled(true);
+        webview.getSettings().setDomStorageEnabled(true);
+        //增加点击回调
+        webview.setActionSelectListener(new ActionSelectListener() {
+            @Override
+            public void onClick(String title, String selectText) {
+                //                Toast.makeText(WenGaoActivity.this, "Click Item: " + title + "。\n\nValue: " + selectText, Toast.LENGTH_LONG).show();
+                addNote(selectText);
+            }
+        });
+        webview.loadUrl("http://thinks.iask.in/add.html");
+    }
+
+    private void addNote(String selectText) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("title", mWenGaoBean.getVideo_name());
+        params.put("content", selectText);
+        if (mType.equals("free")) {
+            params.put("type", "free");
+        } else if (mType.equals("everydaycomment")) {
+            params.put("type", "daily");
+        } else if (mType.equals("softmusicdetail")) {
+            params.put("type", "xk");
+        }
+        OkGo.<DianZanbean>post(MyContants.addNote)
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(WenGaoActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                             }
+                         }
+                );
+    }
+
+    private class CustomWebViewClient extends WebViewClient {
+
+        private boolean mLastLoadFailed = false;
+
+        @Override
+        public void onPageFinished(WebView webView, String url) {
+            super.onPageFinished(webView, url);
+            if (!mLastLoadFailed) {
+                CustomActionWebView customActionWebView = (CustomActionWebView) webView;
+                customActionWebView.linkJSInterface();
+            }
+        }
+
+        @Override
+        public void onPageStarted(WebView webView, String url, Bitmap favicon) {
+            super.onPageStarted(webView, url, favicon);
+        }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            super.onReceivedError(view, request, error);
+            mLastLoadFailed = true;
+        }
     }
 
     private void initView() {
@@ -90,29 +173,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
         recycler_liuyan = (RecyclerView) findViewById(R.id.recycler_liuyan);
         recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
         recycler_liuyan.setNestedScrollingEnabled(false);
-        webview = (WebView) findViewById(R.id.webview);
-        webview.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return false;
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-            }
-        });
-//        webview.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View view) {
-//                return true;
-//            }
-//        });
-        WebSettings webSettings = webview.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        webSettings.setUseWideViewPort(true);//关键点
-        webview.loadUrl("http://wady.s1.natapp.cc/test.html");
+        webview = (CustomActionWebView) findViewById(R.id.webview);
         nestView = (NestedScrollView) findViewById(R.id.nestView);
         nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -368,7 +429,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
                 Intent intent = new Intent(this, LiuYanActivity.class);
                 intent.putExtra("type", mType + "-wengao");
                 intent.putExtra("xiaoke_id", mId);
-                intent.putExtra("teacher_id", mT_id+"");
+                intent.putExtra("teacher_id", mT_id + "");
                 startActivity(intent);
                 break;
             case R.id.ll_guanzhu:

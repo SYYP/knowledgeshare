@@ -47,6 +47,8 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
+import www.knowledgeshare.com.knowledgeshare.db.HistroyUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBannerBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeDaShiBanNewBean;
@@ -462,6 +464,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         list.add(playerBean1);
                     }
                     MediaService.insertMusicList(list);
+                    if (!HistroyUtils.isInserted(item.getVideo_name())) {
+                        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", item.getId(), item.getVideo_name(),
+                                item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
+                                item.getCollect_count(), item.getView_count(), item.getIs_good() == 1 ? true : false,
+                                item.isIsfav(), item.getT_header(), item.getT_tag(), mFree.getTeacher_id() + "");
+                        HistroyUtils.add(bofangHistroyBean);
+                    }
                 }
             });
         }
@@ -502,6 +511,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         list.add(playerBean1);
                     }
                     MediaService.insertMusicList(list);
+                    if (!HistroyUtils.isInserted(item.getVideo_name())) {
+                        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("everydaycomment", item.getId(), item.getVideo_name(),
+                                item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
+                                item.getCollect_count(), item.getView_count(), item.getIs_good() == 1 ? true : false,
+                                item.isIsfav(), item.getT_header(), item.getT_tag(), mFree.getTeacher_id() + "");
+                        HistroyUtils.add(bofangHistroyBean);
+                    }
                 }
             });
         }

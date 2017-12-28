@@ -88,11 +88,11 @@
                     android:layout_height="1dp"
                     android:layout_margin="10dp"
                     android:background="@color/huise"></View>
-                <WebView
+                <www.knowledgeshare.com.knowledgeshare.fragment.home.web.CustomActionWebView
                     android:id="@+id/webview"
                     android:layout_width="match_parent"
-                    android:layout_height="1550dp"
-                    ></WebView>
+                    android:layout_height="wrap_content"
+                    ></www.knowledgeshare.com.knowledgeshare.fragment.home.web.CustomActionWebView>
                 <TextView
                     android:id="@+id/tv_content"
                     android:visibility="gone"

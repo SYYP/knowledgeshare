@@ -84,11 +84,11 @@
                         android:layout_height="1dp"
                         android:layout_marginBottom="10dp"
                         android:background="@color/huise"></View>
-                    <WebView
+                    <www.knowledgeshare.com.knowledgeshare.fragment.home.web.CustomActionWebView
                         android:id="@+id/webview"
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
-                        android:visibility="gone"></WebView>
+                        android:layout_height="wrap_content"
+                        ></www.knowledgeshare.com.knowledgeshare.fragment.home.web.CustomActionWebView>
                     <ImageView
                         android:id="@+id/iv_beijing"
                         android:layout_width="match_parent"

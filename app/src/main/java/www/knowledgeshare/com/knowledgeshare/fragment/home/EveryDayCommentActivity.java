@@ -36,8 +36,10 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
+import www.knowledgeshare.com.knowledgeshare.db.HistroyUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.EveryDayBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
@@ -170,9 +172,9 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                                     EveryDayBean.DailysEntity item = mDailys.get(position);
                                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
                                     gobofang(playerBean);
-                                    MusicTypeBean musicTypeBean= new MusicTypeBean("everydaycomment",
-                                            item.getT_header(),item.getVideo_name(),item.getId()+"",
-                                            item.getTeacher_id()+"",item.isIsfav());
+                                    MusicTypeBean musicTypeBean = new MusicTypeBean("everydaycomment",
+                                            item.getT_header(), item.getVideo_name(), item.getId() + "",
+                                            item.getTeacher_id() + "", item.isIsfav());
                                     musicTypeBean.setMsg("musicplayertype");
                                     EventBus.getDefault().postSticky(musicTypeBean);
                                     List<PlayerBean> list = new ArrayList<PlayerBean>();
@@ -182,6 +184,13 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                                         list.add(playerBean1);
                                     }
                                     MediaService.insertMusicList(list);
+                                    if (!HistroyUtils.isInserted(item.getVideo_name())) {
+                                        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("everydaycomment", item.getId(), item.getVideo_name(),
+                                                item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
+                                                item.getCollect_count(), item.getView_count(), item.isIslive(), item.isIsfav()
+                                                , item.getT_header(), item.getT_tag(), item.getTeacher_id() + "");
+                                        HistroyUtils.add(bofangHistroyBean);
+                                    }
                                 }
                             });
                         } else {
@@ -270,10 +279,10 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 public void onClick(View view) {
                     Intent intent = new Intent(EveryDayCommentActivity.this, WenGaoActivity.class);
                     intent.putExtra("type", "everydaycomment");
-//                    intent.putExtra("t_name", item.getT_name());
-//                    intent.putExtra("t_head", item.getT_header());
-//                    intent.putExtra("video_name", item.getVideo_name());
-//                    intent.putExtra("teacher_id", item.getTeacher_id() + "");
+                    //                    intent.putExtra("t_name", item.getT_name());
+                    //                    intent.putExtra("t_head", item.getT_header());
+                    //                    intent.putExtra("video_name", item.getVideo_name());
+                    //                    intent.putExtra("teacher_id", item.getTeacher_id() + "");
                     intent.putExtra("id", item.getId() + "");
                     startActivity(intent);
                 }

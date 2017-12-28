@@ -439,7 +439,7 @@ public class SoftMusicDetailBean {
          * id : 9
          * view_count : 0
          */
-        private int video_time;
+        private String video_time;
         private int good_count;
         private boolean islive;
         private int is_good;
@@ -488,7 +488,7 @@ public class SoftMusicDetailBean {
             this.t_tag = t_tag;
         }
 
-        public void setVideo_time(int video_time) {
+        public void setVideo_time(String video_time) {
             this.video_time = video_time;
         }
 
@@ -572,7 +572,7 @@ public class SoftMusicDetailBean {
             this.view_count = view_count;
         }
 
-        public int getVideo_time() {
+        public String getVideo_time() {
             return video_time;
         }
 

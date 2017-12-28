@@ -41,8 +41,12 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
+import www.knowledgeshare.com.knowledgeshare.db.HistroyUtils;
+import www.knowledgeshare.com.knowledgeshare.db.LookBean;
+import www.knowledgeshare.com.knowledgeshare.db.LookUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.CommentMoreBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
@@ -292,9 +296,9 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                                              SoftMusicDetailBean.ChildEntity item = mChild.get(position);
                                              PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_old_name(), item.getT_tag(), item.getVideo_url());
                                              gobofang(playerBean);
-                                             MusicTypeBean musicTypeBean= new MusicTypeBean("softmusicdetail",
-                                                     item.getT_header(),item.getVideo_old_name(),item.getId()+"",
-                                                     mMusicDetailBean.getXk_teacher_id()+"",item.isIsfav());
+                                             MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
+                                                     item.getT_header(), item.getVideo_old_name(), item.getId() + "",
+                                                     mMusicDetailBean.getXk_teacher_id() + "", item.isIsfav());
                                              musicTypeBean.setMsg("musicplayertype");
                                              EventBus.getDefault().postSticky(musicTypeBean);
                                              List<PlayerBean> list = new ArrayList<PlayerBean>();
@@ -304,6 +308,13 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                                                  list.add(playerBean1);
                                              }
                                              MediaService.insertMusicList(list);
+                                             if (!HistroyUtils.isInserted(item.getVideo_old_name())) {
+                                                 BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", item.getId(), item.getVideo_old_name(),
+                                                         item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
+                                                         item.getCollect_count(), item.getView_count(), item.isIslive(), item.isIsfav()
+                                                         , item.getT_header(), item.getT_tag(), mMusicDetailBean.getXk_teacher_id() + "");
+                                                 HistroyUtils.add(bofangHistroyBean);
+                                             }
                                          }
                                      }
                                  });
@@ -312,6 +323,11 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                                  }
                                  isRefreshing = false;
                                  springview.onFinishFreshAndLoad();
+                                 if (!LookUtils.isInserted(mMusicDetailBean.getXk_name())) {
+                                     LookUtils.add(new LookBean(Integer.parseInt(mId), "like", mMusicDetailBean.getXk_name(),
+                                             mMusicDetailBean.getTeacher().getT_name(),
+                                             mMusicDetailBean.getXk_teacher_tags(), mMusicDetailBean.getXk_price()));
+                                 }
                              }
                          }
                 );
@@ -389,10 +405,10 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 public void onClick(View view) {
                     Intent intent = new Intent(LikeDetailActivity.this, WenGaoActivity.class);
                     intent.putExtra("type", "softmusicdetail");
-//                    intent.putExtra("t_name", mTeacher.getT_name());
-//                    intent.putExtra("t_head", mTeacher.getT_header());
-//                    intent.putExtra("video_name", item.getVideo_old_name());
-//                    intent.putExtra("teacher_id", mMusicDetailBean.getXk_teacher_id() + "");
+                    //                    intent.putExtra("t_name", mTeacher.getT_name());
+                    //                    intent.putExtra("t_head", mTeacher.getT_header());
+                    //                    intent.putExtra("video_name", item.getVideo_old_name());
+                    //                    intent.putExtra("teacher_id", mMusicDetailBean.getXk_teacher_id() + "");
                     intent.putExtra("id", item.getId() + "");
                     startActivity(intent);
                 }

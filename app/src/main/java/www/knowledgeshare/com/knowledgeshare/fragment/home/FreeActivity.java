@@ -39,8 +39,10 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
+import www.knowledgeshare.com.knowledgeshare.db.HistroyUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.CommentMoreBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeBean;
@@ -239,9 +241,9 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
                                     gobofang(playerBean);
                                     addListenCount(mFreeAdapter.getData().get(position).getId() + "");
-                                    MusicTypeBean musicTypeBean= new MusicTypeBean("free",
-                                            mFreeBean.getTeacher_has().getT_header(),item.getVideo_name(),item.getId()+"",
-                                            mFreeBean.getTeacher_has().getId()+"",item.isIsfav());
+                                    MusicTypeBean musicTypeBean = new MusicTypeBean("free",
+                                            mFreeBean.getTeacher_has().getT_header(), item.getVideo_name(), item.getId() + "",
+                                            mFreeBean.getTeacher_has().getId() + "", item.isIsfav());
                                     musicTypeBean.setMsg("musicplayertype");
                                     EventBus.getDefault().postSticky(musicTypeBean);
                                     List<PlayerBean> list = new ArrayList<PlayerBean>();
@@ -251,6 +253,13 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                                         list.add(playerBean1);
                                     }
                                     MediaService.insertMusicList(list);
+                                    if (!HistroyUtils.isInserted(item.getVideo_name())) {
+                                        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", item.getId(), item.getVideo_name(),
+                                                item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
+                                                item.getCollect_count(), item.getView_count(), item.isIslive(), item.isIsfav(),
+                                                item.getT_header(), item.getT_tag(), mFreeBean.getTeacher_has().getId() + "");
+                                        HistroyUtils.add(bofangHistroyBean);
+                                    }
                                 }
                             });
                             if (!isRefreshing) {
@@ -390,10 +399,10 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 public void onClick(View view) {
                     Intent intent = new Intent(FreeActivity.this, WenGaoActivity.class);
                     intent.putExtra("type", "free");
-//                    intent.putExtra("t_name", mTeacher_has.getT_name());
-//                    intent.putExtra("t_head", mTeacher_has.getT_header());
-//                    intent.putExtra("video_name", item.getVideo_name());
-//                    intent.putExtra("teacher_id", mFreeBean.getTeacher_id() + "");
+                    //                    intent.putExtra("t_name", mTeacher_has.getT_name());
+                    //                    intent.putExtra("t_head", mTeacher_has.getT_header());
+                    //                    intent.putExtra("video_name", item.getVideo_name());
+                    //                    intent.putExtra("teacher_id", mFreeBean.getTeacher_id() + "");
                     intent.putExtra("id", item.getId() + "");
                     startActivity(intent);
                 }
@@ -715,7 +724,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
 
     private void initMusic() {
         MediaServiceIntent = new Intent(this, MediaService.class);
-//        startService(MediaServiceIntent);
+        //        startService(MediaServiceIntent);
         bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
 

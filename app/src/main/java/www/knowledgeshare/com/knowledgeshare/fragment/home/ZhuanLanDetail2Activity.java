@@ -3,6 +3,7 @@ package www.knowledgeshare.com.knowledgeshare.fragment.home;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
@@ -12,6 +13,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -49,6 +52,8 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.OrderBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.TimeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.web.ActionSelectListener;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.web.CustomActionWebView;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
@@ -76,7 +81,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     private BaseDialog.Builder mBuilder;
     private boolean isCollected;
     private boolean isDianzan;
-    private WebView webview;
+    private CustomActionWebView webview;
     private NestedScrollView nestView;
     private boolean isBofang;
     private int lastID;
@@ -98,6 +103,78 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         initMusic();
         initListener();
         initNETDialog();
+        initWebView();
+    }
+
+    private void initWebView() {
+        List<String> list = new ArrayList<>();
+        list.add("添加笔记");
+        webview.setWebViewClient(new CustomWebViewClient());
+        //设置item
+        webview.setActionList(list);
+        //链接js注入接口，使能选中返回数据
+        webview.linkJSInterface();
+        webview.getSettings().setBuiltInZoomControls(true);
+        webview.getSettings().setDisplayZoomControls(false);
+        //使用javascript
+        webview.getSettings().setJavaScriptEnabled(true);
+        webview.getSettings().setDomStorageEnabled(true);
+        //增加点击回调
+        webview.setActionSelectListener(new ActionSelectListener() {
+            @Override
+            public void onClick(String title, String selectText) {
+                //                Toast.makeText(ZhuanLanDetail2Activity.this, "Click Item: " + title + "。\n\nValue: " + selectText, Toast.LENGTH_LONG).show();
+                addNote(selectText);
+            }
+        });
+        webview.loadUrl("http://thinks.iask.in/add.html");
+    }
+
+    private void addNote(String selectText) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("title", getIntent().getStringExtra("title"));
+        params.put("content", selectText);
+        params.put("type", "zl");
+        OkGo.<DianZanbean>post(MyContants.addNote)
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+                                 DianZanbean dianZanbean = response.body();
+                                 Toast.makeText(ZhuanLanDetail2Activity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                             }
+                         }
+                );
+    }
+
+    private class CustomWebViewClient extends WebViewClient {
+
+        private boolean mLastLoadFailed = false;
+
+        @Override
+        public void onPageFinished(WebView webView, String url) {
+            super.onPageFinished(webView, url);
+            if (!mLastLoadFailed) {
+                CustomActionWebView customActionWebView = (CustomActionWebView) webView;
+                customActionWebView.linkJSInterface();
+            }
+        }
+
+        @Override
+        public void onPageStarted(WebView webView, String url, Bitmap favicon) {
+            super.onPageStarted(webView, url, favicon);
+        }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            super.onReceivedError(view, request, error);
+            mLastLoadFailed = true;
+        }
     }
 
     @Override
@@ -249,40 +326,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 );
     }
 
-    /*private void loadMoreComment(String after) {
-        HttpParams params = new HttpParams();
-        params.put("userid", SpUtils.getString(this, "id", ""));
-        params.put("after", after);
-        OkGo.<CommentMoreBean>post(MyContants.LXKURL + "xk/more-comment")
-                .tag(this)
-                .params(params)
-                .execute(new JsonCallback<CommentMoreBean>(CommentMoreBean.class) {
-                    @Override
-                    public void onSuccess(Response<CommentMoreBean> response) {
-                        int code = response.code();
-                        CommentMoreBean commentMoreBean = response.body();
-                        if (response.code() >= 200 && response.code() <= 204) {
-                            Logger.e(code + "");
-                            List<CommentMoreBean.DataEntity> data = commentMoreBean.getData();
-                            if (mComment == null || mComment.size() == 0) {
-                                mComment = data;
-                                mLiuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan, mComment);
-                                recycler_liuyan.setAdapter(mLiuYanAdapter);
-                            } else {
-                                if (data == null || data.size() == 0) {
-                                    Toast.makeText(ZhuanLanDetail2Activity.this, "已无更多评论", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    mComment.addAll(data);
-                                    mLiuYanAdapter.notifyDataSetChanged();
-                                }
-                            }
-                        } else {
-                        }
-                    }
-                });
-        springview.onFinishFreshAndLoad();
-    }*/
-
     private void initDialog() {
         mBuilder = new BaseDialog.Builder(this);
     }
@@ -312,18 +355,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
         recycler_liuyan.setNestedScrollingEnabled(false);
         nestView = (NestedScrollView) findViewById(R.id.nestView);
-        webview = (WebView) findViewById(R.id.webview);
-        webview.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return false;
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-            }
-        });
+        webview = (CustomActionWebView) findViewById(R.id.webview);
     }
 
     private class LiuYanAdapter extends BaseQuickAdapter<FreeTryReadDetailBean.CommentEntity, BaseViewHolder> {

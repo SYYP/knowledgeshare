@@ -31,6 +31,8 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.db.LookBean;
+import www.knowledgeshare.com.knowledgeshare.db.LookUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.OrderBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.TimeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.ZhuanLanBean;
@@ -92,7 +94,7 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
         OkGo.<ZhuanLanBean>post(MyContants.LXKURL + "zl/show")
                 .tag(this)
                 .params(params)
-                .execute(new DialogCallback<ZhuanLanBean>(ZhuanLanActivity.this,ZhuanLanBean.class) {
+                .execute(new DialogCallback<ZhuanLanBean>(ZhuanLanActivity.this, ZhuanLanBean.class) {
                              @Override
                              public void onSuccess(Response<ZhuanLanBean> response) {
                                  int code = response.code();
@@ -107,6 +109,10 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
                                  mLately = mZhuanLanBean.getLately();
                                  mLatelyAdapter = new LatelyAdapter(R.layout.item_lately, mLately);
                                  recycler_lately.setAdapter(mLatelyAdapter);
+                                 if (!LookUtils.isInserted(mZhuanLanBean.getZl_name())) {
+                                     LookUtils.add(new LookBean(Integer.parseInt(mId), "zhuanlan", mZhuanLanBean.getZl_name()
+                                             , mZhuanLanBean.getZl_teacher_tags(), mZhuanLanBean.getZl_price()));
+                                 }
                              }
                          }
                 );
@@ -128,7 +134,7 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
         OkGo.<TimeBean>get(MyContants.LXKURL + "order/expire-time")
                 .tag(this)
                 .headers(headers)
-                .execute(new DialogCallback<TimeBean>(ZhuanLanActivity.this,TimeBean.class) {
+                .execute(new DialogCallback<TimeBean>(ZhuanLanActivity.this, TimeBean.class) {
                              @Override
                              public void onSuccess(Response<TimeBean> response) {
                                  int code = response.code();
@@ -202,18 +208,18 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<BaseBean>(ZhuanLanActivity.this,BaseBean.class) {
+                .execute(new DialogCallback<BaseBean>(ZhuanLanActivity.this, BaseBean.class) {
                              @Override
                              public void onSuccess(Response<BaseBean> response) {
                                  int code = response.code();
                                  BaseBean baseBean = response.body();
                                  String message = baseBean.getMessage();
-                                 if (message.equals("余额不足")){
+                                 if (message.equals("余额不足")) {
                                      showChongzhiDialog();
-                                 }else if (message.equals("支付成功")){
+                                 } else if (message.equals("支付成功")) {
                                      showPaySuccessDialog();
-                                 }else {
-                                     Toast.makeText(ZhuanLanActivity.this,message, Toast.LENGTH_SHORT).show();
+                                 } else {
+                                     Toast.makeText(ZhuanLanActivity.this, message, Toast.LENGTH_SHORT).show();
                                  }
                              }
                          }

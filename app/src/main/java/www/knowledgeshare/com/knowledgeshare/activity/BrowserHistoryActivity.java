@@ -13,15 +13,17 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
-import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.BrowserHistoryBean;
+import www.knowledgeshare.com.knowledgeshare.db.LookBean;
+import www.knowledgeshare.com.knowledgeshare.db.LookUtils;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.LikeDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.SoftMusicDetailActivity;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
 
 
 /**
@@ -35,6 +37,8 @@ public class BrowserHistoryActivity extends BaseActivity implements View.OnClick
     TextView titleContentTv;
     @BindView(R.id.recycler_bh)
     RecyclerView recyclerBh;
+    private BrowserHistoryAdapter mAdapter;
+    private List<LookBean> mList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,64 +46,74 @@ public class BrowserHistoryActivity extends BaseActivity implements View.OnClick
         setContentView(R.layout.activity_browser_history);
         ButterKnife.bind(this);
         initView();
+        initData();
     }
 
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
         titleBackIv.setOnClickListener(this);
         titleContentTv.setText("浏览历史");
-        initData();
     }
 
     private void initData() {
         recyclerBh.setLayoutManager(new LinearLayoutManager(this));
         recyclerBh.setNestedScrollingEnabled(false);
-
-        List<BrowserHistoryBean> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            BrowserHistoryBean browserHistoryBean = new BrowserHistoryBean();
-            browserHistoryBean.setTitle("如何成为一名合格的歌者");
-            browserHistoryBean.setName("刘鹏飞");
-            browserHistoryBean.setContent("中国声乐好声音王牌级人物");
-            browserHistoryBean.setMoney("￥19"+i+"元/年");
-            list.add(browserHistoryBean);
+        mList = LookUtils.search();
+        if (mList != null && mList.size() > 0) {
+            mAdapter = new BrowserHistoryAdapter(R.layout.item_browser_history, mList);
+            recyclerBh.setAdapter(mAdapter);
+            mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                    String type = mList.get(position).getType();
+                    if (type.equals("zhuanlan")) {
+                        Intent intent = new Intent(BrowserHistoryActivity.this, ZhuanLanActivity.class);
+                        intent.putExtra("id", mList.get(position).getId() + "");
+                        startActivity(intent);
+                    }else if (type.equals("xiaoke")) {
+                        Intent intent = new Intent(BrowserHistoryActivity.this, SoftMusicDetailActivity.class);
+                        intent.putExtra("id", mList.get(position).getId() + "");
+                        startActivity(intent);
+                    }else if (type.equals("like")) {
+                        Intent intent = new Intent(BrowserHistoryActivity.this, LikeDetailActivity.class);
+                        intent.putExtra("id", mList.get(position).getId() + "");
+                        startActivity(intent);
+                    }
+                }
+            });
         }
-        BrowserHistoryAdapter adapter = new BrowserHistoryAdapter(R.layout.item_browser_history,list);
-        recyclerBh.setAdapter(adapter);
-        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(BrowserHistoryActivity.this, SoftMusicDetailActivity.class));
-            }
-        });
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.title_back_iv:
                 finish();
                 break;
         }
     }
 
-    private class BrowserHistoryAdapter extends BaseQuickAdapter<BrowserHistoryBean,BaseViewHolder>{
+    private class BrowserHistoryAdapter extends BaseQuickAdapter<LookBean, BaseViewHolder> {
 
-        public BrowserHistoryAdapter(@LayoutRes int layoutResId, @Nullable List<BrowserHistoryBean> data) {
+        public BrowserHistoryAdapter(@LayoutRes int layoutResId, @Nullable List<LookBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, BrowserHistoryBean item) {
+        protected void convert(BaseViewHolder helper, LookBean item) {
             TextView itemTitleTv = helper.getView(R.id.item_title_tv);
             TextView itemNameTv = helper.getView(R.id.item_name_tv);
             TextView itemContentTv = helper.getView(R.id.item_content_tv);
             TextView itemMoneyTv = helper.getView(R.id.item_money_tv);
-
+            if (item.getType().equals("zhuanlan")) {
+                itemNameTv.setVisibility(View.GONE);
+            } else {
+                itemNameTv.setVisibility(View.VISIBLE);
+            }
             itemTitleTv.setText(item.getTitle());
-            itemNameTv.setText(item.getName());
-            itemContentTv.setText(item.getContent());
-            itemMoneyTv.setText(item.getMoney());
+            itemNameTv.setText(item.getT_name());
+            itemContentTv.setText(item.getT_tag());
+            itemMoneyTv.setText(item.getPrice());
         }
     }
 }

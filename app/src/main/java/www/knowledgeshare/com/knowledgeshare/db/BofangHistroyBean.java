@@ -6,13 +6,76 @@ import org.litepal.crud.DataSupport;
  * Created by Administrator on 2017/12/19.
  */
 
-public class BofangHistroyBean extends DataSupport{
-    private int good_count;
+public class BofangHistroyBean extends DataSupport {
+    private String type;
+    private int id;
     private String video_name;
     private String created_at;
-    private int collect_count;
     private String video_url;
+    private int good_count;
+    private int collect_count;
     private int view_count;
+    private boolean isDianzan;
+    private boolean isCollected;
+    private String t_header;
+    private String t_tag;
+    private String t_id;
+
+    public String getT_id() {
+        return t_id;
+    }
+
+    public void setT_id(String t_id) {
+        this.t_id = t_id;
+    }
+
+    public String getT_header() {
+        return t_header;
+    }
+
+    public void setT_header(String t_header) {
+        this.t_header = t_header;
+    }
+
+    public String getT_tag() {
+        return t_tag;
+    }
+
+    public void setT_tag(String t_tag) {
+        this.t_tag = t_tag;
+    }
+
+    public boolean isDianzan() {
+        return isDianzan;
+    }
+
+    public void setDianzan(boolean dianzan) {
+        isDianzan = dianzan;
+    }
+
+    public boolean isCollected() {
+        return isCollected;
+    }
+
+    public void setCollected(boolean collected) {
+        isCollected = collected;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public int getGood_count() {
         return good_count;
@@ -62,12 +125,19 @@ public class BofangHistroyBean extends DataSupport{
         this.view_count = view_count;
     }
 
-    public BofangHistroyBean(int good_count, String video_name, String created_at, int collect_count, String video_url, int view_count) {
-        this.good_count = good_count;
+    public BofangHistroyBean(String type, int id, String video_name, String created_at, String video_url, int good_count, int collect_count, int view_count, boolean isDianzan, boolean isCollected, String t_header, String t_tag, String t_id) {
+        this.type = type;
+        this.id = id;
         this.video_name = video_name;
         this.created_at = created_at;
-        this.collect_count = collect_count;
         this.video_url = video_url;
+        this.good_count = good_count;
+        this.collect_count = collect_count;
         this.view_count = view_count;
+        this.isDianzan = isDianzan;
+        this.isCollected = isCollected;
+        this.t_header = t_header;
+        this.t_tag = t_tag;
+        this.t_id = t_id;
     }
 }
