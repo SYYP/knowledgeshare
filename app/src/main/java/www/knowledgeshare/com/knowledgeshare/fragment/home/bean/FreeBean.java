@@ -1,12 +1,13 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Administrator on 2017/12/13.
  */
 
-public class FreeBean {
+public class FreeBean implements Serializable{
 
 
     /**
@@ -112,7 +113,7 @@ public class FreeBean {
         return child;
     }
 
-    public static class CommentEntity {
+    public static class CommentEntity implements Serializable{
         /**
          * user_avatar :
          * islive : false
@@ -216,7 +217,7 @@ public class FreeBean {
             return live;
         }
 
-        public static class ChildCommentEntity {
+        public static class ChildCommentEntity implements Serializable{
             /**
              * id : 2
              * comment_id : 6
@@ -252,7 +253,7 @@ public class FreeBean {
         }
     }
 
-    public static class TeacherHasEntity {
+    public static class TeacherHasEntity implements Serializable{
         /**
          * t_tag : 中国好声音
          * islive : false
@@ -367,7 +368,7 @@ public class FreeBean {
         }
     }
 
-    public static class ChildEntity {
+    public static class ChildEntity implements Serializable{
         /**
          * good_count : 0
          * video_name : 女高音，一个神秘又充满魅力的声音3
@@ -391,6 +392,7 @@ public class FreeBean {
          */
         private int good_count;
         private String video_name;
+        private String video_time;
         private boolean islive;
         private int is_good;
         private String txt_url;
@@ -410,6 +412,23 @@ public class FreeBean {
         private int view_count;
         private String t_header;
         private String t_tag;
+        private boolean isChecked=true;
+
+        public String getVideo_time() {
+            return video_time;
+        }
+
+        public void setVideo_time(String video_time) {
+            this.video_time = video_time;
+        }
+
+        public boolean isChecked() {
+            return isChecked;
+        }
+
+        public void setChecked(boolean checked) {
+            isChecked = checked;
+        }
 
         public String getT_header() {
             return t_header;

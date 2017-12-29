@@ -168,7 +168,6 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
                 name.setText(progress.fileName);
             }*/
         }
-
         public void refresh(Progress progress) {
             String currentSize = Formatter.formatFileSize(context, progress.currentSize);
             String totalSize = Formatter.formatFileSize(context, progress.totalSize);

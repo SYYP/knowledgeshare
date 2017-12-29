@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
@@ -27,10 +28,13 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.GetRequest;
+import com.lzy.okserver.OkDownload;
 import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +54,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
@@ -96,6 +101,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
     private TextView mTv_collect;
     private TextView mTv_dianzan;
     private boolean isRefreshing;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -628,10 +634,18 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 String created_at = childEntity.getCreated_at();
                 String[] split = created_at.split(" ");
                 //TODO 免费专区 父类id固定为-1 音频时长写死了  接口调完记得改
-                DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(),-1,
-                        "4:30",childEntity.getVideo_old_name(), split[0], split[1],
+                DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(),-1,-4,-3,
+                        childEntity.getVideo_name(),childEntity.getVideo_time(), split[0], split[1],
                         childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
                 DownUtils.add(DownLoadListBean);
+                GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
+                OkDownload.request(mFreeBean.getId()+"_"+childEntity.getId(), request)
+                        .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download")
+                        .fileName(childEntity.getVideo_name()+mFreeBean.getId()+"_"+childEntity.getId()+".mp3")
+                        .extra3(DownLoadListBean)//额外数据
+                        .save()
+                        .register(new LogDownloadListener())//当前任务的回调监听
+                        .start();
                 mDialog.dismiss();
             }
         });
@@ -759,7 +773,10 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.tv_download:
-                startActivity(new Intent(this, DownLoadListActivity.class));
+                FreeBean model = mFreeBean;
+                intent = new Intent(this, FreeDownListActivity.class);
+                intent.putExtra("model",model);
+                startActivity(intent);
                 break;
             case R.id.tv_search:
                 startActivity(new Intent(this, SearchActivity.class));

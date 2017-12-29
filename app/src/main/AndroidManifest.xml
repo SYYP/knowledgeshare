@@ -109,7 +109,8 @@
         <activity android:name=".login.ResetpwdActivity"/>
         <activity android:name=".fragment.home.WebActivity"/>
         <activity android:name=".fragment.mine.MessageDetailActivity"/>
-        <activity android:name=".activity.BuyZhuanLanActivity"></activity>
+        <activity android:name=".activity.BuyZhuanLanActivity"/>
+        <activity android:name=".fragment.home.FreeDownListActivity"/>
         <receiver android:name=".fragment.home.player.StatusBarReceiver">
             <intent-filter>
                 <action android:name="me.wcy.music.STATUS_BAR_ACTIONS" />

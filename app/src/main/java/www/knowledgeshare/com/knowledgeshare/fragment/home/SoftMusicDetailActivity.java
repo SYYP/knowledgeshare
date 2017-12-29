@@ -674,7 +674,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
                 OkDownload.request(childEntity.getXk_id()+"_"+childEntity.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download")
-                        .fileName(childEntity.getName()+childEntity.getXk_id()+"_"+childEntity.getId())
+                        .fileName(childEntity.getName()+childEntity.getXk_id()+"_"+childEntity.getId()+".mp3")
                         .extra3(DownLoadListBean)
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听
@@ -683,7 +683,6 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
             }
         });
     }
-
     private void changeCollect(final int adapterPosition, int id) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
@@ -956,7 +955,6 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.tv_download:
                 SoftMusicDetailBean model = mMusicDetailBean;
-                Logger.e(model.getChild().size()+"");
                 intent = new Intent(this, DownLoadListActivity.class);
                 intent.putExtra("model", model);
                 startActivity(intent);

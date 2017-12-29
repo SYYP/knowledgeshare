@@ -185,7 +185,7 @@ public class HomeBean {
          * send_time : 0
          * view_count : 0
          */
-        private int video_time;
+        private String video_time;
         private int good_count;
         private String t_tag;
         private String parent_name;
@@ -220,7 +220,7 @@ public class HomeBean {
         public void setChecked(boolean checked) {
             isChecked = checked;
         }
-        public void setVideo_time(int video_time) {
+        public void setVideo_time(String video_time) {
             this.video_time = video_time;
         }
 
@@ -324,7 +324,7 @@ public class HomeBean {
             this.view_count = view_count;
         }
 
-        public int getVideo_time() {
+        public String getVideo_time() {
             return video_time;
         }
 
