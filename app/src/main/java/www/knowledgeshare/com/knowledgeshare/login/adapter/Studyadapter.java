@@ -14,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.wevey.selector.dialog.DialogInterface;
+import com.wevey.selector.dialog.NormalAlertDialog;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,16 +61,13 @@ public class Studyadapter extends RecyclerView.Adapter<Studyadapter.MyViewholder
         holder.item_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                list.remove(position);
-                notifyDataSetChanged();
+                showTips(position);
             }
         });
         holder.item_imgdelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                list.remove(position);
-                notifyDataSetChanged();
+                showTips(position);
             }
         });
         //编辑
@@ -177,6 +177,42 @@ public class Studyadapter extends RecyclerView.Adapter<Studyadapter.MyViewholder
         });
 
 
+    }
+
+    private void showTips(final int position) {
+        new NormalAlertDialog.Builder(context)
+                .setTitleVisible(true).setTitleText("提示")
+                .setTitleTextColor(R.color.text_black)
+                .setContentText("是否删除？")
+                .setContentTextColor(R.color.text_black)
+                .setLeftButtonText("是")
+                .setLeftButtonTextColor(R.color.text_black)
+                .setRightButtonText("否")
+                .setRightButtonTextColor(R.color.text_black)
+                .setSingleButtonTextColor(R.color.text_black)
+                .setCanceledOnTouchOutside(false)
+                .setOnclickListener(new DialogInterface.OnLeftAndRightClickListener<NormalAlertDialog>() {
+                    @Override
+                    public void clickLeftButton(NormalAlertDialog dialog, View view) {
+                        list.remove(position);
+                        notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void clickRightButton(NormalAlertDialog dialog, View view) {
+
+                        dialog.dismiss();
+                    }
+                })
+                .setSingleListener(new DialogInterface.OnSingleClickListener<NormalAlertDialog>() {
+                    @Override
+                    public void clickSingleButton(NormalAlertDialog dialog, View view) {
+                        dialog.dismiss();
+                    }
+                })
+                .build()
+                .show();
     }
 
     @Override

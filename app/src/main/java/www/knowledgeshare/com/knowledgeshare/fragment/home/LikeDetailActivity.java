@@ -507,8 +507,10 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
             case R.id.tv_guanzhu:
             case R.id.iv_guanzhu:
                 if (isGuanzhu) {
+                    tv_guanzhu.setText("关注");
                     iv_guanzhu.setImageResource(R.drawable.free_quxiaoguanzhu);
                 } else {
+                    tv_guanzhu.setText("已关注");
                     iv_guanzhu.setImageResource(R.drawable.free_guanzhu);
                 }
                 isGuanzhu = !isGuanzhu;
