@@ -35,6 +35,10 @@
             android:layout_marginRight="13dp"
             android:src="@drawable/icon_share2"/>
     </RelativeLayout>
+    <com.liaoinstan.springview.widget.SpringView
+        android:id="@+id/springview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nestView"
         android:layout_width="match_parent"
@@ -136,5 +140,6 @@
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+    </com.liaoinstan.springview.widget.SpringView>
 </LinearLayout>
 

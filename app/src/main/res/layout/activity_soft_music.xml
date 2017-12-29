@@ -3,21 +3,21 @@
               xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="#edecea"
               android:focusable="true"
               android:focusableInTouchMode="true"
-              android:background="#edecea"
               android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/text_red_dark"
-        >
+    >
         <ImageView
             android:id="@+id/iv_back"
-            android:padding="13dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:padding="13dp"
             android:src="@drawable/icon_back_white"/>
         <TextView
             android:layout_width="wrap_content"
@@ -27,13 +27,17 @@
             android:textColor="@color/white"
             android:textSize="17sp"/>
     </RelativeLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_yinyueke"
+    <com.liaoinstan.springview.widget.SpringView
+        android:id="@+id/springview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:padding="10dp"
-        android:background="@drawable/bg_wanjiao"
-    ></android.support.v7.widget.RecyclerView>
+    >
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_yinyueke"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_wanjiao"
+        ></android.support.v7.widget.RecyclerView>
+    </com.liaoinstan.springview.widget.SpringView>
 </LinearLayout>

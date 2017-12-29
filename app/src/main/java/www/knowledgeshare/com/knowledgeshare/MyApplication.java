@@ -48,11 +48,11 @@ public class MyApplication extends LitePalApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-//        initUMShare();
-//        initUMPush();
+        //        initUMShare();
+        //        initUMPush();
         setLogger();
         setOkGo();//OkGo----第三方网络框架
-        application=this;
+        application = this;
     }
 
     @Override
@@ -61,8 +61,8 @@ public class MyApplication extends LitePalApplication {
         MultiDex.install(this);
     }
 
-    public static MyApplication  getApplication(){
-        if(application == null){
+    public static MyApplication getApplication() {
+        if (application == null) {
             application = getApplication();
         }
         return application;
@@ -101,11 +101,11 @@ public class MyApplication extends LitePalApplication {
     }
 
     public static Application getInstance() {
-        return  application;
+        return application;
     }
 
-    public static Context getGloableContext()    {
-        return  application.getApplicationContext();
+    public static Context getGloableContext() {
+        return application.getApplicationContext();
     }
 
     public static class ClipChangedListener implements ClipboardManager.OnPrimaryClipChangedListener {
@@ -121,6 +121,7 @@ public class MyApplication extends LitePalApplication {
             cb.setText("");
         }
     }
+
     public static void startClearClip(Context context) {
 
         cb = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
@@ -144,11 +145,12 @@ public class MyApplication extends LitePalApplication {
         Log.e("ProxyApplication", "============================== 开启禁止复制！==================================");
         Log.e("ProxyApplication", "=============================================================================");
     }
+
     // 关闭禁用剪切板
     public static void stopClearClip() {
         try {
             Log.e("ProxyApplication", "=============================================================================");
-            Log.e("ProxyApplication", "============================== cb = "+cb+"==================================");
+            Log.e("ProxyApplication", "============================== cb = " + cb + "==================================");
             Log.e("ProxyApplication", "====================================================");
             if (cb != null) {
                 cb.removePrimaryClipChangedListener(listener);
@@ -170,10 +172,10 @@ public class MyApplication extends LitePalApplication {
     private void setLogger() {
         FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
                 .showThreadInfo(false)  // (Optional) Whether to show thread info or not. Default true
-//                .methodCount(3)         // (Optional) How many method line to show. Default 2
-//                .methodOffset(7)        // (Optional) Hides internal method calls up to offset. Default 5
+                //                .methodCount(3)         // (Optional) How many method line to show. Default 2
+                //                .methodOffset(7)        // (Optional) Hides internal method calls up to offset. Default 5
                 .tag("TAG")   // (Optional) Global tag for every log. Default PRETTY_LOGGER
-//                .logStrategy(logStrategy)   // (Optional) Changes the log strategy to print out. Default LogCat
+                //                .logStrategy(logStrategy)   // (Optional) Changes the log strategy to print out. Default LogCat
                 .build();
         Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy));
         /**
@@ -216,14 +218,14 @@ public class MyApplication extends LitePalApplication {
         //方法一：信任所有证书,不安全有风险
         HttpsUtils.SSLParams sslParams1 = HttpsUtils.getSslSocketFactory();
         //方法二：自定义信任规则，校验服务端证书
-//        HttpsUtils.SSLParams sslParams2 = HttpsUtils.getSslSocketFactory(new SafeTrustManager());
+        //        HttpsUtils.SSLParams sslParams2 = HttpsUtils.getSslSocketFactory(new SafeTrustManager());
         //方法三：使用预埋证书，校验服务端证书（自签名证书）
         //HttpsUtils.SSLParams sslParams3 = HttpsUtils.getSslSocketFactory(getAssets().open("srca.cer"));
         //方法四：使用bks证书和密码管理客户端证书（双向认证），使用预埋证书，校验服务端证书（自签名证书）
         //HttpsUtils.SSLParams sslParams4 = HttpsUtils.getSslSocketFactory(getAssets().open("xxx.bks"), "123456", getAssets().open("yyy.cer"));
         builder.sslSocketFactory(sslParams1.sSLSocketFactory, sslParams1.trustManager);
         //配置https的域名匹配规则，详细看demo的初始化介绍，不需要就不要加入，使用不当会导致https握手失败
-//        builder.hostnameVerifier(new SafeHostnameVerifier());
+        //        builder.hostnameVerifier(new SafeHostnameVerifier());
 
         OkGo.getInstance().init(this)                              //必须调用初始化
                 .setOkHttpClient(builder.build())                  //建议设置OkHttpClient，不设置将使用默认的

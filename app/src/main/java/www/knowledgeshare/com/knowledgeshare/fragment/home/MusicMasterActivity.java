@@ -2,6 +2,7 @@ package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,10 +12,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
@@ -26,6 +29,8 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicMasterMoreBean;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
+import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
 public class MusicMasterActivity extends BaseActivity implements View.OnClickListener {
 
@@ -39,13 +44,17 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
     private LinearLayout activity_gu_dian;
     private List<MusicMasterMoreBean.DataEntity> mData;
     private DaShiBanAdapter mDaShiBanAdapter;
+    private String after = "";
+    private SpringView springview;
+    private boolean isLoadMore;
+    private String type = "1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_master);
         initView();
-        initData("1", "");
+        initData("");
         initListener();
     }
 
@@ -61,33 +70,73 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
                 }
             }
         });
+        springview.setType(SpringView.Type.FOLLOW);
+        springview.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                isLoadMore = false;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        initData(after);
+                        springview.onFinishFreshAndLoad();
+                    }
+                }, 2000);
+            }
+
+            @Override
+            public void onLoadmore() {
+                isLoadMore = true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        initData(after);
+                        springview.onFinishFreshAndLoad();
+                    }
+                }, 2000);
+            }
+        });
+        springview.setHeader(new MyHeader(this));
+        springview.setFooter(new MyFooter(this));
     }
 
-    private void initData(String type, String after) {
+    private void initData(String after) {
         HttpParams params = new HttpParams();
-        params.put("after", after);
+        if (isLoadMore) {
+            params.put("after", after);
+        }
         params.put("class_id", type);
         OkGo.<MusicMasterMoreBean>post(MyContants.LXKURL + "index/zl-more")
                 .tag(this)
                 .params(params)
-                .execute(new DialogCallback<MusicMasterMoreBean>(MusicMasterActivity.this,MusicMasterMoreBean.class) {
+                .execute(new DialogCallback<MusicMasterMoreBean>(MusicMasterActivity.this, MusicMasterMoreBean.class) {
                              @Override
                              public void onSuccess(Response<MusicMasterMoreBean> response) {
                                  int code = response.code();
                                  MusicMasterMoreBean musicMasterMoreBean = response.body();
-                                 mData = musicMasterMoreBean.getData();
-                                 if (mDaShiBanAdapter == null) {
-                                     mDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban4, mData);
-                                     recycler_dashiban.setAdapter(mDaShiBanAdapter);
+                                 if (!isLoadMore) {
+                                     mData = musicMasterMoreBean.getData();
+                                     if (mDaShiBanAdapter == null) {
+                                         mDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban4, mData);
+                                         recycler_dashiban.setAdapter(mDaShiBanAdapter);
+                                     } else {
+                                         mDaShiBanAdapter.setNewData(mData);
+                                         mDaShiBanAdapter.notifyDataSetChanged();
+                                     }
                                  } else {
-                                     mDaShiBanAdapter.setNewData(mData);
+                                     List<MusicMasterMoreBean.DataEntity> data = musicMasterMoreBean.getData();
+                                     if (data==null || data.size()==0){
+                                         Toast.makeText(MusicMasterActivity.this, "已无更多数据", Toast.LENGTH_SHORT).show();
+                                         return;
+                                     }
+                                     mData.addAll(data);
                                      mDaShiBanAdapter.notifyDataSetChanged();
                                  }
                                  mDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                          Intent intent = new Intent(MusicMasterActivity.this, ZhuanLanActivity.class);
-                                         intent.putExtra("id",mDaShiBanAdapter.getData().get(position).getId()+"");
+                                         intent.putExtra("id", mDaShiBanAdapter.getData().get(position).getId() + "");
                                          startActivity(intent);
                                      }
                                  });
@@ -104,6 +153,7 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
         rb_liuxing = (RadioButton) findViewById(R.id.rb_liuxing);
         rb_suyang = (RadioButton) findViewById(R.id.rb_suyang);
         rgp = (RadioGroup) findViewById(R.id.rgp);
+        springview = (SpringView) findViewById(R.id.springview);
         recycler_dashiban = (RecyclerView) findViewById(R.id.recycler_dashiban);
         activity_gu_dian = (LinearLayout) findViewById(R.id.activity_gu_dian);
         rgp.check(R.id.rb_gudian);
@@ -113,16 +163,24 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 switch (i) {
                     case R.id.rb_gudian:
-                        initData("1", "");
+                        type = "1";
+                        isLoadMore=false;
+                        initData("");
                         break;
                     case R.id.rb_minzu:
-                        initData("2", "");
+                        type = "2";
+                        isLoadMore=false;
+                        initData("");
                         break;
                     case R.id.rb_liuxing:
-                        initData("3", "");
+                        type = "3";
+                        isLoadMore=false;
+                        initData("");
                         break;
                     case R.id.rb_suyang:
-                        initData("4", "");
+                        type = "4";
+                        isLoadMore=false;
+                        initData("");
                         break;
                 }
             }
@@ -138,6 +196,7 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
 
         @Override
         protected void convert(BaseViewHolder helper, MusicMasterMoreBean.DataEntity item) {
+            after = item.getId() + "";
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
             Glide.with(mContext).load(item.getZl_img()).into(imageView);
             helper.setVisible(R.id.iv_bofang, false);

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
@@ -49,6 +51,8 @@ import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
+import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
 public class EveryDayCommentActivity extends BaseActivity implements View.OnClickListener {
 
@@ -70,6 +74,9 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
     private LieBiaoAdapter mLieBiaoAdapter;
     private List<EveryDayBean.DailysEntity> mDailys;
     private BaseDialog mNetDialog;
+    private String after = "";
+    private SpringView springview;
+    private boolean isLoadMore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +155,9 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
     private void initData() {
         HttpParams params = new HttpParams();
         params.put("userid", SpUtils.getString(this, "id", ""));
+        if (isLoadMore) {
+            params.put("after", after);
+        }
         OkGo.<EveryDayBean>post(MyContants.LXKURL + "daily")
                 .tag(this)
                 .params(params)
@@ -156,15 +166,25 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                     public void onSuccess(Response<EveryDayBean> response) {
                         int code = response.code();
                         EveryDayBean everyDayBean = response.body();
-                        mDailys = everyDayBean.getDailys();
                         if (response.code() >= 200 && response.code() <= 204) {
                             Logger.e(code + "");
+                            if (isLoadMore) {
+                                List<EveryDayBean.DailysEntity> dailys = everyDayBean.getDailys();
+                                if (dailys==null || dailys.size()==0){
+                                    Toast.makeText(EveryDayCommentActivity.this, "已无更多数据", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                mDailys.addAll(dailys);
+                                mLieBiaoAdapter.notifyDataSetChanged();
+                            } else {
+                                mDailys = everyDayBean.getDailys();
+                                mLieBiaoAdapter = new LieBiaoAdapter(R.layout.item_free, mDailys);
+                                recycler_liebiao.setAdapter(mLieBiaoAdapter);
+                            }
                             Glide.with(EveryDayCommentActivity.this).load(everyDayBean.getImgurl()).into(iv_beijing);
                             tv_jie_count.setText("已更新：" + everyDayBean.getUpdate_count() + "节");
                             tv_look_count.setText("浏览次数：" + everyDayBean.getView_count() + "");
                             tv_collect_count.setText("收藏次数：" + everyDayBean.getCollect_count() + "");
-                            mLieBiaoAdapter = new LieBiaoAdapter(R.layout.item_free, mDailys);
-                            recycler_liebiao.setAdapter(mLieBiaoAdapter);
                             mLieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -216,6 +236,34 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 }
             }
         });
+        springview.setType(SpringView.Type.FOLLOW);
+        springview.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                isLoadMore = false;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        initData();
+                        springview.onFinishFreshAndLoad();
+                    }
+                }, 2000);
+            }
+
+            @Override
+            public void onLoadmore() {
+                isLoadMore = true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        initData();
+                        springview.onFinishFreshAndLoad();
+                    }
+                }, 2000);
+            }
+        });
+        springview.setHeader(new MyHeader(this));
+        springview.setFooter(new MyFooter(this));
     }
 
     private void initDialog() {
@@ -253,6 +301,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
         nestView = (NestedScrollView) findViewById(R.id.nestView);
         recycler_liebiao.setLayoutManager(new LinearLayoutManager(this));
         recycler_liebiao.setNestedScrollingEnabled(false);
+        springview = (SpringView) findViewById(R.id.springview);
     }
 
     private class LieBiaoAdapter extends BaseQuickAdapter<EveryDayBean.DailysEntity, BaseViewHolder> {
@@ -263,6 +312,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
 
         @Override
         protected void convert(final BaseViewHolder helper, final EveryDayBean.DailysEntity item) {
+            after = item.getId() + "";
             helper.setText(R.id.tv_name, item.getVideo_name())
                     .setText(R.id.tv_time, item.getCreated_at() + "发布")
                     .setText(R.id.tv_look_count, item.getIs_view() == 0 ? item.getView_count() + "" : item.getView_count_true() + "")
@@ -366,9 +416,9 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 String created_at = childEntity.getCreated_at();
                 String[] split = created_at.split(" ");
                 //TODO 每日推荐 父类id固定为-2 音频时长写死了  接口调完记得改
-                DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(),-2,
-                        "4:30",childEntity.getVideo_old_name(), split[0], split[1],
-                        childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
+                DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(), -2,
+                        "4:30", childEntity.getVideo_old_name(), split[0], split[1],
+                        childEntity.getVideo_url(), childEntity.getTxt_url(), childEntity.getT_header());
                 DownUtils.add(DownLoadListBean);
                 mDialog.dismiss();
             }

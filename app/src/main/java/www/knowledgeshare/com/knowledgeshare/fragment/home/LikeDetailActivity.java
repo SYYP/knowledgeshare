@@ -397,7 +397,11 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
             helper.getView(R.id.iv_dian).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showListDialog(helper.getAdapterPosition(), item.isIsfav(), item.isIslive(), item.getId());
+                    if (item.getIs_try() == 1) {
+                        showListDialog(helper.getAdapterPosition(), item.isIsfav(), item.isIslive(), item.getId());
+                    }else {
+                        showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
+                    }
                 }
             });
             helper.getView(R.id.iv_wengao).setOnClickListener(new View.OnClickListener() {

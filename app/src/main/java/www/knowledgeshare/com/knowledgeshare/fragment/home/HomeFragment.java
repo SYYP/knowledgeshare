@@ -111,7 +111,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private TextView tv_yinyueke_lookmore;
     private boolean isBofang;
     private Animation mRotate_anim;
-    private String mytype;
+    private String mytype = "";
     private int myposition;
     private List<HomeBean.DailyEntity> mDaily;
     private HomeBean.FreeEntity mFree;
@@ -784,6 +784,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     PlayerBean playerBean = new PlayerBean(t_head, title, subtitle, musicurl);
                     gobofang(playerBean);
                 } else {
+                    mytype = "zhuanlan";
+                    myposition = 0;
                     HomeBean.FreeEntity.ChildEntity item = mMFreeChild.get(0);
                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
                     gobofang(playerBean);
