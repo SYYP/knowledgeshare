@@ -1,6 +1,5 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.LayoutRes;
@@ -19,17 +18,21 @@ import com.lzy.okserver.OkDownload;
 import com.orhanobut.logger.Logger;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicDetailBean;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 
-public class DownLoadListActivity extends BaseActivity implements View.OnClickListener {
+/**
+ * Created by Administrator on 2017/12/29.
+ */
+
+public class FreeDownListActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView iv_back;
     private RecyclerView recycler_list;
@@ -38,8 +41,8 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
     private TextView tv_download;
     private MyAdapter mMyAdapter;
     private boolean isAllChecked = true;
-    private SoftMusicDetailBean childEntity;
-    private List<SoftMusicDetailBean.ChildEntity> list;
+    private FreeBean freeBean;
+    private List<FreeBean.ChildEntity> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +69,8 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void getIntentData() {
-        childEntity = (SoftMusicDetailBean) getIntent().getExtras().getSerializable("model");
-        list = childEntity.getChild();
+        freeBean = (FreeBean) getIntent().getExtras().getSerializable("model");
+        list = freeBean.getChild();
         if (list != null && list.size() > 0){
             mMyAdapter = new MyAdapter(R.layout.item_download, list);
             recycler_list.setAdapter(mMyAdapter);
@@ -116,14 +119,14 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
         iv_quanxuan.setImageResource(R.drawable.noquanxuan);
     }
 
-    private class MyAdapter extends BaseQuickAdapter<SoftMusicDetailBean.ChildEntity, BaseViewHolder> {
+    private class MyAdapter extends BaseQuickAdapter<FreeBean.ChildEntity, BaseViewHolder> {
 
-        public MyAdapter(@LayoutRes int layoutResId, @Nullable List<SoftMusicDetailBean.ChildEntity> data) {
+        public MyAdapter(@LayoutRes int layoutResId, @Nullable List<FreeBean.ChildEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(final BaseViewHolder helper, SoftMusicDetailBean.ChildEntity item) {
+        protected void convert(final BaseViewHolder helper, FreeBean.ChildEntity item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_ischeck);
             if (item.isChecked()) {
                 //                Glide.with(mContext).load(R.drawable.quanxuan_red).into(imageView);//glide加载图片会有闪烁
@@ -134,7 +137,7 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
             String created_at = item.getCreated_at();
             Logger.e(created_at);
             String[] split = created_at.split(" ");
-            helper.setText(R.id.tv_name,item.getName())
+            helper.setText(R.id.tv_name,item.getVideo_name())
                     .setText(R.id.tv_date,split[0])
                     .setText(R.id.tv_time,item.getVideo_time())
                     .setText(R.id.tv_order,helper.getAdapterPosition()+1+"");
@@ -159,17 +162,17 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
             case R.id.tv_download:
                 for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).isChecked()){
-                        SoftMusicDetailBean.ChildEntity childEntity = list.get(i);
+                        FreeBean.ChildEntity childEntity = list.get(i);
                         String created_at = childEntity.getCreated_at();
                         String[] split = created_at.split(" ");
-                        DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(),childEntity.getXk_id(),
-                                childEntity.getName(),childEntity.getVideo_time(), split[0], split[1],
+                        DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(),-1,-4,-3,
+                                childEntity.getVideo_name(),childEntity.getVideo_time(), split[0], split[1],
                                 childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
                         DownUtils.add(DownLoadListBean);
                         GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
-                        OkDownload.request(childEntity.getXk_id()+"_"+childEntity.getId(), request)
-                                .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download")
-                                .fileName(childEntity.getName()+childEntity.getXk_id()+"_"+childEntity.getId()+".mp3")
+                        OkDownload.request(freeBean.getId()+"_"+childEntity.getId(), request)
+                                .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download")
+                                .fileName(childEntity.getVideo_name()+freeBean.getId()+"_"+childEntity.getId()+".mp3")
                                 .extra3(DownLoadListBean)//额外数据
                                 .save()
                                 .register(new LogDownloadListener())//当前任务的回调监听
