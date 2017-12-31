@@ -1,12 +1,13 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Administrator on 2017/12/14.
  */
 
-public class EveryDayBean {
+public class EveryDayBean implements Serializable{
 
 
     /**
@@ -62,7 +63,7 @@ public class EveryDayBean {
         return collect_count;
     }
 
-    public static class DailysEntity {
+    public static class DailysEntity implements Serializable {
         /**
          * good_count : 0
          * t_tag : 中国好声音
@@ -93,6 +94,7 @@ public class EveryDayBean {
         private int good_count;
         private String t_tag;
         private String video_name;
+        private String video_time;
         private int teacher_id;
         private String txt_url;
         private int is_view;
@@ -115,6 +117,23 @@ public class EveryDayBean {
         private int collect_count_true;
         private int send_time;
         private int view_count;
+        private boolean isChecked=true;
+
+        public boolean isChecked() {
+            return isChecked;
+        }
+
+        public void setChecked(boolean checked) {
+            isChecked = checked;
+        }
+
+        public String getVideo_time() {
+            return video_time;
+        }
+
+        public void setVideo_time(String video_time) {
+            this.video_time = video_time;
+        }
 
         public void setGood_count(int good_count) {
             this.good_count = good_count;

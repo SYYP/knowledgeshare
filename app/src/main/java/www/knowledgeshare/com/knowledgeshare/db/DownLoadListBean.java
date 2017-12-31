@@ -196,6 +196,7 @@ public class DownLoadListBean extends DataSupport implements Serializable{
      * @param id    免费专区的音频ID
      * @param freeId    免费专区ID  固定值  -1
      * @param zlId      专栏ID  固定值 -4
+     * @param xkId      小课ID 固定值 -3
      * @param name      音频名字
      * @param videoTime     音频时长
      * @param date      音频日期

@@ -111,6 +111,7 @@
         <activity android:name=".fragment.mine.MessageDetailActivity"/>
         <activity android:name=".activity.BuyZhuanLanActivity"/>
         <activity android:name=".fragment.home.FreeDownListActivity"/>
+        <activity android:name=".fragment.home.CommentDownActivity"/>
         <receiver android:name=".fragment.home.player.StatusBarReceiver">
             <intent-filter>
                 <action android:name="me.wcy.music.STATUS_BAR_ACTIONS" />
