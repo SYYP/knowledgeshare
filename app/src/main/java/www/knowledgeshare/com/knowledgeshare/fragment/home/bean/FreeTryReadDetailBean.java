@@ -24,6 +24,7 @@ public class FreeTryReadDetailBean {
      */
     private String video_time;
     private String zl_price;
+    private String txt_url;
     private int zl_id;
     private String video_url;
     private String t_header;
@@ -36,6 +37,14 @@ public class FreeTryReadDetailBean {
     private List<CommentEntity> comment;
     private int id;
     private boolean isfav;
+
+    public String getTxt_url() {
+        return txt_url;
+    }
+
+    public void setTxt_url(String txt_url) {
+        this.txt_url = txt_url;
+    }
 
     public String getT_tag() {
         return t_tag;
