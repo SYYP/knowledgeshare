@@ -746,7 +746,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                         .extra3(downLoadListsBean)
                         .fileName(childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId())
                         //                        .fileName(childEntity.getName()+childEntity.getXk_id()+"_"+childEntity.getId()+".mp3")
-                        .extra3(DownLoadListBean)
+                        .extra3(downLoadListsBean)
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听
                         .start();
