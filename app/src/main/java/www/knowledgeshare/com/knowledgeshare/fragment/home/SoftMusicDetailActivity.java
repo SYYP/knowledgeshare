@@ -36,7 +36,6 @@ import com.orhanobut.logger.Logger;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -275,6 +274,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                                              SoftMusicDetailBean.ChildEntity item = mChild.get(position);
                                              PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_old_name(), item.getT_tag(), item.getVideo_url());
                                              gobofang(playerBean);
+                                             addListenCount(item.getId() + "");
                                              MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
                                                      item.getT_header(), item.getVideo_old_name(), item.getId() + "",
                                                      mMusicDetailBean.getXk_teacher_id() + "", item.isIsfav());
@@ -310,6 +310,21 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                              }
                          }
                 );
+    }
+
+    private void addListenCount(String id) {
+        HttpParams params = new HttpParams();
+        params.put("id", id);
+        params.put("type", "xk");
+        OkGo.<BaseBean>post(MyContants.LXKURL + "views")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        int code = response.code();
+                    }
+                });
     }
 
     private void loadMoreComment(String after) {
@@ -668,14 +683,15 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 SoftMusicDetailBean.ChildEntity childEntity = mChild.get(adapterPosition);
                 String created_at = childEntity.getCreated_at();
                 String[] split = created_at.split(" ");
-                DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(),childEntity.getXk_id(),
-                        childEntity.getName(),childEntity.getVideo_time(), split[0], split[1],
-                        childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
+                DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(), childEntity.getXk_id(),
+                        childEntity.getName(), childEntity.getVideo_time(), split[0], split[1],
+                        childEntity.getVideo_url(), childEntity.getTxt_url(), childEntity.getT_header());
                 DownUtils.add(DownLoadListBean);
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
-                OkDownload.request(childEntity.getXk_id()+"_"+childEntity.getId(), request)
+                OkDownload.request(childEntity.getXk_id() + "_" + childEntity.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download")
-                        .fileName(childEntity.getName()+childEntity.getXk_id()+"_"+childEntity.getId()+".mp3")
+                        .fileName(childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId())
+//                        .fileName(childEntity.getName()+childEntity.getXk_id()+"_"+childEntity.getId()+".mp3")
                         .extra3(DownLoadListBean)
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听
@@ -967,6 +983,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.tv_download:
                 SoftMusicDetailBean model = mMusicDetailBean;
+                Logger.e(model.getChild().size() + "");
                 intent = new Intent(this, DownLoadListActivity.class);
                 intent.putExtra("model", model);
                 startActivity(intent);

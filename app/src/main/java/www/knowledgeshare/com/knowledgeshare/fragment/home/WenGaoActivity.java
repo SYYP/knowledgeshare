@@ -76,10 +76,9 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
         initDialog();
         showTanchuangDialog();
         initData();
-        initWebView();
     }
 
-    private void initWebView() {
+    private void initWebView(String url) {
         List<String> list = new ArrayList<>();
         list.add("添加笔记");
         webview.setWebViewClient(new CustomWebViewClient());
@@ -100,7 +99,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
                 addNote(selectText);
             }
         });
-        webview.loadUrl("http://thinks.iask.in/add.html");
+        webview.loadUrl(url);
     }
 
     private void addNote(String selectText) {
@@ -225,6 +224,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
                             }
                             mLiuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan2, mComment);
                             recycler_liuyan.setAdapter(mLiuYanAdapter);
+                            initWebView(mWenGaoBean.getH5_url());
                         } else {
                         }
                     }

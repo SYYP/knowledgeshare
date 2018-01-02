@@ -471,6 +471,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
             helper.getView(R.id.iv_wengao).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    mType = item.getType();
                     Intent intent = new Intent(BoFangListActivity.this, WenGaoActivity.class);
                     intent.putExtra("type", mType);
                     intent.putExtra("id", item.getId() + "");

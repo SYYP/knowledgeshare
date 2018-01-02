@@ -2,8 +2,8 @@ package www.knowledgeshare.com.knowledgeshare.utils;
 
 public class MyContants {
     public static String FILENAME = "config.xml";
-    public static String BASEURL = " http://wady.s1.natapp.cc/";
-    public static String LXKURL = " http://wady.s1.natapp.cc/api/v2/";
+    public static String BASEURL = "http://wady.s1.natapp.cc/";
+    public static String LXKURL = "http://wady.s1.natapp.cc/api/v2/";
     public static String IMGBASEURL = "";
 
     //短信发送

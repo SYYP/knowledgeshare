@@ -131,7 +131,7 @@ public class MyUtils {
 
     //  时间戳转为日期  /年/月/日
     public static String getCurrentDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:dd");
         Date curDate = new Date(System.currentTimeMillis());//获取当前时间
         String date = sdf.format(curDate);
         return date;

@@ -20,6 +20,15 @@ public class WenGaoBean {
     private String t_header;
     private int t_id;
     private int id;
+    private String h5_url;
+
+    public String getH5_url() {
+        return h5_url;
+    }
+
+    public void setH5_url(String h5_url) {
+        this.h5_url = h5_url;
+    }
 
     public int getT_id() {
         return t_id;

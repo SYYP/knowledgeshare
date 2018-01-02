@@ -21,7 +21,6 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.adapter.BuyTabAdapter;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.AlreadyDownLoadFragment;
-import www.knowledgeshare.com.knowledgeshare.fragment.mine.DownLoadingFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.MusicDownLoadingFragment;
 import www.knowledgeshare.com.knowledgeshare.view.NoScrollViewPager;
 

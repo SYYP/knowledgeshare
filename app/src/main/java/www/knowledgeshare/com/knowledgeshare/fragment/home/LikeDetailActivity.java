@@ -303,6 +303,7 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                                              SoftMusicDetailBean.ChildEntity item = mChild.get(position);
                                              PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_old_name(), item.getT_tag(), item.getVideo_url());
                                              gobofang(playerBean);
+                                             addListenCount(item.getId() + "");
                                              MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
                                                      item.getT_header(), item.getVideo_old_name(), item.getId() + "",
                                                      mMusicDetailBean.getXk_teacher_id() + "", item.isIsfav());
@@ -404,7 +405,11 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
             helper.getView(R.id.iv_dian).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showListDialog(helper.getAdapterPosition(), item.isIsfav(), item.isIslive(), item.getId());
+                    if (item.getIs_try() == 1) {
+                        showListDialog(helper.getAdapterPosition(), item.isIsfav(), item.isIslive(), item.getId());
+                    } else {
+                        showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
+                    }
                 }
             });
             helper.getView(R.id.iv_wengao).setOnClickListener(new View.OnClickListener() {
@@ -422,6 +427,21 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
             });
             helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
         }
+    }
+
+    private void addListenCount(String id) {
+        HttpParams params = new HttpParams();
+        params.put("id", id);
+        params.put("type", "xk");
+        OkGo.<BaseBean>post(MyContants.LXKURL + "views")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        int code = response.code();
+                    }
+                });
     }
 
     private void showListDialog(final int adapterPosition, boolean isfav, boolean islive, final int id) {
