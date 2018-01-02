@@ -38,6 +38,7 @@ public class FreeTryReadDetailBean {
     private int id;
     private boolean isfav;
 
+
     public String getTxt_url() {
         return txt_url;
     }
