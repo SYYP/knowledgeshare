@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -21,19 +23,24 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.GetRequest;
+import com.lzy.okserver.OkDownload;
 import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
@@ -46,9 +53,12 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
+import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
 public class EveryDayCommentActivity extends BaseActivity implements View.OnClickListener {
 
@@ -169,7 +179,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                             Logger.e(code + "");
                             if (isLoadMore) {
                                 List<EveryDayBean.DailysEntity> dailys = everyDayBean.getDailys();
-                                if (dailys==null || dailys.size()==0){
+                                if (dailys == null || dailys.size() == 0) {
                                     Toast.makeText(EveryDayCommentActivity.this, "已无更多数据", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
@@ -193,6 +203,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                                     EveryDayBean.DailysEntity item = mDailys.get(position);
                                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
                                     gobofang(playerBean);
+                                    addListenCount(mDailys.get(position).getId() + "");
                                     MusicTypeBean musicTypeBean = new MusicTypeBean("everydaycomment",
                                             item.getT_header(), item.getVideo_name(), item.getId() + "",
                                             item.getTeacher_id() + "", item.isIsfav());
@@ -222,6 +233,21 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                     public void onError(Response<EveryDayBean> response) {
                         super.onError(response);
                         Logger.e(response.getException().getMessage());
+                    }
+                });
+    }
+
+    private void addListenCount(String id) {
+        HttpParams params = new HttpParams();
+        params.put("id", id);
+        params.put("type", "daily");
+        OkGo.<BaseBean>post(MyContants.LXKURL + "views")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        int code = response.code();
                     }
                 });
     }

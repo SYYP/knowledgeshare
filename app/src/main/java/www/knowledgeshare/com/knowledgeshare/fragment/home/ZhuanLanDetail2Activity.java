@@ -54,7 +54,6 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeTryReadDetailBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.OrderBean;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicDetailBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.TimeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.web.ActionSelectListener;
@@ -109,10 +108,9 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         initMusic();
         initListener();
         initNETDialog();
-        initWebView();
     }
 
-    private void initWebView() {
+    private void initWebView(String url) {
         List<String> list = new ArrayList<>();
         list.add("添加笔记");
         webview.setWebViewClient(new CustomWebViewClient());
@@ -133,7 +131,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 addNote(selectText);
             }
         });
-        webview.loadUrl("http://thinks.iask.in/add.html");
+        webview.loadUrl(url);
     }
 
     private void addNote(String selectText) {
@@ -326,7 +324,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                  } else {
                                      iv_collect.setImageResource(R.drawable.weiguanzhuxin);
                                  }
-                                 webview.loadData(mFreeTryReadDetailBean.getContent(), "text/html; charset=UTF-8", null); // 加载定义的代码，并设定编码格式和字符集。
+                                 initWebView(mFreeTryReadDetailBean.getH5_url());
                              }
                          }
                 );
@@ -675,6 +673,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                         PlayerBean playerBean = new PlayerBean(mFreeTryReadDetailBean.getT_header(),
                                 mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getT_tag(), mFreeTryReadDetailBean.getVideo_url());
                         gobofang(playerBean);
+                        addListenCount(mFreeTryReadDetailBean.getId() + "");
                         MusicTypeBean musicTypeBean = new MusicTypeBean("zhuanlandetail",
                                 mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getName(), mId,
                                 "", mFreeTryReadDetailBean.isfav());
@@ -724,6 +723,21 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 showBuyDialog();
                 break;
         }
+    }
+
+    private void addListenCount(String id) {
+        HttpParams params = new HttpParams();
+        params.put("id", id);
+        params.put("type", "zl");
+        OkGo.<BaseBean>post(MyContants.LXKURL + "views")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        int code = response.code();
+                    }
+                });
     }
 
     private void collect() {

@@ -35,7 +35,6 @@ import com.orhanobut.logger.Logger;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -274,6 +273,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                                              SoftMusicDetailBean.ChildEntity item = mChild.get(position);
                                              PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_old_name(), item.getT_tag(), item.getVideo_url());
                                              gobofang(playerBean);
+                                             addListenCount(item.getId() + "");
                                              MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
                                                      item.getT_header(), item.getVideo_old_name(), item.getId() + "",
                                                      mMusicDetailBean.getXk_teacher_id() + "", item.isIsfav());
@@ -309,6 +309,21 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                              }
                          }
                 );
+    }
+
+    private void addListenCount(String id) {
+        HttpParams params = new HttpParams();
+        params.put("id", id);
+        params.put("type", "xk");
+        OkGo.<BaseBean>post(MyContants.LXKURL + "views")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        int code = response.code();
+                    }
+                });
     }
 
     private void loadMoreComment(String after) {

@@ -332,7 +332,8 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
     private void addListenCount(String id) {
         HttpParams params = new HttpParams();
         params.put("id", id);
-        OkGo.<BaseBean>post(MyContants.LXKURL + "free/views")
+        params.put("type", "free");
+        OkGo.<BaseBean>post(MyContants.LXKURL + "views")
                 .tag(this)
                 .params(params)
                 .execute(new JsonCallback<BaseBean>(BaseBean.class) {

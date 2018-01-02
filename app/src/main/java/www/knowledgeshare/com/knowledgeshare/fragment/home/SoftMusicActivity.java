@@ -27,7 +27,6 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicMoreBean;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
-import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
 import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
@@ -95,7 +94,7 @@ public class SoftMusicActivity extends BaseActivity implements View.OnClickListe
 
     private void initData() {
         HttpParams params = new HttpParams();
-        params.put("userid", SpUtils.getString(this, "id", ""));
+//        params.put("userid", SpUtils.getString(this, "id", ""));
         if (isLoadMore) {
             params.put("after", after);
         }
