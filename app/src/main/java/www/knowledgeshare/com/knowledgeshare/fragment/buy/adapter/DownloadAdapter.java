@@ -43,6 +43,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 
 /**
@@ -153,10 +154,10 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
 
         public void bind() {
             Progress progress = task.progress;
-            DownLoadListBean downLoadListBean = (DownLoadListBean) progress.extra3;
+            DownLoadListsBean downLoadListBean = (DownLoadListsBean) progress.extra3;
             if (downLoadListBean != null) {
-                Glide.with(context).load(downLoadListBean.getIconUrl()).into(icon);
-                name.setText(downLoadListBean.getName());
+                Glide.with(context).load(downLoadListBean.getList().get(getAdapterPosition()).getIconUrl()).into(icon);
+                name.setText(downLoadListBean.getList().get(getAdapterPosition()).getName());
             } else {
                 name.setText(progress.fileName);
             }

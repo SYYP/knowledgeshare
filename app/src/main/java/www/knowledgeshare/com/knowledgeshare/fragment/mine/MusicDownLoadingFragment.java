@@ -46,8 +46,6 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
     @BindView(R.id.kaishi_tv)
     TextView kaishiTv;
     Unbinder unbinder;
-    private List<MusicDownLoadBean> apks;
-    private static final int REQUEST_PERMISSION_STORAGE = 0x01;
     private DownloadAdapter adapter;
     private OkDownload okDownload;
 

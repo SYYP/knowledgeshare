@@ -27,6 +27,8 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicDetailBean;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
@@ -40,8 +42,10 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
     private TextView tv_download;
     private MyAdapter mMyAdapter;
     private boolean isAllChecked = true;
-    private SoftMusicDetailBean childEntity;
+    private SoftMusicDetailBean childEntityBean;
     private List<SoftMusicDetailBean.ChildEntity> list;
+    private List<DownLoadListsBean.ListBean> downList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +72,8 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void getIntentData() {
-        childEntity = (SoftMusicDetailBean) getIntent().getExtras().getSerializable("model");
-        list = childEntity.getChild();
+        childEntityBean = (SoftMusicDetailBean) getIntent().getExtras().getSerializable("model");
+        list = childEntityBean.getChild();
         if (list != null && list.size() > 0){
             mMyAdapter = new MyAdapter(R.layout.item_download, list);
             recycler_list.setAdapter(mMyAdapter);
@@ -164,21 +168,36 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
                         SoftMusicDetailBean.ChildEntity childEntity = list.get(i);
                         String created_at = childEntity.getCreated_at();
                         String[] split = created_at.split(" ");
-                        DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(),childEntity.getXk_id(),
+                        /*DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(),childEntity.getXk_id(),
                                 childEntity.getName(),childEntity.getVideo_time(), split[0], split[1],
                                 childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
-                        DownUtils.add(DownLoadListBean);
+                        DownUtils.add(DownLoadListBean);*/
+                        DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
+                        listBean.setTypeId(childEntity.getXk_id()+"");
+                        listBean.setChildId(childEntity.getId()+"");
+                        listBean.setName(childEntity.getName());
+                        listBean.setVideoTime(childEntity.getVideo_time());
+                        listBean.setDate(split[0]);
+                        listBean.setTime(split[1]);
+                        listBean.setVideoUrl(childEntity.getVideo_url());
+                        listBean.setTxtUrl(childEntity.getTxt_url());
+                        listBean.setIconUrl(childEntity.getT_header());
+                        downList.add(listBean);
+                        DownLoadListsBean downLoadListsBean = new DownLoadListsBean("xiaoke",childEntityBean.getXk_class_id()+"",downList);
+                        DownUtil.add(downLoadListsBean);
+
                         GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
                         OkDownload.request(childEntity.getXk_id()+"_"+childEntity.getId(), request)
                                 .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download")
                                 .fileName(childEntity.getName()+childEntity.getXk_id()+"_"+childEntity.getId()+".mp3")
-                                .extra3(DownLoadListBean)//额外数据
+                                .extra3(downLoadListsBean)//额外数据
                                 .save()
                                 .register(new LogDownloadListener())//当前任务的回调监听
                                 .start();
+
                         OkGo.<File>get(childEntity.getTxt_url())
                                 .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download"
-                                        ,childEntity.getXk_id()+"_"+childEntity.getId()+childEntity.getName()+".txt") {
+                                        ,childEntity.getXk_id()+"-"+childEntity.getId()+childEntity.getName()+".txt") {
                                     @Override
                                     public void onSuccess(Response<File> response) {
                                         int code = response.code();
