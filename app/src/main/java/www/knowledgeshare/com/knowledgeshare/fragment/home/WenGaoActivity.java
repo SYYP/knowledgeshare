@@ -31,6 +31,7 @@ import com.orhanobut.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
@@ -41,6 +42,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.web.ActionSelectListe
 import www.knowledgeshare.com.knowledgeshare.fragment.home.web.CustomActionWebView;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
@@ -76,6 +78,34 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
         initDialog();
         showTanchuangDialog();
         initData();
+        setTimeRecord();
+    }
+
+    private void setTimeRecord() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(MyApplication.getGloableContext(), "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("id", mId);
+        if (mType.equals("free")) {
+            params.put("type", "free");
+        } else if (mType.equals("everydaycomment")) {
+            params.put("type", "daily");
+        } else if (mType.equals("softmusicdetail")) {
+            params.put("type", "xk");
+        }
+        params.put("date", MyUtils.getCurrentDate());
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "user/study-add")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+
+                             }
+                         }
+                );
     }
 
     private void initWebView(String url) {

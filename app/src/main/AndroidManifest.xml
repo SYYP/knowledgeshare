@@ -86,7 +86,7 @@
             android:name=".fragment.home.LiuYanActivity"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity android:name=".fragment.home.DownLoadListActivity"/>
-        <activity android:name=".login.StudyRecord"/>
+        <activity android:name=".login.StudyRecordActivity"/>
         <activity android:name=".fragment.home.WenGaoActivity"/>
         <activity android:name=".fragment.mine.CollectActivity"/>
         <activity android:name=".activity.PersonInfomationActivity"/>

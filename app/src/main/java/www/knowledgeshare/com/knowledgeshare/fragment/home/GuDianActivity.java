@@ -33,8 +33,6 @@ import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 
-import static com.taobao.accs.ACCSManager.mContext;
-
 public class GuDianActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView iv_back;
@@ -94,9 +92,9 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
         recycler_yinyueke = (RecyclerView) findViewById(R.id.recycler_yinyueke);
         ll_yinyueke = (LinearLayout) findViewById(R.id.ll_yinyueke);
         activity_gu_dian = (LinearLayout) findViewById(R.id.activity_gu_dian);
-        recycler_dashiban.setLayoutManager(new LinearLayoutManager(mContext));
+        recycler_dashiban.setLayoutManager(new LinearLayoutManager(this));
         recycler_dashiban.setNestedScrollingEnabled(false);
-        recycler_yinyueke.setLayoutManager(new LinearLayoutManager(mContext));
+        recycler_yinyueke.setLayoutManager(new LinearLayoutManager(this));
         recycler_yinyueke.setNestedScrollingEnabled(false);
         nestView = (NestedScrollView) findViewById(R.id.nestView);
     }

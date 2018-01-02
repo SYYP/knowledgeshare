@@ -41,6 +41,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.MyAccountActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
@@ -62,6 +63,7 @@ import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
@@ -108,6 +110,28 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         initMusic();
         initListener();
         initNETDialog();
+        setTimeRecord();
+    }
+
+    private void setTimeRecord() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(MyApplication.getGloableContext(), "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("id", mId);
+        params.put("type", "zl");
+        params.put("date", MyUtils.getCurrentDate());
+        OkGo.<DianZanbean>post(MyContants.LXKURL + "user/study-add")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                             @Override
+                             public void onSuccess(Response<DianZanbean> response) {
+                                 int code = response.code();
+
+                             }
+                         }
+                );
     }
 
     private void initWebView(String url) {
@@ -699,14 +723,14 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
             case R.id.iv_download:
                 String created_at = mFreeTryReadDetailBean.getCreated_at();
                 String[] split = created_at.split(" ");
-                DownLoadListBean DownLoadListBean = new DownLoadListBean(mFreeTryReadDetailBean.getId(),mFreeTryReadDetailBean.getZl_id(),-3,
-                        mFreeTryReadDetailBean.getName(),mFreeTryReadDetailBean.getVideo_time(), split[0], split[0],
-                        mFreeTryReadDetailBean.getVideo_url(), mFreeTryReadDetailBean.getTxt_url(),mFreeTryReadDetailBean.getT_header());
+                DownLoadListBean DownLoadListBean = new DownLoadListBean(mFreeTryReadDetailBean.getId(), mFreeTryReadDetailBean.getZl_id(), -3,
+                        mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getVideo_time(), split[0], split[0],
+                        mFreeTryReadDetailBean.getVideo_url(), mFreeTryReadDetailBean.getTxt_url(), mFreeTryReadDetailBean.getT_header());
                 DownUtils.add(DownLoadListBean);
                 GetRequest<File> request = OkGo.<File>get(mFreeTryReadDetailBean.getVideo_url());
-                OkDownload.request(mFreeTryReadDetailBean.getZl_id()+"_"+mFreeTryReadDetailBean.getId(), request)
+                OkDownload.request(mFreeTryReadDetailBean.getZl_id() + "_" + mFreeTryReadDetailBean.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download")
-                        .fileName(mFreeTryReadDetailBean.getName()+mFreeTryReadDetailBean.getZl_id()+"_"+mFreeTryReadDetailBean.getId()+".mp3")
+                        .fileName(mFreeTryReadDetailBean.getName() + mFreeTryReadDetailBean.getZl_id() + "_" + mFreeTryReadDetailBean.getId() + ".mp3")
                         .extra3(DownLoadListBean)
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听

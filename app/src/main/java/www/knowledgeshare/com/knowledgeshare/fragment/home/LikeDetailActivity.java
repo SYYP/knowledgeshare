@@ -516,14 +516,14 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 SoftMusicDetailBean.ChildEntity childEntity = mChild.get(adapterPosition);
                 String created_at = childEntity.getCreated_at();
                 String[] split = created_at.split(" ");
-                DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(),childEntity.getXk_id(),
-                        childEntity.getName(),childEntity.getVideo_time(), split[0], split[1],
-                        childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
+                DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(), childEntity.getXk_id(),
+                        childEntity.getName(), childEntity.getVideo_time(), split[0], split[1],
+                        childEntity.getVideo_url(), childEntity.getTxt_url(), childEntity.getT_header());
                 DownUtils.add(DownLoadListBean);
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
-                OkDownload.request(childEntity.getXk_id()+"_"+childEntity.getId(), request)
+                OkDownload.request(childEntity.getXk_id() + "_" + childEntity.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download")
-                        .fileName(childEntity.getName()+childEntity.getXk_id()+"_"+childEntity.getId()+".mp3")
+                        .fileName(childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId() + ".mp3")
                         .extra3(DownLoadListBean)
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听

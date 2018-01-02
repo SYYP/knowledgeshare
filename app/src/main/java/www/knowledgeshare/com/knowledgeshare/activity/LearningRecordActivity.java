@@ -12,7 +12,7 @@ import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.CollectActivity;
-import www.knowledgeshare.com.knowledgeshare.login.StudyRecord;
+import www.knowledgeshare.com.knowledgeshare.login.StudyRecordActivity;
 
 /**
  * 学习记录
@@ -62,7 +62,7 @@ public class LearningRecordActivity extends BaseActivity implements View.OnClick
                 startActivity(intent1);
                 break;
             case R.id.xxbj_rl://学习笔记
-                Intent intent=new Intent(this, StudyRecord.class);
+                Intent intent=new Intent(this, StudyRecordActivity.class);
                    startActivity(intent);
                 break;
         }
