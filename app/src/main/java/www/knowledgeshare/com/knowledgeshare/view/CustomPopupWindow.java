@@ -104,6 +104,11 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
                                      int code = response.code();
 
                                  }
+
+                                 @Override
+                                 public void onError(Response<DianZanbean> response) {
+                                     super.onError(response);
+                                 }
                              }
                     );
         }
