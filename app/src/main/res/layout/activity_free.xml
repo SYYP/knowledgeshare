@@ -124,7 +124,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="5dp"
-                            android:text="讲师介绍"
+                            android:text="栏目介绍"
                             android:textColor="@color/textblack"
                             android:textSize="16sp"/>
                     </LinearLayout>
