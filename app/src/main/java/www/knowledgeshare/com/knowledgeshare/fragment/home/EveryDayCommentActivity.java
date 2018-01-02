@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
@@ -51,8 +49,6 @@ import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
-import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
-import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
 public class EveryDayCommentActivity extends BaseActivity implements View.OnClickListener {
 
@@ -77,6 +73,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
     private String after = "";
     private SpringView springview;
     private boolean isLoadMore;
+    private EveryDayBean everyDayBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +162,8 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                     @Override
                     public void onSuccess(Response<EveryDayBean> response) {
                         int code = response.code();
+                        everyDayBean = response.body();
+                        mDailys = everyDayBean.getDailys();
                         EveryDayBean everyDayBean = response.body();
                         if (response.code() >= 200 && response.code() <= 204) {
                             Logger.e(code + "");
@@ -185,6 +184,8 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                             tv_jie_count.setText("已更新：" + everyDayBean.getUpdate_count() + "节");
                             tv_look_count.setText("浏览次数：" + everyDayBean.getView_count() + "");
                             tv_collect_count.setText("收藏次数：" + everyDayBean.getCollect_count() + "");
+                            mLieBiaoAdapter = new LieBiaoAdapter(R.layout.item_free, mDailys);
+                            recycler_liebiao.setAdapter(mLieBiaoAdapter);
                             mLieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -415,11 +416,19 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 EveryDayBean.DailysEntity childEntity = mDailys.get(adapterPosition);
                 String created_at = childEntity.getCreated_at();
                 String[] split = created_at.split(" ");
-                //TODO 每日推荐 父类id固定为-2 音频时长写死了  接口调完记得改
-                DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(), -2,
-                        "4:30", childEntity.getVideo_old_name(), split[0], split[1],
-                        childEntity.getVideo_url(), childEntity.getTxt_url(), childEntity.getT_header());
+                //TODO 每日推荐 父类id固定为-2
+                DownLoadListBean DownLoadListBean = new DownLoadListBean(-2,childEntity.getId(),-4,-3,-1,
+                        childEntity.getVideo_name(),childEntity.getVideo_time(), split[0], split[1],
+                        childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
                 DownUtils.add(DownLoadListBean);
+                GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
+                OkDownload.request(childEntity.getVideo_name()+"_"+childEntity.getId(), request)
+                        .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download")
+                        .fileName(childEntity.getVideo_name()+"_"+childEntity.getId()+".mp3")
+                        .extra3(DownLoadListBean)//额外数据
+                        .save()
+                        .register(new LogDownloadListener())//当前任务的回调监听
+                        .start();
                 mDialog.dismiss();
             }
         });
@@ -606,7 +615,10 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 startActivity(new Intent(this, SearchActivity.class));
                 break;
             case R.id.tv_download:
-                startActivity(new Intent(this, DownLoadListActivity.class));
+                EveryDayBean model = everyDayBean;
+                Intent intent = new Intent(this,CommentDownActivity.class);
+                intent.putExtra("model",model);
+                startActivity(intent);
                 break;
         }
     }

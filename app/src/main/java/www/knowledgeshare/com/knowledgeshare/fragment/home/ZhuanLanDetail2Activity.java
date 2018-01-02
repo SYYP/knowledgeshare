@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -29,11 +30,14 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.GetRequest;
+import com.lzy.okserver.OkDownload;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,16 +48,20 @@ import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeTryReadDetailBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.OrderBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicDetailBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.TimeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.web.ActionSelectListener;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.web.CustomActionWebView;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
@@ -691,10 +699,19 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 break;
             case R.id.iv_download:
                 String created_at = mFreeTryReadDetailBean.getCreated_at();
-                String video_time = mFreeTryReadDetailBean.getVideo_time();
-                /*DownLoadListBean DownLoadListBean = new DownLoadListBean(mFreeTryReadDetailBean.getName(),
-                        created_at, video_time, mFreeTryReadDetailBean.getVideo_url(), mFreeTryReadDetailBean.getContent());
-                DownUtils.add(DownLoadListBean);*/
+                String[] split = created_at.split(" ");
+                DownLoadListBean DownLoadListBean = new DownLoadListBean(mFreeTryReadDetailBean.getId(),mFreeTryReadDetailBean.getZl_id(),-3,
+                        mFreeTryReadDetailBean.getName(),mFreeTryReadDetailBean.getVideo_time(), split[0], split[0],
+                        mFreeTryReadDetailBean.getVideo_url(), mFreeTryReadDetailBean.getTxt_url(),mFreeTryReadDetailBean.getT_header());
+                DownUtils.add(DownLoadListBean);
+                GetRequest<File> request = OkGo.<File>get(mFreeTryReadDetailBean.getVideo_url());
+                OkDownload.request(mFreeTryReadDetailBean.getZl_id()+"_"+mFreeTryReadDetailBean.getId(), request)
+                        .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download")
+                        .fileName(mFreeTryReadDetailBean.getName()+mFreeTryReadDetailBean.getZl_id()+"_"+mFreeTryReadDetailBean.getId()+".mp3")
+                        .extra3(DownLoadListBean)
+                        .save()
+                        .register(new LogDownloadListener())//当前任务的回调监听
+                        .start();
                 break;
             case R.id.tv_writeliuyan:
                 Intent intent = new Intent(this, LiuYanActivity.class);

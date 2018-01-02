@@ -115,8 +115,8 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                         ShoppingCartBean body = response.body();
                         if (response.code() >= 200 && response.code() <= 204){
                             list = response.body().getData();
-                            if (list.size() == 0){
-                                adapter.notifyDataSetChanged();
+                            if (list.toString().equals("[]") && list.size() == 0){
+//                                adapter.notifyDataSetChanged();
                                 recyclerGwc.setVisibility(View.GONE);
                                 nullRl.setVisibility(View.VISIBLE);
                             }else {
