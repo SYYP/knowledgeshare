@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
@@ -54,6 +55,7 @@ import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 public class EveryDayCommentActivity extends BaseActivity implements View.OnClickListener {
 
@@ -384,6 +386,17 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听
                         .start();
+                OkGo.<File>get(childEntity.getTxt_url())
+                        .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download"
+                                ,childEntity.getId()+"-"+childEntity.getVideo_name()+".txt") {
+                            @Override
+                            public void onSuccess(Response<File> response) {
+                                int code = response.code();
+                                if (code >= 200 && code <= 204){
+                                    Logger.e("文稿下载完成");
+                                }
+                            }
+                        });
                 mDialog.dismiss();
             }
         });
