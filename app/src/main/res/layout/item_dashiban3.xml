@@ -67,9 +67,11 @@
                 android:layout_marginTop="6dp">
                 <TextView
                     android:id="@+id/tv_update_name"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                    android:layout_marginRight="50dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:text="最新更新的专栏课程"/>
                 <TextView
                     android:id="@+id/tv_price"

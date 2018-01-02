@@ -68,25 +68,44 @@ import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
 public class SoftMusicDetailActivity extends BaseActivity implements View.OnClickListener {
 
-    private ImageView iv_back;private ImageView iv_beijing;
-    private TextView tv_download;private TextView tv_search;
-    private TextView tv_share;private TextView tv_guanzhu;
-    private TextView tv_dianzan_count;private TextView tv_teacher_intro;
-    private RecyclerView recycler_free;private TextView tv_shiyirenqun;
-    private TextView tv_readxuzhi;private TextView tv_writeliuyan;
-    private RecyclerView recycler_liuyan;private LinearLayout activity_free;
-    private TextView tv_tryread;private TextView tv_buy;
-    private BaseDialog mDialog;private BaseDialog.Builder mBuilder;
-    private boolean isDianzan;private boolean isGuanzhu = true;
-    private boolean isZan = true;private ImageView iv_guanzhu, iv_dianzan;
-    private NestedScrollView nestView;private boolean mIsCollected;
-    private boolean mDianzan;private SoftMusicDetailBean.TeacherEntity mTeacher;
-    private int mTeacher_zan_count;private List<SoftMusicDetailBean.ChildEntity> mChild;
-    private LieBiaoAdapter mLieBiaoAdapter;private LiuYanAdapter mLiuYanAdapter;
-    private List<CommentMoreBean.DataEntity> mComment;private SoftMusicDetailBean mMusicDetailBean;
-    private SpringView springview;private int lastID;
-    private TextView mTv_collect;private TextView mTv_dianzan;
-    private boolean isRefreshing;private String mId;
+    private ImageView iv_back;
+    private ImageView iv_beijing;
+    private TextView tv_download;
+    private TextView tv_search;
+    private TextView tv_share;
+    private TextView tv_guanzhu;
+    private TextView tv_dianzan_count;
+    private TextView tv_teacher_intro;
+    private RecyclerView recycler_free;
+    private TextView tv_shiyirenqun;
+    private TextView tv_readxuzhi;
+    private TextView tv_writeliuyan;
+    private RecyclerView recycler_liuyan;
+    private LinearLayout activity_free;
+    private TextView tv_tryread;
+    private TextView tv_buy;
+    private BaseDialog mDialog;
+    private BaseDialog.Builder mBuilder;
+    private boolean isDianzan;
+    private boolean isGuanzhu = true;
+    private boolean isZan = true;
+    private ImageView iv_guanzhu, iv_dianzan;
+    private NestedScrollView nestView;
+    private boolean mIsCollected;
+    private boolean mDianzan;
+    private SoftMusicDetailBean.TeacherEntity mTeacher;
+    private int mTeacher_zan_count;
+    private List<SoftMusicDetailBean.ChildEntity> mChild;
+    private LieBiaoAdapter mLieBiaoAdapter;
+    private LiuYanAdapter mLiuYanAdapter;
+    private List<CommentMoreBean.DataEntity> mComment;
+    private SoftMusicDetailBean mMusicDetailBean;
+    private SpringView springview;
+    private int lastID;
+    private TextView mTv_collect;
+    private TextView mTv_dianzan;
+    private boolean isRefreshing;
+    private String mId;
     private BaseDialog mNetDialog;
     private Intent intent;
 
@@ -199,21 +218,36 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
     }
 
     private void initView() {
-        iv_back = (ImageView) findViewById(R.id.iv_back);iv_back.setOnClickListener(this);
-        iv_beijing = (ImageView) findViewById(R.id.iv_beijing);tv_download = (TextView) findViewById(R.id.tv_download);
-        tv_download.setOnClickListener(this);tv_search = (TextView) findViewById(R.id.tv_search);
-        tv_search.setOnClickListener(this);tv_share = (TextView) findViewById(R.id.tv_share);
-        tv_share.setOnClickListener(this);tv_guanzhu = (TextView) findViewById(R.id.tv_guanzhu);
-        tv_guanzhu.setOnClickListener(this);tv_dianzan_count = (TextView) findViewById(R.id.tv_dianzan_count);
-        tv_dianzan_count.setOnClickListener(this);tv_teacher_intro = (TextView) findViewById(R.id.tv_teacher_intro);
-        recycler_free = (RecyclerView) findViewById(R.id.recycler_free);tv_shiyirenqun = (TextView) findViewById(R.id.tv_shiyirenqun);
-        tv_readxuzhi = (TextView) findViewById(R.id.tv_readxuzhi);tv_writeliuyan = (TextView) findViewById(R.id.tv_writeliuyan);
-        tv_writeliuyan.setOnClickListener(this);recycler_liuyan = (RecyclerView) findViewById(R.id.recycler_liuyan);
-        activity_free = (LinearLayout) findViewById(R.id.activity_free);tv_tryread = (TextView) findViewById(R.id.tv_tryread);
-        tv_tryread.setOnClickListener(this);tv_buy = (TextView) findViewById(R.id.tv_buy);
-        tv_buy.setOnClickListener(this);iv_guanzhu = (ImageView) findViewById(R.id.iv_guanzhu);
-        iv_guanzhu.setOnClickListener(this);iv_dianzan = (ImageView) findViewById(R.id.iv_dianzan);
-        iv_dianzan.setOnClickListener(this);nestView = (NestedScrollView) findViewById(R.id.nestView);
+        iv_back = (ImageView) findViewById(R.id.iv_back);
+        iv_back.setOnClickListener(this);
+        iv_beijing = (ImageView) findViewById(R.id.iv_beijing);
+        tv_download = (TextView) findViewById(R.id.tv_download);
+        tv_download.setOnClickListener(this);
+        tv_search = (TextView) findViewById(R.id.tv_search);
+        tv_search.setOnClickListener(this);
+        tv_share = (TextView) findViewById(R.id.tv_share);
+        tv_share.setOnClickListener(this);
+        tv_guanzhu = (TextView) findViewById(R.id.tv_guanzhu);
+        tv_guanzhu.setOnClickListener(this);
+        tv_dianzan_count = (TextView) findViewById(R.id.tv_dianzan_count);
+        tv_dianzan_count.setOnClickListener(this);
+        tv_teacher_intro = (TextView) findViewById(R.id.tv_teacher_intro);
+        recycler_free = (RecyclerView) findViewById(R.id.recycler_free);
+        tv_shiyirenqun = (TextView) findViewById(R.id.tv_shiyirenqun);
+        tv_readxuzhi = (TextView) findViewById(R.id.tv_readxuzhi);
+        tv_writeliuyan = (TextView) findViewById(R.id.tv_writeliuyan);
+        tv_writeliuyan.setOnClickListener(this);
+        recycler_liuyan = (RecyclerView) findViewById(R.id.recycler_liuyan);
+        activity_free = (LinearLayout) findViewById(R.id.activity_free);
+        tv_tryread = (TextView) findViewById(R.id.tv_tryread);
+        tv_tryread.setOnClickListener(this);
+        tv_buy = (TextView) findViewById(R.id.tv_buy);
+        tv_buy.setOnClickListener(this);
+        iv_guanzhu = (ImageView) findViewById(R.id.iv_guanzhu);
+        iv_guanzhu.setOnClickListener(this);
+        iv_dianzan = (ImageView) findViewById(R.id.iv_dianzan);
+        iv_dianzan.setOnClickListener(this);
+        nestView = (NestedScrollView) findViewById(R.id.nestView);
         recycler_free.setLayoutManager(new LinearLayoutManager(this));
         recycler_free.setNestedScrollingEnabled(false);
         recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
@@ -690,7 +724,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 OkDownload.request(childEntity.getXk_id() + "_" + childEntity.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download")
                         .fileName(childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId())
-//                        .fileName(childEntity.getName()+childEntity.getXk_id()+"_"+childEntity.getId()+".mp3")
+                        //                        .fileName(childEntity.getName()+childEntity.getXk_id()+"_"+childEntity.getId()+".mp3")
                         .extra3(DownLoadListBean)
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听
@@ -699,6 +733,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
             }
         });
     }
+
     private void changeCollect(final int adapterPosition, int id) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
