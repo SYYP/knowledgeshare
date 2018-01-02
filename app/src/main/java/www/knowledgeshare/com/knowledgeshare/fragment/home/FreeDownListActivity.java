@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.FileCallback;
+import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.OkDownload;
 import com.orhanobut.logger.Logger;
@@ -27,6 +29,7 @@ import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicDetailBean;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
  * Created by Administrator on 2017/12/29.
@@ -177,6 +180,17 @@ public class FreeDownListActivity extends BaseActivity implements View.OnClickLi
                                 .save()
                                 .register(new LogDownloadListener())//当前任务的回调监听
                                 .start();
+                        OkGo.<File>get(childEntity.getTxt_url())
+                                .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download"
+                                        ,childEntity.getVideo_name()+freeBean.getId()+"-"+childEntity.getId()+".txt") {
+                                    @Override
+                                    public void onSuccess(Response<File> response) {
+                                        int code = response.code();
+                                        if (code >= 200 && code <= 204){
+                                            Logger.e("文稿下载完成");
+                                        }
+                                    }
+                                });
                     }
                 }
                 break;
