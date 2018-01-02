@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -21,11 +23,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.AlreadyDownloadDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
+import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.EasyLessonBean;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
  * Created by Administrator on 2017/11/28.
@@ -34,6 +40,12 @@ import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.EasyLessonBean;
 public class AlreadyDownLoadFragment extends BaseFragment {
     @BindView(R.id.recycler_alread_download)
     RecyclerView recyclerAlreadDownload;
+    @BindView(R.id.scrollView)
+    NestedScrollView scrollView;
+    @BindView(R.id.free_ll)
+    LinearLayout freeLl;
+    @BindView(R.id.comment_ll)
+    LinearLayout commentLl;
     Unbinder unbinder;
 
     @Override
@@ -48,8 +60,22 @@ public class AlreadyDownLoadFragment extends BaseFragment {
         return inflate;
     }
 
+    @OnClick(R.id.free_ll)
+    public void free(){
+        TUtils.showShort(mContext,"免费专区");
+    }
+
+    @OnClick(R.id.comment_ll)
+    public void comment(){
+        TUtils.showShort(mContext,"每日推荐");
+    }
+
     @Override
     protected void initData() {
+
+        List<DownLoadListBean> downList = DownUtils.search();
+
+
         recyclerAlreadDownload.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerAlreadDownload.setNestedScrollingEnabled(false);
         List<EasyLessonBean> list = new ArrayList<>();

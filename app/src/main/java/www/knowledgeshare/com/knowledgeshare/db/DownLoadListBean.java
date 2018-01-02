@@ -140,7 +140,7 @@ public class DownLoadListBean extends DataSupport implements Serializable{
     /**
      * -------------------------------------小课
      * @param id    小课里的音频ID
-     * @param xkId  下课ID
+     * @param xkId  小课ID
      * @param name  音频名字
      * @param videoTime 音频时长
      * @param date  音频日期
@@ -181,7 +181,7 @@ public class DownLoadListBean extends DataSupport implements Serializable{
                             String time, String videoUrl,String txtUrl, String iconUrl) {
         this.id = id;
         this.zlId = zlId;
-        this.xkId = -3;
+        this.xkId = xkId;
         this.name = name;
         this.videoTime = videoTime;
         this.date = date;
@@ -210,8 +210,8 @@ public class DownLoadListBean extends DataSupport implements Serializable{
                             String time, String videoUrl,String txtUrl, String iconUrl) {
         this.id = id;
         this.freeId = freeId;
-        this.zlId = -4;
-        this.xkId = -3;
+        this.zlId = zlId;
+        this.xkId = xkId;
         this.name = name;
         this.videoTime = videoTime;
         this.date = date;
@@ -240,9 +240,9 @@ public class DownLoadListBean extends DataSupport implements Serializable{
                             String time, String videoUrl,String txtUrl, String iconUrl) {
         this.id = id;
         this.tuijianId = tuijianId;
-        this.zlId = -4;
-        this.xkId = -3;
-        this.freeId = -1;
+        this.zlId = zlId;
+        this.xkId = xkId;
+        this.freeId = freeId;
         this.name = name;
         this.videoTime = videoTime;
         this.date = date;

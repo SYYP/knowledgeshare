@@ -78,7 +78,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
         OkDownload.restore(progressList);
 
         adapter = new DownloadAdapter(getActivity());
-        adapter.updateData(DownloadAdapter.TYPE_ALL);
+        adapter.updateData(DownloadAdapter.TYPE_ING);
         recyclerXzz.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerXzz.setNestedScrollingEnabled(false);
         recyclerXzz.setAdapter(adapter);
@@ -136,7 +136,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                     public void clickLeftButton(NormalAlertDialog dialog, View view) {
                         dialog.dismiss();
                         okDownload.removeAll();
-                        adapter.updateData(DownloadAdapter.TYPE_ALL);
+                        adapter.updateData(DownloadAdapter.TYPE_ING);
                         adapter.notifyDataSetChanged();
                     }
 
