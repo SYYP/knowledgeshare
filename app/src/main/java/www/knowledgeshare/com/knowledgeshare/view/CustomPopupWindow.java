@@ -26,6 +26,8 @@ import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.db.StudyTimeBean;
+import www.knowledgeshare.com.knowledgeshare.db.StudyTimeUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.BoFangListActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.MusicActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
@@ -94,6 +96,16 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
                 params.put("type", "zl");
             }
             params.put("date", MyUtils.getCurrentDate());
+            //学习时长
+            if (!StudyTimeUtils.isHave("music", musicTypeBean.getId())) {
+                StudyTimeBean studyTimeBean = new StudyTimeBean(Integer.parseInt(musicTypeBean.getId()), "music",
+                        MyUtils.getCurrentDate(), System.currentTimeMillis());
+                StudyTimeUtils.add(studyTimeBean);
+            }else {
+                long oneTime = StudyTimeUtils.getOneTime("music", musicTypeBean.getId());
+                long time = System.currentTimeMillis()-oneTime;
+                StudyTimeUtils.updateCount("zhuanlandetail", musicTypeBean.getId(), time);
+            }
             OkGo.<DianZanbean>post(MyContants.LXKURL + "user/study-add")
                     .tag(this)
                     .headers(headers)
@@ -116,8 +128,10 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
-        if (eventBean.getMsg().equals("home_pause")) {
-
+        if (eventBean.getMsg().equals("home_pause") || eventBean.getMsg().equals("norotate")) {
+            long oneTime = StudyTimeUtils.getOneTime("music", mMusicTypeBean.getId());
+            long time = System.currentTimeMillis() - oneTime;
+            StudyTimeUtils.updateCount("music", mMusicTypeBean.getId(), time);
         }
     }
 

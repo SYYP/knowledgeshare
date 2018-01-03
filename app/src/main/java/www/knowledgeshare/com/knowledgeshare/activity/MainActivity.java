@@ -19,22 +19,35 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.List;
+
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.db.StudyTimeBean;
+import www.knowledgeshare.com.knowledgeshare.db.StudyTimeUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.BuyFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.HomeFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.WebActivity;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.MineFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.study.StudyFragment;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
@@ -88,8 +101,31 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initMusic();
         abool = SpUtils.getBoolean(this, "abool", false);
         pop();
+        setStudyTime();
     }
 
+    private void setStudyTime() {
+        List<StudyTimeBean> search = StudyTimeUtils.search();
+        if (search != null && search.size() > 0) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.put("Authorization", "Bearer " + SpUtils.getString(MyApplication.getGloableContext(), "token", ""));
+            HttpParams params = new HttpParams();
+            params.put("date", StudyTimeUtils.getDate());
+            params.put("time", StudyTimeUtils.getTotalTime());
+            OkGo.<DianZanbean>post(MyContants.LXKURL + "user/add-time")
+                    .tag(this)
+                    .headers(headers)
+                    .params(params)
+                    .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                                 @Override
+                                 public void onSuccess(Response<DianZanbean> response) {
+                                     int code = response.code();
+                                     StudyTimeUtils.deleteAll();
+                                 }
+                             }
+                    );
+        }
+    }
 
     @Override
     protected void onResume() {
