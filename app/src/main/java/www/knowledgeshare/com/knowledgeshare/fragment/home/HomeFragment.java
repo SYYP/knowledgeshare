@@ -322,9 +322,20 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
                     }
                 });
-        OkGo.<HomeBannerBean>post(MyContants.LXKURL + "bootstrappers")
+        initbanner();
+        initDialog();
+        initAnim();
+        initListener();
+        initMusic();
+    }
+
+    private void initbanner() {
+        HttpParams params2 = new HttpParams();
+        params2.put("type", false);
+        params2.put("from", "android");
+        OkGo.<HomeBannerBean>get(MyContants.LXKURL + "bootstrappers")
                 .tag(this)
-                .params(params)
+                .params(params2)
                 .execute(new JsonCallback<HomeBannerBean>(HomeBannerBean.class) {
                     @Override
                     public void onSuccess(Response<HomeBannerBean> response) {
@@ -346,10 +357,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         }
                     }
                 });
-        initDialog();
-        initAnim();
-        initListener();
-        initMusic();
     }
 
     //“绑定”服务的intent

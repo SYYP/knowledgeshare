@@ -90,7 +90,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
                 params.put("type", "daily");
             } else if (mMusicTypeBean.getType().equals("softmusicdetail")) {
                 params.put("type", "xk");
-            }else if (mMusicTypeBean.getType().equals("zhuanlandetail")) {
+            } else if (mMusicTypeBean.getType().equals("zhuanlandetail")) {
                 params.put("type", "zl");
             }
             params.put("date", MyUtils.getCurrentDate());
@@ -111,6 +111,13 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
                                  }
                              }
                     );
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("home_pause")) {
+
         }
     }
 
