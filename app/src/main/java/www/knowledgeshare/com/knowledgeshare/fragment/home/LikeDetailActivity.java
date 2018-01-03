@@ -48,6 +48,8 @@ import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.db.HistroyUtils;
 import www.knowledgeshare.com.knowledgeshare.db.LookBean;
@@ -516,21 +518,40 @@ public class LikeDetailActivity extends BaseActivity implements View.OnClickList
                 SoftMusicDetailBean.ChildEntity childEntity = mChild.get(adapterPosition);
                 String created_at = childEntity.getCreated_at();
                 String[] split = created_at.split(" ");
-                DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(), childEntity.getXk_id(),
+
+                List<DownLoadListsBean.ListBean> list = new ArrayList<>();
+                DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
+                listBean.setTypeId(childEntity.getXk_id()+"");
+                listBean.setChildId(childEntity.getId()+"");
+                listBean.setName(childEntity.getName());
+                listBean.setVideoTime(childEntity.getVideo_time());
+                listBean.setDate(split[0]);
+                listBean.setTime(split[1]);
+                listBean.setVideoUrl(childEntity.getVideo_url());
+                listBean.setTxtUrl(childEntity.getTxt_url());
+                listBean.setIconUrl(childEntity.getT_header());
+                list.add(listBean);
+                DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
+                        "xiaoke",mMusicDetailBean.getXk_class_id()+"", childEntity.getParent_name(),childEntity.getT_header(),
+                        childEntity.getT_name(),childEntity.getT_tag(),mChild.size()+"",list);
+                DownUtil.add(downLoadListsBean);
+
+                /*DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(), childEntity.getXk_id(),
                         childEntity.getName(), childEntity.getVideo_time(), split[0], split[1],
                         childEntity.getVideo_url(), childEntity.getTxt_url(), childEntity.getT_header());
-                DownUtils.add(DownLoadListBean);
+                DownUtils.add(DownLoadListBean);*/
+
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
                 OkDownload.request(childEntity.getXk_id() + "_" + childEntity.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download")
                         .fileName(childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId() + ".mp3")
-                        .extra3(DownLoadListBean)
+                        .extra3(downLoadListsBean)
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听
                         .start();
                 OkGo.<File>get(childEntity.getTxt_url())
                         .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download"
-                                ,childEntity.getXk_id()+"_"+childEntity.getId()+childEntity.getName()+".txt") {
+                                ,childEntity.getXk_id()+"-"+childEntity.getId()+childEntity.getName()+".txt") {
                             @Override
                             public void onSuccess(Response<File> response) {
                                 int code = response.code();
