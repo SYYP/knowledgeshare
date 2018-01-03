@@ -3,6 +3,7 @@ package www.knowledgeshare.com.knowledgeshare.fragment.home;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -36,6 +37,8 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.db.StudyTimeBean;
+import www.knowledgeshare.com.knowledgeshare.db.StudyTimeUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.WenGaoBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.web.ActionSelectListener;
@@ -69,6 +72,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
     private String mId, mType;
     private WenGaoBean mWenGaoBean;
     private int mT_id;
+    private long pretime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,26 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
         showTanchuangDialog();
         initData();
         setTimeRecord();
+        setStudyTime();
+    }
+
+    private void setStudyTime() {
+        pretime= SystemClock.currentThreadTimeMillis();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        long lasttime = SystemClock.currentThreadTimeMillis() - pretime;
+        if (!StudyTimeUtils.isHave(mType, mId)) {
+            StudyTimeBean studyTimeBean = new StudyTimeBean(Integer.parseInt(mId), mType,
+                    MyUtils.getCurrentDate(), lasttime);
+            StudyTimeUtils.add(studyTimeBean);
+        } else {
+            long oneTime = StudyTimeUtils.getOneTime(mType, mId);
+            lasttime+=oneTime;
+            StudyTimeUtils.updateCount(mType, mId, lasttime);
+        }
     }
 
     private void setTimeRecord() {

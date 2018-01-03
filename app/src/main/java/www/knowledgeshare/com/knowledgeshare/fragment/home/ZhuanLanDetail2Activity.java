@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -49,10 +50,10 @@ import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
-import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
-import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
+import www.knowledgeshare.com.knowledgeshare.db.StudyTimeBean;
+import www.knowledgeshare.com.knowledgeshare.db.StudyTimeUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeTryReadDetailBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
@@ -100,6 +101,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     private String mTime;
     private String mId;
     private BaseDialog mNetDialog;
+    private long pretime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +115,26 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         initListener();
         initNETDialog();
         setTimeRecord();
+        setStudyTime();
+    }
+
+    private void setStudyTime() {
+        pretime= SystemClock.currentThreadTimeMillis();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        long lasttime = SystemClock.currentThreadTimeMillis() - pretime;
+        if (!StudyTimeUtils.isHave("zhuanlandetail", mId)) {
+            StudyTimeBean studyTimeBean = new StudyTimeBean(Integer.parseInt(mId), "zhuanlandetail",
+                    MyUtils.getCurrentDate(), lasttime);
+            StudyTimeUtils.add(studyTimeBean);
+        } else {
+            long oneTime = StudyTimeUtils.getOneTime("zhuanlandetail", mId);
+            lasttime+=oneTime;
+            StudyTimeUtils.updateCount("zhuanlandetail", mId, lasttime);
+        }
     }
 
     private void setTimeRecord() {
@@ -728,8 +750,8 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
 
                 List<DownLoadListsBean.ListBean> list = new ArrayList<>();
                 DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
-                listBean.setTypeId(mFreeTryReadDetailBean.getZl_id()+"");
-                listBean.setChildId(mFreeTryReadDetailBean.getId()+"");
+                listBean.setTypeId(mFreeTryReadDetailBean.getZl_id() + "");
+                listBean.setChildId(mFreeTryReadDetailBean.getId() + "");
                 listBean.setName(mFreeTryReadDetailBean.getName());
                 listBean.setVideoTime(mFreeTryReadDetailBean.getVideo_time());
                 listBean.setDate(split[0]);
@@ -739,8 +761,8 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 listBean.setIconUrl(mFreeTryReadDetailBean.getT_header());
                 list.add(listBean);
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
-                        "zhuanlan",mFreeTryReadDetailBean.getZl_id()+"", getIntent().getStringExtra("title"),mFreeTryReadDetailBean.getT_header(),
-                        mFreeTryReadDetailBean.getT_name(),mFreeTryReadDetailBean.getT_tag(),"1",list);
+                        "zhuanlan", mFreeTryReadDetailBean.getZl_id() + "", getIntent().getStringExtra("title"), mFreeTryReadDetailBean.getT_header(),
+                        mFreeTryReadDetailBean.getT_name(), mFreeTryReadDetailBean.getT_tag(), "1", list);
                 DownUtil.add(downLoadListsBean);
 
                 /*DownLoadListBean DownLoadListBean = new DownLoadListBean(mFreeTryReadDetailBean.getId(), mFreeTryReadDetailBean.getZl_id(), -3,
