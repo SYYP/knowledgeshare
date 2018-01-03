@@ -22,6 +22,7 @@ import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
+import com.taobao.accs.utl.ALog;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
 import com.umeng.socialize.Config;
@@ -197,11 +198,10 @@ public class MyApplication extends LitePalApplication {
 
         HttpHeaders headers = new HttpHeaders();
         HttpParams params = new HttpParams();
-
         //log相关
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor("TAG");
         loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);        //log打印级别，决定了log显示的详细程度
-        loggingInterceptor.setColorLevel(Level.WARNING);                     //log颜色级别，决定了log在控制台显示的颜色
+        loggingInterceptor.setColorLevel(Level.SEVERE);                     //log颜色级别，决定了log在控制台显示的颜色
         builder.addInterceptor(loggingInterceptor);                                 //添加OkGo默认debug日志
         //超时时间设置，默认60秒
         builder.readTimeout(OkGo.DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);      //全局的读取超时时间
