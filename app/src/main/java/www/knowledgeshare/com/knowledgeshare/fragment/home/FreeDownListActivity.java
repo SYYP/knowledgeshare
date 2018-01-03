@@ -20,11 +20,14 @@ import com.lzy.okserver.OkDownload;
 import com.orhanobut.logger.Logger;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicDetailBean;
@@ -168,15 +171,32 @@ public class FreeDownListActivity extends BaseActivity implements View.OnClickLi
                         FreeBean.ChildEntity childEntity = list.get(i);
                         String created_at = childEntity.getCreated_at();
                         String[] split = created_at.split(" ");
-                        DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(),-1,-4,-3,
+
+                        List<DownLoadListsBean.ListBean> list = new ArrayList<>();
+                        DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
+                        listBean.setTypeId("freeId");
+                        listBean.setChildId(childEntity.getId()+"");
+                        listBean.setName(childEntity.getVideo_name());
+                        listBean.setVideoTime(childEntity.getVideo_time());
+                        listBean.setDate(split[0]);
+                        listBean.setTime(split[1]);
+                        listBean.setVideoUrl(childEntity.getVideo_url());
+                        listBean.setTxtUrl(childEntity.getTxt_url());
+                        listBean.setIconUrl(childEntity.getT_header());
+                        list.add(listBean);
+                        DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
+                                "free", "freeId", "", childEntity.getT_header(), "", "",list.size()+"",list);
+                        DownUtil.add(downLoadListsBean);
+
+                        /*DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(),-1,-4,-3,
                                 childEntity.getVideo_name(),childEntity.getVideo_time(), split[0], split[1],
                                 childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
-                        DownUtils.add(DownLoadListBean);
+                        DownUtils.add(DownLoadListBean);*/
                         GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
                         OkDownload.request(freeBean.getId()+"_"+childEntity.getId(), request)
                                 .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download")
                                 .fileName(childEntity.getVideo_name()+freeBean.getId()+"_"+childEntity.getId()+".mp3")
-                                .extra3(DownLoadListBean)//额外数据
+                                .extra3(downLoadListsBean)//额外数据
                                 .save()
                                 .register(new LogDownloadListener())//当前任务的回调监听
                                 .start();

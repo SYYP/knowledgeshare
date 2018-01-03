@@ -183,7 +183,9 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
                         listBean.setTxtUrl(childEntity.getTxt_url());
                         listBean.setIconUrl(childEntity.getT_header());
                         downList.add(listBean);
-                        DownLoadListsBean downLoadListsBean = new DownLoadListsBean("xiaoke",childEntityBean.getXk_class_id()+"",downList);
+                        DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
+                                "xiaoke",childEntityBean.getXk_class_id()+"", childEntity.getParent_name(),
+                                childEntity.getT_header(),childEntity.getT_name(),childEntity.getT_tag(),list.size()+"",downList);
                         DownUtil.add(downLoadListsBean);
 
                         GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());

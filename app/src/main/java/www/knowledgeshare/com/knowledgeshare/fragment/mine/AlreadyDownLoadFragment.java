@@ -14,8 +14,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.db.DownloadManager;
+import com.lzy.okgo.model.Progress;
+import com.lzy.okserver.OkDownload;
+import com.lzy.okserver.download.DownloadTask;
+import com.orhanobut.logger.Logger;
 import com.umeng.message.common.inter.ITagManager;
 
 import java.util.ArrayList;
@@ -29,6 +35,8 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.AlreadyDownloadDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.EasyLessonBean;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
@@ -46,7 +54,13 @@ public class AlreadyDownLoadFragment extends BaseFragment {
     LinearLayout freeLl;
     @BindView(R.id.comment_ll)
     LinearLayout commentLl;
+    @BindView(R.id.free_tv)
+    TextView freeTv;
+    @BindView(R.id.comment_tv)
+    TextView commentTv;
     Unbinder unbinder;
+    private DownloadTask task;
+
 
     @Override
     protected void lazyLoad() {
@@ -72,22 +86,31 @@ public class AlreadyDownLoadFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-
-        List<DownLoadListBean> downList = DownUtils.search();
-
-
         recyclerAlreadDownload.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerAlreadDownload.setNestedScrollingEnabled(false);
-        List<EasyLessonBean> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            EasyLessonBean easyLessonBean = new EasyLessonBean();
-            easyLessonBean.setTitle("如何成为一名合格的歌者");
-            easyLessonBean.setName("刘鹏飞");
-            easyLessonBean.setDesc("中国音乐好声音王牌级人物");
-            easyLessonBean.setWendang("共100节");
-            easyLessonBean.setHuancun("共缓存"+i+"章节");
-            list.add(easyLessonBean);
+        List<DownLoadListsBean> list = new ArrayList<>();
+        List<DownLoadListsBean> freeList = new ArrayList<>();
+        List<DownLoadListsBean> commentList = new ArrayList<>();
+
+        List<DownloadTask> restoreList = OkDownload.restore(DownloadManager.getInstance().getFinished());
+        Logger.e(restoreList.size()+"");
+        for (int i = 0; i < restoreList.size(); i++) {
+            Progress progress = restoreList.get(i).progress;
+            DownLoadListsBean downLoadListBean = (DownLoadListsBean) progress.extra3;
+            if (downLoadListBean.getType().equals("xiaoke")|| downLoadListBean.getType().equals("zhuanlan")){
+                list.add(downLoadListBean);
+            }
+            if (downLoadListBean.getType().equals("free")){
+                freeList.add(downLoadListBean);
+            }
+            if (downLoadListBean.getType().equals("comment")){
+                commentList.add(downLoadListBean);
+            }
         }
+
+        freeTv.setText("共缓存"+freeList.size()+"节");
+        commentTv.setText("共缓存"+commentList.size()+"节");
+
         AlreadyDownLoadAdapter adapter = new AlreadyDownLoadAdapter(R.layout.item_already_download,list);
         recyclerAlreadDownload.setAdapter(adapter);
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -104,14 +127,15 @@ public class AlreadyDownLoadFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    private class AlreadyDownLoadAdapter extends BaseQuickAdapter<EasyLessonBean,BaseViewHolder>{
+    private class AlreadyDownLoadAdapter extends BaseQuickAdapter<DownLoadListsBean,BaseViewHolder>{
 
-        public AlreadyDownLoadAdapter(@LayoutRes int layoutResId, @Nullable List<EasyLessonBean> data) {
+        public AlreadyDownLoadAdapter(@LayoutRes int layoutResId, @Nullable List<DownLoadListsBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, EasyLessonBean item) {
+        protected void convert(BaseViewHolder helper, DownLoadListsBean item) {
+
             ImageView alreadyFaceIv = helper.getView(R.id.already_face_iv);
             ImageView alreadyTishiIv = helper.getView(R.id.already_tishi_iv);
             TextView alreadyTitleTv = helper.getView(R.id.already_title_tv);
@@ -120,11 +144,16 @@ public class AlreadyDownLoadFragment extends BaseFragment {
             TextView alreadyZhangjieTv = helper.getView(R.id.already_zhangjie_tv);
             TextView alreadyXiazaiTv = helper.getView(R.id.already_xiazai_tv);
 
-            alreadyTitleTv.setText(item.getTitle());
-            alreadyNmaeTv.setText(item.getName());
-            alreadyDescTv.setText(item.getDesc());
-            alreadyZhangjieTv.setText(item.getWendang());
-            alreadyXiazaiTv.setText(item.getHuancun());
+            Glide.with(mActivity).load(item.getTypeIcon()).into(alreadyFaceIv);
+            alreadyTitleTv.setText(item.getTypeName());
+            if (item.getType().equals("xiaoke")){
+                alreadyNmaeTv.setText(item.gettName());
+            }else {
+                alreadyNmaeTv.setVisibility(View.GONE);
+            }
+            alreadyDescTv.setText(item.gettTag());
+            alreadyZhangjieTv.setText("共"+item.getTypeSize()+"节");
+            alreadyXiazaiTv.setText("共缓存"+item.getList().size()+"章节");
         }
     }
 }

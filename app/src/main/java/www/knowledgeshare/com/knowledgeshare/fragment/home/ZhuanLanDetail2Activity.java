@@ -50,6 +50,8 @@ import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeTryReadDetailBean;
@@ -723,15 +725,34 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
             case R.id.iv_download:
                 String created_at = mFreeTryReadDetailBean.getCreated_at();
                 String[] split = created_at.split(" ");
-                DownLoadListBean DownLoadListBean = new DownLoadListBean(mFreeTryReadDetailBean.getId(), mFreeTryReadDetailBean.getZl_id(), -3,
+
+                List<DownLoadListsBean.ListBean> list = new ArrayList<>();
+                DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
+                listBean.setTypeId(mFreeTryReadDetailBean.getZl_id()+"");
+                listBean.setChildId(mFreeTryReadDetailBean.getId()+"");
+                listBean.setName(mFreeTryReadDetailBean.getName());
+                listBean.setVideoTime(mFreeTryReadDetailBean.getVideo_time());
+                listBean.setDate(split[0]);
+                listBean.setTime(split[0]);
+                listBean.setVideoUrl(mFreeTryReadDetailBean.getVideo_url());
+                listBean.setTxtUrl(mFreeTryReadDetailBean.getTxt_url());
+                listBean.setIconUrl(mFreeTryReadDetailBean.getT_header());
+                list.add(listBean);
+                DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
+                        "zhuanlan",mFreeTryReadDetailBean.getZl_id()+"", getIntent().getStringExtra("title"),mFreeTryReadDetailBean.getT_header(),
+                        mFreeTryReadDetailBean.getT_name(),mFreeTryReadDetailBean.getT_tag(),"1",list);
+                DownUtil.add(downLoadListsBean);
+
+                /*DownLoadListBean DownLoadListBean = new DownLoadListBean(mFreeTryReadDetailBean.getId(), mFreeTryReadDetailBean.getZl_id(), -3,
                         mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getVideo_time(), split[0], split[0],
                         mFreeTryReadDetailBean.getVideo_url(), mFreeTryReadDetailBean.getTxt_url(), mFreeTryReadDetailBean.getT_header());
-                DownUtils.add(DownLoadListBean);
+                DownUtils.add(DownLoadListBean);*/
+
                 GetRequest<File> request = OkGo.<File>get(mFreeTryReadDetailBean.getVideo_url());
                 OkDownload.request(mFreeTryReadDetailBean.getZl_id() + "_" + mFreeTryReadDetailBean.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download")
                         .fileName(mFreeTryReadDetailBean.getName() + mFreeTryReadDetailBean.getZl_id() + "_" + mFreeTryReadDetailBean.getId() + ".mp3")
-                        .extra3(DownLoadListBean)
+                        .extra3(downLoadListsBean)
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听
                         .start();

@@ -464,7 +464,17 @@ public class SoftMusicDetailBean implements Serializable{
         private String t_header;
         private String t_tag;
         private String t_name;
+        private String parent_name;
         private boolean isChecked=true;
+
+
+        public String getParent_name() {
+            return parent_name;
+        }
+
+        public void setParent_name(String parent_name) {
+            this.parent_name = parent_name;
+        }
 
         public boolean isChecked() {
             return isChecked;

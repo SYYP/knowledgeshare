@@ -39,6 +39,7 @@
                         android:text="免费专区"
                         android:textColor="@color/text_black" />
                     <TextView
+                        android:id="@+id/free_tv"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
@@ -67,6 +68,7 @@
                         android:text="每日推荐"
                         android:textColor="@color/text_black" />
                     <TextView
+                        android:id="@+id/comment_tv"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"

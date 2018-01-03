@@ -20,6 +20,16 @@ public class DownUtil {
         return all;
     }
 
+    public static List<DownLoadListsBean> search(String type){
+         /*
+         where()方法接收任意个字符串参数，其中第一个参数用于进行条件约束，
+         从第二个参数开始，都是用于替换第一个参数中的占位符的。那这个where()方法就对应了一条SQL语句中的where部分。
+         */
+        List<DownLoadListsBean> flList = DataSupport.where("type=?", type).find(DownLoadListsBean.class);
+//        List<DownLoadListsBean> flList = where("type=?",type).find(DownLoadListsBean.class);
+        return flList;
+    }
+
     public static void deleteOne(String name) {
         DataSupport.deleteAll(DownLoadListsBean.class, "name=?", name);
     }

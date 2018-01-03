@@ -731,7 +731,9 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 listBean.setTxtUrl(childEntity.getTxt_url());
                 listBean.setIconUrl(childEntity.getT_header());
                 list.add(listBean);
-                DownLoadListsBean downLoadListsBean = new DownLoadListsBean("xiaoke",mMusicDetailBean.getXk_class_id()+"",list);
+                DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
+                        "xiaoke",mMusicDetailBean.getXk_class_id()+"", childEntity.getParent_name(),childEntity.getT_header(),
+                        childEntity.getT_name(),childEntity.getT_tag(),mChild.size()+"",list);
                 DownUtil.add(downLoadListsBean);
 
                 /*DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(), childEntity.getXk_id(),

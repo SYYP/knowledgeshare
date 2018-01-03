@@ -45,6 +45,7 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
+import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
 /**
  * ================================================
@@ -128,7 +129,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.icon) ImageView icon;
+        @BindView(R.id.icon) CircleImageView icon;
         @BindView(R.id.name) TextView name;
         @BindView(R.id.downloadSize) TextView downloadSize;
         @BindView(R.id.pbProgress) ProgressBar pbProgress;

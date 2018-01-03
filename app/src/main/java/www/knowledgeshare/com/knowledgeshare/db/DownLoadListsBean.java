@@ -13,12 +13,54 @@ public class DownLoadListsBean extends DataSupport implements Serializable {
     private String type;
     private String typeId;
     private String typeName;
+    private String typeIcon;
+    private String tName;
+    private String tTag;
+    private String typeSize;
     private List<ListBean> list;
 
-    public DownLoadListsBean(String type, String typeId, List<ListBean> list){
+    public DownLoadListsBean(String type, String typeId, String typeName,String typeIcon, String tName,
+                             String tTag, String typeSize, List<ListBean> list){
         this.type = type;
         this.typeId = typeId;
+        this.typeName = typeName;
+        this.typeIcon = typeIcon;
+        this.tName = tName;
+        this.tTag = tTag;
+        this.typeSize = typeSize;
         this.list = list;
+    }
+
+    public String getTypeIcon() {
+        return typeIcon;
+    }
+
+    public void setTypeIcon(String typeIcon) {
+        this.typeIcon = typeIcon;
+    }
+
+    public String gettName() {
+        return tName;
+    }
+
+    public void settName(String tName) {
+        this.tName = tName;
+    }
+
+    public String gettTag() {
+        return tTag;
+    }
+
+    public void settTag(String tTag) {
+        this.tTag = tTag;
+    }
+
+    public String getTypeSize() {
+        return typeSize;
+    }
+
+    public void setTypeSize(String typeSize) {
+        this.typeSize = typeSize;
     }
 
     public String getTypeName() {
