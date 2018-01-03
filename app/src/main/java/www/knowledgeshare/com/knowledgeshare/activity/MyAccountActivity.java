@@ -70,31 +70,37 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
             case R.id.one_money_tv:
                 oneMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow3));
                 oneMoneyTv.setTextColor(getResources().getColor(R.color.white));
+                payMoneyTv.setText("支付金额：28元");
                 clear(1);
                 break;
             case R.id.two_money_tv:
                 twoMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow3));
                 twoMoneyTv.setTextColor(getResources().getColor(R.color.white));
+                payMoneyTv.setText("支付金额：88元");
                 clear(2);
                 break;
             case R.id.three_money_tv:
                 threeMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow3));
                 threeMoneyTv.setTextColor(getResources().getColor(R.color.white));
+                payMoneyTv.setText("支付金额：99元");
                 clear(3);
                 break;
             case R.id.four_money_tv:
                 fourMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow3));
                 fourMoneyTv.setTextColor(getResources().getColor(R.color.white));
+                payMoneyTv.setText("支付金额：100元");
                 clear(4);
                 break;
             case R.id.five_money_tv:
                 fiveMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow3));
                 fiveMoneyTv.setTextColor(getResources().getColor(R.color.white));
+                payMoneyTv.setText("支付金额：188元");
                 clear(5);
                 break;
             case R.id.six_money_tv:
                 sixMoneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow3));
                 sixMoneyTv.setTextColor(getResources().getColor(R.color.white));
+                payMoneyTv.setText("支付金额：888元");
                 clear(6);
                 break;
             case R.id.query_tv:
