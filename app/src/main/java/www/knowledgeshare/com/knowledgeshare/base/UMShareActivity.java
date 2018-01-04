@@ -72,6 +72,19 @@ public class UMShareActivity extends BaseActivity {
         shareAction.setCallback(umShareListener);
     }
 
+    public static void shareWebUrl(String url, String title, String imgUrl, String des, Activity context, SHARE_MEDIA pingtai) {
+        UMWeb web = new UMWeb(url);
+        web.setTitle(title);//标题
+        UMImage thumb = new UMImage(context, imgUrl);
+        web.setThumb(thumb);  //缩略图
+        web.setDescription(des);//描述
+        //注意在新浪平台，缩略图属于必传参数，否则会报错
+        ShareAction shareAction = new ShareAction(context).withMedia(web);
+        shareAction.setPlatform(pingtai);//传入平台
+        shareAction.share();
+        shareAction.setCallback(umShareListener);
+    }
+
     public static UMShareListener umShareListener = new UMShareListener() {
         @Override
         public void onStart(SHARE_MEDIA platform) {

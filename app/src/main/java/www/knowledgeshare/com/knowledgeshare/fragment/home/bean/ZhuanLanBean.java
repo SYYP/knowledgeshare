@@ -45,6 +45,15 @@ public class ZhuanLanBean {
     private String zl_img;
     private String zl_look;
     private int zl_buy_count;
+    private String h5_url;
+
+    public String getH5_url() {
+        return h5_url;
+    }
+
+    public void setH5_url(String h5_url) {
+        this.h5_url = h5_url;
+    }
 
     public void setZl_name(String zl_name) {
         this.zl_name = zl_name;

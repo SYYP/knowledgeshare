@@ -133,7 +133,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         } else {
             long oneTime = StudyTimeUtils.getOneTime("zhuanlandetail", mId);
             lasttime+=oneTime;
-            StudyTimeUtils.updateCount("zhuanlandetail", mId, lasttime);
+            StudyTimeUtils.updateTime("zhuanlandetail", mId, lasttime);
         }
     }
 

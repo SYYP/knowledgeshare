@@ -32,6 +32,7 @@ import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.OkDownload;
 import com.orhanobut.logger.Logger;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -40,15 +41,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
-import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
-import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.db.HistroyUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.CommentMoreBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
@@ -61,14 +60,13 @@ import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
-import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
 import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
 import static www.knowledgeshare.com.knowledgeshare.R.id.tv_collect;
 import static www.knowledgeshare.com.knowledgeshare.R.id.tv_dianzan;
 
-public class FreeActivity extends BaseActivity implements View.OnClickListener {
+public class FreeActivity extends UMShareActivity implements View.OnClickListener {
 
     private ImageView iv_back;
     private ImageView iv_beijing;
@@ -267,7 +265,8 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", item.getId(), item.getVideo_name(),
                                                 item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                                 item.getCollect_count(), item.getView_count(), item.isIslive(), item.isIsfav(),
-                                                item.getT_header(), item.getT_tag(), mFreeBean.getTeacher_has().getId() + "");
+                                                item.getT_header(), item.getT_tag(), mFreeBean.getTeacher_has().getId() + "",
+                                                item.getShare_h5_url());
                                         HistroyUtils.add(bofangHistroyBean);
                                     }
                                 }
@@ -513,7 +512,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 );
     }
 
-    private void showShareDialog() {
+    private void showShareDialog(final String root, final int adapterPosition) {
         mDialog = mBuilder.setViewId(R.layout.dialog_share)
                 //设置dialogpadding
                 .setPaddingdp(10, 0, 10, 0)
@@ -537,30 +536,70 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
         mDialog.getView(R.id.tv_weixin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(mFreeBean.getH5_url(), mFreeBean.getName(),
+                            mFreeBean.getImgurl(), "", FreeActivity.this, SHARE_MEDIA.WEIXIN);
+                } else {
+                    FreeBean.ChildEntity entity = mFreeAdapter.getData().get(adapterPosition);
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_name(),
+                            entity.getT_header(), "", FreeActivity.this, SHARE_MEDIA.WEIXIN);
+                }
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(mFreeBean.getH5_url(), mFreeBean.getName(),
+                            mFreeBean.getImgurl(), "", FreeActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                } else {
+                    FreeBean.ChildEntity entity = mFreeAdapter.getData().get(adapterPosition);
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_name(),
+                            entity.getT_header(), "", FreeActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                }
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(mFreeBean.getH5_url(), mFreeBean.getName(),
+                            mFreeBean.getImgurl(), "", FreeActivity.this, SHARE_MEDIA.QZONE);
+                } else {
+                    FreeBean.ChildEntity entity = mFreeAdapter.getData().get(adapterPosition);
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_name(),
+                            entity.getT_header(), "", FreeActivity.this, SHARE_MEDIA.QZONE);
+                }
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(mFreeBean.getH5_url(), mFreeBean.getName(),
+                            mFreeBean.getImgurl(), "", FreeActivity.this, SHARE_MEDIA.QQ);
+                } else {
+                    FreeBean.ChildEntity entity = mFreeAdapter.getData().get(adapterPosition);
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_name(),
+                            entity.getT_header(), "", FreeActivity.this, SHARE_MEDIA.QQ);
+                }
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(mFreeBean.getH5_url(), mFreeBean.getName(),
+                            mFreeBean.getImgurl(), "", FreeActivity.this, SHARE_MEDIA.SINA);
+                } else {
+                    FreeBean.ChildEntity entity = mFreeAdapter.getData().get(adapterPosition);
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_name(),
+                            entity.getT_header(), "", FreeActivity.this, SHARE_MEDIA.SINA);
+                }
                 mDialog.dismiss();
             }
         });
@@ -591,7 +630,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                showShareDialog();
+                showShareDialog("list",adapterPosition);
             }
         });
         mTv_collect = mDialog.getView(tv_collect);
@@ -641,7 +680,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 List<DownLoadListsBean.ListBean> list = new ArrayList<>();
                 DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
                 listBean.setTypeId("freeId");
-                listBean.setChildId(childEntity.getId()+"");
+                listBean.setChildId(childEntity.getId() + "");
                 listBean.setName(childEntity.getVideo_name());
                 listBean.setVideoTime(childEntity.getVideo_time());
                 listBean.setDate(split[0]);
@@ -651,16 +690,16 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 listBean.setIconUrl(childEntity.getT_header());
                 list.add(listBean);
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
-                        "free", "freeId", "", childEntity.getT_header(), "", "",list.size()+"",list);
+                        "free", "freeId", "", childEntity.getT_header(), "", "", list.size() + "", list);
                 DownUtil.add(downLoadListsBean);
                 /*DownLoadListBean DownLoadListBean = new DownLoadListBean(-1,childEntity.getId(),-4,-3,
                         childEntity.getVideo_name(),childEntity.getVideo_time(), split[0], split[1],
                         childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
                 DownUtils.add(DownLoadListBean);*/
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
-                OkDownload.request(mFreeBean.getId()+"_"+childEntity.getId(), request)
+                OkDownload.request(mFreeBean.getId() + "_" + childEntity.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download")
-                        .fileName(childEntity.getVideo_name()+mFreeBean.getId()+"_"+childEntity.getId()+".mp3")
+                        .fileName(childEntity.getVideo_name() + mFreeBean.getId() + "_" + childEntity.getId() + ".mp3")
                         .extra3(downLoadListsBean)//额外数据
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听
@@ -668,11 +707,11 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
 
                 OkGo.<File>get(childEntity.getTxt_url())
                         .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download"
-                        ,mFreeBean.getId()+"-"+childEntity.getId()+childEntity.getVideo_name()+".txt") {
+                                , mFreeBean.getId() + "-" + childEntity.getId() + childEntity.getVideo_name() + ".txt") {
                             @Override
                             public void onSuccess(Response<File> response) {
                                 int code = response.code();
-                                if (code >= 200 && code <= 204){
+                                if (code >= 200 && code <= 204) {
                                     Logger.e("文稿下载完成");
                                 }
                             }
@@ -807,14 +846,14 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
             case R.id.tv_download:
                 FreeBean model = mFreeBean;
                 intent = new Intent(this, FreeDownListActivity.class);
-                intent.putExtra("model",model);
+                intent.putExtra("model", model);
                 startActivity(intent);
                 break;
             case R.id.tv_search:
                 startActivity(new Intent(this, SearchActivity.class));
                 break;
             case R.id.tv_share:
-                showShareDialog();
+                showShareDialog("root", 0);
                 break;
             case R.id.tv_guanzhu:
             case R.id.iv_guanzhu:

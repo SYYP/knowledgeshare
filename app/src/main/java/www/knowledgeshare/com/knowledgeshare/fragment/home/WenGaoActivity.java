@@ -101,7 +101,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
         } else {
             long oneTime = StudyTimeUtils.getOneTime(mType, mId);
             lasttime+=oneTime;
-            StudyTimeUtils.updateCount(mType, mId, lasttime);
+            StudyTimeUtils.updateTime(mType, mId, lasttime);
         }
     }
 

@@ -212,6 +212,15 @@ public class HomeBean {
         private int send_time;
         private int view_count;
         private boolean isChecked;
+        private String share_h5_url;
+
+        public String getShare_h5_url() {
+            return share_h5_url;
+        }
+
+        public void setShare_h5_url(String share_h5_url) {
+            this.share_h5_url = share_h5_url;
+        }
 
         public boolean isChecked() {
             return isChecked;
@@ -554,6 +563,15 @@ public class HomeBean {
             private int id;
             private int view_count;
             private boolean isChecked;
+            private String share_h5_url;
+
+            public String getShare_h5_url() {
+                return share_h5_url;
+            }
+
+            public void setShare_h5_url(String share_h5_url) {
+                this.share_h5_url = share_h5_url;
+            }
 
             public boolean isChecked() {
                 return isChecked;

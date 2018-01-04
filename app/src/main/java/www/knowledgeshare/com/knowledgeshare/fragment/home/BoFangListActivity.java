@@ -23,6 +23,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -42,6 +43,8 @@ import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+
+import static www.knowledgeshare.com.knowledgeshare.base.UMShareActivity.shareWebUrl;
 
 public class BoFangListActivity extends BaseActivity implements View.OnClickListener {
 
@@ -238,7 +241,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                showShareDialog();
+                showShareDialog(adapterPosition);
             }
         });
         mTv_collect = mDialog.getView(R.id.tv_collect);
@@ -395,7 +398,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                 );
     }
 
-    private void showShareDialog() {
+    private void showShareDialog(final int adapterPosition) {
         mDialog = mBuilder.setViewId(R.layout.dialog_share)
                 //设置dialogpadding
                 .setPaddingdp(10, 0, 10, 0)
@@ -416,33 +419,44 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                 mDialog.dismiss();
             }
         });
+        final BofangHistroyBean entity = mLieBiaoAdapter.getData().get(adapterPosition);
         mDialog.getView(R.id.tv_weixin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                shareWebUrl(entity.getH5_url(), entity.getVideo_name(),
+                        entity.getT_header(), "", BoFangListActivity.this, SHARE_MEDIA.WEIXIN);
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                shareWebUrl(entity.getH5_url(), entity.getVideo_name(),
+                        entity.getT_header(), "", BoFangListActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                shareWebUrl(entity.getH5_url(), entity.getVideo_name(),
+                        entity.getT_header(), "", BoFangListActivity.this, SHARE_MEDIA.QZONE);
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                shareWebUrl(entity.getH5_url(), entity.getVideo_name(),
+                        entity.getT_header(), "", BoFangListActivity.this, SHARE_MEDIA.QQ);
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                shareWebUrl(entity.getH5_url(), entity.getVideo_name(),
+                        entity.getT_header(), "", BoFangListActivity.this, SHARE_MEDIA.SINA);
                 mDialog.dismiss();
             }
         });

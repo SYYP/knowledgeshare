@@ -414,6 +414,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
             preTime = System.currentTimeMillis();
         } else {
+            EventBean eventBean = new EventBean("home_pause");//发一个保证正在播放音频的学习时长的终止
+            EventBus.getDefault().postSticky(eventBean);
             super.onBackPressed();//相当于finish()
             realBack();//删除所有引用
         }

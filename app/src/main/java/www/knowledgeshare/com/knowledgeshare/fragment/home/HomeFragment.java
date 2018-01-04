@@ -476,7 +476,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", item.getId(), item.getVideo_name(),
                                 item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                 item.getCollect_count(), item.getView_count(), item.getIs_good() == 1 ? true : false,
-                                item.isIsfav(), item.getT_header(), item.getT_tag(), mFree.getTeacher_id() + "");
+                                item.isIsfav(), item.getT_header(), item.getT_tag(), mFree.getTeacher_id() + "",item.getShare_h5_url());
                         HistroyUtils.add(bofangHistroyBean);
                     }
                 }
@@ -524,7 +524,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("everydaycomment", item.getId(), item.getVideo_name(),
                                 item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                 item.getCollect_count(), item.getView_count(), item.getIs_good() == 1 ? true : false,
-                                item.isIsfav(), item.getT_header(), item.getT_tag(), mFree.getTeacher_id() + "");
+                                item.isIsfav(), item.getT_header(), item.getT_tag(), mFree.getTeacher_id() + "",item.getShare_h5_url());
                         HistroyUtils.add(bofangHistroyBean);
                     }
                 }

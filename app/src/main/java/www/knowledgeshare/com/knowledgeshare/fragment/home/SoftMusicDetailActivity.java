@@ -32,6 +32,7 @@ import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.OkDownload;
 import com.orhanobut.logger.Logger;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -41,15 +42,13 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.MyAccountActivity;
-import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
-import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
-import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.db.HistroyUtils;
 import www.knowledgeshare.com.knowledgeshare.db.LookBean;
 import www.knowledgeshare.com.knowledgeshare.db.LookUtils;
@@ -69,7 +68,7 @@ import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
 import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
-public class SoftMusicDetailActivity extends BaseActivity implements View.OnClickListener {
+public class SoftMusicDetailActivity extends UMShareActivity implements View.OnClickListener {
 
     private ImageView iv_back;
     private ImageView iv_beijing;
@@ -327,7 +326,8 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                                                  BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", item.getId(), item.getVideo_old_name(),
                                                          item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                                          item.getCollect_count(), item.getView_count(), item.isIslive(), item.isIsfav()
-                                                         , item.getT_header(), item.getT_tag(), mMusicDetailBean.getXk_teacher_id() + "");
+                                                         , item.getT_header(), item.getT_tag(), mMusicDetailBean.getXk_teacher_id() + ""
+                                                         ,item.getShare_h5_url());
                                                  HistroyUtils.add(bofangHistroyBean);
                                              }
                                          }
@@ -594,7 +594,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 );
     }
 
-    private void showShareDialog() {
+    private void showShareDialog(final String root, final int adapterPosition) {
         mDialog = mBuilder.setViewId(R.layout.dialog_share)
                 //设置dialogpadding
                 .setPaddingdp(10, 0, 10, 0)
@@ -615,33 +615,69 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 mDialog.dismiss();
             }
         });
+        final SoftMusicDetailBean.ChildEntity entity = mLieBiaoAdapter.getData().get(adapterPosition);
         mDialog.getView(R.id.tv_weixin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(mMusicDetailBean.getH5_url(), mMusicDetailBean.getXk_name(),
+                            mMusicDetailBean.getImgurl(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.WEIXIN);
+                } else {
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_old_name(),
+                            entity.getT_header(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.WEIXIN);
+                }
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(mMusicDetailBean.getH5_url(), mMusicDetailBean.getXk_name(),
+                            mMusicDetailBean.getImgurl(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                } else {
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_old_name(),
+                            entity.getT_header(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                }
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(mMusicDetailBean.getH5_url(), mMusicDetailBean.getXk_name(),
+                            mMusicDetailBean.getImgurl(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.QZONE);
+                } else {
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_old_name(),
+                            entity.getT_header(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.QZONE);
+                }
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(mMusicDetailBean.getH5_url(), mMusicDetailBean.getXk_name(),
+                            mMusicDetailBean.getImgurl(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.QQ);
+                } else {
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_old_name(),
+                            entity.getT_header(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.QQ);
+                }
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(mMusicDetailBean.getH5_url(), mMusicDetailBean.getXk_name(),
+                            mMusicDetailBean.getImgurl(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.SINA);
+                } else {
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_old_name(),
+                            entity.getT_header(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.SINA);
+                }
                 mDialog.dismiss();
             }
         });
@@ -672,7 +708,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                showShareDialog();
+                showShareDialog("list",adapterPosition);
             }
         });
         mTv_collect = mDialog.getView(R.id.tv_collect);
@@ -721,8 +757,8 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 String[] split = created_at.split(" ");
                 List<DownLoadListsBean.ListBean> list = new ArrayList<>();
                 DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
-                listBean.setTypeId(childEntity.getXk_id()+"");
-                listBean.setChildId(childEntity.getId()+"");
+                listBean.setTypeId(childEntity.getXk_id() + "");
+                listBean.setChildId(childEntity.getId() + "");
                 listBean.setName(childEntity.getName());
                 listBean.setVideoTime(childEntity.getVideo_time());
                 listBean.setDate(split[0]);
@@ -732,8 +768,8 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 listBean.setIconUrl(childEntity.getT_header());
                 list.add(listBean);
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
-                        "xiaoke",mMusicDetailBean.getXk_class_id()+"", childEntity.getParent_name(),childEntity.getT_header(),
-                        childEntity.getT_name(),childEntity.getT_tag(),mChild.size()+"",list);
+                        "xiaoke", mMusicDetailBean.getXk_class_id() + "", childEntity.getParent_name(), childEntity.getT_header(),
+                        childEntity.getT_name(), childEntity.getT_tag(), mChild.size() + "", list);
                 DownUtil.add(downLoadListsBean);
 
                 /*DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(), childEntity.getXk_id(),
@@ -743,8 +779,8 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
                 OkDownload.request(childEntity.getXk_id() + "_" + childEntity.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download")
-//                        .fileName(childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId())
-                        .fileName(childEntity.getName()+childEntity.getXk_id()+"_"+childEntity.getId()+".mp3")
+                        //                        .fileName(childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId())
+                        .fileName(childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId() + ".mp3")
                         .extra3(downLoadListsBean)
                         .fileName(childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId())
                         //                        .fileName(childEntity.getName()+childEntity.getXk_id()+"_"+childEntity.getId()+".mp3")
@@ -754,11 +790,11 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                         .start();
                 OkGo.<File>get(childEntity.getTxt_url())
                         .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download"
-                                ,childEntity.getXk_id()+"-"+childEntity.getId()+childEntity.getName()+".txt") {
+                                , childEntity.getXk_id() + "-" + childEntity.getId() + childEntity.getName() + ".txt") {
                             @Override
                             public void onSuccess(Response<File> response) {
                                 int code = response.code();
-                                if (code >= 200 && code <= 204){
+                                if (code >= 200 && code <= 204) {
                                     Logger.e("文稿下载完成");
                                 }
                             }
@@ -1049,7 +1085,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 startActivity(new Intent(this, SearchActivity.class));
                 break;
             case R.id.tv_share:
-                showShareDialog();
+                showShareDialog("root",0);
                 break;
             case R.id.tv_guanzhu:
             case R.id.iv_guanzhu:

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -56,6 +57,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
     private static String subtitle;
     private static String header;
     private static MusicTypeBean mMusicTypeBean;
+    private long pretime;
 
     public CustomPopupWindow(Activity context) {
         super(context);
@@ -97,15 +99,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
             }
             params.put("date", MyUtils.getCurrentDate());
             //学习时长
-            if (!StudyTimeUtils.isHave("music", musicTypeBean.getId())) {
-                StudyTimeBean studyTimeBean = new StudyTimeBean(Integer.parseInt(musicTypeBean.getId()), "music",
-                        MyUtils.getCurrentDate(), System.currentTimeMillis());
-                StudyTimeUtils.add(studyTimeBean);
-            }else {
-                long oneTime = StudyTimeUtils.getOneTime("music", musicTypeBean.getId());
-                long time = System.currentTimeMillis()-oneTime;
-                StudyTimeUtils.updateCount("zhuanlandetail", musicTypeBean.getId(), time);
-            }
+            pretime = SystemClock.currentThreadTimeMillis();
             OkGo.<DianZanbean>post(MyContants.LXKURL + "user/study-add")
                     .tag(this)
                     .headers(headers)
@@ -129,10 +123,18 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("home_pause") || eventBean.getMsg().equals("norotate")) {
-            long oneTime = StudyTimeUtils.getOneTime("music", mMusicTypeBean.getId());
-            long time = System.currentTimeMillis() - oneTime;
-            StudyTimeUtils.updateCount("music", mMusicTypeBean.getId(), time);
+            long lasttime = SystemClock.currentThreadTimeMillis() - pretime;
+            if (!StudyTimeUtils.isHave("music", mMusicTypeBean.getId())) {
+                StudyTimeBean studyTimeBean = new StudyTimeBean(Integer.parseInt(mMusicTypeBean.getId()), "music",
+                        MyUtils.getCurrentDate(), lasttime);
+                StudyTimeUtils.add(studyTimeBean);
+            } else {
+                long oneTime = StudyTimeUtils.getOneTime("music", mMusicTypeBean.getId());
+                lasttime+=oneTime;
+                StudyTimeUtils.updateTime("music", mMusicTypeBean.getId(), lasttime);
+            }
         }
+
     }
 
     /**

@@ -32,6 +32,15 @@ public class FreeBean implements Serializable{
     private TeacherHasEntity teacher_has;
     private String look;
     private List<ChildEntity> child;
+    private String h5_url;
+
+    public String getH5_url() {
+        return h5_url;
+    }
+
+    public void setH5_url(String h5_url) {
+        this.h5_url = h5_url;
+    }
 
     public void setImgurl(String imgurl) {
         this.imgurl = imgurl;
@@ -413,6 +422,15 @@ public class FreeBean implements Serializable{
         private String t_header;
         private String t_tag;
         private boolean isChecked=true;
+        private String share_h5_url;
+
+        public String getShare_h5_url() {
+            return share_h5_url;
+        }
+
+        public void setShare_h5_url(String share_h5_url) {
+            this.share_h5_url = share_h5_url;
+        }
 
         public String getVideo_time() {
             return video_time;

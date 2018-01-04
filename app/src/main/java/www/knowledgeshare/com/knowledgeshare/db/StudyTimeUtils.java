@@ -43,7 +43,7 @@ public class StudyTimeUtils {
         }
     }
 
-    public static void updateCount(String type, String id, long time) {
+    public static void updateTime(String type, String id, long time) {
         ContentValues values = new ContentValues();
         values.put("time", time);
         DataSupport.updateAll(StudyTimeBean.class, values, "type=? and id=?", type, id);
