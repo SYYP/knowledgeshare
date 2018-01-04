@@ -19,14 +19,14 @@ public class BofangHistroyBean extends DataSupport {
     private boolean isCollected;
     private String t_header;
     private String t_tag;
-    private String t_id;
+    private String h5_url;
 
-    public String getT_id() {
-        return t_id;
+    public String getH5_url() {
+        return h5_url;
     }
 
-    public void setT_id(String t_id) {
-        this.t_id = t_id;
+    public void setH5_url(String h5_url) {
+        this.h5_url = h5_url;
     }
 
     public String getT_header() {
@@ -125,7 +125,10 @@ public class BofangHistroyBean extends DataSupport {
         this.view_count = view_count;
     }
 
-    public BofangHistroyBean(String type, int id, String video_name, String created_at, String video_url, int good_count, int collect_count, int view_count, boolean isDianzan, boolean isCollected, String t_header, String t_tag, String t_id) {
+    public BofangHistroyBean(String type, int id, String video_name, String created_at, String video_url,
+                             int good_count, int collect_count, int view_count,
+                             boolean isDianzan, boolean isCollected, String t_header,
+                             String t_tag, String h5_url) {
         this.type = type;
         this.id = id;
         this.video_name = video_name;
@@ -138,6 +141,6 @@ public class BofangHistroyBean extends DataSupport {
         this.isCollected = isCollected;
         this.t_header = t_header;
         this.t_tag = t_tag;
-        this.t_id = t_id;
+        this.h5_url = h5_url;
     }
 }

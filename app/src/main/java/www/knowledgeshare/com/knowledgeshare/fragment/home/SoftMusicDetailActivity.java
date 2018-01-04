@@ -32,6 +32,7 @@ import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.OkDownload;
 import com.orhanobut.logger.Logger;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -41,15 +42,13 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.MyAccountActivity;
-import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
-import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
-import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.db.HistroyUtils;
 import www.knowledgeshare.com.knowledgeshare.db.LookBean;
 import www.knowledgeshare.com.knowledgeshare.db.LookUtils;
@@ -69,7 +68,7 @@ import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
 import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
-public class SoftMusicDetailActivity extends BaseActivity implements View.OnClickListener {
+public class SoftMusicDetailActivity extends UMShareActivity implements View.OnClickListener {
 
     private ImageView iv_back;
     private ImageView iv_beijing;
@@ -312,8 +311,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                                              gobofang(playerBean);
                                              addListenCount(item.getId() + "");
                                              MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
-                                                     item.getT_header(), item.getVideo_old_name(), item.getId() + "",
-                                                     mMusicDetailBean.getXk_teacher_id() + "", item.isIsfav());
+                                                     item.getT_header(), item.getVideo_old_name(), item.getId() + "", item.isIsfav());
                                              musicTypeBean.setMsg("musicplayertype");
                                              EventBus.getDefault().postSticky(musicTypeBean);
                                              List<PlayerBean> list = new ArrayList<PlayerBean>();
@@ -327,7 +325,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                                                  BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", item.getId(), item.getVideo_old_name(),
                                                          item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                                          item.getCollect_count(), item.getView_count(), item.isIslive(), item.isIsfav()
-                                                         , item.getT_header(), item.getT_tag(), mMusicDetailBean.getXk_teacher_id() + "");
+                                                         , item.getT_header(), item.getT_tag(),item.getShare_h5_url());
                                                  HistroyUtils.add(bofangHistroyBean);
                                              }
                                          }
@@ -594,7 +592,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 );
     }
 
-    private void showShareDialog() {
+    private void showShareDialog(final String root, final int adapterPosition) {
         mDialog = mBuilder.setViewId(R.layout.dialog_share)
                 //设置dialogpadding
                 .setPaddingdp(10, 0, 10, 0)
@@ -615,33 +613,69 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 mDialog.dismiss();
             }
         });
+        final SoftMusicDetailBean.ChildEntity entity = mLieBiaoAdapter.getData().get(adapterPosition);
         mDialog.getView(R.id.tv_weixin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(mMusicDetailBean.getH5_url(), mMusicDetailBean.getXk_name(),
+                            mMusicDetailBean.getImgurl(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.WEIXIN);
+                } else {
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_old_name(),
+                            entity.getT_header(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.WEIXIN);
+                }
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(mMusicDetailBean.getH5_url(), mMusicDetailBean.getXk_name(),
+                            mMusicDetailBean.getImgurl(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                } else {
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_old_name(),
+                            entity.getT_header(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                }
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(mMusicDetailBean.getH5_url(), mMusicDetailBean.getXk_name(),
+                            mMusicDetailBean.getImgurl(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.QZONE);
+                } else {
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_old_name(),
+                            entity.getT_header(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.QZONE);
+                }
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(mMusicDetailBean.getH5_url(), mMusicDetailBean.getXk_name(),
+                            mMusicDetailBean.getImgurl(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.QQ);
+                } else {
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_old_name(),
+                            entity.getT_header(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.QQ);
+                }
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(mMusicDetailBean.getH5_url(), mMusicDetailBean.getXk_name(),
+                            mMusicDetailBean.getImgurl(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.SINA);
+                } else {
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_old_name(),
+                            entity.getT_header(), "", SoftMusicDetailActivity.this, SHARE_MEDIA.SINA);
+                }
                 mDialog.dismiss();
             }
         });
@@ -672,7 +706,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                showShareDialog();
+                showShareDialog("list",adapterPosition);
             }
         });
         mTv_collect = mDialog.getView(R.id.tv_collect);
@@ -1045,7 +1079,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 startActivity(new Intent(this, SearchActivity.class));
                 break;
             case R.id.tv_share:
-                showShareDialog();
+                showShareDialog("root",0);
                 break;
             case R.id.tv_guanzhu:
             case R.id.iv_guanzhu:

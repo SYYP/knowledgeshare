@@ -16,11 +16,11 @@ public class LitePalHelper {
         return all;
     }
 
-    public static void updateCount(String goodId, int count) {
+    public static void updateTime(String goodId, int count) {
         ContentValues values = new ContentValues();
         values.put("duration", count);
         //这段代码将id为1的User的name进行修改，注意update方法是DataSupport中的一个静态方法。
-        //        DataSupport.updateCount(User.class, values, 1);//这个方法只能根据id来进行修改
+        //        DataSupport.updateTime(User.class, values, 1);//这个方法只能根据id来进行修改
         //        Toast.makeText(MyApplication.getGloableContext(), " "+count, Toast.LENGTH_SHORT).show();
         DataSupport.updateAll(ShopCarBean.class, values, "goodId=?", goodId);
 
@@ -72,7 +72,7 @@ public class LitePalHelper {
         //        }
         if (isInserted(shopCarBean.getGoodId())) {
             //数量加1
-            updateCount(shopCarBean.getGoodId(), shopCarBean.getDuration() + 1);
+            updateTime(shopCarBean.getGoodId(), shopCarBean.getDuration() + 1);
             Toast.makeText(MyApplication.getInstance(), "已成功加入共享车", Toast.LENGTH_SHORT).show();
         } else {
             boolean save = shopCarBean.save();//添加完数据别忘了保存，这个save()方法是实体类继承的DataSupport类中的

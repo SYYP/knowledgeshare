@@ -19,13 +19,14 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.youth.banner.Banner;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.GuDianBean;
 import www.knowledgeshare.com.knowledgeshare.utils.BannerUtils;
@@ -33,7 +34,7 @@ import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 
-public class GuDianActivity extends BaseActivity implements View.OnClickListener {
+public class GuDianActivity extends UMShareActivity implements View.OnClickListener {
 
     private ImageView iv_back;
     private TextView tv_title;
@@ -55,6 +56,7 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
     private List<GuDianBean.ZhuanlanEntity> mZhuanlan;
     private DaShiBanAdapter mDaShiBanAdapter;
     private YinYueKeAdapter mYinYueKeAdapter;
+    private GuDianBean mGuDianBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,9 +115,9 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
                              @Override
                              public void onSuccess(Response<GuDianBean> response) {
                                  int code = response.code();
-                                 GuDianBean guDianBean = response.body();
-                                 tv_zhuanlan_content.setText(guDianBean.getIntroduce());
-                                 mSlide = guDianBean.getSlide();
+                                 mGuDianBean = response.body();
+                                 tv_zhuanlan_content.setText(mGuDianBean.getIntroduce());
+                                 mSlide = mGuDianBean.getSlide();
                                  if (bannerList != null) {
                                      bannerList.clear();
                                      for (int i = 0; i < mSlide.size(); i++) {
@@ -123,8 +125,8 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
                                      }
                                  }
                                  BannerUtils.startBanner(banner, bannerList);
-                                 mXiaoke = guDianBean.getXiaoke();
-                                 mZhuanlan = guDianBean.getZhuanlan();
+                                 mXiaoke = mGuDianBean.getXiaoke();
+                                 mZhuanlan = mGuDianBean.getZhuanlan();
                                  mDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban3, mZhuanlan);
                                  recycler_dashiban.setAdapter(mDaShiBanAdapter);
                                  mDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -226,30 +228,40 @@ public class GuDianActivity extends BaseActivity implements View.OnClickListener
         mDialog.getView(R.id.tv_weixin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                shareWebUrl(mGuDianBean.getH5_url(),mGuDianBean.getIntroduce(),
+                        mXiaoke.get(0).getXk_image(),"",GuDianActivity.this, SHARE_MEDIA.WEIXIN);
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                shareWebUrl(mGuDianBean.getH5_url(),mGuDianBean.getIntroduce(),
+                        mXiaoke.get(0).getXk_image(),"",GuDianActivity.this,SHARE_MEDIA.WEIXIN_CIRCLE);
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                shareWebUrl(mGuDianBean.getH5_url(),mGuDianBean.getIntroduce(),
+                        mXiaoke.get(0).getXk_image(),"",GuDianActivity.this,SHARE_MEDIA.QZONE);
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                shareWebUrl(mGuDianBean.getH5_url(),mGuDianBean.getIntroduce(),
+                        mXiaoke.get(0).getXk_image(),"",GuDianActivity.this,SHARE_MEDIA.QQ);
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                shareWebUrl(mGuDianBean.getH5_url(),mGuDianBean.getIntroduce(),
+                        mXiaoke.get(0).getXk_image(),"",GuDianActivity.this,SHARE_MEDIA.SINA);
                 mDialog.dismiss();
             }
         });

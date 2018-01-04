@@ -25,7 +25,6 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
-import com.orhanobut.logger.Logger;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
 
@@ -42,7 +41,6 @@ import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.SearchActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.CollectActivity;
-import www.knowledgeshare.com.knowledgeshare.fragment.mine.Myclassjinjuadapter;
 import www.knowledgeshare.com.knowledgeshare.login.MessageActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SoftKeyboardTool;
@@ -55,7 +53,7 @@ import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 /**
  * Created by Administrator on 2017/11/17.
  */
-public class StudyFragment extends BaseFragment {
+public class StudyFragment extends BaseFragment implements View.OnClickListener {
     public TextView tv_search;
     public ImageView iv_message;
     public LinearLayout ll_download;
@@ -84,7 +82,7 @@ public class StudyFragment extends BaseFragment {
     List<NoteListBean.NoteBean> list = new ArrayList<>();
     List<NoteListBean.NoteBean> listAll = new ArrayList<>();
 
-    private TextView study_name;
+    private TextView study_name, tv_suishenting;
     private int favoriteId;
     private boolean isfav;
     private SpringView springView;
@@ -98,9 +96,9 @@ public class StudyFragment extends BaseFragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(!hidden){
+        if (!hidden) {
 
-            }
+        }
     }
 
     @Override
@@ -125,6 +123,8 @@ public class StudyFragment extends BaseFragment {
         this.lines = (View) rootView.findViewById(R.id.lines);
         this.study_titles = (TextView) rootView.findViewById(R.id.study_titles);
         this.study_dates = (TextView) rootView.findViewById(R.id.study_dates);
+        this.tv_suishenting = (TextView) rootView.findViewById(R.id.tv_suishenting);
+        tv_suishenting.setOnClickListener(this);
         this.springView = rootView.findViewById(R.id.springview);
         this.historyRl = rootView.findViewById(R.id.history_rl);
         study_recycler = rootView.findViewById(R.id.study_recycle);
@@ -149,7 +149,8 @@ public class StudyFragment extends BaseFragment {
         fram_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), MessageActivity.class);startActivity(intent);
+                Intent intent = new Intent(getActivity(), MessageActivity.class);
+                startActivity(intent);
             }
         });
         //搜索
@@ -168,7 +169,7 @@ public class StudyFragment extends BaseFragment {
             }
         });
         return rootView;
-        }
+    }
 
     private void initLoadMore() {
         springView.setType(SpringView.Type.FOLLOW);
@@ -189,7 +190,7 @@ public class StudyFragment extends BaseFragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        requestNoteList(lastId+"");
+                        requestNoteList(lastId + "");
                         springView.onFinishFreshAndLoad();
                     }
                 }, 2000);
@@ -203,7 +204,7 @@ public class StudyFragment extends BaseFragment {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("id",favoriteId);
+        params.put("id", favoriteId);
         OkGo.<BaseBean>post(MyContants.dayFavorite)
                 .tag(this)
                 .headers(headers)
@@ -212,12 +213,12 @@ public class StudyFragment extends BaseFragment {
                     @Override
                     public void onSuccess(Response<BaseBean> response) {
                         int code = response.code();
-                        if (code >= 200 && code <= 204){
+                        if (code >= 200 && code <= 204) {
                             study_xinxin.setImageResource(R.drawable.xinxin);
-                            TUtils.showShort(mContext,response.body().getMessage());
+                            TUtils.showShort(mContext, response.body().getMessage());
                             isfav = true;
-                        }else {
-                            TUtils.showShort(mContext,response.body().getMessage());
+                        } else {
+                            TUtils.showShort(mContext, response.body().getMessage());
                         }
                     }
                 });
@@ -227,7 +228,7 @@ public class StudyFragment extends BaseFragment {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("id",favoriteId);
+        params.put("id", favoriteId);
 
         OkGo.<BaseBean>post(MyContants.dayNoFacorite)
                 .tag(this)
@@ -237,12 +238,12 @@ public class StudyFragment extends BaseFragment {
                     @Override
                     public void onSuccess(Response<BaseBean> response) {
                         int code = response.code();
-                        if (code >= 200 && code <= 204){
+                        if (code >= 200 && code <= 204) {
                             study_xinxin.setImageResource(R.drawable.weiguanzhuxin);
-                            TUtils.showShort(mContext,response.body().getMessage());
+                            TUtils.showShort(mContext, response.body().getMessage());
                             isfav = false;
-                        }else {
-                            TUtils.showShort(mContext,response.body().getMessage());
+                        } else {
+                            TUtils.showShort(mContext, response.body().getMessage());
                         }
                     }
                 });
@@ -252,38 +253,38 @@ public class StudyFragment extends BaseFragment {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("after",after);
+        params.put("after", after);
         OkGo.<NoteListBean>post(MyContants.noteList)
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<NoteListBean>(mActivity,NoteListBean.class) {
+                .execute(new DialogCallback<NoteListBean>(mActivity, NoteListBean.class) {
                     @Override
                     public void onSuccess(Response<NoteListBean> response) {
                         int code = response.code();
-                        if (code >= 200 && code <= 204){
+                        if (code >= 200 && code <= 204) {
                             list = response.body().getNote();
                             List<NoteListBean.GoldBean> gold = response.body().getGold();
-                            if (list.size() > 0){
+                            if (list.size() > 0) {
                                 listAll.addAll(list);
-                            }else {
-                                TUtils.showShort(mContext,"没有更多数据了");
+                            } else {
+                                TUtils.showShort(mContext, "没有更多数据了");
                             }
-                            Studyadapter studyadapter = new Studyadapter(getActivity(),listAll);
+                            Studyadapter studyadapter = new Studyadapter(getActivity(), listAll);
                             study_recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
                             study_recycler.setAdapter(studyadapter);
-                            if (gold.size() > 0){
+                            if (gold.size() > 0) {
                                 study_day.setText(gold.get(0).getDay());
                                 study_date.setText(gold.get(0).getDisplay_at());
                                 study_count.setText(gold.get(0).getContent());
                                 favoriteId = gold.get(0).getId();
                                 isfav = gold.get(0).isIsfav();
-                                if (isfav){
+                                if (isfav) {
                                     study_xinxin.setImageResource(R.drawable.xinxin);
-                                }else {
+                                } else {
                                     study_xinxin.setImageResource(R.drawable.weiguanzhuxin);
                                 }
-                            }else {
+                            } else {
                                 historyRl.setVisibility(View.GONE);
                             }
 
@@ -294,10 +295,60 @@ public class StudyFragment extends BaseFragment {
                 });
     }
 
-        @Override
-        protected void initData () {
+    @Override
+    protected void initData() {
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_suishenting:
+                suishenting();
+                break;
         }
+    }
+
+    private void suishenting() {
+        /*HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        OkGo.<SuiShenTingBean>post(MyContants.LXKURL + "user/walkman")
+                .tag(this)
+                .headers(headers)
+                .execute(new JsonCallback<SuiShenTingBean>(SuiShenTingBean.class) {
+                             @Override
+                             public void onSuccess(Response<SuiShenTingBean> response) {
+                                 int code = response.code();
+                                 SuiShenTingBean tingBean = response.body();
+                                 SuiShenTingBean.DataEntity data = tingBean.getData();
+                                 List<SuiShenTingBean.DataEntity.DailyEntity> daily = data.getDaily();
+                                 List<SuiShenTingBean.DataEntity.FreeEntity> free = data.getFree();
+
+                                 SuiShenTingBean.DataEntity.FreeEntity item = free.get(0);//先播放免费专区的第一首
+                                 PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
+                                 gobofang(playerBean);
+                                 MusicTypeBean musicTypeBean = new MusicTypeBean("free",
+                                         item.getT_header(), item.getVideo_name(), item.getId() + "", item.isIsfav());
+                                 musicTypeBean.setMsg("musicplayertype");
+                                 EventBus.getDefault().postSticky(musicTypeBean);
+                                 List<PlayerBean> list = new ArrayList<PlayerBean>();
+                                 for (int i = 0; i < daily.size(); i++) {
+                                     SuiShenTingBean.DataEntity.DailyEntity entity = daily.get(i);
+                                     PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getT_tag(), entity.getVideo_url());
+                                     list.add(playerBean1);
+                                 }
+                                 MediaService.insertMusicList(list);
+                                 if (!HistroyUtils.isInserted(item.getVideo_name())) {
+                                     BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", item.getId(), item.getVideo_name(),
+                                             item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
+                                             item.getCollect_count(), item.getView_count(), item.getIs_good() == 1 ? true : false,
+                                             item.isIsfav(), item.getT_header(), item.getT_tag(),item.getShare_h5_url());
+                                     HistroyUtils.add(bofangHistroyBean);
+                                 }
+                             }
+                         }
+                );*/
+    }
 
     class Studyadapter extends RecyclerView.Adapter<Studyadapter.MyViewholder> {
         private Context context;
@@ -327,7 +378,7 @@ public class StudyFragment extends BaseFragment {
             holder.item_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showTips(list.get(position).getId(),position);
+                    showTips(list.get(position).getId(), position);
 
 
                 }
@@ -340,28 +391,28 @@ public class StudyFragment extends BaseFragment {
                     if (bool) {
                         holder.item_count.setFocusableInTouchMode(false);
                         holder.item_count.setFocusable(false);
-                        Drawable drawable= context.getResources().getDrawable(R.drawable.study_bianji);
+                        Drawable drawable = context.getResources().getDrawable(R.drawable.study_bianji);
                         /// 这一步必须要做,否则不会显示.
                         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                        holder.item_compile.setCompoundDrawables(drawable,null,null,null);
+                        holder.item_compile.setCompoundDrawables(drawable, null, null, null);
                         holder.item_compile.setText("编辑");
                         //关闭键盘
                         SoftKeyboardTool.closeKeyboard(holder.item_count);
                         MyApplication.stopClearClip();
-                        requesteditNote(list.get(position).getId(),holder.item_count.getText().toString());
+                        requesteditNote(list.get(position).getId(), holder.item_count.getText().toString());
                     } else {
                         holder.item_count.setFocusableInTouchMode(true);
                         holder.item_count.setFocusable(true);
-                        Drawable drawable= context.getResources().getDrawable(R.drawable.study_finish);
+                        Drawable drawable = context.getResources().getDrawable(R.drawable.study_finish);
                         /// 这一步必须要做,否则不会显示.
                         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                        holder.item_compile.setCompoundDrawables(drawable,null,null,null);
+                        holder.item_compile.setCompoundDrawables(drawable, null, null, null);
                         holder.item_compile.setText("完成");
                         MyApplication.startClearClip(context);
                         holder.item_count.setOnTouchListener(new View.OnTouchListener() {
                             @Override
                             public boolean onTouch(View view, MotionEvent motionEvent) {
-                                setInsertionDisabled( holder.item_count);
+                                setInsertionDisabled(holder.item_count);
                                 return false;
                             }
                         });
@@ -408,7 +459,7 @@ public class StudyFragment extends BaseFragment {
                     .setOnclickListener(new DialogInterface.OnLeftAndRightClickListener<NormalAlertDialog>() {
                         @Override
                         public void clickLeftButton(NormalAlertDialog dialog, View view) {
-                            requestDelNote(id,position);
+                            requestDelNote(id, position);
                             dialog.dismiss();
                         }
 
@@ -432,7 +483,7 @@ public class StudyFragment extends BaseFragment {
             HttpHeaders headers = new HttpHeaders();
             headers.put("Authorization", "Bearer " + SpUtils.getString(context, "token", ""));
             HttpParams params = new HttpParams();
-            params.put("id",id);
+            params.put("id", id);
             OkGo.<BaseBean>post(MyContants.delNote)
                     .tag(this)
                     .headers(headers)
@@ -441,8 +492,8 @@ public class StudyFragment extends BaseFragment {
                         @Override
                         public void onSuccess(Response<BaseBean> response) {
                             int code = response.code();
-                            if (code >= 200 && code <= 204){
-                                TUtils.showShort(context,response.body().getMessage());
+                            if (code >= 200 && code <= 204) {
+                                TUtils.showShort(context, response.body().getMessage());
                                 list.remove(position);
                                 notifyDataSetChanged();
                             }
@@ -454,8 +505,8 @@ public class StudyFragment extends BaseFragment {
             HttpHeaders headers = new HttpHeaders();
             headers.put("Authorization", "Bearer " + SpUtils.getString(context, "token", ""));
             HttpParams params = new HttpParams();
-            params.put("id",id+"");
-            params.put("content",content);
+            params.put("id", id + "");
+            params.put("content", content);
             OkGo.<BaseBean>post(MyContants.editNote)
                     .tag(this)
                     .headers(headers)
@@ -464,10 +515,10 @@ public class StudyFragment extends BaseFragment {
                         @Override
                         public void onSuccess(Response<BaseBean> response) {
                             int code = response.code();
-                            if (code >= 200 && code <= 204){
-                                TUtils.showShort(context,response.body().getMessage());
-                            }else {
-                                TUtils.showShort(context,response.body().getMessage());
+                            if (code >= 200 && code <= 204) {
+                                TUtils.showShort(context, response.body().getMessage());
+                            } else {
+                                TUtils.showShort(context, response.body().getMessage());
                             }
                         }
                     });
@@ -478,14 +529,14 @@ public class StudyFragment extends BaseFragment {
             return list != null ? list.size() : 0;
         }
 
-         class MyViewholder extends RecyclerView.ViewHolder {
-             TextView item_title;
-             TextView item_delete;
-             TextView item_compile;
-             EditText item_count;
-             LinearLayout study_liner;
+        class MyViewholder extends RecyclerView.ViewHolder {
+            TextView item_title;
+            TextView item_delete;
+            TextView item_compile;
+            EditText item_count;
+            LinearLayout study_liner;
 
-             MyViewholder(View rootView) {
+            MyViewholder(View rootView) {
                 super(rootView);
                 item_title = (TextView) rootView.findViewById(R.id.item_title);
                 item_delete = (TextView) rootView.findViewById(R.id.item_delete);
@@ -520,4 +571,4 @@ public class StudyFragment extends BaseFragment {
         }
     }
 
-    }
+}

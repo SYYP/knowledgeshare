@@ -22,6 +22,15 @@ public class EveryDayBean implements Serializable{
     private int update_count;
     private int view_count;
     private int collect_count;
+    private String h5_url;
+
+    public String getH5_url() {
+        return h5_url;
+    }
+
+    public void setH5_url(String h5_url) {
+        this.h5_url = h5_url;
+    }
 
     public void setImgurl(String imgurl) {
         this.imgurl = imgurl;
@@ -118,6 +127,16 @@ public class EveryDayBean implements Serializable{
         private int send_time;
         private int view_count;
         private boolean isChecked=true;
+        private String share_h5_url;
+
+        public String getShare_h5_url() {
+            return share_h5_url;
+        }
+
+        public void setShare_h5_url(String share_h5_url) {
+            this.share_h5_url = share_h5_url;
+        }
+
 
         public boolean isChecked() {
             return isChecked;

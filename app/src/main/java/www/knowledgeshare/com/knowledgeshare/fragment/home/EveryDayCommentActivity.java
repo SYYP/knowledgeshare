@@ -32,6 +32,7 @@ import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.OkDownload;
 import com.orhanobut.logger.Logger;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -40,15 +41,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
-import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
-import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.db.HistroyUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.EveryDayBean;
@@ -62,9 +61,8 @@ import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
 import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
-import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
-public class EveryDayCommentActivity extends BaseActivity implements View.OnClickListener {
+public class EveryDayCommentActivity extends UMShareActivity implements View.OnClickListener {
 
     private ImageView iv_back;
     private ImageView iv_share;
@@ -208,8 +206,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                                     gobofang(playerBean);
                                     addListenCount(mDailys.get(position).getId() + "");
                                     MusicTypeBean musicTypeBean = new MusicTypeBean("everydaycomment",
-                                            item.getT_header(), item.getVideo_name(), item.getId() + "",
-                                            item.getTeacher_id() + "", item.isIsfav());
+                                            item.getT_header(), item.getVideo_name(), item.getId() + "", item.isIsfav());
                                     musicTypeBean.setMsg("musicplayertype");
                                     EventBus.getDefault().postSticky(musicTypeBean);
                                     List<PlayerBean> list = new ArrayList<PlayerBean>();
@@ -223,7 +220,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("everydaycomment", item.getId(), item.getVideo_name(),
                                                 item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                                 item.getCollect_count(), item.getView_count(), item.isIslive(), item.isIsfav()
-                                                , item.getT_header(), item.getT_tag(), item.getTeacher_id() + "");
+                                                , item.getT_header(), item.getT_tag(),item.getShare_h5_url());
                                         HistroyUtils.add(bofangHistroyBean);
                                     }
                                 }
@@ -398,7 +395,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                showShareDialog();
+                showShareDialog("list",adapterPosition);
             }
         });
         mTv_collect = mDialog.getView(R.id.tv_collect);
@@ -449,7 +446,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 List<DownLoadListsBean.ListBean> list = new ArrayList<>();
                 DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
                 listBean.setTypeId("commentId");
-                listBean.setChildId(childEntity.getId()+"");
+                listBean.setChildId(childEntity.getId() + "");
                 listBean.setName(childEntity.getVideo_name());
                 listBean.setVideoTime(childEntity.getVideo_time());
                 listBean.setDate(split[0]);
@@ -459,7 +456,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 listBean.setIconUrl(childEntity.getT_header());
                 list.add(listBean);
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
-                        "comment", "commentId", "", childEntity.getT_header(), "", "",list.size()+"",list);
+                        "comment", "commentId", "", childEntity.getT_header(), "", "", list.size() + "", list);
                 DownUtil.add(downLoadListsBean);
 
                 /*DownLoadListBean DownLoadListBean = new DownLoadListBean(-2,childEntity.getId(),-4,-3,-1,
@@ -468,6 +465,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 DownUtils.add(DownLoadListBean);*/
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
                 OkDownload.request(downLoadListsBean.getTypeId()+"_"+childEntity.getId(), request)
+                OkDownload.request(childEntity.getVideo_name() + "_" + childEntity.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download")
                         .fileName(childEntity.getVideo_name()+"_"+childEntity.getId()+".mp3")
                         .extra3(downLoadListsBean)//额外数据
@@ -573,7 +571,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 );
     }
 
-    private void showShareDialog() {
+    private void showShareDialog(final String root, final int adapterPosition) {
         mDialog = mBuilder.setViewId(R.layout.dialog_share)
                 //设置dialogpadding
                 .setPaddingdp(10, 0, 10, 0)
@@ -594,33 +592,69 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 mDialog.dismiss();
             }
         });
+        final EveryDayBean.DailysEntity entity = mDailys.get(adapterPosition);
         mDialog.getView(R.id.tv_weixin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(everyDayBean.getH5_url(), mDailys.get(0).getVideo_name(),
+                            everyDayBean.getImgurl(), "", EveryDayCommentActivity.this, SHARE_MEDIA.WEIXIN);
+                } else {
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_name(),
+                            entity.getT_header(), "", EveryDayCommentActivity.this, SHARE_MEDIA.WEIXIN);
+                }
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(everyDayBean.getH5_url(), mDailys.get(0).getVideo_name(),
+                            everyDayBean.getImgurl(), "", EveryDayCommentActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                } else {
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_name(),
+                            entity.getT_header(), "", EveryDayCommentActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                }
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(everyDayBean.getH5_url(), mDailys.get(0).getVideo_name(),
+                            everyDayBean.getImgurl(), "", EveryDayCommentActivity.this, SHARE_MEDIA.QZONE);
+                } else {
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_name(),
+                            entity.getT_header(), "", EveryDayCommentActivity.this, SHARE_MEDIA.QZONE);
+                }
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(everyDayBean.getH5_url(), mDailys.get(0).getVideo_name(),
+                            everyDayBean.getImgurl(), "", EveryDayCommentActivity.this, SHARE_MEDIA.QQ);
+                } else {
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_name(),
+                            entity.getT_header(), "", EveryDayCommentActivity.this, SHARE_MEDIA.QQ);
+                }
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (root.equals("root")) {
+                    shareWebUrl(everyDayBean.getH5_url(), mDailys.get(0).getVideo_name(),
+                            everyDayBean.getImgurl(), "", EveryDayCommentActivity.this, SHARE_MEDIA.SINA);
+                } else {
+                    shareWebUrl(entity.getShare_h5_url(), entity.getVideo_name(),
+                            entity.getT_header(), "", EveryDayCommentActivity.this, SHARE_MEDIA.SINA);
+                }
                 mDialog.dismiss();
             }
         });
@@ -665,15 +699,15 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                 finish();
                 break;
             case R.id.iv_share:
-                showShareDialog();
+                showShareDialog("root",0);
                 break;
             case R.id.tv_search:
                 startActivity(new Intent(this, SearchActivity.class));
                 break;
             case R.id.tv_download:
                 EveryDayBean model = everyDayBean;
-                Intent intent = new Intent(this,CommentDownActivity.class);
-                intent.putExtra("model",model);
+                Intent intent = new Intent(this, CommentDownActivity.class);
+                intent.putExtra("model", model);
                 startActivity(intent);
                 break;
         }

@@ -8,6 +8,9 @@ import android.os.Environment;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.alibaba.sdk.android.push.CloudPushService;
+import com.alibaba.sdk.android.push.CommonCallback;
+import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
@@ -22,9 +25,6 @@ import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
-import com.taobao.accs.utl.ALog;
-import com.umeng.message.IUmengRegisterCallback;
-import com.umeng.message.PushAgent;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
@@ -35,7 +35,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import okhttp3.OkHttpClient;
-import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 /**
  * Created by Administrator on 2017/8/24.
@@ -49,11 +48,39 @@ public class MyApplication extends LitePalApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        application = this;
         //        initUMShare();
-        //        initUMPush();
         setLogger();
         setOkGo();//OkGo----第三方网络框架
-        application = this;
+        initCloudChannel(this);
+    }
+
+    /**
+     * 初始化云推送通道
+     *移动推送的初始化必须在Application中，不能放到Activity中执行。移动推送在初始化过程中将启动后台进程channel，
+     * 必须保证应用进程和channel进程都执行到推送初始化代码。
+     如果设备成功注册，将回调callback.onSuccess()方法。
+     但如果注册服务器连接失败，则调用callback.onFailed方法，并且自动进行重新注册，直到onSuccess为止。
+     （重试规则会由网络切换等时间自动触发。）
+     请在网络通畅的情况下进行相关的初始化调试，如果网络不通，或者App信息配置错误，在onFailed方法中，会有相应的错误码返回
+     * @param applicationContext
+     */
+    private void initCloudChannel(final Context applicationContext) {
+        PushServiceFactory.init(applicationContext);
+        final CloudPushService pushService = PushServiceFactory.getCloudPushService();
+        pushService.register(applicationContext, new CommonCallback() {
+            @Override
+            public void onSuccess(String response) {
+                //                Log.d(TAG, "init cloudchannel success");
+                String deviceId = pushService.getDeviceId();
+                System.out.println("xxxxxxxxx  "+deviceId);
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                //                Log.d(TAG, "init cloudchannel failed -- errorcode:" + errorCode + " -- errorMessage:" + errorMessage);
+            }
+        });
     }
 
     @Override
@@ -67,30 +94,6 @@ public class MyApplication extends LitePalApplication {
             application = getApplication();
         }
         return application;
-    }
-
-
-    private void initUMPush() {
-        final PushAgent mPushAgent = PushAgent.getInstance(this);
-        //注册推送服务，每次调用register方法都会回调该接口
-        mPushAgent.register(new IUmengRegisterCallback() {
-
-            @Override
-            public void onSuccess(String deviceToken) {
-                //                Toast.makeText(MyApplication.this, "注册成功" + deviceToken, Toast.LENGTH_SHORT).show();
-                System.out.println("友盟推送注册成功" + deviceToken);
-                //注册成功会返回device token
-                //                mRegistrationId = mPushAgent.getRegistrationId();
-                //                Toast.makeText(MyApplication.this, "注册成功" + mRegistrationId, Toast.LENGTH_SHORT).show();
-                //                SpUtils.putString(instance, "UMPUSHID", mRegistrationId);
-                SpUtils.putString(application, "UMPUSHID", deviceToken);
-            }
-
-            @Override
-            public void onFailure(String s, String s1) {
-                //                Toast.makeText(MyApplication.this, "注册失败", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void initUMShare() {

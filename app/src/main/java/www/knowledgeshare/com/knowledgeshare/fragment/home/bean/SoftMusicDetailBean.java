@@ -39,6 +39,15 @@ public class SoftMusicDetailBean implements Serializable{
     private int xk_class_id;
     private String xk_price;
     private List<ChildEntity> child;
+    private String h5_url;
+
+    public String getH5_url() {
+        return h5_url;
+    }
+
+    public void setH5_url(String h5_url) {
+        this.h5_url = h5_url;
+    }
 
     public void setXk_sale(int xk_sale) {
         this.xk_sale = xk_sale;
@@ -466,6 +475,15 @@ public class SoftMusicDetailBean implements Serializable{
         private String t_name;
         private String parent_name;
         private boolean isChecked=true;
+        private String share_h5_url;
+
+        public String getShare_h5_url() {
+            return share_h5_url;
+        }
+
+        public void setShare_h5_url(String share_h5_url) {
+            this.share_h5_url = share_h5_url;
+        }
 
 
         public String getParent_name() {

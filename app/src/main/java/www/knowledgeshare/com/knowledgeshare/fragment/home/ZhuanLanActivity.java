@@ -22,12 +22,13 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.MyAccountActivity;
-import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
@@ -40,7 +41,7 @@ import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
-public class ZhuanLanActivity extends BaseActivity implements View.OnClickListener {
+public class ZhuanLanActivity extends UMShareActivity implements View.OnClickListener {
 
     private ImageView iv_back;
     private ImageView iv_share;
@@ -227,6 +228,7 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void showShareDialog() {
+        mBuilder = new BaseDialog.Builder(this);
         mDialog = mBuilder.setViewId(R.layout.dialog_share)
                 //设置dialogpadding
                 .setPaddingdp(10, 0, 10, 0)
@@ -244,6 +246,46 @@ public class ZhuanLanActivity extends BaseActivity implements View.OnClickListen
         mDialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_weixin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareWebUrl(mZhuanLanBean.getH5_url(),mZhuanLanBean.getZl_introduce(),
+                        mZhuanLanBean.getZl_img(),"",ZhuanLanActivity.this, SHARE_MEDIA.WEIXIN);
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareWebUrl(mZhuanLanBean.getH5_url(),mZhuanLanBean.getZl_introduce(),
+                        mZhuanLanBean.getZl_img(),"",ZhuanLanActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareWebUrl(mZhuanLanBean.getH5_url(),mZhuanLanBean.getZl_introduce(),
+                        mZhuanLanBean.getZl_img(),"",ZhuanLanActivity.this, SHARE_MEDIA.QZONE);
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareWebUrl(mZhuanLanBean.getH5_url(),mZhuanLanBean.getZl_introduce(),
+                        mZhuanLanBean.getZl_img(),"",ZhuanLanActivity.this, SHARE_MEDIA.QQ);
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareWebUrl(mZhuanLanBean.getH5_url(),mZhuanLanBean.getZl_introduce(),
+                        mZhuanLanBean.getZl_img(),"",ZhuanLanActivity.this, SHARE_MEDIA.SINA);
                 mDialog.dismiss();
             }
         });

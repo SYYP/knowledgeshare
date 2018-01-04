@@ -234,9 +234,18 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             isBofang = true;
             rl_bofang.setVisibility(View.VISIBLE);
             iv_delete.setVisibility(View.GONE);
+            mytype = "zhuanlan";
+            myposition = 0;
             HomeBean.FreeEntity.ChildEntity item = mMFreeChild.get(0);
             PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
             gobofang(playerBean);
+            List<PlayerBean> list = new ArrayList<PlayerBean>();
+            for (int i = 0; i < mMFreeChild.size(); i++) {
+                HomeBean.FreeEntity.ChildEntity entity = mMFreeChild.get(i);
+                PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getT_tag(), entity.getVideo_url());
+                list.add(playerBean1);
+            }
+            MediaService.insertMusicList(list);
         }
     }
 
@@ -460,7 +469,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     gobofang(playerBean);
                     mMusicTypeBean = new MusicTypeBean("free",
                             item.getT_header(), item.getVideo_name(), item.getId() + "",
-                            mFree.getTeacher_id() + "", item.getIs_collect() == 0 ? false : true);
+                            item.getIs_collect() == 0 ? false : true);
                     mMusicTypeBean.setMsg("musicplayertype");
                     EventBus.getDefault().postSticky(mMusicTypeBean);
                     List<PlayerBean> list = new ArrayList<PlayerBean>();
@@ -474,7 +483,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", item.getId(), item.getVideo_name(),
                                 item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                 item.getCollect_count(), item.getView_count(), item.getIs_good() == 1 ? true : false,
-                                item.isIsfav(), item.getT_header(), item.getT_tag(), mFree.getTeacher_id() + "");
+                                item.isIsfav(), item.getT_header(), item.getT_tag(), item.getShare_h5_url());
                         HistroyUtils.add(bofangHistroyBean);
                     }
                 }
@@ -508,7 +517,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     gobofang(playerBean);
                     mMusicTypeBean = new MusicTypeBean("everydaycomment",
                             item.getT_header(), item.getVideo_name(), item.getId() + "",
-                            item.getTeacher_id() + "", item.isIsfav());
+                            item.isIsfav());
                     mMusicTypeBean.setMsg("musicplayertype");
                     EventBus.getDefault().postSticky(mMusicTypeBean);
                     List<PlayerBean> list = new ArrayList<PlayerBean>();
@@ -522,7 +531,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("everydaycomment", item.getId(), item.getVideo_name(),
                                 item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                 item.getCollect_count(), item.getView_count(), item.getIs_good() == 1 ? true : false,
-                                item.isIsfav(), item.getT_header(), item.getT_tag(), mFree.getTeacher_id() + "");
+                                item.isIsfav(), item.getT_header(), item.getT_tag(), item.getShare_h5_url());
                         HistroyUtils.add(bofangHistroyBean);
                     }
                 }
@@ -778,22 +787,28 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, MyGuanzhuActivity.class));
                 break;
             case R.id.tv_lianxubofang:
-                String musicurl = SpUtils.getString(mContext, "musicurl", "");
-                if (!TextUtils.isEmpty(musicurl)) {
-                    //                        if (mRotate_anim != null) {
-                    //                            iv_listen.startAnimation(mRotate_anim);  //开始动画
-                    //                        }
-                    String title = SpUtils.getString(mContext, "title", "");
-                    String subtitle = SpUtils.getString(mContext, "subtitle", "");
-                    String t_head = SpUtils.getString(mContext, "t_head", "");
+                List<PlayerBean> lastList = MediaService.getLastList();
+                if (lastList != null && lastList.size() > 0) {
+                    String musicurl = lastList.get(0).getVideo_url();
+                    String title = lastList.get(0).getTitle();
+                    String subtitle = lastList.get(0).getSubtitle();
+                    String t_head = lastList.get(0).getTeacher_head();
                     PlayerBean playerBean = new PlayerBean(t_head, title, subtitle, musicurl);
                     gobofang(playerBean);
+                    MediaService.insertMusicList(lastList);//下一次启动的时候获取之前播放到的地方的新list，设置上
                 } else {
                     mytype = "zhuanlan";
                     myposition = 0;
                     HomeBean.FreeEntity.ChildEntity item = mMFreeChild.get(0);
                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
                     gobofang(playerBean);
+                    List<PlayerBean> list = new ArrayList<PlayerBean>();
+                    for (int i = 0; i < mMFreeChild.size(); i++) {
+                        HomeBean.FreeEntity.ChildEntity entity = mMFreeChild.get(i);
+                        PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getT_tag(), entity.getVideo_url());
+                        list.add(playerBean1);
+                    }
+                    MediaService.insertMusicList(list);
                 }
                 break;
             case R.id.iv_zhuanlan_head:

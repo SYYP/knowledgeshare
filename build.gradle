@@ -19,6 +19,9 @@ allprojects {
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }//recycler框架需要
+        maven {
+            url 'http://maven.aliyun.com/nexus/content/repositories/releases/'//阿里云推送
+        }
     }
 }
 
