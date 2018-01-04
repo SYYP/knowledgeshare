@@ -724,7 +724,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                         addListenCount(mFreeTryReadDetailBean.getId() + "");
                         MusicTypeBean musicTypeBean = new MusicTypeBean("zhuanlandetail",
                                 mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getName(), mId,
-                                "", mFreeTryReadDetailBean.isfav());
+                                mFreeTryReadDetailBean.isfav());
                         musicTypeBean.setMsg("musicplayertype");
                         EventBus.getDefault().postSticky(musicTypeBean);
                         List<PlayerBean> list = new ArrayList<PlayerBean>();

@@ -251,7 +251,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                     addListenCount(mFreeAdapter.getData().get(position).getId() + "");
                                     MusicTypeBean musicTypeBean = new MusicTypeBean("free",
                                             mFreeBean.getTeacher_has().getT_header(), item.getVideo_name(), item.getId() + "",
-                                            mFreeBean.getTeacher_has().getId() + "", item.isIsfav());
+                                            item.isIsfav());
                                     musicTypeBean.setMsg("musicplayertype");
                                     EventBus.getDefault().postSticky(musicTypeBean);
                                     List<PlayerBean> list = new ArrayList<PlayerBean>();
@@ -265,7 +265,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", item.getId(), item.getVideo_name(),
                                                 item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                                 item.getCollect_count(), item.getView_count(), item.isIslive(), item.isIsfav(),
-                                                item.getT_header(), item.getT_tag(), mFreeBean.getTeacher_has().getId() + "",
+                                                item.getT_header(), item.getT_tag(),
                                                 item.getShare_h5_url());
                                         HistroyUtils.add(bofangHistroyBean);
                                     }

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -296,14 +295,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 if (isPause) {
                     iv_listen.setImageResource(R.drawable.tab_listen_bo);
                     if (mMyBinder.isClosed()) {
-                        String musicurl = SpUtils.getString(this, "musicurl", "");
-                        if (!TextUtils.isEmpty(musicurl)) {
-                            String title = SpUtils.getString(this, "title", "");
-                            String subtitle = SpUtils.getString(this, "subtitle", "");
-                            String t_head = SpUtils.getString(this, "t_head", "");
+                        List<PlayerBean> lastList = MediaService.getLastList();
+                        if (lastList != null && lastList.size() > 0) {
+                            String musicurl = lastList.get(0).getVideo_url();
+                            String title = lastList.get(0).getTitle();
+                            String subtitle = lastList.get(0).getSubtitle();
+                            String t_head = lastList.get(0).getTeacher_head();
                             PlayerBean playerBean = new PlayerBean(t_head, title, subtitle, musicurl);
                             playerBean.setMsg("lastbofang");
                             EventBus.getDefault().postSticky(playerBean);
+                            MediaService.insertMusicList(lastList);//下一次启动的时候获取之前播放到的地方的新list，设置上
                         } else {
                             EventBus.getDefault().post(new EventBean("morenbofang"));
                         }

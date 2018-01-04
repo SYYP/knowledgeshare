@@ -306,8 +306,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                              gobofang(playerBean);
                                              addListenCount(item.getId() + "");
                                              MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
-                                                     item.getT_header(), item.getVideo_old_name(), item.getId() + "",
-                                                     mMusicDetailBean.getXk_teacher_id() + "", item.isIsfav());
+                                                     item.getT_header(), item.getVideo_old_name(), item.getId() + "", item.isIsfav());
                                              musicTypeBean.setMsg("musicplayertype");
                                              EventBus.getDefault().postSticky(musicTypeBean);
                                              List<PlayerBean> list = new ArrayList<PlayerBean>();
@@ -321,8 +320,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                                  BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", item.getId(), item.getVideo_old_name(),
                                                          item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                                          item.getCollect_count(), item.getView_count(), item.isIslive(), item.isIsfav()
-                                                         , item.getT_header(), item.getT_tag(), mMusicDetailBean.getXk_teacher_id() + ""
-                                                         ,item.getShare_h5_url());
+                                                         , item.getT_header(), item.getT_tag(),item.getShare_h5_url());
                                                  HistroyUtils.add(bofangHistroyBean);
                                              }
                                          }

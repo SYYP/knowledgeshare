@@ -100,8 +100,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
                     gobofang(playerBean);
                     MusicTypeBean musicTypeBean = new MusicTypeBean("free",
-                            item.getT_header(), item.getVideo_name(), item.getId() + "",
-                            item.getT_id(), item.isCollected());
+                            item.getT_header(), item.getVideo_name(), item.getId() + "",item.isCollected());
                     musicTypeBean.setMsg("musicplayertype");
                     EventBus.getDefault().postSticky(musicTypeBean);
                     List<PlayerBean> list = new ArrayList<PlayerBean>();

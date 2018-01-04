@@ -11,7 +11,6 @@ public class MusicTypeBean implements Serializable {
     private String t_head;
     private String video_name;
     private String id;
-    private String teacher_id;
     private boolean isCollected;
     private String msg;
 
@@ -55,14 +54,6 @@ public class MusicTypeBean implements Serializable {
         this.id = id;
     }
 
-    public String getTeacher_id() {
-        return teacher_id;
-    }
-
-    public void setTeacher_id(String teacher_id) {
-        this.teacher_id = teacher_id;
-    }
-
     public boolean isCollected() {
         return isCollected;
     }
@@ -71,12 +62,11 @@ public class MusicTypeBean implements Serializable {
         isCollected = collected;
     }
 
-    public MusicTypeBean(String type, String t_head, String video_name, String id, String teacher_id, boolean isCollected) {
+    public MusicTypeBean(String type, String t_head, String video_name, String id, boolean isCollected) {
         this.type = type;
         this.t_head = t_head;
         this.video_name = video_name;
         this.id = id;
-        this.teacher_id = teacher_id;
         this.isCollected = isCollected;
     }
 }

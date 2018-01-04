@@ -207,8 +207,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                     gobofang(playerBean);
                                     addListenCount(mDailys.get(position).getId() + "");
                                     MusicTypeBean musicTypeBean = new MusicTypeBean("everydaycomment",
-                                            item.getT_header(), item.getVideo_name(), item.getId() + "",
-                                            item.getTeacher_id() + "", item.isIsfav());
+                                            item.getT_header(), item.getVideo_name(), item.getId() + "", item.isIsfav());
                                     musicTypeBean.setMsg("musicplayertype");
                                     EventBus.getDefault().postSticky(musicTypeBean);
                                     List<PlayerBean> list = new ArrayList<PlayerBean>();
@@ -222,8 +221,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("everydaycomment", item.getId(), item.getVideo_name(),
                                                 item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                                 item.getCollect_count(), item.getView_count(), item.isIslive(), item.isIsfav()
-                                                , item.getT_header(), item.getT_tag(), item.getTeacher_id() + ""
-                                                ,item.getShare_h5_url());
+                                                , item.getT_header(), item.getT_tag(),item.getShare_h5_url());
                                         HistroyUtils.add(bofangHistroyBean);
                                     }
                                 }
