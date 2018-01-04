@@ -640,7 +640,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 String[] split = created_at.split(" ");
                 List<DownLoadListsBean.ListBean> list = new ArrayList<>();
                 DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
-                listBean.setTypeId("freeId");
+                listBean.setTypeId(mFreeBean.getId()+"");
                 listBean.setChildId(childEntity.getId()+"");
                 listBean.setName(childEntity.getVideo_name());
                 listBean.setVideoTime(childEntity.getVideo_time());
@@ -651,7 +651,7 @@ public class FreeActivity extends BaseActivity implements View.OnClickListener {
                 listBean.setIconUrl(childEntity.getT_header());
                 list.add(listBean);
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
-                        "free", "freeId", "", childEntity.getT_header(), "", "",list.size()+"",list);
+                        "free", mFreeBean.getId()+"", "", childEntity.getT_header(), "", "",list.size()+"",list);
                 DownUtil.add(downLoadListsBean);
                 /*DownLoadListBean DownLoadListBean = new DownLoadListBean(-1,childEntity.getId(),-4,-3,
                         childEntity.getVideo_name(),childEntity.getVideo_time(), split[0], split[1],

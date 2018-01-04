@@ -180,7 +180,6 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                         mDailys = everyDayBean.getDailys();
                         EveryDayBean everyDayBean = response.body();
                         if (response.code() >= 200 && response.code() <= 204) {
-                            Logger.e(code + "");
                             if (isLoadMore) {
                                 List<EveryDayBean.DailysEntity> dailys = everyDayBean.getDailys();
                                 if (dailys == null || dailys.size() == 0) {
@@ -468,7 +467,7 @@ public class EveryDayCommentActivity extends BaseActivity implements View.OnClic
                         childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
                 DownUtils.add(DownLoadListBean);*/
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
-                OkDownload.request(childEntity.getVideo_name()+"_"+childEntity.getId(), request)
+                OkDownload.request(downLoadListsBean.getTypeId()+"_"+childEntity.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download")
                         .fileName(childEntity.getVideo_name()+"_"+childEntity.getId()+".mp3")
                         .extra3(downLoadListsBean)//额外数据

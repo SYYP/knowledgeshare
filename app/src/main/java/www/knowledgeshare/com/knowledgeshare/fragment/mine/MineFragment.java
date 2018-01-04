@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -133,36 +132,32 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 xzEndTv.setText("铜勋章");
                 break;
             case 1:
-                progressBar.setMin(200);
-                progressBar.setMax(600);
-                progressBar.setProgress(integral);
+                progressBar.setMax(600-200);
+                progressBar.setProgress(integral-200);
                 xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v1));
                 xzStartTv.setText("铜勋章");
                 xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v2));
                 xzEndTv.setText("银勋章");
                 break;
             case 2:
-                progressBar.setMin(600);
-                progressBar.setMax(1500);
-                progressBar.setProgress(integral);
+                progressBar.setMax(1500-600);
+                progressBar.setProgress(integral-600);
                 xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v2));
                 xzStartTv.setText("银勋章");
                 xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v3));
                 xzEndTv.setText("金勋章");
                 break;
             case 3:
-                progressBar.setMin(1500);
-                progressBar.setMax(3000);
-                progressBar.setProgress(integral);
+                progressBar.setMax(3000-1500);
+                progressBar.setProgress(integral-1500);
                 xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v3));
                 xzStartTv.setText("金勋章");
                 xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v4));
                 xzEndTv.setText("白金勋章");
                 break;
             case 4:
-                progressBar.setMin(3000);
-                progressBar.setMax(5000);
-                progressBar.setProgress(integral);
+                progressBar.setMax(5000-3000);
+                progressBar.setProgress(integral-3000);
                 xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v4));
                 xzStartTv.setText("白金勋章");
                 xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v5));

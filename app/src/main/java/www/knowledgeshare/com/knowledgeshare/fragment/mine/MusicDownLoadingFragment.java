@@ -16,8 +16,11 @@ import com.lzy.okgo.model.Progress;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.OkDownload;
 import com.lzy.okserver.task.XExecutor;
+import com.orhanobut.logger.Logger;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,6 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.MusicDownLoadBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.adapter.DownloadAdapter;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
@@ -87,6 +91,15 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
     public void onResume() {
         super.onResume();
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser){
+            EventBean eventBean = new EventBean("refrash");
+            EventBus.getDefault().postSticky(eventBean);
+        }
     }
 
     @Override

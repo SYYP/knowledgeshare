@@ -743,11 +743,7 @@ public class SoftMusicDetailActivity extends BaseActivity implements View.OnClic
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
                 OkDownload.request(childEntity.getXk_id() + "_" + childEntity.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download")
-//                        .fileName(childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId())
                         .fileName(childEntity.getName()+childEntity.getXk_id()+"_"+childEntity.getId()+".mp3")
-                        .extra3(downLoadListsBean)
-                        .fileName(childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId())
-                        //                        .fileName(childEntity.getName()+childEntity.getXk_id()+"_"+childEntity.getId()+".mp3")
                         .extra3(downLoadListsBean)
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听

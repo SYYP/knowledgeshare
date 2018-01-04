@@ -15,7 +15,16 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.db.DownloadManager;
+import com.lzy.okgo.request.GetRequest;
+import com.lzy.okserver.OkDownload;
+import com.lzy.okserver.download.DownloadTask;
+import com.orhanobut.logger.Logger;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +32,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
+import www.knowledgeshare.com.knowledgeshare.fragment.buy.adapter.DownloadAdapter;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.AlreadyDlDetailBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.WenGaoActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 
 /**
@@ -40,9 +54,11 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
     @BindView(R.id.heji_tv) TextView hejiTv;
     @BindView(R.id.delete_tv) TextView deleteTv;
     @BindView(R.id.bianji_rl) RelativeLayout bianjiRl;
-    private List<AlreadyDlDetailBean> list;
     private AlreadyDlDetailAdapter adapter;
-    private AlreadyDlDetailBean alreadyDlDetailBean;
+    private List<DownLoadListsBean> listFree = new ArrayList<>();
+    private List<DownLoadListsBean> listComment = new ArrayList<>();
+    private List<DownLoadListsBean.ListBean> list = new ArrayList<>();
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +76,6 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
         titleBackIv.setOnClickListener(this);
         titleContentRightTv.setOnClickListener(this);
         deleteTv.setOnClickListener(this);
-        initData();
         allCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,22 +88,46 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                 }
             }
         });
+        getIntentData();
+    }
+
+    private void getIntentData() {
+        type = getIntent().getStringExtra("type");
+        switch (type){
+            case "free":
+                listFree = (List<DownLoadListsBean>) getIntent().getExtras().getSerializable("list");
+                for (int i = 0; i < listFree.size(); i++) {
+                    list.addAll(listFree.get(i).getList());
+                }
+                break;
+            case "comment":
+                listComment = (List<DownLoadListsBean>) getIntent().getExtras().getSerializable("list");
+                for (int i = 0; i < listComment.size(); i++) {
+                    list.addAll(listComment.get(i).getList());
+                }
+                break;
+            case "xiaoke":
+                list = (List<DownLoadListsBean.ListBean>) getIntent().getExtras().getSerializable("list");
+                break;
+            case "zhuanlan":
+                list = (List<DownLoadListsBean.ListBean>) getIntent().getExtras().getSerializable("list");
+                break;
+        }
+        initData();
     }
 
     private void initData() {
         recyclerKcmc.setLayoutManager(new LinearLayoutManager(this));
         recyclerKcmc.setNestedScrollingEnabled(false);
-        list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            alreadyDlDetailBean = new AlreadyDlDetailBean();
-            alreadyDlDetailBean.setTitle("男低音，一个神秘又充满魅力的声部");
-            alreadyDlDetailBean.setName("崔宗顺");
-            alreadyDlDetailBean.setTime("05:00");
-            alreadyDlDetailBean.setSize(i+1+"");
-            list.add(alreadyDlDetailBean);
-        }
         adapter = new AlreadyDlDetailAdapter(R.layout.item_alreadydl_detail, list);
         recyclerKcmc.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBean eventBean = new EventBean("back");
+        EventBus.getDefault().postSticky(eventBean);
     }
 
     @Override
@@ -99,13 +138,15 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                 break;
             case R.id.title_content_right_tv:
                 if (TextUtils.equals("编辑", titleContentRightTv.getText().toString())) {
-                    titleContentRightTv.setText("取消");
-                    MyUtils.setMargins(recyclerKcmc,0,0,0,100);
-                    bianjiRl.setVisibility(View.VISIBLE);
-                    for (int i = 0; i < list.size(); i++) {
-                        list.get(i).setVisibility(true);
+                    if (list.size() > 0){
+                        titleContentRightTv.setText("取消");
+                        MyUtils.setMargins(recyclerKcmc,0,0,0,100);
+                        bianjiRl.setVisibility(View.VISIBLE);
+                        for (int i = 0; i < list.size(); i++) {
+                            list.get(i).setVisibility(true);
+                        }
+                        adapter.notifyDataSetChanged();
                     }
-                    adapter.notifyDataSetChanged();
                 }else {
                     titleContentRightTv.setText("编辑");
                     MyUtils.setMargins(recyclerKcmc,0,0,0,0);
@@ -119,7 +160,15 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
             case R.id.delete_tv:
                 for (int i = list.size()-1; i >= 0; i--) {
                     if (list.get(i).isChecked()){
+                        GetRequest< File > request = OkGo.<File>get(list.get(i).getVideoUrl());
+                        DownloadTask task = new DownloadTask(list.get(i).getTypeId()+"_"+list.get(i).getChildId(),request);
+                        Logger.e("TAG:"+list.get(i).getTypeId()+"_"+list.get(i).getChildId());
+                        task.remove(true);
                         list.remove(i);
+                    }
+                    if (list.size() == 0){
+                        bianjiRl.setVisibility(View.GONE);
+                        titleContentRightTv.setText("编辑");
                     }
                     adapter.notifyDataSetChanged();
                 }
@@ -152,14 +201,14 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
         return true;
     }
 
-    private class AlreadyDlDetailAdapter extends BaseQuickAdapter<AlreadyDlDetailBean, BaseViewHolder> {
+    private class AlreadyDlDetailAdapter extends BaseQuickAdapter<DownLoadListsBean.ListBean, BaseViewHolder> {
 
-        public AlreadyDlDetailAdapter(@LayoutRes int layoutResId, @Nullable List<AlreadyDlDetailBean> data) {
+        public AlreadyDlDetailAdapter(@LayoutRes int layoutResId, @Nullable List<DownLoadListsBean.ListBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, final AlreadyDlDetailBean item) {
+        protected void convert(BaseViewHolder helper, final DownLoadListsBean.ListBean item) {
             TextView sizeTv = helper.getView(R.id.size_tv);
             TextView titleTv = helper.getView(R.id.title_tv);
             TextView nameTv = helper.getView(R.id.name_tv);
@@ -172,9 +221,9 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                 checkBox.setVisibility(View.GONE);
             }
 
-            sizeTv.setText(item.getSize());
-            titleTv.setText(item.getTitle());
-            nameTv.setText(item.getName());
+            sizeTv.setText(helper.getPosition()+1+"");
+            titleTv.setText(item.getName());
+//            nameTv.setText(item.getName());
             timeTv.setText(item.getTime());
             checkBox.setChecked(item.isChecked());
 

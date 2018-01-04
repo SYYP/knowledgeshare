@@ -273,7 +273,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         int code = response.code();
                         HomeBean homeBean = response.body();
                         if (response.code() >= 200 && response.code() <= 204) {
-                            Logger.e(code + "");
                             mDaily = homeBean.getDaily();
                             mFree = homeBean.getFree();
                             mLive = homeBean.getLive();
@@ -342,7 +341,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         int code = response.code();
                         HomeBannerBean bannerBean = response.body();
                         if (response.code() >= 200 && response.code() <= 204) {
-                            Logger.e(code + "");
                             List<HomeBannerBean.HomeslideEntity> homeslide = bannerBean.getHomeslide();
                             for (int i = 0; i < homeslide.size(); i++) {
                                 String imgurl = homeslide.get(i).getImgurl();

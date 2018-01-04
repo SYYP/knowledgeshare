@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,11 @@ import com.lzy.okserver.download.DownloadTask;
 import com.orhanobut.logger.Logger;
 import com.umeng.message.common.inter.ITagManager;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,11 +40,14 @@ import butterknife.Unbinder;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.AlreadyDownloadDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.EasyLessonBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
@@ -46,21 +55,17 @@ import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
  */
 
 public class AlreadyDownLoadFragment extends BaseFragment {
-    @BindView(R.id.recycler_alread_download)
-    RecyclerView recyclerAlreadDownload;
-    @BindView(R.id.scrollView)
-    NestedScrollView scrollView;
-    @BindView(R.id.free_ll)
-    LinearLayout freeLl;
-    @BindView(R.id.comment_ll)
-    LinearLayout commentLl;
-    @BindView(R.id.free_tv)
-    TextView freeTv;
-    @BindView(R.id.comment_tv)
-    TextView commentTv;
+    @BindView(R.id.recycler_alread_download) RecyclerView recyclerAlreadDownload;
+    @BindView(R.id.scrollView) NestedScrollView scrollView;
+    @BindView(R.id.free_ll) LinearLayout freeLl;
+    @BindView(R.id.comment_ll) LinearLayout commentLl;
+    @BindView(R.id.free_tv) TextView freeTv;
+    @BindView(R.id.comment_tv) TextView commentTv;
     Unbinder unbinder;
-    private DownloadTask task;
-
+    private DownLoadListsBean downLoadListBean;
+    private List<DownLoadListsBean> freeList;
+    private List<DownLoadListsBean> commentList;
+    private List<DownLoadListsBean> list = new ArrayList<>();
 
     @Override
     protected void lazyLoad() {
@@ -71,32 +76,36 @@ public class AlreadyDownLoadFragment extends BaseFragment {
     protected View initView() {
         View inflate = View.inflate(mContext, R.layout.fragment_already_download, null);
         unbinder = ButterKnife.bind(this, inflate);
+        EventBus.getDefault().register(this);
         return inflate;
     }
 
     @OnClick(R.id.free_ll)
     public void free(){
-        TUtils.showShort(mContext,"免费专区");
+        Intent intent = new Intent(getActivity(),AlreadyDownloadDetailActivity.class);
+        intent.putExtra("type","free");
+        intent.putExtra("list", (Serializable) freeList);
+        startActivity(intent);
     }
 
     @OnClick(R.id.comment_ll)
     public void comment(){
-        TUtils.showShort(mContext,"每日推荐");
+        Intent intent = new Intent(getActivity(),AlreadyDownloadDetailActivity.class);
+        intent.putExtra("type","comment");
+        intent.putExtra("list", (Serializable) commentList);
+        startActivity(intent);
     }
 
     @Override
     protected void initData() {
         recyclerAlreadDownload.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerAlreadDownload.setNestedScrollingEnabled(false);
-        List<DownLoadListsBean> list = new ArrayList<>();
-        List<DownLoadListsBean> freeList = new ArrayList<>();
-        List<DownLoadListsBean> commentList = new ArrayList<>();
-
+        freeList = new ArrayList<>();
+        commentList = new ArrayList<>();
         List<DownloadTask> restoreList = OkDownload.restore(DownloadManager.getInstance().getFinished());
-        Logger.e(restoreList.size()+"");
         for (int i = 0; i < restoreList.size(); i++) {
             Progress progress = restoreList.get(i).progress;
-            DownLoadListsBean downLoadListBean = (DownLoadListsBean) progress.extra3;
+            downLoadListBean = (DownLoadListsBean) progress.extra3;
             if (downLoadListBean.getType().equals("xiaoke")|| downLoadListBean.getType().equals("zhuanlan")){
                 list.add(downLoadListBean);
             }
@@ -108,23 +117,59 @@ public class AlreadyDownLoadFragment extends BaseFragment {
             }
         }
 
-        freeTv.setText("共缓存"+freeList.size()+"节");
-        commentTv.setText("共缓存"+commentList.size()+"节");
+        if (freeList.size() == 0){
+            freeLl.setVisibility(View.GONE);
+        }else {
+            freeLl.setVisibility(View.VISIBLE);
+            freeTv.setText("共缓存"+ freeList.size()+"节");
+        }
+        if (commentList.size() == 0){
+            commentLl.setVisibility(View.GONE);
+        }else {
+            commentLl.setVisibility(View.VISIBLE);
+            commentTv.setText("共缓存"+ commentList.size()+"节");
+        }
 
         AlreadyDownLoadAdapter adapter = new AlreadyDownLoadAdapter(R.layout.item_already_download,list);
         recyclerAlreadDownload.setAdapter(adapter);
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(getActivity(), AlreadyDownloadDetailActivity.class));
+                if (list.get(position).getType().equals("xiaoke")){
+                    List<DownLoadListsBean.ListBean> list1 = list.get(position).getList();
+                    Intent intent = new Intent(getActivity(),AlreadyDownloadDetailActivity.class);
+                    intent.putExtra("type","xiaoke");
+                    intent.putExtra("list", (Serializable) list1);
+                    startActivity(intent);
+                }
+                if (list.get(position).getType().equals("zhuanlan")){
+                    List<DownLoadListsBean.ListBean> list1 = list.get(position).getList();
+                    Intent intent = new Intent(getActivity(),AlreadyDownloadDetailActivity.class);
+                    intent.putExtra("type","xiaoke");
+                    intent.putExtra("list", (Serializable) list1);
+                    startActivity(intent);
+                }
             }
         });
+    }
+
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("refrash")) {
+            initData();
+        }
+        if (eventBean.getMsg().equals("back")){
+            initData();
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        EventBus.getDefault().unregister(this);
     }
 
     private class AlreadyDownLoadAdapter extends BaseQuickAdapter<DownLoadListsBean,BaseViewHolder>{
