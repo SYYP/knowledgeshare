@@ -34,13 +34,11 @@ dependencies {
     //最新版本
 
     //Springview
-    compile files('libs/alipaySdk-20170725.jar')
     compile files('libs/litepal-1.5.1.jar')
     compile files('libs/libammsdk.jar')
     compile files('libs/gson-2.7.jar')
     compile files('libs/SocialSDK_QQ_Simplify.jar')
     compile files('libs/umeng_social_shareview.jar')
-    compile files('libs/umeng-analytics-v6.1.2.jar')
     compile files('libs/umeng_shareboard_widget.jar')
     compile files('libs/umeng_social_shareboard.jar')
     compile files('libs/SocialSDK_WeChat_Simplify.jar')
@@ -79,5 +77,7 @@ dependencies {
     compile files('libs/fastjson-1.2.5.jar')
     compile files('libs/AMap_Location_V3.6.1_20171012.jar')
     compile files('libs/litepal-1.6.1.jar')
-    compile 'com.aliyun.ams:alicloud-android-push:3.1.0'//阿里云推送
+    compile 'com.aliyun.ams:alicloud-android-push:3.1.0'
+    //阿里云推送
+    compile files('libs/alipaySdk-20170922.jar')
 }

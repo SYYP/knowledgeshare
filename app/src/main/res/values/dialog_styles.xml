@@ -25,21 +25,9 @@
         <item name="android:windowExitAnimation">@anim/bottom_out</item>
     </style>
     <!--dialog 从上往下弹出动画-->
-    <style name="Top_Bottom_aniamtion">
-        <item name="android:windowEnterAnimation">@anim/top_in</item>
-        <item name="android:windowExitAnimation">@anim/top_out</item>
-    </style>
     <!--dialog 从左往右弹出动画-->
-    <style name="Left_Right_aniamtion">
-        <item name="android:windowEnterAnimation">@anim/left_in</item>
-        <item name="android:windowExitAnimation">@anim/left_out</item>
-    </style>
 
     <!--dialog 从左往右弹出动画-->
-    <style name="Right_Left_aniamtion">
-        <item name="android:windowEnterAnimation">@anim/right_in</item>
-        <item name="android:windowExitAnimation">@anim/right_out</item>
-    </style>
 
     <!--dialog 透明弹出动画-->
     <style name="Alpah_aniamtion">
@@ -48,8 +36,4 @@
     </style>
 
     <!--dialog 缩放弹出动画-->
-    <style name="Scale_aniamtion">
-        <item name="android:windowEnterAnimation">@anim/scale_in</item>
-        <item name="android:windowExitAnimation">@anim/scale_out</item>
-    </style>
 </resources>
