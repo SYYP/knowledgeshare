@@ -1,7 +1,10 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -13,14 +16,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.youth.banner.Banner;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +35,18 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
+import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
+import www.knowledgeshare.com.knowledgeshare.db.HistroyUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.GuDianBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
+import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BannerUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class GuDianActivity extends UMShareActivity implements View.OnClickListener {
 
@@ -65,6 +79,8 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
         initView();
         initData();
         initListener();
+        initMusic();
+        initNETDialog();
     }
 
     private void initListener() {
@@ -109,9 +125,12 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
         ViewGroup.LayoutParams layoutParams = banner.getLayoutParams();
         layoutParams.height = MyUtils.getScreenWidth(this) / 2;
         banner.setLayoutParams(layoutParams);
-        OkGo.<GuDianBean>post(MyContants.LXKURL + "index/"+type)
+        HttpParams params=new HttpParams();
+        params.put("userid", SpUtils.getString(this, "id", ""));
+        OkGo.<GuDianBean>post(MyContants.LXKURL + "index/" + type)
                 .tag(this)
-                .execute(new DialogCallback<GuDianBean>(GuDianActivity.this,GuDianBean.class) {
+                .params(params)
+                .execute(new DialogCallback<GuDianBean>(GuDianActivity.this, GuDianBean.class) {
                              @Override
                              public void onSuccess(Response<GuDianBean> response) {
                                  int code = response.code();
@@ -133,7 +152,7 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                          Intent intent = new Intent(GuDianActivity.this, ZhuanLanDetail1Activity.class);
-                                         intent.putExtra("title",mDaShiBanAdapter.getData().get(position).getZl_name());
+                                         intent.putExtra("title", mDaShiBanAdapter.getData().get(position).getZl_name());
                                          intent.putExtra("id", mDaShiBanAdapter.getData().get(position).getId() + "");
                                          startActivity(intent);
                                      }
@@ -160,7 +179,7 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, GuDianBean.ZhuanlanEntity item) {
+        protected void convert(BaseViewHolder helper, final GuDianBean.ZhuanlanEntity item) {
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
             Glide.with(mContext).load(item.getZl_img()).into(imageView);
             helper.setText(R.id.tv_name, item.getZl_name())
@@ -171,7 +190,10 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
             helper.getView(R.id.iv_bofang).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(GuDianActivity.this, ZhuanLanDetail2Activity.class));
+                    Intent intent = new Intent(GuDianActivity.this, ZhuanLanDetail2Activity.class);
+                    intent.putExtra("id", item.getId() + "");
+                    intent.putExtra("title", item.getZl_name());
+                    startActivity(intent);
                 }
             });
         }
@@ -184,7 +206,7 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, GuDianBean.XiaokeEntity item) {
+        protected void convert(final BaseViewHolder helper, GuDianBean.XiaokeEntity item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
             Glide.with(mContext).load(item.getXk_image()).into(imageView);
             helper.setText(R.id.tv_buy_count, item.getBuy_count())
@@ -197,9 +219,125 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
             helper.getView(R.id.iv_bofang).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(GuDianActivity.this, ZhuanLanDetail2Activity.class));
+                    setISshow(true);
+                    GuDianBean.XiaokeEntity xiaokeEntity = mXiaoke.get(helper.getAdapterPosition());
+                    GuDianBean.XiaokeEntity.TryVideoEntity try_video = xiaokeEntity.getTry_video();
+                    PlayerBean playerBean = new PlayerBean(try_video.getT_header(), try_video.getParent_name(), try_video.getT_tag(), try_video.getVideo_url());
+                    gobofang(playerBean);
+                    MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
+                            try_video.getT_header(), try_video.getParent_name(), try_video.getId() + "", try_video.isIsfav());
+                    musicTypeBean.setMsg("musicplayertype");
+                    EventBus.getDefault().postSticky(musicTypeBean);
+                    List<PlayerBean> list = new ArrayList<PlayerBean>();
+                    PlayerBean playerBean1 = new PlayerBean(try_video.getT_header(), try_video.getParent_name(), try_video.getT_tag(), try_video.getVideo_url());
+                    list.add(playerBean1);
+                    MediaService.insertMusicList(list);
+                    if (!HistroyUtils.isInserted(try_video.getParent_name())) {
+                        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", try_video.getId(), try_video.getParent_name(),
+                                try_video.getCreated_at(), try_video.getVideo_url(), try_video.getGood_count(),
+                                try_video.getCollect_count(), try_video.getView_count(), try_video.isIslive(), try_video.isIsfav()
+                                , try_video.getT_header(), try_video.getT_tag(), try_video.getShare_h5_url());
+                        HistroyUtils.add(bofangHistroyBean);
+                    }
                 }
             });
+        }
+    }
+
+    private MediaService.MyBinder mMyBinder;
+    //“绑定”服务的intent
+    private Intent MediaServiceIntent;
+
+    private BaseDialog mNetDialog;
+
+    private void initMusic() {
+        MediaServiceIntent = new Intent(this, MediaService.class);
+        //        startService(MediaServiceIntent);
+        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+    }
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mMyBinder = (MediaService.MyBinder) service;
+            if (mMyBinder.isPlaying()) {
+            } else {
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
+    private void initNETDialog() {
+        BaseDialog.Builder builder = new BaseDialog.Builder(this);
+        mNetDialog = builder.setViewId(R.layout.dialog_iswifi)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+        unbindService(mServiceConnection);
+    }
+
+
+    private void gobofang(final PlayerBean playerBean) {
+        int apnType = NetWorkUtils.getAPNType(this);
+        if (apnType == 0) {
+            Toast.makeText(this, "没有网络呢~", Toast.LENGTH_SHORT).show();
+        } else if (apnType == 2 || apnType == 3 || apnType == 4) {
+            if (SpUtils.getBoolean(this, "nowifiallowlisten", false)) {//记住用户允许流量播放
+                playerBean.setMsg("refreshplayer");
+                EventBus.getDefault().postSticky(playerBean);
+                mMyBinder.setMusicUrl(playerBean.getVideo_url());
+                mMyBinder.playMusic(playerBean);
+                mNetDialog.dismiss();
+                ClickPopShow();
+                SpUtils.putBoolean(this, "nowifiallowlisten", true);
+            } else {
+                mNetDialog.show();
+                mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        playerBean.setMsg("refreshplayer");
+                        EventBus.getDefault().postSticky(playerBean);
+                        mMyBinder.setMusicUrl(playerBean.getVideo_url());
+                        mMyBinder.playMusic(playerBean);
+                        mNetDialog.dismiss();
+                        ClickPopShow();
+                        SpUtils.putBoolean(GuDianActivity.this, "nowifiallowlisten", true);
+                    }
+                });
+                mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mNetDialog.dismiss();
+                    }
+                });
+            }
+        } else if (NetWorkUtils.isMobileConnected(GuDianActivity.this)) {
+            Toast.makeText(this, "wifi不可用呢~", Toast.LENGTH_SHORT).show();
+        } else {
+            playerBean.setMsg("refreshplayer");
+            EventBus.getDefault().postSticky(playerBean);
+            mMyBinder.setMusicUrl(playerBean.getVideo_url());
+            mMyBinder.playMusic(playerBean);
+            ClickPopShow();
         }
     }
 
@@ -228,40 +366,40 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
         mDialog.getView(R.id.tv_weixin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareWebUrl(mGuDianBean.getH5_url(),mGuDianBean.getIntroduce(),
-                        mXiaoke.get(0).getXk_image(),"",GuDianActivity.this, SHARE_MEDIA.WEIXIN);
+                shareWebUrl(mGuDianBean.getH5_url(), mGuDianBean.getIntroduce(),
+                        mXiaoke.get(0).getXk_image(), "", GuDianActivity.this, SHARE_MEDIA.WEIXIN);
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareWebUrl(mGuDianBean.getH5_url(),mGuDianBean.getIntroduce(),
-                        mXiaoke.get(0).getXk_image(),"",GuDianActivity.this,SHARE_MEDIA.WEIXIN_CIRCLE);
+                shareWebUrl(mGuDianBean.getH5_url(), mGuDianBean.getIntroduce(),
+                        mXiaoke.get(0).getXk_image(), "", GuDianActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareWebUrl(mGuDianBean.getH5_url(),mGuDianBean.getIntroduce(),
-                        mXiaoke.get(0).getXk_image(),"",GuDianActivity.this,SHARE_MEDIA.QZONE);
+                shareWebUrl(mGuDianBean.getH5_url(), mGuDianBean.getIntroduce(),
+                        mXiaoke.get(0).getXk_image(), "", GuDianActivity.this, SHARE_MEDIA.QZONE);
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareWebUrl(mGuDianBean.getH5_url(),mGuDianBean.getIntroduce(),
-                        mXiaoke.get(0).getXk_image(),"",GuDianActivity.this,SHARE_MEDIA.QQ);
+                shareWebUrl(mGuDianBean.getH5_url(), mGuDianBean.getIntroduce(),
+                        mXiaoke.get(0).getXk_image(), "", GuDianActivity.this, SHARE_MEDIA.QQ);
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareWebUrl(mGuDianBean.getH5_url(),mGuDianBean.getIntroduce(),
-                        mXiaoke.get(0).getXk_image(),"",GuDianActivity.this,SHARE_MEDIA.SINA);
+                shareWebUrl(mGuDianBean.getH5_url(), mGuDianBean.getIntroduce(),
+                        mXiaoke.get(0).getXk_image(), "", GuDianActivity.this, SHARE_MEDIA.SINA);
                 mDialog.dismiss();
             }
         });

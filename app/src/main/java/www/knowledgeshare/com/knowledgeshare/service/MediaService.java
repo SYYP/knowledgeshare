@@ -14,9 +14,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
@@ -35,7 +32,6 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.player.AudioFocusMana
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.NoisyAudioStreamReceiver;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.Notifier;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
-import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class MediaService extends Service implements MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
 
@@ -82,21 +78,6 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         }
     };
 
-    /**
-     * 获取历史查询记录
-     *
-     * @return
-     */
-    public static List<PlayerBean> getLastList() {
-        String lastmusiclist = SpUtils.getString(MyApplication.getGloableContext(), "lastmusiclist", "");
-        if (lastmusiclist != null && !lastmusiclist.equals("")) {//必须要加上后面的判断，因为获取的字符串默认值就是空字符串
-            //将json字符串转换成list集合
-            return new Gson().fromJson(lastmusiclist, new TypeToken<List<PlayerBean>>() {
-            }.getType());
-        }
-        return new ArrayList<PlayerBean>();
-    }
-
     private void start() {
         if (mAudioFocusManager.requestAudioFocus()) {
             mMediaPlayer.start();
@@ -109,12 +90,6 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
             isClosed = false;
             Notifier.showPlay(mPlayerBean);
-            //保存上次播放到的列表
-            List<PlayerBean> list = new ArrayList<>();
-            for (int i = currPosition; i < musicList.size(); i++) {
-                list.add(musicList.get(i));
-            }
-            SpUtils.putString(MyApplication.getGloableContext(),"lastmusiclist",new Gson().toJson(list));
         }
     }
 
@@ -126,12 +101,6 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
             isClosed = false;
             Notifier.showPlay(mPlayerBean);
-            //保存上次播放到的列表
-            List<PlayerBean> list = new ArrayList<>();
-            for (int i = currPosition; i < musicList.size(); i++) {
-                list.add(musicList.get(i));
-            }
-            SpUtils.putString(MyApplication.getGloableContext(),"lastmusiclist",new Gson().toJson(list));
         }
     }
 
