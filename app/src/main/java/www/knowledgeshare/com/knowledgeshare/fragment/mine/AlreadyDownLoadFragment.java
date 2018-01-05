@@ -63,6 +63,7 @@ public class AlreadyDownLoadFragment extends BaseFragment {
     private List<DownLoadListsBean> freeList;
     private List<DownLoadListsBean> commentList;
     private List<DownLoadListsBean> list = new ArrayList<>();
+    private List<DownloadTask> restoreList;
 
     @Override
     protected void lazyLoad() {
@@ -99,7 +100,7 @@ public class AlreadyDownLoadFragment extends BaseFragment {
         recyclerAlreadDownload.setNestedScrollingEnabled(false);
         freeList = new ArrayList<>();
         commentList = new ArrayList<>();
-        List<DownloadTask> restoreList = OkDownload.restore(DownloadManager.getInstance().getFinished());
+        restoreList = OkDownload.restore(DownloadManager.getInstance().getFinished());
         for (int i = 0; i < restoreList.size(); i++) {
             Progress progress = restoreList.get(i).progress;
             downLoadListBean = (DownLoadListsBean) progress.extra3;
@@ -155,9 +156,13 @@ public class AlreadyDownLoadFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("refrash")) {
+            restoreList.clear();
+            list.clear();
             initData();
         }
         if (eventBean.getMsg().equals("back")){
+            restoreList.clear();
+            list.clear();
             initData();
         }
     }

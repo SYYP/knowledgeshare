@@ -65,6 +65,10 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
     private ZhuanLanBean mZhuanLanBean;
     private String mId;
     private String mTime;
+    private LinearLayout rootView;
+    private LinearLayout rootView01;
+    private TextView readTv;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +94,10 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
     }
 
     private void initData() {
+        if (getIntent().getStringExtra("type") != null){
+            rootView.setVisibility(View.GONE);
+            rootView01.setVisibility(View.VISIBLE);
+        }
         mId = getIntent().getStringExtra("id");
         HttpParams params = new HttpParams();
         params.put("id", mId);
@@ -411,6 +419,10 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
         tv_tryread.setOnClickListener(this);
         tv_buy = (TextView) findViewById(R.id.tv_buy);
         tv_buy.setOnClickListener(this);
+        rootView = (LinearLayout) findViewById(R.id.ll_root_view);
+        rootView01 = (LinearLayout) findViewById(R.id.ll_root_view1);
+        readTv = (TextView) findViewById(R.id.tv_read);
+        readTv.setOnClickListener(this);
         recycler_lately.setLayoutManager(new LinearLayoutManager(this));
         recycler_lately.setNestedScrollingEnabled(false);
         nestView = (NestedScrollView) findViewById(R.id.nestView);
@@ -440,13 +452,19 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                 showShareDialog();
                 break;
             case R.id.tv_tryread:
-                Intent intent = new Intent(this, ZhuanLanDetail1Activity.class);
+                intent = new Intent(this, ZhuanLanDetail1Activity.class);
                 intent.putExtra("id", mZhuanLanBean.getId() + "");
                 intent.putExtra("title", mZhuanLanBean.getZl_name());
                 startActivity(intent);
                 break;
             case R.id.tv_buy:
                 showBuyDialog();
+                break;
+            case R.id.tv_read:
+                intent = new Intent(this, ZhuanLanDetail1Activity.class);
+                intent.putExtra("id", mZhuanLanBean.getId() + "");
+                intent.putExtra("title", mZhuanLanBean.getZl_name());
+                startActivity(intent);
                 break;
         }
     }

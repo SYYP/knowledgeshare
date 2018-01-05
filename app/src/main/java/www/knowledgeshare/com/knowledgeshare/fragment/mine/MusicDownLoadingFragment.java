@@ -96,10 +96,10 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser){
+//        if (isVisibleToUser){
             EventBean eventBean = new EventBean("refrash");
             EventBus.getDefault().postSticky(eventBean);
-        }
+//        }
     }
 
     @Override

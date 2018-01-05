@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -267,6 +268,8 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
     private void initData() {
         if (getIntent().getStringExtra("type") != null){
             bottomLl.setVisibility(View.GONE);
+            SpringView.MarginLayoutParams layoutParams = (SpringView.MarginLayoutParams) springview.getLayoutParams();
+            layoutParams.setMargins(0,0,0,0);
         }
 
         mId = getIntent().getStringExtra("id");
@@ -479,12 +482,17 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
 
         @Override
         protected void convert(final BaseViewHolder helper, final SoftMusicDetailBean.ChildEntity item) {
-            if (item.getIs_try() == 1) {
-                helper.setVisible(R.id.tv_trylisten, true);
-                helper.setVisible(R.id.iv_wengao, true);
-            } else {
+            if (getIntent().getStringExtra("type") != null){
                 helper.setVisible(R.id.tv_trylisten, false);
-                helper.setVisible(R.id.iv_wengao, false);
+                helper.setVisible(R.id.iv_wengao, true);
+            }else {
+                if (item.getIs_try() == 1) {
+                    helper.setVisible(R.id.tv_trylisten, true);
+                    helper.setVisible(R.id.iv_wengao, true);
+                } else {
+                    helper.setVisible(R.id.tv_trylisten, false);
+                    helper.setVisible(R.id.iv_wengao, false);
+                }
             }
             String created_at = item.getCreated_at();
             String[] split = created_at.split(" ");
