@@ -17,13 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.activity.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.MainActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.TagBean;
 import www.knowledgeshare.com.knowledgeshare.bean.VerifyCodesBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.FlowLayout;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;

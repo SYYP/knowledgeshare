@@ -12,23 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.model.HttpParams;
-import com.lzy.okgo.model.Response;
-
 import org.zackratos.ultimatebar.UltimateBar;
 
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.activity.LoginActivity;
-import www.knowledgeshare.com.knowledgeshare.activity.RegisterActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
-import www.knowledgeshare.com.knowledgeshare.bean.VerifyCodesBean;
-import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.login.bean.HobbyActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
-import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
-import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
-import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
  * date : ${Date}

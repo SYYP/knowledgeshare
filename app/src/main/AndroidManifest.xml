@@ -82,7 +82,6 @@
         <activity android:name=".fragment.home.MusicMasterActivity"/>
         <activity android:name=".login.GuidePageActivity"/>
         <activity android:name=".login.MessageActivity"/>
-        <activity android:name=".activity.LoginActivity"/>
         <activity android:name=".login.bean.HobbyActivity"/>
         <activity android:name=".fragment.home.ZhuanLanActivity"/>
         <activity android:name=".fragment.home.ZhuanLanDetail1Activity"/>
@@ -122,6 +121,7 @@
         <activity android:name=".activity.BuyZhuanLanActivity"/>
         <activity android:name=".fragment.home.FreeDownListActivity"/>
         <activity android:name=".fragment.home.CommentDownActivity"/>
+        <activity android:name=".login.LoginActivity"/>
         <receiver android:name=".fragment.home.player.StatusBarReceiver">
             <intent-filter>
                 <action android:name="me.wcy.music.STATUS_BAR_ACTIONS"/>

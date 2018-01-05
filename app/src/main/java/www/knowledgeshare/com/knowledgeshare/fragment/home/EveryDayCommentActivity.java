@@ -464,7 +464,6 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                         childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
                 DownUtils.add(DownLoadListBean);*/
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
-                OkDownload.request(downLoadListsBean.getTypeId()+"_"+childEntity.getId(), request)
                 OkDownload.request(childEntity.getVideo_name() + "_" + childEntity.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download")
                         .fileName(childEntity.getVideo_name()+"_"+childEntity.getId()+".mp3")

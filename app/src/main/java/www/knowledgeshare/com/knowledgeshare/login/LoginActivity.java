@@ -1,4 +1,4 @@
-package www.knowledgeshare.com.knowledgeshare.activity;
+package www.knowledgeshare.com.knowledgeshare.login;
 
 import android.Manifest;
 import android.content.Context;
@@ -30,10 +30,12 @@ import org.zackratos.ultimatebar.UltimateBar;
 import java.util.UUID;
 
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.BindPhoneActivity;
+import www.knowledgeshare.com.knowledgeshare.activity.MainActivity;
+import www.knowledgeshare.com.knowledgeshare.activity.RegisterActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.LoginBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
-import www.knowledgeshare.com.knowledgeshare.login.ForgetActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;

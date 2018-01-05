@@ -17,10 +17,8 @@ import com.lzy.okgo.model.Response;
 import org.zackratos.ultimatebar.UltimateBar;
 
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.activity.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
-import www.knowledgeshare.com.knowledgeshare.bean.VerifyCodesBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;

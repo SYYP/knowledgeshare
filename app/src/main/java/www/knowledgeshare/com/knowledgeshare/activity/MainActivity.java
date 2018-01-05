@@ -44,6 +44,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.MineFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.study.StudyFragment;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
@@ -272,7 +273,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.ll_study:
                 if (!abool) {
-                    Intent intent = new Intent(this, www.knowledgeshare.com.knowledgeshare.activity.LoginActivity.class);
+                    Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
                 } else {
@@ -327,7 +328,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.ll_buy:
                 if (!abool) {
-                    Intent intent = new Intent(this, www.knowledgeshare.com.knowledgeshare.activity.LoginActivity.class);
+                    Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
                 } else {
@@ -347,7 +348,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.ll_mine:
                 if (!abool) {
-                    Intent intent = new Intent(this, www.knowledgeshare.com.knowledgeshare.activity.LoginActivity.class);
+                    Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
                 } else {
