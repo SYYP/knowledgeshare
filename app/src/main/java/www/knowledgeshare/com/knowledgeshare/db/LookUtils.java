@@ -1,5 +1,7 @@
 package www.knowledgeshare.com.knowledgeshare.db;
 
+import android.content.ContentValues;
+
 import org.litepal.crud.DataSupport;
 
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.List;
 
 public class LookUtils {
     public static List<LookBean> search() {
-        List<LookBean> all = DataSupport.findAll(LookBean.class);//这样也行
+        List<LookBean> all = DataSupport.order("time desc").find(LookBean.class);//这样也行
         return all;
     }
 
@@ -27,6 +29,12 @@ public class LookUtils {
         } else {
             lookBean.save();//添加完数据别忘了保存，这个save()方法是实体类继承的DataSupport类中的
         }
+    }
+
+    public static void updateTime(long time, String type, String title) {
+        ContentValues values = new ContentValues();
+        values.put("time", time);
+        DataSupport.updateAll(LookBean.class, values, "title=? and type=?", title, type);
     }
 
     public static boolean isInserted(String title) {

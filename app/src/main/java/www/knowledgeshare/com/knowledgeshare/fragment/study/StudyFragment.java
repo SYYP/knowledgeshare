@@ -28,6 +28,8 @@ import com.lzy.okgo.model.Response;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,7 @@ import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.NoteListBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
@@ -310,6 +313,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener 
     }
 
     private void suishenting() {
+        EventBus.getDefault().post(new EventBean("morenbofang"));
         /*HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         OkGo.<SuiShenTingBean>post(MyContants.LXKURL + "user/walkman")

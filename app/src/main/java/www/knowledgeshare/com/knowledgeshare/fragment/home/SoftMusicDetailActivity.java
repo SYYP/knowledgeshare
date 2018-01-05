@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -339,7 +340,11 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                  if (!LookUtils.isInserted(mMusicDetailBean.getXk_name())) {
                                      LookUtils.add(new LookBean(Integer.parseInt(mId), "xiaoke", mMusicDetailBean.getXk_name(),
                                              mMusicDetailBean.getTeacher().getT_name(),
-                                             mMusicDetailBean.getXk_teacher_tags(), mMusicDetailBean.getXk_price()));
+                                             mMusicDetailBean.getXk_teacher_tags(), mMusicDetailBean.getXk_price()
+                                             , SystemClock.currentThreadTimeMillis()));
+                                 }else {
+                                     LookUtils.updateTime(SystemClock.currentThreadTimeMillis(),
+                                             mMusicDetailBean.getXk_name(),"xiaoke");
                                  }
                              }
                          }

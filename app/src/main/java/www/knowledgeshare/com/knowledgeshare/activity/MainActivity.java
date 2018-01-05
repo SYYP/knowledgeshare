@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -41,7 +42,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.buy.BuyFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.HomeFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.WebActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.RefreshToken;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.MineFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.study.StudyFragment;
 import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
@@ -102,6 +103,36 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         abool = SpUtils.getBoolean(this, "abool", false);
         pop();
         setStudyTime();
+        refreshToken();
+    }
+
+    private void refreshToken() {
+        String totalMs = SpUtils.getString(this, "totalMs", "");
+        String token = SpUtils.getString(this, "token", "");
+        if (!TextUtils.isEmpty(totalMs)) {
+            long daoqitime = Long.parseLong(totalMs);
+            if (daoqitime - System.currentTimeMillis() < 24 * 60 * 60 * 1000) {//提前一天刷新
+                HttpParams params = new HttpParams();
+                params.put("token", token);
+                OkGo.<RefreshToken>post(MyContants.LXKURL + "tokens-refresh")
+                        .tag(this)
+                        .params(params)
+                        .execute(new JsonCallback<RefreshToken>(RefreshToken.class) {
+                            @Override
+                            public void onSuccess(Response<RefreshToken> response) {
+                                RefreshToken refreshToken = response.body();
+                                if (response.code() >= 200 && response.code() <= 204) {
+                                    String token1 = refreshToken.getToken();
+                                    SpUtils.putString(MainActivity.this, "token", token1);
+                                    long ttlMs = refreshToken.getTtl() * 60 * 1000L;
+                                    long timeMillis = System.currentTimeMillis();
+                                    long totalMs = ttlMs + timeMillis;
+                                    SpUtils.putString(MainActivity.this, "totalMs", totalMs + "");
+                                }
+                            }
+                        });
+            }
+        }
     }
 
     private void setStudyTime() {
@@ -296,19 +327,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 if (isPause) {
                     iv_listen.setImageResource(R.drawable.tab_listen_bo);
                     if (mMyBinder.isClosed()) {
-                        List<PlayerBean> lastList = MediaService.getLastList();
-                        if (lastList != null && lastList.size() > 0) {
-                            String musicurl = lastList.get(0).getVideo_url();
-                            String title = lastList.get(0).getTitle();
-                            String subtitle = lastList.get(0).getSubtitle();
-                            String t_head = lastList.get(0).getTeacher_head();
-                            PlayerBean playerBean = new PlayerBean(t_head, title, subtitle, musicurl);
-                            playerBean.setMsg("lastbofang");
-                            EventBus.getDefault().postSticky(playerBean);
-                            MediaService.insertMusicList(lastList);//下一次启动的时候获取之前播放到的地方的新list，设置上
-                        } else {
-                            EventBus.getDefault().post(new EventBean("morenbofang"));
-                        }
+                        EventBus.getDefault().post(new EventBean("morenbofang"));
                     } else {
                         if (mRotate_anim != null) {
                             iv_listen.startAnimation(mRotate_anim);  //开始动画

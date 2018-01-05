@@ -2,6 +2,7 @@ package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -112,7 +113,11 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                                  recycler_lately.setAdapter(mLatelyAdapter);
                                  if (!LookUtils.isInserted(mZhuanLanBean.getZl_name())) {
                                      LookUtils.add(new LookBean(Integer.parseInt(mId), "zhuanlan", mZhuanLanBean.getZl_name()
-                                             , mZhuanLanBean.getZl_teacher_tags(), mZhuanLanBean.getZl_price()));
+                                             , mZhuanLanBean.getZl_teacher_tags(), mZhuanLanBean.getZl_price()
+                                             , SystemClock.currentThreadTimeMillis()));
+                                 } else {
+                                     LookUtils.updateTime(SystemClock.currentThreadTimeMillis(), mZhuanLanBean.getZl_name()
+                                             , "zhuanlan");
                                  }
                              }
                          }
@@ -252,40 +257,40 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
         mDialog.getView(R.id.tv_weixin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareWebUrl(mZhuanLanBean.getH5_url(),mZhuanLanBean.getZl_introduce(),
-                        mZhuanLanBean.getZl_img(),"",ZhuanLanActivity.this, SHARE_MEDIA.WEIXIN);
+                shareWebUrl(mZhuanLanBean.getH5_url(), mZhuanLanBean.getZl_introduce(),
+                        mZhuanLanBean.getZl_img(), "", ZhuanLanActivity.this, SHARE_MEDIA.WEIXIN);
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareWebUrl(mZhuanLanBean.getH5_url(),mZhuanLanBean.getZl_introduce(),
-                        mZhuanLanBean.getZl_img(),"",ZhuanLanActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                shareWebUrl(mZhuanLanBean.getH5_url(), mZhuanLanBean.getZl_introduce(),
+                        mZhuanLanBean.getZl_img(), "", ZhuanLanActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareWebUrl(mZhuanLanBean.getH5_url(),mZhuanLanBean.getZl_introduce(),
-                        mZhuanLanBean.getZl_img(),"",ZhuanLanActivity.this, SHARE_MEDIA.QZONE);
+                shareWebUrl(mZhuanLanBean.getH5_url(), mZhuanLanBean.getZl_introduce(),
+                        mZhuanLanBean.getZl_img(), "", ZhuanLanActivity.this, SHARE_MEDIA.QZONE);
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareWebUrl(mZhuanLanBean.getH5_url(),mZhuanLanBean.getZl_introduce(),
-                        mZhuanLanBean.getZl_img(),"",ZhuanLanActivity.this, SHARE_MEDIA.QQ);
+                shareWebUrl(mZhuanLanBean.getH5_url(), mZhuanLanBean.getZl_introduce(),
+                        mZhuanLanBean.getZl_img(), "", ZhuanLanActivity.this, SHARE_MEDIA.QQ);
                 mDialog.dismiss();
             }
         });
         mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareWebUrl(mZhuanLanBean.getH5_url(),mZhuanLanBean.getZl_introduce(),
-                        mZhuanLanBean.getZl_img(),"",ZhuanLanActivity.this, SHARE_MEDIA.SINA);
+                shareWebUrl(mZhuanLanBean.getH5_url(), mZhuanLanBean.getZl_introduce(),
+                        mZhuanLanBean.getZl_img(), "", ZhuanLanActivity.this, SHARE_MEDIA.SINA);
                 mDialog.dismiss();
             }
         });
