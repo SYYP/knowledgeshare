@@ -23,10 +23,12 @@ public class HeleCenterBean implements Serializable{
         /**
          * id : 1
          * title : 如何购买？
+         * h5_url : http://thinks.iask.in/help.html?id=1
          */
 
         private int id;
         private String title;
+        private String h5_url;
 
         public int getId() {
             return id;
@@ -42,6 +44,14 @@ public class HeleCenterBean implements Serializable{
 
         public void setTitle(String title) {
             this.title = title;
+        }
+
+        public String getH5_url() {
+            return h5_url;
+        }
+
+        public void setH5_url(String h5_url) {
+            this.h5_url = h5_url;
         }
     }
 }

@@ -30,8 +30,10 @@ import www.knowledgeshare.com.knowledgeshare.activity.PersonInfomationActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.SettingActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.TaskDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
+import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.bean.UserInfoBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
@@ -214,13 +216,31 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(getActivity(), AccountSafeActivity.class));
                 break;
             case R.id.qiandao_btn://签到
-                qiandaoBtn.setBackground(mActivity.getResources().getDrawable(R.drawable.bg_qiandao_hui));
-                qiandaoBtn.setText("已签到");
-                qiandaoBtn.setClickable(false);
-                TUtils.showShort(getActivity(),"签到成功");
+                requestSignIn();
             default:
                 break;
         }
+    }
+
+    private void requestSignIn() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(getActivity(), "token", ""));
+
+        OkGo.<BaseBean>post(MyContants.signIn)
+                .tag(this)
+                .headers(headers)
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        int code = response.code();
+                        if (code >= 200 && code <= 204){
+                            qiandaoBtn.setBackground(mActivity.getResources().getDrawable(R.drawable.bg_qiandao_hui));
+                            qiandaoBtn.setText("已签到");
+                            qiandaoBtn.setClickable(false);
+                            TUtils.showShort(getActivity(),"签到成功");
+                        }
+                    }
+                });
     }
 
     @Override

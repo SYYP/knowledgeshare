@@ -88,7 +88,7 @@ public class HelpCenterActivity extends BaseActivity implements View.OnClickList
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(HelpCenterActivity.this,HelpCenterDetailActivity.class);
-                                    intent.putExtra("id",id);
+                                    intent.putExtra("h5_url",list.get(position).getData().get(position).getH5_url());
                                     startActivity(intent);
                                 }
                             });
