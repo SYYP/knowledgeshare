@@ -62,12 +62,10 @@ public class MyContants {
     public static final String feedBack = BASEURL + "api/v2/user/feedback";
     //帮助中心
     public static final String help = BASEURL + "api/v2/help";
-    //帮助中心详情
-    public static final String helpShow = BASEURL + "api/v2/help/show";
     //注册协议
-    public static final String registration = BASEURL + "api/v2/registration";
+    public static final String registration = BASEURL + "api/v2/reg";
     //关于我们
-    public static final String aboutUs = BASEURL + "api/v2/about";
+    public static final String aboutUs = BASEURL + "api/v2/aboutus";
     //学习，右上角专栏课程通知
     public static final String notice = BASEURL + "api/v2/note/notices";
     //充值
@@ -82,5 +80,7 @@ public class MyContants {
     public static final String nitification = BASEURL + "api/v2/user/notifications";
     //学习笔记
     public static final String notes = BASEURL + "api/v2/user/notes";
+    //签到
+    public static final String signIn = BASEURL + "api/v2/user/sign-in";
 
 }

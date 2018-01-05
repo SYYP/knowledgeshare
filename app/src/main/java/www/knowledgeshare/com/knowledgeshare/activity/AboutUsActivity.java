@@ -8,10 +8,19 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.AboutUsBean;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 /**
  * 关于我们
@@ -37,23 +46,44 @@ public class AboutUsActivity extends BaseActivity implements View.OnClickListene
         titleBackIv.setVisibility(View.VISIBLE);
         titleContentTv.setText("关于我们");
         titleBackIv.setOnClickListener(this);
+        requestAboutUs();
 
-        String weburl = "https://www.baidu.com/";
 
-        WebSettings settings = webView.getSettings();
-        settings.setSupportZoom(true); // 支持缩放
-        settings.setBuiltInZoomControls(true); // 启用内置缩放装置
-        settings.setJavaScriptEnabled(true); // 启用JS脚本
-        settings.setDefaultTextEncodingName("utf-8");
+    }
 
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-        });
-        webView.loadUrl(weburl);
+    private void requestAboutUs() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+
+        OkGo.<AboutUsBean>get(MyContants.aboutUs)
+                .tag(this)
+                .headers(headers)
+                .execute(new JsonCallback<AboutUsBean>(AboutUsBean.class) {
+                    @Override
+                    public void onSuccess(Response<AboutUsBean> response) {
+                        int code = response.code();
+                        if (code >= 200 && code <= 204){
+                            AboutUsBean aboutUsBean = response.body();
+                            String h5_url = aboutUsBean.getH5_url();
+                            WebSettings settings = webView.getSettings();
+                            settings.setSupportZoom(true); // 支持缩放
+                            settings.setBuiltInZoomControls(true); // 启用内置缩放装置
+                            settings.setJavaScriptEnabled(true); // 启用JS脚本
+                            settings.setDefaultTextEncodingName("utf-8");
+
+                            webView.setWebViewClient(new WebViewClient() {
+                                @Override
+                                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                                    view.loadUrl(url);
+                                    return true;
+                                }
+                            });
+                            webView.loadUrl(h5_url);
+                        }else {
+                            Logger.e(response.body().getMessage());
+                        }
+                    }
+                });
     }
 
     @Override
