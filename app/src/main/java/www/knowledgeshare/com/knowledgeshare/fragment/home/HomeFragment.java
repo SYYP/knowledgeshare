@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -485,8 +486,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", item.getId(), item.getVideo_name(),
                                 item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                 item.getCollect_count(), item.getView_count(), item.getIs_good() == 1 ? true : false,
-                                item.isIsfav(), item.getT_header(), item.getT_tag(), item.getShare_h5_url());
+                                item.isIsfav(), item.getT_header(), item.getT_tag(), item.getShare_h5_url()
+                                , SystemClock.currentThreadTimeMillis());
                         HistroyUtils.add(bofangHistroyBean);
+                    }else {
+                        HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(),item.getVideo_old_name());
                     }
                 }
             });
@@ -533,8 +537,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("everydaycomment", item.getId(), item.getVideo_name(),
                                 item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                 item.getCollect_count(), item.getView_count(), item.getIs_good() == 1 ? true : false,
-                                item.isIsfav(), item.getT_header(), item.getT_tag(), item.getShare_h5_url());
+                                item.isIsfav(), item.getT_header(), item.getT_tag(), item.getShare_h5_url()
+                                , SystemClock.currentThreadTimeMillis());
                         HistroyUtils.add(bofangHistroyBean);
+                    }else {
+                        HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(),item.getVideo_old_name());
                     }
                 }
             });

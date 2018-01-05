@@ -1,5 +1,7 @@
 package www.knowledgeshare.com.knowledgeshare.db;
 
+import android.content.ContentValues;
+
 import org.litepal.crud.DataSupport;
 
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.List;
 public class HistroyUtils {
 
     public static List<BofangHistroyBean> search() {
-        List<BofangHistroyBean> all = DataSupport.findAll(BofangHistroyBean.class);//这样也行
+        List<BofangHistroyBean> all = DataSupport.order("time desc").find(BofangHistroyBean.class);//这样也行
         return all;
     }
 
@@ -28,6 +30,12 @@ public class HistroyUtils {
         } else {
             bofangHistroyBean.save();//添加完数据别忘了保存，这个save()方法是实体类继承的DataSupport类中的
         }
+    }
+
+    public static void updateTime(long time, String video_name) {
+        ContentValues values = new ContentValues();
+        values.put("time", time);
+        DataSupport.updateAll(BofangHistroyBean.class, values, "video_name=?", video_name);
     }
 
     public static boolean isInserted(String video_name) {

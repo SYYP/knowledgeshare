@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -266,8 +267,10 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                                 item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                                 item.getCollect_count(), item.getView_count(), item.isIslive(), item.isIsfav(),
                                                 item.getT_header(), item.getT_tag(),
-                                                item.getShare_h5_url());
+                                                item.getShare_h5_url(), SystemClock.currentThreadTimeMillis());
                                         HistroyUtils.add(bofangHistroyBean);
+                                    }else {
+                                        HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(),item.getVideo_old_name());
                                     }
                                 }
                             });
@@ -393,8 +396,10 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
 
         @Override
         protected void convert(final BaseViewHolder helper, final FreeBean.ChildEntity item) {
+            String created_at = item.getCreated_at();
+            String[] split = created_at.split(" ");
             helper.setText(R.id.tv_name, item.getVideo_name())
-                    .setText(R.id.tv_time, item.getCreated_at() + "发布")
+                    .setText(R.id.tv_time, split[0] + "发布")
                     .setText(R.id.tv_look_count, item.getIs_view() == 0 ? item.getView_count() + "" : item.getView_count_true() + "")
                     .setText(R.id.tv_collect_count, item.getIs_collect() == 0 ? item.getCollect_count() + "" : item.getCollect_count_true() + "")
                     .setText(R.id.tv_dianzan_count, item.getIs_good() == 0 ? item.getGood_count() + "" : item.getGood_count_true() + "");

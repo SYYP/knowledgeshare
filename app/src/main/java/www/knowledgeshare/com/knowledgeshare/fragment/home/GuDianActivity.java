@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -236,8 +237,11 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", try_video.getId(), try_video.getParent_name(),
                                 try_video.getCreated_at(), try_video.getVideo_url(), try_video.getGood_count(),
                                 try_video.getCollect_count(), try_video.getView_count(), try_video.isIslive(), try_video.isIsfav()
-                                , try_video.getT_header(), try_video.getT_tag(), try_video.getShare_h5_url());
+                                , try_video.getT_header(), try_video.getT_tag(), try_video.getShare_h5_url()
+                                , SystemClock.currentThreadTimeMillis());
                         HistroyUtils.add(bofangHistroyBean);
+                    }else {
+                        HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(),try_video.getVideo_old_name());
                     }
                 }
             });

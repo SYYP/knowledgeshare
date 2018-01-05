@@ -20,6 +20,15 @@ public class BofangHistroyBean extends DataSupport {
     private String t_header;
     private String t_tag;
     private String h5_url;
+    private long time;//用时间戳来控制排列顺序
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
 
     public String getH5_url() {
         return h5_url;
@@ -128,7 +137,7 @@ public class BofangHistroyBean extends DataSupport {
     public BofangHistroyBean(String type, int id, String video_name, String created_at, String video_url,
                              int good_count, int collect_count, int view_count,
                              boolean isDianzan, boolean isCollected, String t_header,
-                             String t_tag, String h5_url) {
+                             String t_tag, String h5_url,long time) {
         this.type = type;
         this.id = id;
         this.video_name = video_name;
@@ -142,5 +151,6 @@ public class BofangHistroyBean extends DataSupport {
         this.t_header = t_header;
         this.t_tag = t_tag;
         this.h5_url = h5_url;
+        this.time=time;
     }
 }

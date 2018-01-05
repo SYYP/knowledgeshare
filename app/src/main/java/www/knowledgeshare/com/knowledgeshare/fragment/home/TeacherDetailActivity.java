@@ -91,7 +91,7 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<TeacherDetailBean>(TeacherDetailActivity.this,TeacherDetailBean.class) {
+                .execute(new DialogCallback<TeacherDetailBean>(TeacherDetailActivity.this, TeacherDetailBean.class) {
                              @Override
                              public void onSuccess(Response<TeacherDetailBean> response) {
                                  int code = response.code();
@@ -106,7 +106,7 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                          Intent intent = new Intent(TeacherDetailActivity.this, ZhuanLanDetail1Activity.class);
-                                         intent.putExtra("title",mDaShiBanAdapter.getData().get(position).getZl_name());
+                                         intent.putExtra("title", mDaShiBanAdapter.getData().get(position).getZl_name());
                                          intent.putExtra("id", mDaShiBanAdapter.getData().get(position).getId() + "");
                                          startActivity(intent);
                                      }
@@ -134,7 +134,7 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, TeacherDetailBean.ZhuanlanEntity item) {
+        protected void convert(BaseViewHolder helper, final TeacherDetailBean.ZhuanlanEntity item) {
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
             Glide.with(mContext).load(item.getZl_img()).into(imageView);
             helper.setText(R.id.tv_name, item.getZl_name())
@@ -142,12 +142,7 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
                     .setText(R.id.tv_update_name, item.getZl_update_name())
                     .setText(R.id.tv_update_time, item.getZl_update_time())
                     .setText(R.id.tv_price, item.getZl_price());
-            helper.getView(R.id.iv_bofang).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivity(new Intent(TeacherDetailActivity.this, ZhuanLanDetail2Activity.class));
-                }
-            });
+            helper.getView(R.id.iv_bofang).setVisibility(View.GONE);
         }
     }
 
@@ -158,8 +153,8 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, TeacherDetailBean.XiaokeEntity item) {
-            ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
+        protected void convert(BaseViewHolder helper, final TeacherDetailBean.XiaokeEntity item) {
+            final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
             Glide.with(mContext).load(item.getXk_image()).into(imageView);
             helper.setText(R.id.tv_buy_count, item.getBuy_count())
                     .setText(R.id.tv_name, item.getXk_name())
@@ -168,12 +163,7 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
                     .setText(R.id.tv_price, item.getXk_price())
                     .setText(R.id.tv_time, item.getTime_count())
                     .setText(R.id.tv_teacher_tag, item.getXk_teacher_tags());
-            helper.getView(R.id.iv_bofang).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivity(new Intent(TeacherDetailActivity.this, ZhuanLanDetail2Activity.class));
-                }
-            });
+            helper.getView(R.id.iv_bofang).setVisibility(View.GONE);
         }
     }
 
