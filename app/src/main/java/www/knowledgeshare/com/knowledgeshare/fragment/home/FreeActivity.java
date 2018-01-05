@@ -853,7 +853,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 startActivity(new Intent(this, SearchActivity.class));
                 break;
             case R.id.tv_share:
-                showShareDialog();
+                showShareDialog("root",0);
                 break;
             case R.id.tv_guanzhu:
             case R.id.iv_guanzhu:
