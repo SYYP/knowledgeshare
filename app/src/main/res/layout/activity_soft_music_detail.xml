@@ -74,7 +74,7 @@
                             android:layout_height="match_parent"
                             android:layout_marginLeft="15dp"
                             android:layout_marginRight="15dp"
-                            android:background="@color/white"></View>
+                            android:background="@color/white"/>
                         <TextView
                             android:id="@+id/tv_search"
                             android:layout_width="wrap_content"
@@ -91,7 +91,7 @@
                             android:layout_height="match_parent"
                             android:layout_marginLeft="15dp"
                             android:layout_marginRight="15dp"
-                            android:background="@color/white"></View>
+                            android:background="@color/white"/>
                         <TextView
                             android:id="@+id/tv_share"
                             android:layout_width="wrap_content"
@@ -125,7 +125,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_marginBottom="4dp"
                                 android:layout_marginTop="4dp"
-                                android:background="@color/text_red_dark"></View>
+                                android:background="@color/text_red_dark"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -198,7 +198,7 @@
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/bg_wanjiao"></android.support.v7.widget.RecyclerView>
+                    android:background="@drawable/bg_wanjiao"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -216,7 +216,7 @@
                             android:layout_height="match_parent"
                             android:layout_marginBottom="4dp"
                             android:layout_marginTop="4dp"
-                            android:background="@color/text_red_dark"></View>
+                            android:background="@color/text_red_dark"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -330,6 +330,7 @@
         </com.liaoinstan.springview.widget.SpringView>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/bottom_ll"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="50dp">
