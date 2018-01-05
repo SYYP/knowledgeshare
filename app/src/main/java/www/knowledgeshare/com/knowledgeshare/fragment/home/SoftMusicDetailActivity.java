@@ -110,6 +110,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
     private String mId;
     private BaseDialog mNetDialog;
     private Intent intent;
+    private LinearLayout bottomLl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -249,6 +250,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
         iv_guanzhu.setOnClickListener(this);
         iv_dianzan = (ImageView) findViewById(R.id.iv_dianzan);
         iv_dianzan.setOnClickListener(this);
+        bottomLl = (LinearLayout) findViewById(R.id.bottom_ll);
         nestView = (NestedScrollView) findViewById(R.id.nestView);
         recycler_free.setLayoutManager(new LinearLayoutManager(this));
         recycler_free.setNestedScrollingEnabled(false);
@@ -262,6 +264,10 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
     }
 
     private void initData() {
+        if (getIntent().getStringExtra("type") != null){
+            bottomLl.setVisibility(View.GONE);
+        }
+
         mId = getIntent().getStringExtra("id");
         HttpParams params = new HttpParams();
         params.put("id", mId);

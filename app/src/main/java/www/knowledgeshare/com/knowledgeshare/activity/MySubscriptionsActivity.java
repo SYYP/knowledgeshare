@@ -6,6 +6,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,6 +32,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.EasyLessonBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
  * 我的订阅
@@ -121,7 +123,9 @@ public class MySubscriptionsActivity extends BaseActivity implements View.OnClic
             ImageView subFaceIv = helper.getView(R.id.sub_face_iv);
 
             int position = helper.getPosition();
-            Glide.with(mContext).load(item.getData().get(position).getZl_img()).into(subFaceIv);
+            if (!TextUtils.isEmpty(item.getData().get(position).getZl_img())){
+                Glide.with(mContext).load(item.getData().get(position).getZl_img()).into(subFaceIv);
+            }
             subTitleTv.setText(item.getData().get(position).getZl_name());
             subDescTv.setText(item.getData().get(position).getZl_teacher_tags());
             subUpdataTv.setText(item.getData().get(position).getZl_update_time());
