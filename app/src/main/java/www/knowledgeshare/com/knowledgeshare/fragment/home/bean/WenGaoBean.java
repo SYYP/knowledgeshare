@@ -21,6 +21,15 @@ public class WenGaoBean {
     private int t_id;
     private int id;
     private String h5_url;
+    private String share_h5_url;
+
+    public String getShare_h5_url() {
+        return share_h5_url;
+    }
+
+    public void setShare_h5_url(String share_h5_url) {
+        this.share_h5_url = share_h5_url;
+    }
 
     public String getH5_url() {
         return h5_url;
