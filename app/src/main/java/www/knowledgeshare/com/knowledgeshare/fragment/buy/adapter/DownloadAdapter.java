@@ -37,6 +37,7 @@ import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -63,15 +64,20 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
     public static final int TYPE_ALL = 0;
     public static final int TYPE_FINISH = 1;
     public static final int TYPE_ING = 2;
+    public static final int TYPE_REMOVE = 3;
 
     private List<DownloadTask> values;
     private NumberFormat numberFormat;
     private LayoutInflater inflater;
     private Context context;
     private int type;
+    List<DownLoadListsBean> list = new ArrayList<>();
+    List<DownLoadListsBean.ListBean> listAllBeen = new ArrayList<>();
+    private DownloadTask task;
 
-    public DownloadAdapter(Context context) {
+    public DownloadAdapter(Context context, List<DownloadTask> list) {
         this.context = context;
+        this.values = list;
         numberFormat = NumberFormat.getPercentInstance();
         numberFormat.setMinimumFractionDigits(2);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -83,6 +89,16 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
         if (type == TYPE_ALL) values = OkDownload.restore(DownloadManager.getInstance().getAll());
         if (type == TYPE_FINISH) values = OkDownload.restore(DownloadManager.getInstance().getFinished());
         if (type == TYPE_ING) values = OkDownload.restore(DownloadManager.getInstance().getDownloading());
+        if (type == TYPE_REMOVE){
+            values = new ArrayList<>();
+            /*values = OkDownload.restore(DownloadManager.getInstance().getDownloading());
+            for (int i = 0; i < values.size(); i++) {
+                task = values.get(i);
+                values.remove(i);
+                task.remove(true);
+                notifyDataSetChanged();
+            }*/
+        }
         notifyDataSetChanged();
     }
 
@@ -94,7 +110,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final DownloadTask task = values.get(position);
+        task = values.get(position);
         String tag = createTag(task);
         task.register(new ListDownloadListener(tag, holder))//
                 .register(new LogDownloadListener());
@@ -158,20 +174,19 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
         public void bind() {
             Progress progress = task.progress;
             DownLoadListsBean downLoadListBean = (DownLoadListsBean) progress.extra3;
-            Logger.e(downLoadListBean.toString());
-            if (downLoadListBean != null) {
-                Glide.with(context).load(downLoadListBean.getList().get(getAdapterPosition()).getIconUrl()).into(icon);
-                name.setText(downLoadListBean.getList().get(getAdapterPosition()).getName());
+
+            list.add(downLoadListBean);
+            for (int i = 0; i < list.size(); i++) {
+                List<DownLoadListsBean.ListBean> listBeen = list.get(i).getList();
+                listAllBeen.addAll(listBeen);
+            }
+            if (listAllBeen != null) {
+                Glide.with(context).load(listAllBeen.get(getAdapterPosition()).getIconUrl()).into(icon);
+                Logger.e("下载中头像URL地址："+listAllBeen.get(getAdapterPosition()).getIconUrl());
+                name.setText(listAllBeen.get(getAdapterPosition()).getName());
             } else {
                 name.setText(progress.fileName);
             }
-            /*MusicDownLoadBean apk = (MusicDownLoadBean) progress.extra1;
-            if (apk != null) {
-                Glide.with(context).load(apk.iconUrl).into(icon);
-                name.setText(apk.name);
-            } else {
-                name.setText(progress.fileName);
-            }*/
         }
         public void refresh(Progress progress) {
             String currentSize = Formatter.formatFileSize(context, progress.currentSize);
@@ -273,7 +288,8 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
         @Override
         public void onFinish(File file, Progress progress) {
             Toast.makeText(context, "下载完成:" + progress.filePath, Toast.LENGTH_SHORT).show();
-            updateData(type);
+//            updateData(type);
+            notifyDataSetChanged();
         }
 
         @Override

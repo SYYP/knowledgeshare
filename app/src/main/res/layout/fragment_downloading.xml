@@ -32,7 +32,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="全部开始"
+                    android:text="全部暂停"
                     android:textColor="@color/text_black"/>
             </LinearLayout>
             <View
