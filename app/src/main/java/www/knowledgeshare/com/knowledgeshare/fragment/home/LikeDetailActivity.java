@@ -1,13 +1,10 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -117,7 +114,6 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
         initView();
         initDialog();
         initData();
-        initMusic();
         initListener();
         initNETDialog();
     }
@@ -321,11 +317,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                                  BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", item.getId(), item.getVideo_old_name(),
                                                          item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                                          item.getCollect_count(), item.getView_count(), item.isIslive(), item.isIsfav()
-                                                         , item.getT_header(), item.getT_tag(),item.getShare_h5_url()
+                                                         , item.getT_header(), item.getT_tag(), item.getShare_h5_url()
                                                          , SystemClock.currentThreadTimeMillis());
                                                  HistroyUtils.add(bofangHistroyBean);
-                                             }else {
-                                                 HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(),item.getVideo_old_name());
+                                             } else {
+                                                 HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(), item.getVideo_old_name());
                                              }
                                          }
                                      }
@@ -340,9 +336,9 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                              mMusicDetailBean.getTeacher().getT_name(),
                                              mMusicDetailBean.getXk_teacher_tags(), mMusicDetailBean.getXk_price()
                                              , SystemClock.currentThreadTimeMillis()));
-                                 }else {
+                                 } else {
                                      LookUtils.updateTime(SystemClock.currentThreadTimeMillis(),
-                                             mMusicDetailBean.getXk_name(),"like");
+                                             mMusicDetailBean.getXk_name(), "like");
                                  }
                              }
                          }
@@ -478,7 +474,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                showShareDialog("list",adapterPosition);
+                showShareDialog("list", adapterPosition);
             }
         });
         mTv_collect = mDialog.getView(R.id.tv_collect);
@@ -528,8 +524,8 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
 
                 List<DownLoadListsBean.ListBean> list = new ArrayList<>();
                 DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
-                listBean.setTypeId(childEntity.getXk_id()+"");
-                listBean.setChildId(childEntity.getId()+"");
+                listBean.setTypeId(childEntity.getXk_id() + "");
+                listBean.setChildId(childEntity.getId() + "");
                 listBean.setName(childEntity.getName());
                 listBean.setVideoTime(childEntity.getVideo_time());
                 listBean.setDate(split[0]);
@@ -539,8 +535,8 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                 listBean.setIconUrl(childEntity.getT_header());
                 list.add(listBean);
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
-                        "xiaoke",mMusicDetailBean.getXk_class_id()+"", childEntity.getParent_name(),childEntity.getT_header(),
-                        childEntity.getT_name(),childEntity.getT_tag(),mChild.size()+"",list);
+                        "xiaoke", mMusicDetailBean.getXk_class_id() + "", childEntity.getParent_name(), childEntity.getT_header(),
+                        childEntity.getT_name(), childEntity.getT_tag(), mChild.size() + "", list);
                 DownUtil.add(downLoadListsBean);
 
                 /*DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(), childEntity.getXk_id(),
@@ -558,11 +554,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                         .start();
                 OkGo.<File>get(childEntity.getTxt_url())
                         .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download"
-                                ,childEntity.getXk_id()+"-"+childEntity.getId()+childEntity.getName()+".txt") {
+                                , childEntity.getXk_id() + "-" + childEntity.getId() + childEntity.getName() + ".txt") {
                             @Override
                             public void onSuccess(Response<File> response) {
                                 int code = response.code();
-                                if (code >= 200 && code <= 204){
+                                if (code >= 200 && code <= 204) {
                                     Logger.e("文稿下载完成");
                                 }
                             }
@@ -1014,36 +1010,10 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                 );
     }
 
-    private MediaService.MyBinder mMyBinder;
-    //“绑定”服务的intent
-    private Intent MediaServiceIntent;
-
-    private void initMusic() {
-        MediaServiceIntent = new Intent(this, MediaService.class);
-        //        startService(MediaServiceIntent);
-        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-    }
-
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mMyBinder = (MediaService.MyBinder) service;
-            if (mMyBinder.isPlaying()) {
-            } else {
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
-        //        unbindService(mServiceConnection);
     }
 
     @Override
@@ -1076,7 +1046,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                 startActivity(intent);
                 break;
             case R.id.tv_share:
-                showShareDialog("root",0);
+                showShareDialog("root", 0);
                 break;
             case R.id.tv_buy:
                 showPayStyleDialog();

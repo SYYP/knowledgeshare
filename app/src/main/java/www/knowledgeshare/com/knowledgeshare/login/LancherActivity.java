@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
 
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpParams;
@@ -20,7 +19,6 @@ import www.knowledgeshare.com.knowledgeshare.bean.GuidePageBean;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
-import www.knowledgeshare.com.knowledgeshare.utils.ViewPagerIndicator;
 
 /**
  * Created by Administrator on 2017/8/24.
@@ -59,29 +57,6 @@ public class LancherActivity extends BaseActivity {
 //        ultimateBar.setImmersionBar();
         setISshow(false);
         setContentView(R.layout.activity_launcher);
-//        String umpushid = SpUtils.getString(this, "UMPUSHID", "");
-//        if (!TextUtils.isEmpty(umpushid)) {
-//            ArrayMap arrayMap = new ArrayMap<String, String>();
-//            arrayMap.put("user_id", SpUtils.getString(this, "user_id", ""));
-//            arrayMap.put("token", MyUtils.getToken());
-//            arrayMap.put("device_token", umpushid);
-//            RetrofitManager.get(MyContants.BASEURL + "s=User/upush", arrayMap, new BaseObserver1<EasyBean>("") {
-//                @Override
-//                public void onSuccess(EasyBean result, String tag) {
-//
-//                    //                Toast.makeText(RegisterActivity.this, result.getSuccess(), Toast.LENGTH_SHORT).show();
-//                    if (result.getCode() == 200) {
-//
-//                    } else {
-//
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailed(int code) {
-//                }
-//            });
-    //    }
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {

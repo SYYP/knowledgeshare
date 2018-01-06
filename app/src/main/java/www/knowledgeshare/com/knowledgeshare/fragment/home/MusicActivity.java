@@ -103,7 +103,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
             }
             play_seek.setMax(mMyBinder.getProgress());
             music_duration.setText(time.format(mMyBinder.getProgress()) + "");
-            mMyBinder.refreshhuanchong();
+//            mMyBinder.refreshhuanchong();
         }
     }
 

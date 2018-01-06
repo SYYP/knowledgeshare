@@ -256,7 +256,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(PlayerBean playerBean) {
-        if (playerBean.getMsg().equals("refreshplayer")) {
+        if (playerBean.getMsg().equals("refreshplayer")) {//当在其他界面点击播放的时候homeFragment也要更新小型播放器
             Glide.with(mContext).load(playerBean.getTeacher_head()).into(iv_bo_head);
             tv_title.setText(playerBean.getTitle());
             tv_subtitle.setText(playerBean.getSubtitle());
@@ -468,20 +468,24 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 public void onClick(View view) {
                     mytype = "zhuanlan";
                     myposition = helper.getAdapterPosition();
+                    //刷新小型播放器
                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
                     gobofang(playerBean);
+                    //设置进入播放主界面的数据
                     mMusicTypeBean = new MusicTypeBean("free",
                             item.getT_header(), item.getVideo_name(), item.getId() + "",
                             item.getIs_collect() == 0 ? false : true);
                     mMusicTypeBean.setMsg("musicplayertype");
                     EventBus.getDefault().postSticky(mMusicTypeBean);
                     List<PlayerBean> list = new ArrayList<PlayerBean>();
+                    //加入默认的播放列表
                     for (int i = 0; i < mMFreeChild.size(); i++) {
                         HomeBean.FreeEntity.ChildEntity entity = mMFreeChild.get(i);
                         PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getT_tag(), entity.getVideo_url());
                         list.add(playerBean1);
                     }
                     MediaService.insertMusicList(list);
+                    //下面是播放历史--浏览历史
                     if (!HistroyUtils.isInserted(item.getVideo_name())) {
                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", item.getId(), item.getVideo_name(),
                                 item.getCreated_at(), item.getVideo_url(), item.getGood_count(),

@@ -11,12 +11,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.view.CustomPopupWindow;
 
@@ -28,22 +25,23 @@ import www.knowledgeshare.com.knowledgeshare.view.CustomPopupWindow;
 public class BaseActivity extends AppCompatActivity {
     private static List<Activity> activityList = new ArrayList<>();
     private boolean isshow = true;//默认所有界面都显示
-    protected CustomPopupWindow musicPop;
-    private MediaService.MyBinder mMyBinder;
+    public static CustomPopupWindow musicPop;
+    public MediaService.MyBinder mMyBinder;
     //“绑定”服务的intent
-    private Intent MediaServiceIntent;
+    public Intent MediaServiceIntent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
         //在这里判断是否token是否存在、是否过期之类的
-        if (activityList != null)
+        if (activityList != null) {
             activityList.add(this);
-        if (musicPop == null && isshow) {
-            musicPop = new CustomPopupWindow(this);
-            initMusic();
         }
+        if (musicPop == null) {
+            musicPop = new CustomPopupWindow(this);
+        }
+            initMusic();
     }
 
     private void initMusic() {
@@ -64,24 +62,19 @@ public class BaseActivity extends AppCompatActivity {
         }
     };
 
-    public void ClickPopShow() {
+    public void ClickPopShow() {//在子类页面中点击音频的时候弹出popupwindow
         if (isshow && !musicPop.isShowing()) {
             musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
-//            mMyBinder.playMusic();
-//            EventBean eventBean = new EventBean("rotate");
-//            EventBus.getDefault().postSticky(eventBean);
-//            EventBean eventBean2 = new EventBean("bofang");
-//            EventBus.getDefault().postSticky(eventBean2);
         }
     }
 
     public void SlidePopShow() {
         if (isshow && !musicPop.isShowing() && mMyBinder.isPlaying()) {
             musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
-            EventBean eventBean = new EventBean("rotate");
-            EventBus.getDefault().postSticky(eventBean);
-            EventBean eventBean2 = new EventBean("home_bofang");
-            EventBus.getDefault().postSticky(eventBean2);
+//            EventBean eventBean = new EventBean("rotate");
+//            EventBus.getDefault().postSticky(eventBean);
+//            EventBean eventBean2 = new EventBean("home_bofang");
+//            EventBus.getDefault().postSticky(eventBean2);
         }
     }
 
@@ -116,12 +109,10 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (activityList != null)
+        if (activityList != null) {
             activityList.remove(this);
-    }
-
-    public static List<Activity> getAllActivitys() {
-        return activityList;
+        }
+//        unbindService(mServiceConnection);
     }
 
     public static void removeAllActivitys() {
@@ -132,7 +123,6 @@ public class BaseActivity extends AppCompatActivity {
                 }
             }
             activityList.clear();
-            //            activityList = null;
         }
     }
 

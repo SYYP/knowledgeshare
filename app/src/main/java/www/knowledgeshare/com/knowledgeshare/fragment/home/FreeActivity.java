@@ -1,13 +1,10 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -113,7 +110,6 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
         initView();
         initData();
         initDialog();
-        initMusic();
         initListener();
         initNETDialog();
     }
@@ -269,8 +265,8 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                                 item.getT_header(), item.getT_tag(),
                                                 item.getShare_h5_url(), SystemClock.currentThreadTimeMillis());
                                         HistroyUtils.add(bofangHistroyBean);
-                                    }else {
-                                        HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(),item.getVideo_old_name());
+                                    } else {
+                                        HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(), item.getVideo_old_name());
                                     }
                                 }
                             });
@@ -635,7 +631,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                showShareDialog("list",adapterPosition);
+                showShareDialog("list", adapterPosition);
             }
         });
         mTv_collect = mDialog.getView(tv_collect);
@@ -684,8 +680,8 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 String[] split = created_at.split(" ");
                 List<DownLoadListsBean.ListBean> list = new ArrayList<>();
                 DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
-                listBean.setTypeId(mFreeBean.getId()+"");
-                listBean.setChildId(childEntity.getId()+"");
+                listBean.setTypeId(mFreeBean.getId() + "");
+                listBean.setChildId(childEntity.getId() + "");
                 listBean.setName(childEntity.getVideo_name());
                 listBean.setVideoTime(childEntity.getVideo_time());
                 listBean.setDate(split[0]);
@@ -695,16 +691,16 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 listBean.setIconUrl(childEntity.getT_header());
                 list.add(listBean);
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
-                        "free", mFreeBean.getId()+"", "", childEntity.getT_header(), "", "",list.size()+"",list);
+                        "free", mFreeBean.getId() + "", "", childEntity.getT_header(), "", "", list.size() + "", list);
                 DownUtil.add(downLoadListsBean);
                 /*DownLoadListBean DownLoadListBean = new DownLoadListBean(-1,childEntity.getId(),-4,-3,
                         childEntity.getVideo_name(),childEntity.getVideo_time(), split[0], split[1],
                         childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
                 DownUtils.add(DownLoadListBean);*/
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
-                OkDownload.request(mFreeBean.getId()+"_"+childEntity.getId(), request)
+                OkDownload.request(mFreeBean.getId() + "_" + childEntity.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download")
-                        .fileName(childEntity.getVideo_name()+mFreeBean.getId()+"_"+childEntity.getId()+".mp3")
+                        .fileName(childEntity.getVideo_name() + mFreeBean.getId() + "_" + childEntity.getId() + ".mp3")
                         .extra3(downLoadListsBean)//额外数据
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听
@@ -712,11 +708,11 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
 
                 OkGo.<File>get(childEntity.getTxt_url())
                         .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download"
-                        ,mFreeBean.getId()+"-"+childEntity.getId()+childEntity.getVideo_name()+".txt") {
+                                , mFreeBean.getId() + "-" + childEntity.getId() + childEntity.getVideo_name() + ".txt") {
                             @Override
                             public void onSuccess(Response<File> response) {
                                 int code = response.code();
-                                if (code >= 200 && code <= 204){
+                                if (code >= 200 && code <= 204) {
                                     Logger.e("文稿下载完成");
                                 }
                             }
@@ -810,36 +806,10 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 );
     }
 
-    private MediaService.MyBinder mMyBinder;
-    //“绑定”服务的intent
-    private Intent MediaServiceIntent;
-
-    private void initMusic() {
-        MediaServiceIntent = new Intent(this, MediaService.class);
-        //        startService(MediaServiceIntent);
-        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-    }
-
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mMyBinder = (MediaService.MyBinder) service;
-            if (mMyBinder.isPlaying()) {
-            } else {
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
-        //        unbindService(mServiceConnection);
     }
 
     @Override
@@ -851,7 +821,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
             case R.id.tv_download:
                 FreeBean model = mFreeBean;
                 intent = new Intent(this, FreeDownListActivity.class);
-                intent.putExtra("model",model);
+                intent.putExtra("model", model);
                 startActivity(intent);
                 break;
             case R.id.tv_search:

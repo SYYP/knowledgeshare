@@ -123,6 +123,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("home_pause") || eventBean.getMsg().equals("norotate")) {
+            //我在用户退出APP的时候发了eventbus，就是为了这边接收到然后刷新学习时间
             long lasttime = SystemClock.currentThreadTimeMillis() - pretime;
             if (!StudyTimeUtils.isHave("music", mMusicTypeBean.getId())) {
                 StudyTimeBean studyTimeBean = new StudyTimeBean(Integer.parseInt(mMusicTypeBean.getId()), "music",

@@ -47,14 +47,22 @@ import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
  */
 public class AlreadyDownloadDetailActivity extends BaseActivity implements View.OnClickListener {
 
-    @BindView(R.id.title_back_iv) ImageView titleBackIv;
-    @BindView(R.id.title_content_tv) TextView titleContentTv;
-    @BindView(R.id.title_content_right_tv) TextView titleContentRightTv;
-    @BindView(R.id.recycler_kcmc) RecyclerView recyclerKcmc;
-    @BindView(R.id.all_checkBox) CheckBox allCheckBox;
-    @BindView(R.id.heji_tv) TextView hejiTv;
-    @BindView(R.id.delete_tv) TextView deleteTv;
-    @BindView(R.id.bianji_rl) RelativeLayout bianjiRl;
+    @BindView(R.id.title_back_iv)
+    ImageView titleBackIv;
+    @BindView(R.id.title_content_tv)
+    TextView titleContentTv;
+    @BindView(R.id.title_content_right_tv)
+    TextView titleContentRightTv;
+    @BindView(R.id.recycler_kcmc)
+    RecyclerView recyclerKcmc;
+    @BindView(R.id.all_checkBox)
+    CheckBox allCheckBox;
+    @BindView(R.id.heji_tv)
+    TextView hejiTv;
+    @BindView(R.id.delete_tv)
+    TextView deleteTv;
+    @BindView(R.id.bianji_rl)
+    RelativeLayout bianjiRl;
     private AlreadyDlDetailAdapter adapter;
     private List<DownLoadListsBean> listFree = new ArrayList<>();
     private List<DownLoadListsBean> listComment = new ArrayList<>();
@@ -82,7 +90,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
             @Override
             public void onClick(View view) {
                 if (((CheckBox) view).isChecked()) {
-                    if (!isAllChecked()){
+                    if (!isAllChecked()) {
                         quanxuan();
                     }
                 } else {
@@ -95,7 +103,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
 
     private void getIntentData() {
         type = getIntent().getStringExtra("type");
-        switch (type){
+        switch (type) {
             case "free":
                 listFree = (List<DownLoadListsBean>) getIntent().getExtras().getSerializable("list");
                 for (int i = 0; i < listFree.size(); i++) {
@@ -126,69 +134,33 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                            @Override
                                            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                               String mytype="";
                                                if (type.equals("free")) {
-                                                   setISshow(true);
-                                                   DownLoadListsBean item = listFree.get(position);
-                                                   PlayerBean playerBean = new PlayerBean(item.getTypeIcon(), item.getTypeName(),
-                                                           item.gettTag(), "",
-                                                           loadFromSDFile(item.getList().get(0).getName()+item.getTypeId()+"_"
-                                                                   +item.getList().get(0).getChildId()+".mp3"));
-                                                   gobofang(playerBean);
-                                                   MusicTypeBean musicTypeBean = new MusicTypeBean("free",
-                                                           item.getTypeIcon(), item.getTypeName(), item.getList().get(0).getTypeId(),
-                                                           item.getList().get(0).isSave());
-                                                   musicTypeBean.setMsg("musicplayertype");
-                                                   EventBus.getDefault().postSticky(musicTypeBean);
-                                                   List<PlayerBean> list = new ArrayList<PlayerBean>();
-                                                   for (int i = 0; i < item.getList().size(); i++) {
-                                                       DownLoadListsBean.ListBean entity = item.getList().get(i);
-                                                       PlayerBean playerBean1 = new PlayerBean(entity.getIconUrl(), entity.getName(),
-                                                               item.gettTag(), "");
-                                                       list.add(playerBean1);
-                                                   }
-                                                   MediaService.insertMusicList(list);
-                                               } else if (type.equals("comment")) {
-                                                   setISshow(true);
-                                                   DownLoadListsBean item = listComment.get(position);
-                                                   PlayerBean playerBean = new PlayerBean(item.getTypeIcon(), item.getTypeName(),
-                                                           item.gettTag(), "",
-                                                           loadFromSDFile(item.getList().get(0).getName()+item.getTypeId()+"_"
-                                                                   +item.getList().get(0).getChildId()+".mp3"));
-                                                   gobofang(playerBean);
-                                                   MusicTypeBean musicTypeBean = new MusicTypeBean("everydaycomment",
-                                                           item.getTypeIcon(), item.getTypeName(), item.getList().get(0).getTypeId(),
-                                                           item.getList().get(0).isSave());
-                                                   musicTypeBean.setMsg("musicplayertype");
-                                                   EventBus.getDefault().postSticky(musicTypeBean);
-                                                   List<PlayerBean> list = new ArrayList<PlayerBean>();
-                                                   for (int i = 0; i < item.getList().size(); i++) {
-                                                       DownLoadListsBean.ListBean entity = item.getList().get(i);
-                                                       PlayerBean playerBean1 = new PlayerBean(entity.getIconUrl(), entity.getName(),
-                                                               item.gettTag(), "");
-                                                       list.add(playerBean1);
-                                                   }
-                                                   MediaService.insertMusicList(list);
-                                               } else {
-                                                   setISshow(true);
-                                                   DownLoadListsBean.ListBean listBean = list.get(0);
-                                                   PlayerBean playerBean = new PlayerBean(listBean.getIconUrl(), listBean.getName(),
-                                                           "", "",loadFromSDFile(listBean.getName()+listBean.getTypeId()+"_"
-                                                           +listBean.getChildId()+".mp3"));
-                                                   gobofang(playerBean);
-                                                   MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
-                                                           listBean.getIconUrl(), listBean.getName(), listBean.getTypeId(),
-                                                           listBean.isSave());
-                                                   musicTypeBean.setMsg("musicplayertype");
-                                                   EventBus.getDefault().postSticky(musicTypeBean);
-                                                   List<PlayerBean> beanList = new ArrayList<PlayerBean>();
-                                                   for (int i = 0; i < list.size(); i++) {
-                                                       DownLoadListsBean.ListBean listBean1 = list.get(i);
-                                                       PlayerBean playerBean1 = new PlayerBean(listBean1.getIconUrl(), listBean1.getName(),
-                                                               "", "");
-                                                       beanList.add(playerBean1);
-                                                   }
-                                                   MediaService.insertMusicList(beanList);
+                                                   mytype="free";
+                                               }else if (type.equals("comment")){
+                                                   mytype="everydaycomment";
+                                               }else {
+                                                   mytype="softmusicdetail";
                                                }
+                                               setISshow(true);
+                                               DownLoadListsBean.ListBean listBean = list.get(0);
+                                               PlayerBean playerBean = new PlayerBean(listBean.getIconUrl(), listBean.getName(),
+                                                       "", "", loadFromSDFile(listBean.getName() + listBean.getTypeId() + "_"
+                                                       + listBean.getChildId() + ".mp3"));
+                                               gobofang(playerBean);
+                                               MusicTypeBean musicTypeBean = new MusicTypeBean(mytype,
+                                                       listBean.getIconUrl(), listBean.getName(), listBean.getTypeId(),
+                                                       listBean.isSave());
+                                               musicTypeBean.setMsg("musicplayertype");
+                                               EventBus.getDefault().postSticky(musicTypeBean);
+                                               List<PlayerBean> beanList = new ArrayList<PlayerBean>();
+                                               for (int i = 0; i < list.size(); i++) {
+                                                   DownLoadListsBean.ListBean listBean1 = list.get(i);
+                                                   PlayerBean playerBean1 = new PlayerBean(listBean1.getIconUrl(), listBean1.getName(),
+                                                           "", "");
+                                                   beanList.add(playerBean1);
+                                               }
+                                               MediaService.insertMusicList(beanList);
                                            }
                                        }
 
@@ -202,19 +174,19 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
             switch (type) {
                 case "free":
                     Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download" + fname);
-                    result=Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download" + fname;
+                    result = Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download" + fname;
                     break;
                 case "comment":
                     Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download" + fname);
-                    result=Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download" + fname;
+                    result = Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download" + fname;
                     break;
                 case "xiaoke":
                     Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download" + fname);
-                    result=Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download" + fname;
+                    result = Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download" + fname;
                     break;
                 case "zhuanlan":
                     Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download" + fname);
-                    result=Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download" + fname;
+                    result = Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download" + fname;
                     break;
             }
         } catch (Exception e) {
@@ -271,18 +243,18 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                 break;
             case R.id.title_content_right_tv:
                 if (TextUtils.equals("编辑", titleContentRightTv.getText().toString())) {
-                    if (list.size() > 0){
+                    if (list.size() > 0) {
                         titleContentRightTv.setText("取消");
-                        MyUtils.setMargins(recyclerKcmc,0,0,0,100);
+                        MyUtils.setMargins(recyclerKcmc, 0, 0, 0, 100);
                         bianjiRl.setVisibility(View.VISIBLE);
                         for (int i = 0; i < list.size(); i++) {
                             list.get(i).setVisibility(true);
                         }
                         adapter.notifyDataSetChanged();
                     }
-                }else {
+                } else {
                     titleContentRightTv.setText("编辑");
-                    MyUtils.setMargins(recyclerKcmc,0,0,0,0);
+                    MyUtils.setMargins(recyclerKcmc, 0, 0, 0, 0);
                     bianjiRl.setVisibility(View.GONE);
                     for (int i = 0; i < list.size(); i++) {
                         list.get(i).setVisibility(false);
@@ -291,15 +263,15 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                 }
                 break;
             case R.id.delete_tv:
-                for (int i = list.size()-1; i >= 0; i--) {
-                    if (list.get(i).isChecked()){
-                        GetRequest< File > request = OkGo.<File>get(list.get(i).getVideoUrl());
-                        DownloadTask task = new DownloadTask(list.get(i).getTypeId()+"_"+list.get(i).getChildId(),request);
-                        Logger.e("TAG:"+list.get(i).getTypeId()+"_"+list.get(i).getChildId());
+                for (int i = list.size() - 1; i >= 0; i--) {
+                    if (list.get(i).isChecked()) {
+                        GetRequest<File> request = OkGo.<File>get(list.get(i).getVideoUrl());
+                        DownloadTask task = new DownloadTask(list.get(i).getTypeId() + "_" + list.get(i).getChildId(), request);
+                        Logger.e("TAG:" + list.get(i).getTypeId() + "_" + list.get(i).getChildId());
                         task.remove(true);
                         list.remove(i);
                     }
-                    if (list.size() == 0){
+                    if (list.size() == 0) {
                         bianjiRl.setVisibility(View.GONE);
                         titleContentRightTv.setText("编辑");
                     }
@@ -348,19 +320,19 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
             TextView timeTv = helper.getView(R.id.time_tv);
             ImageView wengaoIv = helper.getView(R.id.wengao_iv);
             CheckBox checkBox = helper.getView(R.id.checkbox);
-            if (item.isVisibility()){
+            if (item.isVisibility()) {
                 checkBox.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 checkBox.setVisibility(View.GONE);
             }
 
-            if (type.equals("zhuanlan")){
+            if (type.equals("zhuanlan")) {
                 wengaoIv.setVisibility(View.GONE);
             }
 
-            sizeTv.setText(helper.getPosition()+1+"");
+            sizeTv.setText(helper.getPosition() + 1 + "");
             titleTv.setText(item.getName());
-//            nameTv.setText(item.getName());
+            //            nameTv.setText(item.getName());
             timeTv.setText(item.getTime());
             checkBox.setChecked(item.isChecked());
 
@@ -368,12 +340,12 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
             checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!((CheckBox) view).isChecked()){//未选中
+                    if (!((CheckBox) view).isChecked()) {//未选中
                         allCheckBox.setChecked(false);
                         item.setChecked(false);
-                    }else {
+                    } else {
                         item.setChecked(true);
-                        if (isAllChecked()){
+                        if (isAllChecked()) {
                             allCheckBox.setChecked(true);
                         }
                     }
@@ -384,11 +356,11 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(mContext, WenGaoFileActivity.class);
-                    intent.putExtra("img",item.getIconUrl());
-                    intent.putExtra("title",item.getName());
-                    intent.putExtra("id",item.getTypeId());
-                    intent.putExtra("childId",item.getChildId());
-                    intent.putExtra("type",type);
+                    intent.putExtra("img", item.getIconUrl());
+                    intent.putExtra("title", item.getName());
+                    intent.putExtra("id", item.getTypeId());
+                    intent.putExtra("childId", item.getChildId());
+                    intent.putExtra("type", type);
                     startActivity(intent);
                 }
             });

@@ -48,7 +48,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
     private AudioFocusManager mAudioFocusManager;
     private final NoisyAudioStreamReceiver mNoisyReceiver = new NoisyAudioStreamReceiver();
     private final IntentFilter mNoisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-    private static List<PlayerBean> musicList = new ArrayList<>();
+    private static List<PlayerBean> musicList = new ArrayList<>();//传进来的音频列表
     private static int currPosition;
 
     @Override
@@ -60,11 +60,19 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         mMediaPlayer.setOnErrorListener(this);
     }
 
+    /*
+    * 我这边因为一开始没有考虑到音频列表的问题，所以在有播放的界面都是先播放一首，传进来一个playerBean,
+    * 然后再传进来List<PlayerBean>也就是音频列表，然后设置当前位置为0，这种处理也是可以的
+    * */
     public static void insertMusicList(List<PlayerBean> musiclist) {
         currPosition = 0;
         musicList = musiclist;
     }
 
+    /*
+    * 手机上的通知栏上面的按钮通过广播接收者来控制，接收到广播后就调用这个方法，
+    * 调用了这个方法自然就会调用onStartCommand()这个方法，根据action就可以判断应该进行什么操作
+    * */
     public static void startCommand(Context context, String action) {
         Intent intent = new Intent(context, MediaService.class);
         intent.setAction(action);
@@ -87,7 +95,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             EventBean eventBean2 = new EventBean("home_bofang");
             EventBus.getDefault().postSticky(eventBean2);
             registerReceiver(mNoisyReceiver, mNoisyFilter);
-            EventBus.getDefault().postSticky(new EventBean("isplaying"));
+            EventBus.getDefault().postSticky(new EventBean("isplaying"));//传给播放主界面的
             mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
             isClosed = false;
             Notifier.showPlay(mPlayerBean);
@@ -137,7 +145,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
     private MediaPlayer.OnBufferingUpdateListener mBufferingUpdateListener = new MediaPlayer.OnBufferingUpdateListener() {
         @Override
         public void onBufferingUpdate(MediaPlayer mp, int percent) {
-            mPercent = percent;
+            mPercent = percent;//通过eventbus来向播放主界面发送缓冲的百分比
             EventBus.getDefault().postSticky(new HuanChongBean("huanchong", percent));
         }
     };
@@ -194,6 +202,9 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         mMediaPlayer.release();
         mMediaPlayer = null;
         mAudioFocusManager.abandonAudioFocus();
+        isPrepared=false;
+        isPlaying=false;
+        isClosed=true;
         Notifier.cancelAll();
     }
 
@@ -205,6 +216,14 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
+         /*
+        此方法的回调在很多情况下会被回调，例如
+        1.当播放完成的时候会被回调
+        2.当mMediaPlayer.setDataSource(）方法还没有来得及调用，就使用了 mMediaPlayer.getDuration()的时候
+        3.当mMediaPlayer.setDataSource(）方法没有调用，就使用了mMediaPlayer.seekto();的时候，
+        总之大部分不正确的使用都会回调onCompletion此方法，所以需要注意
+        解决办法就是实现MediaPlayer的onError回调，然后返回值设置成true
+         */
         mBinder.nextMusic();
     }
 
@@ -333,7 +352,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
          * 暂停播放
          */
         public void pauseMusic() {
-            isPlaying = mMediaPlayer.isPlaying();
+            isPlaying = mBinder.isPlaying();
             if (isPlaying) {
                 //如果正在播放，就暂停
                 mMediaPlayer.pause();
@@ -342,7 +361,10 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 isClosed = false;
             }
         }
-
+        /*
+        * mainActivity的播放按钮要判断是不是关闭掉了播放器，来决定是开启默认播放还是继续播放
+        * 同样的专栏详情的播放界面也是这样
+        * */
         public boolean isClosed() {
             return isClosed;
         }
@@ -355,6 +377,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 mMediaPlayer.stop();
                 mMediaPlayer.release();
                 isPlaying = false;
+                isPrepared=false;
                 isClosed = true;
                 Notifier.showPause(mPlayerBean);
                 //                mMediaPlayer = null;
@@ -372,6 +395,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 } else {
                     currPosition++;
                     mMediaPlayer.reset();
+                    //当播放本地音频的时候我没传url，就通过这个来区分
                     if (TextUtils.isEmpty(musicList.get(currPosition).getVideo_url())) {
                         playLocal(musicList.get(currPosition).getLocalPath());
                     } else {
@@ -446,9 +470,9 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             mMusicUrl = musicUrl;
             try {
                 //此处的两个方法需要捕获IO异常
-                //设置音频文件到MediaPlayer对象中
                 //            Uri uri = Uri.parse("android.resource://" + MyApplication.getGloableContext().getPackageName() + "/" + R.raw.music1);
                 mMediaPlayer.reset();
+                //设置音频文件到MediaPlayer对象中
                 mMediaPlayer.setDataSource(mMusicUrl);
                 //让MediaPlayer对象准备
                 mMediaPlayer.prepareAsync();
@@ -500,6 +524,9 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         }
 
         public void refreshhuanchong() {
+            /*
+            * 这个方法在刚进入
+            * */
             EventBus.getDefault().postSticky(new HuanChongBean("huanchong", mPercent));
         }
     }

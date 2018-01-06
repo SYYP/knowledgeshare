@@ -1,11 +1,8 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -67,7 +64,6 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
         setContentView(R.layout.activity_bo_fang_list);
         initView();
         initDialog();
-        initMusic();
         initNETDialog();
     }
 
@@ -80,6 +76,11 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
         //关闭窗体动画显示
         super.finish();
         this.overridePendingTransition(0, R.anim.bottom_out);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     private void initView() {
@@ -126,16 +127,6 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
         });
     }
 
-    private MediaService.MyBinder mMyBinder;
-    //“绑定”服务的intent
-    private Intent MediaServiceIntent;
-
-    private void initMusic() {
-        MediaServiceIntent = new Intent(this, MediaService.class);
-        //        startService(MediaServiceIntent);
-        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-    }
-
     private BaseDialog mNetDialog;
 
     private void initNETDialog() {
@@ -154,21 +145,6 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                 //设置监听事件
                 .builder();
     }
-
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mMyBinder = (MediaService.MyBinder) service;
-            if (mMyBinder.isPlaying()) {
-            } else {
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
 
     private void gobofang(final PlayerBean playerBean) {
         int apnType = NetWorkUtils.getAPNType(this);

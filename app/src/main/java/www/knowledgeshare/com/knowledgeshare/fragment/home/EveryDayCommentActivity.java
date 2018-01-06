@@ -1,13 +1,10 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -95,7 +92,6 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
         initView();
         initData();
         initDialog();
-        initMusic();
         initListener();
         initNETDialog();
     }
@@ -665,36 +661,10 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
         });
     }
 
-    private MediaService.MyBinder mMyBinder;
-    //“绑定”服务的intent
-    private Intent MediaServiceIntent;
-
-    private void initMusic() {
-        MediaServiceIntent = new Intent(this, MediaService.class);
-        //        startService(MediaServiceIntent);
-        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-    }
-
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mMyBinder = (MediaService.MyBinder) service;
-            if (mMyBinder.isPlaying()) {
-            } else {
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
-        unbindService(mServiceConnection);
+//        unbindService(mServiceConnection);
     }
 
     @Override

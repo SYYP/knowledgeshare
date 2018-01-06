@@ -1,10 +1,7 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -55,6 +52,7 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
     private TextView tv_title;
     private ImageView iv_share;
     private Banner banner;
+    private BaseDialog mNetDialog;
     private TextView tv_zhuanlan_title;
     private TextView tv_zhuanlan_content;
     private RecyclerView recycler_dashiban;
@@ -80,7 +78,6 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
         initView();
         initData();
         initListener();
-        initMusic();
         initNETDialog();
     }
 
@@ -126,7 +123,7 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
         ViewGroup.LayoutParams layoutParams = banner.getLayoutParams();
         layoutParams.height = MyUtils.getScreenWidth(this) / 2;
         banner.setLayoutParams(layoutParams);
-        HttpParams params=new HttpParams();
+        HttpParams params = new HttpParams();
         params.put("userid", SpUtils.getString(this, "id", ""));
         OkGo.<GuDianBean>post(MyContants.LXKURL + "index/" + type)
                 .tag(this)
@@ -240,40 +237,14 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
                                 , try_video.getT_header(), try_video.getT_tag(), try_video.getShare_h5_url()
                                 , SystemClock.currentThreadTimeMillis());
                         HistroyUtils.add(bofangHistroyBean);
-                    }else {
-                        HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(),try_video.getVideo_old_name());
+                    } else {
+                        HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(), try_video.getVideo_old_name());
                     }
                 }
             });
         }
     }
 
-    private MediaService.MyBinder mMyBinder;
-    //“绑定”服务的intent
-    private Intent MediaServiceIntent;
-
-    private BaseDialog mNetDialog;
-
-    private void initMusic() {
-        MediaServiceIntent = new Intent(this, MediaService.class);
-        //        startService(MediaServiceIntent);
-        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-    }
-
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mMyBinder = (MediaService.MyBinder) service;
-            if (mMyBinder.isPlaying()) {
-            } else {
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
 
     private void initNETDialog() {
         BaseDialog.Builder builder = new BaseDialog.Builder(this);
@@ -295,8 +266,6 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
-        unbindService(mServiceConnection);
     }
 
 
