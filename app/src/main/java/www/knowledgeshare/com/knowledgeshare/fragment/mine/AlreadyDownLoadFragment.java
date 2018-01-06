@@ -6,8 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,7 +18,6 @@ import com.lzy.okgo.db.DownloadManager;
 import com.lzy.okgo.model.Progress;
 import com.lzy.okserver.OkDownload;
 import com.lzy.okserver.download.DownloadTask;
-import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,14 +35,7 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.AlreadyDownloadDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
-import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
-import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
-import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
-import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.EasyLessonBean;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBean;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
-import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
  * Created by Administrator on 2017/11/28.
@@ -150,7 +140,6 @@ public class AlreadyDownLoadFragment extends BaseFragment {
             }
         });
     }
-
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)

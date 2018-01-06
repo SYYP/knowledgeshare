@@ -1,7 +1,11 @@
 package www.knowledgeshare.com.knowledgeshare.activity;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.IBinder;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,13 +16,12 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.db.DownloadManager;
 import com.lzy.okgo.request.GetRequest;
-import com.lzy.okserver.OkDownload;
 import com.lzy.okserver.download.DownloadTask;
 import com.orhanobut.logger.Logger;
 
@@ -34,11 +37,9 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
-import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
-import www.knowledgeshare.com.knowledgeshare.fragment.buy.adapter.DownloadAdapter;
-import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.AlreadyDlDetailBean;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.WenGaoActivity;
-import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
+import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 
 /**
@@ -66,6 +67,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
         setContentView(R.layout.activity_already_download_detail);
         ButterKnife.bind(this);
         initView();
+        initMusic();
     }
 
     private void initView() {
@@ -121,7 +123,138 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
         recyclerKcmc.setNestedScrollingEnabled(false);
         adapter = new AlreadyDlDetailAdapter(R.layout.item_alreadydl_detail, list);
         recyclerKcmc.setAdapter(adapter);
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                           @Override
+                                           public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                               if (type.equals("free")) {
+                                                   setISshow(true);
+                                                   DownLoadListsBean item = listFree.get(position);
+                                                   PlayerBean playerBean = new PlayerBean(item.getTypeIcon(), item.getTypeName(),
+                                                           item.gettTag(), "",
+                                                           loadFromSDFile(item.getList().get(0).getName()+item.getTypeId()+"_"
+                                                                   +item.getList().get(0).getChildId()+".mp3"));
+                                                   gobofang(playerBean);
+                                                   MusicTypeBean musicTypeBean = new MusicTypeBean("free",
+                                                           item.getTypeIcon(), item.getTypeName(), item.getList().get(0).getTypeId(),
+                                                           item.getList().get(0).isSave());
+                                                   musicTypeBean.setMsg("musicplayertype");
+                                                   EventBus.getDefault().postSticky(musicTypeBean);
+                                                   List<PlayerBean> list = new ArrayList<PlayerBean>();
+                                                   for (int i = 0; i < item.getList().size(); i++) {
+                                                       DownLoadListsBean.ListBean entity = item.getList().get(i);
+                                                       PlayerBean playerBean1 = new PlayerBean(entity.getIconUrl(), entity.getName(),
+                                                               item.gettTag(), "");
+                                                       list.add(playerBean1);
+                                                   }
+                                                   MediaService.insertMusicList(list);
+                                               } else if (type.equals("comment")) {
+                                                   setISshow(true);
+                                                   DownLoadListsBean item = listComment.get(position);
+                                                   PlayerBean playerBean = new PlayerBean(item.getTypeIcon(), item.getTypeName(),
+                                                           item.gettTag(), "",
+                                                           loadFromSDFile(item.getList().get(0).getName()+item.getTypeId()+"_"
+                                                                   +item.getList().get(0).getChildId()+".mp3"));
+                                                   gobofang(playerBean);
+                                                   MusicTypeBean musicTypeBean = new MusicTypeBean("everydaycomment",
+                                                           item.getTypeIcon(), item.getTypeName(), item.getList().get(0).getTypeId(),
+                                                           item.getList().get(0).isSave());
+                                                   musicTypeBean.setMsg("musicplayertype");
+                                                   EventBus.getDefault().postSticky(musicTypeBean);
+                                                   List<PlayerBean> list = new ArrayList<PlayerBean>();
+                                                   for (int i = 0; i < item.getList().size(); i++) {
+                                                       DownLoadListsBean.ListBean entity = item.getList().get(i);
+                                                       PlayerBean playerBean1 = new PlayerBean(entity.getIconUrl(), entity.getName(),
+                                                               item.gettTag(), "");
+                                                       list.add(playerBean1);
+                                                   }
+                                                   MediaService.insertMusicList(list);
+                                               } else {
+                                                   setISshow(true);
+                                                   DownLoadListsBean.ListBean listBean = list.get(0);
+                                                   PlayerBean playerBean = new PlayerBean(listBean.getIconUrl(), listBean.getName(),
+                                                           "", "",loadFromSDFile(listBean.getName()+listBean.getTypeId()+"_"
+                                                           +listBean.getChildId()+".mp3"));
+                                                   gobofang(playerBean);
+                                                   MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
+                                                           listBean.getIconUrl(), listBean.getName(), listBean.getTypeId(),
+                                                           listBean.isSave());
+                                                   musicTypeBean.setMsg("musicplayertype");
+                                                   EventBus.getDefault().postSticky(musicTypeBean);
+                                                   List<PlayerBean> beanList = new ArrayList<PlayerBean>();
+                                                   for (int i = 0; i < list.size(); i++) {
+                                                       DownLoadListsBean.ListBean listBean1 = list.get(i);
+                                                       PlayerBean playerBean1 = new PlayerBean(listBean1.getIconUrl(), listBean1.getName(),
+                                                               "", "");
+                                                       beanList.add(playerBean1);
+                                                   }
+                                                   MediaService.insertMusicList(beanList);
+                                               }
+                                           }
+                                       }
+
+        );
     }
+
+    private String loadFromSDFile(String fname) {
+        fname = "/" + fname;
+        String result = null;
+        try {
+            switch (type) {
+                case "free":
+                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download" + fname);
+                    result=Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download" + fname;
+                    break;
+                case "comment":
+                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download" + fname);
+                    result=Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download" + fname;
+                    break;
+                case "xiaoke":
+                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download" + fname);
+                    result=Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download" + fname;
+                    break;
+                case "zhuanlan":
+                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download" + fname);
+                    result=Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download" + fname;
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(AlreadyDownloadDetailActivity.this, "没有找到指定文件", Toast.LENGTH_SHORT).show();
+        }
+        return result;
+    }
+
+    private void gobofang(final PlayerBean playerBean) {
+        mMyBinder.setMusicLocal(playerBean);
+        ClickPopShow();
+        playerBean.setMsg("refreshplayer");
+        EventBus.getDefault().postSticky(playerBean);
+    }
+
+    private MediaService.MyBinder mMyBinder;
+    //“绑定”服务的intent
+    private Intent MediaServiceIntent;
+
+    private void initMusic() {
+        MediaServiceIntent = new Intent(this, MediaService.class);
+        //        startService(MediaServiceIntent);
+        bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+    }
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mMyBinder = (MediaService.MyBinder) service;
+            if (mMyBinder.isPlaying()) {
+            } else {
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     @Override
     protected void onDestroy() {
