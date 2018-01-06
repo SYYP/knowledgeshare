@@ -28,13 +28,14 @@ import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.orhanobut.logger.Logger;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.StudyTimeBean;
@@ -49,7 +50,7 @@ import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
-public class WenGaoActivity extends BaseActivity implements View.OnClickListener {
+public class WenGaoActivity extends UMShareActivity implements View.OnClickListener {
 
     private ImageView iv_back;
     private ImageView iv_share;
@@ -87,7 +88,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void setStudyTime() {
-        pretime= SystemClock.currentThreadTimeMillis();
+        pretime = SystemClock.currentThreadTimeMillis();
     }
 
     @Override
@@ -100,7 +101,7 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
             StudyTimeUtils.add(studyTimeBean);
         } else {
             long oneTime = StudyTimeUtils.getOneTime(mType, mId);
-            lasttime+=oneTime;
+            lasttime += oneTime;
             StudyTimeUtils.updateTime(mType, mId, lasttime);
         }
     }
@@ -442,6 +443,46 @@ public class WenGaoActivity extends BaseActivity implements View.OnClickListener
         mDialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_weixin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareWebUrl(mWenGaoBean.getShare_h5_url(), mWenGaoBean.getVideo_name(),
+                        mWenGaoBean.getT_header(), "", WenGaoActivity.this, SHARE_MEDIA.WEIXIN);
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareWebUrl(mWenGaoBean.getShare_h5_url(), mWenGaoBean.getVideo_name(),
+                        mWenGaoBean.getT_header(), "", WenGaoActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareWebUrl(mWenGaoBean.getShare_h5_url(), mWenGaoBean.getVideo_name(),
+                        mWenGaoBean.getT_header(), "", WenGaoActivity.this, SHARE_MEDIA.QZONE);
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareWebUrl(mWenGaoBean.getShare_h5_url(), mWenGaoBean.getVideo_name(),
+                        mWenGaoBean.getT_header(), "", WenGaoActivity.this, SHARE_MEDIA.QQ);
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareWebUrl(mWenGaoBean.getShare_h5_url(), mWenGaoBean.getVideo_name(),
+                        mWenGaoBean.getT_header(), "", WenGaoActivity.this, SHARE_MEDIA.SINA);
                 mDialog.dismiss();
             }
         });
