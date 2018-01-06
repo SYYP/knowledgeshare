@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
@@ -42,6 +43,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.buy.BuyFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.HomeFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.WebActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBannerBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.RefreshToken;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.MineFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.study.StudyFragment;
@@ -165,36 +167,58 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void pop() {
-        mBuilder = new BaseDialog.Builder(this);
-        mDialog = mBuilder.setViewId(R.layout.dialog_pop)
-                //设置dialogpadding
-                .setPaddingdp(10, 0, 10, 0)
-                //设置显示位置
-                .setGravity(Gravity.BOTTOM)
-                //设置动画
-                .setAnimation(R.style.Bottom_Top_aniamtion)
-                //设置dialog的宽高
-                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                //设置触摸dialog外围是否关闭
-                .isOnTouchCanceled(true)
-                //设置监听事件
-                .builder();
-        mDialog.show();
-        mDialog.getView(R.id.iv_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-            }
-        });
-        mDialog.getView(R.id.iv_pop).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-                Intent intent = new Intent(MainActivity.this, WebActivity.class);
-                intent.putExtra("lxk", "lxk");
-                startActivity(intent);
-            }
-        });
+        HttpParams params2 = new HttpParams();
+        params2.put("type", false);
+        params2.put("from", "android");
+        OkGo.<HomeBannerBean>get(MyContants.LXKURL + "bootstrappers")
+                .tag(this)
+                .params(params2)
+                .execute(new JsonCallback<HomeBannerBean>(HomeBannerBean.class) {
+                    @Override
+                    public void onSuccess(Response<HomeBannerBean> response) {
+                        int code = response.code();
+                        HomeBannerBean bannerBean = response.body();
+                        if (response.code() >= 200 && response.code() <= 204) {
+                            HomeBannerBean.CtivityEntity ctivity = bannerBean.getCtivity();
+                            if (ctivity!=null){
+                                mBuilder = new BaseDialog.Builder(MainActivity.this);
+                                mDialog = mBuilder.setViewId(R.layout.dialog_pop)
+                                        //设置dialogpadding
+                                        .setPaddingdp(10, 0, 10, 0)
+                                        //设置显示位置
+                                        .setGravity(Gravity.CENTER)
+                                        //设置动画
+                                        .setAnimation(R.style.Bottom_Top_aniamtion)
+                                        //设置dialog的宽高
+                                        .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                                        //设置触摸dialog外围是否关闭
+                                        .isOnTouchCanceled(true)
+                                        //设置监听事件
+                                        .builder();
+                                mDialog.getView(R.id.iv_cancel).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        mDialog.dismiss();
+                                    }
+                                });
+                                ImageView iv_pop=mDialog.getView(R.id.iv_pop);
+                                Glide.with(MainActivity.this).load(ctivity.getImgurl()).into(iv_pop);
+                                iv_pop.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        mDialog.dismiss();
+                                        Intent intent = new Intent(MainActivity.this, WebActivity.class);
+                                        intent.putExtra("lxk", "lxk");
+                                        startActivity(intent);
+                                    }
+                                });
+                                mDialog.show();
+                            }
+                        } else {
+
+                        }
+                    }
+                });
     }
 
     private void initMusic() {

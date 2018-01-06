@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
@@ -60,7 +61,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
     }
 
     public static void insertMusicList(List<PlayerBean> musiclist) {
-        currPosition=0;
+        currPosition = 0;
         musicList = musiclist;
     }
 
@@ -101,6 +102,34 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
             isClosed = false;
             Notifier.showPlay(mPlayerBean);
+        }
+    }
+
+    private void startLocal() {
+        if (mAudioFocusManager.requestAudioFocus()) {
+            mMediaPlayer.start();
+            registerReceiver(mNoisyReceiver, mNoisyFilter);
+            EventBus.getDefault().postSticky(new EventBean("isplaying"));
+            mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
+            isClosed = false;
+            Notifier.showPlay(mPlayerBean);
+        }
+    }
+
+    private void playLocal(String localPath) {
+        if (mAudioFocusManager.requestAudioFocus()) {
+            try {
+                mMediaPlayer.setDataSource(localPath);
+                mMediaPlayer.prepare();
+                mMediaPlayer.start();
+                registerReceiver(mNoisyReceiver, mNoisyFilter);
+                EventBus.getDefault().postSticky(new EventBean("isplaying"));
+                mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
+                isClosed = false;
+                Notifier.showPlay(mPlayerBean);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -181,7 +210,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
 
     @Override
     public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-//        Toast.makeText(this, "播放错误", Toast.LENGTH_SHORT).show();很诡异的bug
+        //        Toast.makeText(this, "播放错误", Toast.LENGTH_SHORT).show();很诡异的bug
         return true;//要设置为true
     }
 
@@ -343,8 +372,12 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 } else {
                     currPosition++;
                     mMediaPlayer.reset();
-                    mBinder.setMusicUrl(musicList.get(currPosition).getVideo_url());
-                    mBinder.playMusic(musicList.get(currPosition));
+                    if (TextUtils.isEmpty(musicList.get(currPosition).getVideo_url())) {
+                        playLocal(musicList.get(currPosition).getLocalPath());
+                    } else {
+                        mBinder.setMusicUrl(musicList.get(currPosition).getVideo_url());
+                        mBinder.playMusic(musicList.get(currPosition));
+                    }
                 }
             }
         }
@@ -359,8 +392,12 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 } else {
                     currPosition--;
                     mMediaPlayer.reset();
-                    mBinder.setMusicUrl(musicList.get(currPosition).getVideo_url());
-                    mBinder.playMusic(musicList.get(currPosition));
+                    if (TextUtils.isEmpty(musicList.get(currPosition).getVideo_url())) {
+                        playLocal(musicList.get(currPosition).getLocalPath());
+                    } else {
+                        mBinder.setMusicUrl(musicList.get(currPosition).getVideo_url());
+                        mBinder.playMusic(musicList.get(currPosition));
+                    }
                 }
             }
         }
@@ -423,6 +460,36 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                     mMediaPlayer.setDataSource(mMusicUrl);
                     mMediaPlayer.prepareAsync();
                     //                    mMediaPlayer.prepare();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            } catch (IOException e) {
+                //            Log.d(TAG, "设置资源，准备阶段出错");
+                e.printStackTrace();
+            }
+        }
+
+        public void setMusicLocal(PlayerBean playerBean) {
+            try {
+                //此处的两个方法需要捕获IO异常
+                //设置音频文件到MediaPlayer对象中
+                mMediaPlayer.reset();
+                mMediaPlayer.setDataSource(playerBean.getLocalPath());
+                //                FileInputStream fis = new FileInputStream(new File(playerBean.getLocalPath()));
+                //                mMediaPlayer.setDataSource(fis.getFD());
+                //让MediaPlayer对象准备
+                mMediaPlayer.prepare();
+                mPlayerBean = playerBean;
+                startLocal();
+            } catch (IllegalStateException e) {
+                mMediaPlayer = null;
+                mMediaPlayer = new MediaPlayer();
+                try {
+                    mMediaPlayer.reset();
+                    mMediaPlayer.setDataSource(playerBean.getLocalPath());
+                    mMediaPlayer.prepare();
+                    mPlayerBean = playerBean;
+                    startLocal();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }

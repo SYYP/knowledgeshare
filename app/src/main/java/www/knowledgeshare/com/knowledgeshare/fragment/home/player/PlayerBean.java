@@ -13,6 +13,15 @@ public class PlayerBean {
     private String video_url;
     private Bitmap mBitmap;
     private String msg;
+    private String localPath;//本地路径
+
+    public String getLocalPath() {
+        return localPath;
+    }
+
+    public void setLocalPath(String localPath) {
+        this.localPath = localPath;
+    }
 
     public String getMsg() {
         return msg;
@@ -67,5 +76,13 @@ public class PlayerBean {
         this.title = title;
         this.subtitle = subtitle;
         this.video_url = video_url;
+    }
+
+    public PlayerBean(String teacher_head, String title, String subtitle, String video_url, String localPath) {
+        this.teacher_head = teacher_head;
+        this.title = title;
+        this.subtitle = subtitle;
+        this.video_url = video_url;
+        this.localPath = localPath;
     }
 }

@@ -73,7 +73,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
             title = playerBean.getTitle();
             subtitle = playerBean.getSubtitle();
             header = playerBean.getTeacher_head();
-            Glide.with(mContext).load(header).into(iv_bo_head);
+            Glide.with(MyApplication.getGloableContext()).load(header).into(iv_bo_head);
             tv_title.setText(title);
             tv_subtitle.setText(subtitle);
         }
