@@ -221,6 +221,10 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                 checkBox.setVisibility(View.GONE);
             }
 
+            if (type.equals("zhuanlan")){
+                wengaoIv.setVisibility(View.GONE);
+            }
+
             sizeTv.setText(helper.getPosition()+1+"");
             titleTv.setText(item.getName());
 //            nameTv.setText(item.getName());
@@ -246,7 +250,13 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
             wengaoIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(mContext, WenGaoActivity.class));
+                    Intent intent = new Intent(mContext, WenGaoFileActivity.class);
+                    intent.putExtra("img",item.getIconUrl());
+                    intent.putExtra("title",item.getName());
+                    intent.putExtra("id",item.getTypeId());
+                    intent.putExtra("childId",item.getChildId());
+                    intent.putExtra("type",type);
+                    startActivity(intent);
                 }
             });
         }

@@ -33,6 +33,8 @@ import com.lzy.okgo.model.Progress;
 import com.lzy.okserver.OkDownload;
 import com.lzy.okserver.download.DownloadListener;
 import com.lzy.okserver.download.DownloadTask;
+import com.orhanobut.logger.Logger;
+
 import java.io.File;
 import java.text.NumberFormat;
 import java.util.List;
@@ -156,6 +158,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
         public void bind() {
             Progress progress = task.progress;
             DownLoadListsBean downLoadListBean = (DownLoadListsBean) progress.extra3;
+            Logger.e(downLoadListBean.toString());
             if (downLoadListBean != null) {
                 Glide.with(context).load(downLoadListBean.getList().get(getAdapterPosition()).getIconUrl()).into(icon);
                 name.setText(downLoadListBean.getList().get(getAdapterPosition()).getName());

@@ -143,7 +143,7 @@ public class AlreadyDownLoadFragment extends BaseFragment {
                 if (list.get(position).getType().equals("zhuanlan")){
                     List<DownLoadListsBean.ListBean> list1 = list.get(position).getList();
                     Intent intent = new Intent(getActivity(),AlreadyDownloadDetailActivity.class);
-                    intent.putExtra("type","xiaoke");
+                    intent.putExtra("type","zhuanlan");
                     intent.putExtra("list", (Serializable) list1);
                     startActivity(intent);
                 }

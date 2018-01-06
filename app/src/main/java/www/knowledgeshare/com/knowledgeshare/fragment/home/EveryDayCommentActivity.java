@@ -479,7 +479,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                         .start();
                 OkGo.<File>get(childEntity.getTxt_url())
                         .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download"
-                                ,childEntity.getId()+"-"+childEntity.getVideo_name()+".txt") {
+                                ,downLoadListsBean.getTypeId()+"-"+childEntity.getId()+childEntity.getVideo_name()+".txt") {
                             @Override
                             public void onSuccess(Response<File> response) {
                                 int code = response.code();
