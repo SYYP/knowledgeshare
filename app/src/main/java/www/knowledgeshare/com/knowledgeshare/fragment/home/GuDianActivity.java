@@ -220,15 +220,16 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
                     setISshow(true);
                     GuDianBean.XiaokeEntity xiaokeEntity = mXiaoke.get(helper.getAdapterPosition());
                     GuDianBean.XiaokeEntity.TryVideoEntity try_video = xiaokeEntity.getTry_video();
-                    PlayerBean playerBean = new PlayerBean(try_video.getT_header(), try_video.getParent_name(), try_video.getT_tag(), try_video.getVideo_url());
+                    PlayerBean playerBean = new PlayerBean(try_video.getT_header(), try_video.getParent_name(),
+                            try_video.getT_tag(), try_video.getVideo_url());
                     gobofang(playerBean);
                     MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
                             try_video.getT_header(), try_video.getParent_name(), try_video.getId() + "", try_video.isIsfav());
                     musicTypeBean.setMsg("musicplayertype");
                     EventBus.getDefault().postSticky(musicTypeBean);
+                    //设置播放列表
                     List<PlayerBean> list = new ArrayList<PlayerBean>();
-                    PlayerBean playerBean1 = new PlayerBean(try_video.getT_header(), try_video.getParent_name(), try_video.getT_tag(), try_video.getVideo_url());
-                    list.add(playerBean1);
+                    list.add(playerBean);
                     MediaService.insertMusicList(list);
                     if (!HistroyUtils.isInserted(try_video.getParent_name())) {
                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", try_video.getId(), try_video.getParent_name(),

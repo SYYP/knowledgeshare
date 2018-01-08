@@ -48,7 +48,6 @@ import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
-import www.knowledgeshare.com.knowledgeshare.db.HistroyUtils;
 import www.knowledgeshare.com.knowledgeshare.db.LookBean;
 import www.knowledgeshare.com.knowledgeshare.db.LookUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.CommentMoreBean;
@@ -299,13 +298,22 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                          } else {
                                              setISshow(true);
                                              SoftMusicDetailBean.ChildEntity item = mChild.get(position);
-                                             PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_old_name(), item.getT_tag(), item.getVideo_url());
+                                             //刷新小型播放器
+                                             PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_old_name(), item.getT_tag(),
+                                                     item.getVideo_url(),position);
                                              gobofang(playerBean);
                                              addListenCount(item.getId() + "");
-                                             MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
-                                                     item.getT_header(), item.getVideo_old_name(), item.getId() + "", item.isIsfav());
-                                             musicTypeBean.setMsg("musicplayertype");
-                                             EventBus.getDefault().postSticky(musicTypeBean);
+                                             //设置进入播放主界面的数据
+                                             List<MusicTypeBean> musicTypeBeanList=new ArrayList<MusicTypeBean>();
+                                             for (int i = 0; i < mChild.size(); i++) {
+                                                 SoftMusicDetailBean.ChildEntity childEntity = mChild.get(i);
+                                                 MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
+                                                         childEntity.getT_header(), childEntity.getVideo_old_name(), childEntity.getId() + "", childEntity.isIsfav());
+                                                 musicTypeBean.setMsg("musicplayertype");
+                                                 musicTypeBeanList.add(musicTypeBean);
+                                             }
+                                             MediaService.insertMusicTypeList(musicTypeBeanList);
+                                             //加入默认的播放列表
                                              List<PlayerBean> list = new ArrayList<PlayerBean>();
                                              for (int i = 0; i < mChild.size(); i++) {
                                                  SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
@@ -313,16 +321,18 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                                  list.add(playerBean1);
                                              }
                                              MediaService.insertMusicList(list);
-                                             if (!HistroyUtils.isInserted(item.getVideo_old_name())) {
-                                                 BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", item.getId(), item.getVideo_old_name(),
-                                                         item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
-                                                         item.getCollect_count(), item.getView_count(), item.isIslive(), item.isIsfav()
-                                                         , item.getT_header(), item.getT_tag(), item.getShare_h5_url()
+                                             //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
+                                             List<BofangHistroyBean> histroyBeanList=new ArrayList<BofangHistroyBean>();
+                                             for (int i = 0; i < mChild.size(); i++) {
+                                                 SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
+                                                 BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", entity.getId(), entity.getVideo_old_name(),
+                                                         entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
+                                                         entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
+                                                         , entity.getT_header(), entity.getT_tag(),entity.getShare_h5_url()
                                                          , SystemClock.currentThreadTimeMillis());
-                                                 HistroyUtils.add(bofangHistroyBean);
-                                             } else {
-                                                 HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(), item.getVideo_old_name());
+                                                 histroyBeanList.add(bofangHistroyBean);
                                              }
+                                             MediaService.insertBoFangHistroyList(histroyBeanList);
                                          }
                                      }
                                  });

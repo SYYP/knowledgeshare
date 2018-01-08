@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
-import com.orhanobut.logger.Logger;
 
 import org.zackratos.ultimatebar.UltimateBar;
 
@@ -52,7 +51,7 @@ public class GuidePageActivity extends BaseActivity {
         setContentView(R.layout.activity_guidepage);
         vp = (ViewPager) findViewById(R.id.vp);
         liner = (LinearLayout) findViewById(R.id.liner);
-
+        vp.setOffscreenPageLimit(5);
         requestGuide();
         vp.setOnPageChangeListener(new ViewPagerIndicator(GuidePageActivity.this,vp,liner,list.size()));
         vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

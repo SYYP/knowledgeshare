@@ -46,7 +46,6 @@ import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
-import www.knowledgeshare.com.knowledgeshare.db.HistroyUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.EveryDayBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
@@ -199,13 +198,22 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     setISshow(true);
                                     EveryDayBean.DailysEntity item = mDailys.get(position);
-                                    PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
+                                    //刷新小型播放器
+                                    PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(),
+                                            item.getT_tag(), item.getVideo_url(),position);
                                     gobofang(playerBean);
                                     addListenCount(mDailys.get(position).getId() + "");
-                                    MusicTypeBean musicTypeBean = new MusicTypeBean("everydaycomment",
-                                            item.getT_header(), item.getVideo_name(), item.getId() + "", item.isIsfav());
-                                    musicTypeBean.setMsg("musicplayertype");
-                                    EventBus.getDefault().postSticky(musicTypeBean);
+                                    //设置进入播放主界面的数据
+                                    List<MusicTypeBean> musicTypeBeanList=new ArrayList<MusicTypeBean>();
+                                    for (int i = 0; i < mDailys.size(); i++) {
+                                        EveryDayBean.DailysEntity entity = mDailys.get(i);
+                                        MusicTypeBean musicTypeBean = new MusicTypeBean("everydaycomment",
+                                                entity.getT_header(), entity.getVideo_name(), entity.getId() + "", entity.isIsfav());
+                                        musicTypeBean.setMsg("musicplayertype");
+                                        musicTypeBeanList.add(musicTypeBean);
+                                    }
+                                    MediaService.insertMusicTypeList(musicTypeBeanList);
+                                    //加入默认的播放列表
                                     List<PlayerBean> list = new ArrayList<PlayerBean>();
                                     for (int i = 0; i < mDailys.size(); i++) {
                                         EveryDayBean.DailysEntity entity = mDailys.get(i);
@@ -213,16 +221,18 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                         list.add(playerBean1);
                                     }
                                     MediaService.insertMusicList(list);
-                                    if (!HistroyUtils.isInserted(item.getVideo_name())) {
-                                        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("everydaycomment", item.getId(), item.getVideo_name(),
-                                                item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
-                                                item.getCollect_count(), item.getView_count(), item.isIslive(), item.isIsfav()
-                                                , item.getT_header(), item.getT_tag(),item.getShare_h5_url(),
+                                    //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
+                                    List<BofangHistroyBean> histroyBeanList=new ArrayList<BofangHistroyBean>();
+                                    for (int i = 0; i < mDailys.size(); i++) {
+                                        EveryDayBean.DailysEntity entity = mDailys.get(i);
+                                        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("everydaycomment", entity.getId(), entity.getVideo_name(),
+                                                entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
+                                                entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
+                                                , entity.getT_header(), entity.getT_tag(),entity.getShare_h5_url(),
                                                 SystemClock.currentThreadTimeMillis());
-                                        HistroyUtils.add(bofangHistroyBean);
-                                    }else {
-                                        HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(),item.getVideo_old_name());
+                                        histroyBeanList.add(bofangHistroyBean);
                                     }
+                                    MediaService.insertBoFangHistroyList(histroyBeanList);
                                 }
                             });
                         } else {
@@ -468,7 +478,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
                 OkDownload.request(downLoadListsBean.getTypeId()+"_"+childEntity.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download")
-                        .fileName(childEntity.getVideo_name()+"_"+childEntity.getId()+".mp3")
+                        .fileName(childEntity.getVideo_name()+listBean.getTypeId()+"_"+childEntity.getId()+".mp3")
                         .extra3(downLoadListsBean)//额外数据
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听

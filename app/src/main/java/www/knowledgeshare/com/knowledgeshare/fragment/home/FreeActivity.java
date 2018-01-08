@@ -46,7 +46,6 @@ import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
-import www.knowledgeshare.com.knowledgeshare.db.HistroyUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.CommentMoreBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeBean;
@@ -243,14 +242,23 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     setISshow(true);
                                     FreeBean.ChildEntity item = mChild.get(position);
-                                    PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
+                                    //刷新小型播放器
+                                    PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(),
+                                            item.getVideo_url(),position);
                                     gobofang(playerBean);
                                     addListenCount(mFreeAdapter.getData().get(position).getId() + "");
-                                    MusicTypeBean musicTypeBean = new MusicTypeBean("free",
-                                            mFreeBean.getTeacher_has().getT_header(), item.getVideo_name(), item.getId() + "",
-                                            item.isIsfav());
-                                    musicTypeBean.setMsg("musicplayertype");
-                                    EventBus.getDefault().postSticky(musicTypeBean);
+                                    //设置进入播放主界面的数据
+                                    List<MusicTypeBean> musicTypeBeanList=new ArrayList<MusicTypeBean>();
+                                    for (int i = 0; i < mChild.size(); i++) {
+                                        FreeBean.ChildEntity childEntity = mChild.get(i);
+                                        MusicTypeBean musicTypeBean = new MusicTypeBean("free",
+                                                mFreeBean.getTeacher_has().getT_header(), childEntity.getVideo_name(), childEntity.getId() + "",
+                                                childEntity.isIsfav());
+                                        musicTypeBean.setMsg("musicplayertype");
+                                        musicTypeBeanList.add(musicTypeBean);
+                                    }
+                                    MediaService.insertMusicTypeList(musicTypeBeanList);
+                                    //加入默认的播放列表
                                     List<PlayerBean> list = new ArrayList<PlayerBean>();
                                     for (int i = 0; i < mChild.size(); i++) {
                                         FreeBean.ChildEntity entity = mChild.get(i);
@@ -258,16 +266,19 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                         list.add(playerBean1);
                                     }
                                     MediaService.insertMusicList(list);
-                                    if (!HistroyUtils.isInserted(item.getVideo_name())) {
-                                        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", item.getId(), item.getVideo_name(),
-                                                item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
-                                                item.getCollect_count(), item.getView_count(), item.isIslive(), item.isIsfav(),
-                                                item.getT_header(), item.getT_tag(),
-                                                item.getShare_h5_url(), SystemClock.currentThreadTimeMillis());
-                                        HistroyUtils.add(bofangHistroyBean);
-                                    } else {
-                                        HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(), item.getVideo_old_name());
+                                    //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
+                                    List<BofangHistroyBean> histroyBeanList=new ArrayList<BofangHistroyBean>();
+                                    for (int i = 0; i < mChild.size(); i++) {
+                                        FreeBean.ChildEntity childEntity = mChild.get(i);
+                                        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", childEntity.getId(), childEntity.getVideo_name(),
+                                                childEntity.getCreated_at(), childEntity.getVideo_url(), childEntity.getGood_count(),
+                                                childEntity.getCollect_count(), childEntity.getView_count(), childEntity.isIslive(), childEntity.isIsfav(),
+                                                childEntity.getT_header(), childEntity.getT_tag(),
+                                                childEntity.getShare_h5_url(), SystemClock.currentThreadTimeMillis());
+                                        histroyBeanList.add(bofangHistroyBean);
                                     }
+                                    MediaService.insertBoFangHistroyList(histroyBeanList);
+
                                 }
                             });
                             if (!isRefreshing) {

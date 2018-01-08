@@ -14,6 +14,15 @@ public class PlayerBean {
     private Bitmap mBitmap;
     private String msg;
     private String localPath;//本地路径
+    private int position;//用来记录当前点击的音频是音频列表中的第几个
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
 
     public String getLocalPath() {
         return localPath;
@@ -71,11 +80,28 @@ public class PlayerBean {
         this.subtitle = subtitle;
     }
 
+    public PlayerBean(String teacher_head, String title, String subtitle, String video_url, int position) {
+        this.teacher_head = teacher_head;
+        this.title = title;
+        this.subtitle = subtitle;
+        this.video_url = video_url;
+        this.position=position;
+    }
+
     public PlayerBean(String teacher_head, String title, String subtitle, String video_url) {
         this.teacher_head = teacher_head;
         this.title = title;
         this.subtitle = subtitle;
         this.video_url = video_url;
+    }
+
+    public PlayerBean(String teacher_head, String title, String subtitle, String video_url, String localPath,int position) {
+        this.teacher_head = teacher_head;
+        this.title = title;
+        this.subtitle = subtitle;
+        this.video_url = video_url;
+        this.localPath = localPath;
+        this.position=position;
     }
 
     public PlayerBean(String teacher_head, String title, String subtitle, String video_url, String localPath) {

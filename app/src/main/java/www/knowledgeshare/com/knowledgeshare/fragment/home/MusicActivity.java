@@ -107,6 +107,39 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(MusicTypeBean musicTypeBean) {
+        if (musicTypeBean.getMsg().equals("musicplayertype")) {
+            //接收到播放主界面要刷新的数据
+            mMusicTypeBean = musicTypeBean;
+            tv_title.setText(mMusicTypeBean.getVideo_name());
+            Glide.with(this).load(mMusicTypeBean.getT_head()).into(iv_bigphoto);
+            isCollected = mMusicTypeBean.isCollected();
+            if (isCollected) {
+                Drawable drawable = getResources().getDrawable(R.drawable.music_collected);
+                /// 这一步必须要做,否则不会显示.
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                tv_collect.setCompoundDrawables(null, drawable, null, null);
+            } else {
+                Drawable drawable = getResources().getDrawable(R.drawable.music_collect);
+                /// 这一步必须要做,否则不会显示.
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                tv_collect.setCompoundDrawables(null, drawable, null, null);
+            }
+            List<BofangHistroyBean> search = HistroyUtils.search();
+            if (search!=null && search.size()>0){
+                tv_liebiao.setText(1+"/"+search.size());
+            }
+            if (mMyBinder.isPlaying()) {
+                iv_pause.setImageResource(R.drawable.bofang_yellow_big);
+            } else {
+                iv_pause.setImageResource(R.drawable.pause_yellow_big);
+            }
+            play_seek.setMax(mMyBinder.getProgress());
+            music_duration.setText(time.format(mMyBinder.getProgress()) + "");
+        }
+    }
+
     private void initMusic() {
         MediaServiceIntent = new Intent(this, MediaService.class);
         bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
