@@ -66,11 +66,13 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
     RecyclerView recyclerXzz;
     @BindView(R.id.kaishi_tv)
     TextView kaishiTv;
+    @BindView(R.id.kongzhi_ll)
+    LinearLayout kongzhiLl;
     Unbinder unbinder;
     private DownloadAdapter adapter;
     private OkDownload okDownload;
-    private List<DownloadTask> taskList;
-    private DownloadTask task;
+
+    private List<DownloadTask> values;
 
     @Override
     protected void lazyLoad() {
@@ -100,6 +102,9 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
         recyclerXzz.setNestedScrollingEnabled(false);
         recyclerXzz.setAdapter(adapter);
         okDownload.addOnAllTaskEndListener(this);
+        if (values.size() == 0 ){
+            kongzhiLl.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -125,6 +130,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
     @Override
     public void onAllTaskEnd() {
         TUtils.showShort(mContext,"所有下载任务已结束");
+        kaishiTv.setText("全部开始");
     }
 
     @Override
@@ -177,5 +183,242 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                 })
                 .build()
                 .show();
+    }
+
+    public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHolder>{
+
+        public static final int TYPE_ALL = 0;
+        public static final int TYPE_FINISH = 1;
+        public static final int TYPE_ING = 2;
+        public static final int TYPE_REMOVE = 3;
+
+        private NumberFormat numberFormat;
+        private LayoutInflater inflater;
+        private Context context;
+        private int type;
+        List<DownLoadListsBean> list = new ArrayList<>();
+        List<DownLoadListsBean.ListBean> listAllBeen = new ArrayList<>();
+        private DownloadTask task;
+
+        public DownloadAdapter(Context context) {
+            this.context = context;
+            numberFormat = NumberFormat.getPercentInstance();
+            numberFormat.setMinimumFractionDigits(2);
+            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        public void updateData(int type) {
+            //这里是将数据库的数据恢复
+            this.type = type;
+            if (type == TYPE_ALL) values = OkDownload.restore(DownloadManager.getInstance().getAll());
+            if (type == TYPE_FINISH) values = OkDownload.restore(DownloadManager.getInstance().getFinished());
+            if (type == TYPE_ING) values = OkDownload.restore(DownloadManager.getInstance().getDownloading());
+            if (type == TYPE_REMOVE){
+                values = OkDownload.restore(DownloadManager.getInstance().getDownloading());
+                for (int i = values.size()-1; i >= 0; i--) {
+                    task = values.get(i);
+                    values.remove(i);
+                    task.remove(true);
+                    notifyDataSetChanged();
+                }
+            }
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = inflater.inflate(R.layout.item_download_manager, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final ViewHolder holder, int position) {
+            task = values.get(position);
+            String tag = createTag(task);
+            task.register(new ListDownloadListener(tag, holder))//
+                    .register(new LogDownloadListener());
+            holder.setTag(tag);
+            holder.setTask(task);
+            holder.bind();
+            holder.refresh(task.progress);
+            holder.shanchuTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int adapterPosition = holder.getAdapterPosition();
+                    values.remove(adapterPosition);
+                    task.remove(true);
+                    notifyItemRemoved(adapterPosition);
+                }
+            });
+        }
+
+        public void unRegister() {
+            Map<String, DownloadTask> taskMap = OkDownload.getInstance().getTaskMap();
+            for (DownloadTask task : taskMap.values()) {
+                task.unRegister(createTag(task));
+            }
+        }
+
+        private String createTag(DownloadTask task) {
+            return type + "_" + task.progress.tag;
+        }
+
+        @Override
+        public int getItemCount() {
+            return values == null ? 0 : values.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+
+            @BindView(R.id.icon) CircleImageView icon;
+            @BindView(R.id.name) TextView name;
+            @BindView(R.id.downloadSize) TextView downloadSize;
+            @BindView(R.id.pbProgress) ProgressBar pbProgress;
+            @BindView(R.id.start) ImageView download;
+            @BindView(R.id.start_or_pause) TextView startOrPause;
+            @BindView(R.id.shachu_tv) TextView shanchuTv;
+            @BindView(R.id.content_ll) LinearLayout contentLl;
+            private DownloadTask task;
+            private String tag;
+
+            public LinearLayout getContentLl() {
+                return contentLl;
+            }
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                ButterKnife.bind(this, itemView);
+            }
+
+            public void setTask(DownloadTask task) {
+                this.task = task;
+            }
+
+            public void bind() {
+                Progress progress = task.progress;
+                DownLoadListsBean downLoadListBean = (DownLoadListsBean) progress.extra3;
+
+                list.add(downLoadListBean);
+                for (int i = 0; i < list.size(); i++) {
+                    List<DownLoadListsBean.ListBean> listBeen = list.get(i).getList();
+                    listAllBeen.addAll(listBeen);
+                }
+                if (listAllBeen != null) {
+                    Glide.with(context).load(listAllBeen.get(getAdapterPosition()).getIconUrl()).into(icon);
+                    Logger.e("下载中头像URL地址："+listAllBeen.get(getAdapterPosition()).getIconUrl());
+                    name.setText(listAllBeen.get(getAdapterPosition()).getName());
+                } else {
+                    name.setText(progress.fileName);
+                }
+            }
+            public void refresh(Progress progress) {
+                String currentSize = Formatter.formatFileSize(context, progress.currentSize);
+                String totalSize = Formatter.formatFileSize(context, progress.totalSize);
+                downloadSize.setText(currentSize + "/" + totalSize);
+                switch (progress.status) {
+                    case Progress.NONE:
+                        startOrPause.setText("下载");
+                        break;
+                    case Progress.PAUSE:
+                        startOrPause.setText("已暂停");
+                        download.setImageDrawable(context.getResources().getDrawable(R.drawable.power_kaishi_iv));
+                        break;
+                    case Progress.ERROR:
+                        startOrPause.setText("下载出错");
+                        download.setImageDrawable(context.getResources().getDrawable(R.drawable.power_kaishi_iv));
+                        break;
+                    case Progress.WAITING:
+                        startOrPause.setText("等待中");
+                        download.setImageDrawable(context.getResources().getDrawable(R.drawable.power_kaishi_iv));
+                        break;
+                    case Progress.FINISH:
+                        startOrPause.setText("下载完成");
+                        break;
+                    case Progress.LOADING:
+                        startOrPause.setText("正在下载");
+                        download.setImageDrawable(context.getResources().getDrawable(R.drawable.power_zanting));
+                        break;
+                }
+                pbProgress.setMax(10000);
+                pbProgress.setProgress((int) (progress.fraction * 10000));
+            }
+
+            @OnClick(R.id.start)
+            public void start() {
+                Progress progress = task.progress;
+                switch (progress.status) {
+                    case Progress.PAUSE:
+                    case Progress.NONE:
+                    case Progress.ERROR:
+                        task.start();
+                        break;
+                    case Progress.LOADING:
+                        task.pause();
+                        break;
+                    case Progress.FINISH:
+
+                        break;
+                }
+                refresh(progress);
+            }
+
+        /*@OnClick(R.id.remove)
+        public void remove() {
+            task.remove(true);
+            updateData(type);
+        }*/
+
+        /*@OnClick(R.id.restart)
+        public void restart() {
+            task.restart();
+        }*/
+
+            public void setTag(String tag) {
+                this.tag = tag;
+            }
+
+            public String getTag() {
+                return tag;
+            }
+        }
+
+        private class ListDownloadListener extends DownloadListener {
+
+            private ViewHolder holder;
+
+            ListDownloadListener(Object tag, ViewHolder holder) {
+                super(tag);
+                this.holder = holder;
+            }
+
+            @Override
+            public void onStart(Progress progress) {
+            }
+
+            @Override
+            public void onProgress(Progress progress) {
+                if (tag == holder.getTag()) {
+                    holder.refresh(progress);
+                }
+            }
+
+            @Override
+            public void onError(Progress progress) {
+                Throwable throwable = progress.exception;
+                if (throwable != null) throwable.printStackTrace();
+            }
+
+            @Override
+            public void onFinish(File file, Progress progress) {
+//            Toast.makeText(context, "下载完成:" + progress.filePath, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "下载完成" , Toast.LENGTH_SHORT).show();
+                updateData(type);
+            }
+
+            @Override
+            public void onRemove(Progress progress) {
+
+            }
+        }
     }
 }

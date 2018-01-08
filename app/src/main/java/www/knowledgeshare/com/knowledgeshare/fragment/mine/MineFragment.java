@@ -58,6 +58,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     Unbinder unbinder;
     private UserInfoBean userInfoBean;
     private Intent intent;
+    private int user_level;
+    private int user_integral;
 
 
     @Override
@@ -113,9 +115,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                                     Glide.with(mActivity).load(userInfoBean.getUser_avatar()).into(mineFaceIv);
                                 }
                             }
-                            int user_level = userInfoBean.getUser_level();
-                            int user_integral = userInfoBean.getUser_integral();
-                            getLevel(user_level,user_integral);
+                            user_level = userInfoBean.getUser_level();
+                            user_integral = userInfoBean.getUser_integral();
+                            getLevel(user_level, user_integral);
                             zhyeTv.setText(userInfoBean.getUser_android_balance()+"元");
                         }
                     }
@@ -210,7 +212,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(getActivity(),MyAccountActivity.class));
                 break;
             case R.id.wdxz_rl://我的勋章
-                startActivity(new Intent(getActivity(),MyMedalActivity.class));
+                Intent intent = new Intent(getActivity(),MyMedalActivity.class);
+                intent.putExtra("level",user_level+"");
+                startActivity(intent);
                 break;
             case R.id.zhaq_rl://帐号安全
                 startActivity(new Intent(getActivity(), AccountSafeActivity.class));
