@@ -93,9 +93,9 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
     }
 
     private void initAdapter() {
-        taskList = OkDownload.restore(DownloadManager.getInstance().getDownloading());
-        adapter = new DownloadAdapter(getActivity(), taskList);
-//        adapter.updateData(DownloadAdapter.TYPE_ING);
+//        taskList = OkDownload.restore(DownloadManager.getInstance().getDownloading());
+        adapter = new DownloadAdapter(getActivity());
+        adapter.updateData(DownloadAdapter.TYPE_ING);
         recyclerXzz.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerXzz.setNestedScrollingEnabled(false);
         recyclerXzz.setAdapter(adapter);
@@ -159,15 +159,15 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                     @Override
                     public void clickLeftButton(NormalAlertDialog dialog, View view) {
                         dialog.dismiss();
-                        /*okDownload.removeAll();
-                        adapter.updateData(DownloadAdapter.TYPE_ING);
-                        adapter.notifyDataSetChanged();*/
-                        for (int i = taskList.size()-1; i >= 0; i--) {
+//                        okDownload.removeAll();
+                        adapter.updateData(DownloadAdapter.TYPE_REMOVE);
+                        adapter.notifyDataSetChanged();
+                        /*for (int i = taskList.size()-1; i >= 0; i--) {
                             task = taskList.get(i);
                             taskList.remove(i);
                             task.remove(true);
                         }
-                        adapter.notifyDataSetChanged();
+                        adapter.notifyDataSetChanged();*/
                     }
 
                     @Override

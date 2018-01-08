@@ -15,6 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.DataCleanManager;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
@@ -61,6 +62,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         gywmRl.setOnClickListener(this);
         kfzxCallTv.setOnClickListener(this);
         exitBtn.setOnClickListener(this);
+
+        try {
+            String data = DataCleanManager.getTotalCacheSize(SettingActivity.this);
+            tv_cache_size.setText(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -116,7 +124,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     public void clickLeftButton(NormalAlertDialog dialog, View view) {
                         switch (flag){
                             case 1:
+                                DataCleanManager.clearAllCache(SettingActivity.this);
                                 tv_cache_size.setText("0M");
+                                TUtils.showShort(SettingActivity.this,"缓存已清理");
                                 break;
                             case 2:
                                 break;
