@@ -146,18 +146,31 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                                DownLoadListsBean.ListBean listBean = list.get(0);
                                                PlayerBean playerBean = new PlayerBean(listBean.getIconUrl(), listBean.getName(),
                                                        "", "", loadFromSDFile(listBean.getName() + listBean.getTypeId() + "_"
-                                                       + listBean.getChildId() + ".mp3"));
+                                                       + listBean.getChildId() + ".mp3"),position);
                                                gobofang(playerBean);
                                                MusicTypeBean musicTypeBean = new MusicTypeBean(mytype,
                                                        listBean.getIconUrl(), listBean.getName(), listBean.getTypeId(),
                                                        listBean.isSave());
                                                musicTypeBean.setMsg("musicplayertype");
                                                EventBus.getDefault().postSticky(musicTypeBean);
+                                               //还要设置一个播放主界面的list数据，因为自动播放下一首上一首的时候主界面的数据也得变
+                                               List<MusicTypeBean> musicTypeBeanList=new ArrayList<MusicTypeBean>();
+                                               for (int i = 0; i < list.size(); i++) {
+                                                   DownLoadListsBean.ListBean listBean1 = list.get(i);
+                                                   MusicTypeBean musicTypeBean1 = new MusicTypeBean(mytype,
+                                                           listBean1.getIconUrl(), listBean1.getName(), listBean1.getTypeId(),
+                                                           listBean1.isSave());
+                                                   musicTypeBean.setMsg("musicplayertype");
+                                                   musicTypeBeanList.add(musicTypeBean1);
+                                               }
+                                               MediaService.insertMusicTypeList(musicTypeBeanList);
+                                               //播放列表
                                                List<PlayerBean> beanList = new ArrayList<PlayerBean>();
                                                for (int i = 0; i < list.size(); i++) {
                                                    DownLoadListsBean.ListBean listBean1 = list.get(i);
                                                    PlayerBean playerBean1 = new PlayerBean(listBean1.getIconUrl(), listBean1.getName(),
-                                                           "", "");
+                                                           "", "", loadFromSDFile(listBean1.getName() + listBean1.getTypeId() + "_"
+                                                           + listBean1.getChildId() + ".mp3"));
                                                    beanList.add(playerBean1);
                                                }
                                                MediaService.insertMusicList(beanList);
