@@ -401,6 +401,11 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                     } else {
                         mBinder.setMusicUrl(musicList.get(currPosition).getVideo_url());
                         mBinder.playMusic(musicList.get(currPosition));
+                        //当播放下一首的时候小型播放器的数据和播放主界面都需要变
+                        PlayerBean playerBean = musicList.get(currPosition);
+                        playerBean.setMsg("refreshplayer");
+                        EventBus.getDefault().postSticky(playerBean);
+                        //这边还有传到播放主界面的数据，还有历史播放的数据，都得通过list集合的形式加进来
                     }
                 }
             }
@@ -421,6 +426,10 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                     } else {
                         mBinder.setMusicUrl(musicList.get(currPosition).getVideo_url());
                         mBinder.playMusic(musicList.get(currPosition));
+                        //当播放下一首的时候小型播放器的数据和播放主界面都需要变
+                        PlayerBean playerBean = musicList.get(currPosition);
+                        playerBean.setMsg("refreshplayer");
+                        EventBus.getDefault().postSticky(playerBean);
                     }
                 }
             }
