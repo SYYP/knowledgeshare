@@ -18,6 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
 
@@ -27,16 +31,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.MainActivity;
+import www.knowledgeshare.com.knowledgeshare.activity.SettingActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.FavoriteBean;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.WenGaoActivity;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
 import static android.content.Context.BIND_AUTO_CREATE;
@@ -49,10 +59,10 @@ import static android.content.Context.BIND_AUTO_CREATE;
 public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
-    //    private List<Collectbean> list = new ArrayList<>();
+//    private List<Collectbean> list = new ArrayList<>();
     final static int ONE = 0, TWO = 1, THREE = 2;
     private OnItemClickListener mOnItemClickListener = null;
-    //    private OnClickListener mOnClickListener = null;
+//    private OnClickListener mOnClickListener = null;
     boolean bool;
     private Myviewholder1 myviewhiodler1;
     private Myviewholder2 myviewhiodler2;
@@ -108,7 +118,7 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return viewHolder;
     }
 
-    private void showTips(final int flag, String title, String content) {
+    private void showTips(final int flag, String title, String content, final int positon) {
         new NormalAlertDialog.Builder(context)
                 .setTitleVisible(true).setTitleText(title)
                 .setTitleTextColor(R.color.text_black)
@@ -123,15 +133,15 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 .setOnclickListener(new DialogInterface.OnLeftAndRightClickListener<NormalAlertDialog>() {
                     @Override
                     public void clickLeftButton(NormalAlertDialog dialog, View view) {
-                        switch (flag) {
+                        switch (flag){
                             case ONE:
-                                myviewhiodler1.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                                requestCancle(ONE,1,list.get(positon).getId(),positon);
                                 break;
                             case TWO:
-                                myviewhiodler2.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                                requestCancle(TWO,2,list.get(positon).getId(),positon);
                                 break;
                             case THREE:
-                                myviewhiodler3.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                                requestCancle(THREE,0,list.get(positon).getId(),positon);
                                 break;
                         }
 
@@ -154,6 +164,62 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 .show();
     }
 
+    private void requestCancle(int flag, int type, int id, final int position) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(context, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("id", id + "");
+        String url = "";
+        switch (flag){
+            case ONE:
+                params.put("type", list.get(position).getType()+"");
+                String video_type1 = list.get(position).getVideo_type();
+                if (video_type1.equals("free")){
+                    url = MyContants.LXKURL + "free/no-favorite";
+                }else if (video_type1.equals("daily")){
+                    url = MyContants.LXKURL + "daily/no-favorite";
+                }else if (video_type1.equals("xk")){
+                    url = MyContants.LXKURL + "xk/no-favorite";
+                }
+                break;
+            case TWO:
+                params.put("type", list.get(position).getType()+"");
+                String video_type = list.get(position).getVideo_type();
+                if (video_type.equals("free")){
+                    url = MyContants.LXKURL + "free/no-favorite";
+                }else if (video_type.equals("daily")){
+                    url = MyContants.LXKURL + "daily/no-favorite";
+                }else if (video_type.equals("xk")){
+                    url = MyContants.LXKURL + "xk/no-favorite";
+                }
+                break;
+            case THREE:
+                params.put("fav_type",type+"");
+                url = MyContants.LXKURL + "zl/favorite";
+                break;
+        }
+        OkGo.<DianZanbean>post(url)
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                    @Override
+                    public void onSuccess(Response<DianZanbean> response) {
+                        int code = response.code();
+                        DianZanbean dianZanbean = response.body();
+                        Toast.makeText(context, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                        if (code >= 200 && code <= 204){
+                            if (list.get(position).getType() == 2) myviewhiodler2.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                            if (list.get(position).getType() == 0) myviewhiodler3.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                            if (list.get(position).getType() == 1) myviewhiodler1.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                            notifyDataSetChanged();
+                        }
+                    }
+                });
+    }
+
+
+
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         final int itemViewType = getItemViewType(position);
@@ -164,7 +230,7 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 public void onClick(View view) {
                     int layoutPosition = holder.getLayoutPosition();
                     Log.d("tag", layoutPosition + "");
-                    mOnItemClickListener.onItemClick(holder.itemView, layoutPosition, itemViewType, list.get(position).getId());
+                    mOnItemClickListener.onItemClick(holder.itemView, layoutPosition, itemViewType,list.get(position).getId());
                 }
             });
         }
@@ -201,7 +267,7 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     @Override
                     public void onClick(View view) {
                         if (bool) {
-                            showTips(ONE, "提示", "是否取消收藏？");
+                            showTips(ONE,"提示","是否取消收藏？",position);
                         } else {
                             myviewhiodler1.class_xinxin.setImageResource(R.drawable.xinxin);
                         }
@@ -261,20 +327,20 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 myviewhiodler2.class_count.setText(list.get(position).getContent());
                 Glide.with(context).load(list.get(position).getT_header()).into(myviewhiodler2.class_pho);
                 myviewhiodler2.class_name.setText(list.get(position).getT_name());
-                myviewhiodler2.class_date.setText(list.get(position).getCreate_at() + " " + list.get(position).getDay_week());
+                myviewhiodler2.class_date.setText(list.get(position).getCreate_at()+" "+list.get(position).getDay_week());
 
                 myviewhiodler2.class_xinxin.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (bool) {
-                            showTips(TWO, "提示", "是否取消收藏？");
-                        } else {
-                            myviewhiodler2.class_xinxin.setImageResource(R.drawable.xinxin);
-                        }
-                        bool = !bool;
+                @Override
+                public void onClick(View view) {
+                    if (bool) {
+                        showTips(TWO,"提示","是否取消收藏？",position);
+                    } else {
+                        myviewhiodler2.class_xinxin.setImageResource(R.drawable.xinxin);
                     }
+                    bool = !bool;
+                }
 
-                });
+            });
                 break;
             case 0:
                 myviewhiodler3 = (Myviewholder3) holder;
@@ -282,7 +348,7 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     @Override
                     public void onClick(View view) {
                         if (bool) {
-                            showTips(THREE, "提示", "是否取消收藏？");
+                            showTips(THREE,"提示","是否取消收藏？",position);
                         } else {
                             myviewhiodler3.class_xinxin.setImageResource(R.drawable.xinxin);
                         }
@@ -450,7 +516,7 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
        接口回调用来item点击
      */
     public interface OnItemClickListener {
-        void onItemClick(View view, int position, int type, int id);
+        void onItemClick(View view, int position, int type,int id);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
