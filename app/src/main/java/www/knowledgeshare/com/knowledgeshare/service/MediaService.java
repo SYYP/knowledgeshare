@@ -249,6 +249,8 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             mBinder.pauseMusic();
             EventBean eventBean = new EventBean("main_pause");
             EventBus.getDefault().postSticky(eventBean);
+            EventBean eventBean2 = new EventBean("home_pause");
+            EventBus.getDefault().postSticky(eventBean2);
         } else {
             if (isClosed) {
                 mBinder.setMusicUrl(mMusicUrl);
