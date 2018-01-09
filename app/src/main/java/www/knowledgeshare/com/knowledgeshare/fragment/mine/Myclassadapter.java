@@ -182,6 +182,8 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         String type1 = list.get(position).getVideo_type();
                         if (type1.equals("daliy")) {
                             intent.putExtra("type", "everydaycomment");
+
+
                         } else if (type1.equals("free")) {
                             intent.putExtra("type", "free");
                         } else if (type1.equals("xk")) {
