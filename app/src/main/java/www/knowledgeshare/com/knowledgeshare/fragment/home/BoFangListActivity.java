@@ -3,6 +3,7 @@ package www.knowledgeshare.com.knowledgeshare.fragment.home;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -98,12 +99,20 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     setISshow(true);
                     BofangHistroyBean item = mList.get(position);
-                    PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
+                    PlayerBean playerBean = new PlayerBean(item.getT_header(),
+                            item.getVideo_name(), item.getT_tag(), item.getVideo_url(), position);
                     gobofang(playerBean);
-                    MusicTypeBean musicTypeBean = new MusicTypeBean("free",
-                            item.getT_header(), item.getVideo_name(), item.getId() + "",item.isCollected());
-                    musicTypeBean.setMsg("musicplayertype");
-                    EventBus.getDefault().postSticky(musicTypeBean);
+                    //设置进入播放主界面的数据
+                    List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
+                    for (int i = 0; i < mList.size(); i++) {
+                        BofangHistroyBean bean = mList.get(i);
+                        MusicTypeBean musicTypeBean = new MusicTypeBean(bean.getType(),
+                                bean.getT_header(), bean.getVideo_name(), bean.getId() + "", bean.isCollected());
+                        musicTypeBean.setMsg("musicplayertype");
+                        musicTypeBeanList.add(musicTypeBean);
+                    }
+                    MediaService.insertMusicTypeList(musicTypeBeanList);
+                    //加入默认的播放列表
                     List<PlayerBean> list = new ArrayList<PlayerBean>();
                     for (int i = 0; i < mList.size(); i++) {
                         BofangHistroyBean entity = mList.get(i);
@@ -111,6 +120,18 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                         list.add(playerBean1);
                     }
                     MediaService.insertMusicList(list);
+                    //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
+                    List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
+                    for (int i = 0; i < mList.size(); i++) {
+                        BofangHistroyBean bean = mList.get(i);
+                        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean(bean.getType(), bean.getId(), bean.getVideo_name(),
+                                bean.getCreated_at(), bean.getVideo_url(), bean.getGood_count(),
+                                bean.getCollect_count(), bean.getView_count(), bean.isDianzan(), bean.isCollected(),
+                                bean.getT_header(), bean.getT_tag(),
+                                bean.getH5_url(), SystemClock.currentThreadTimeMillis());
+                        histroyBeanList.add(bofangHistroyBean);
+                    }
+                    MediaService.insertBoFangHistroyList(histroyBeanList);
                 }
             });
         }
