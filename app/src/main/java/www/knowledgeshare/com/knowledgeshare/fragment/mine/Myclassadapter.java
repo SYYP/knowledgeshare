@@ -183,13 +183,15 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         if (type1.equals("daliy")) {
                             intent.putExtra("type", "everydaycomment");
 
-
                         } else if (type1.equals("free")) {
                             intent.putExtra("type", "free");
+
                         } else if (type1.equals("xk")) {
                             intent.putExtra("type", "softmusicdetail");
+
                         } else if (type1.equals("zl")) {
                             intent.putExtra("type", "zhuanlandetail");
+
                         }
                         intent.putExtra("id", list.get(position).getId() + "");
                         context.startActivity(intent);
