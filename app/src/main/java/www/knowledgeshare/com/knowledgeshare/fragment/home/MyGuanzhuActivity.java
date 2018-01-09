@@ -74,6 +74,7 @@ public class MyGuanzhuActivity extends BaseActivity implements View.OnClickListe
                                      }
                                  });
                              }
+
                          }
                 );
     }

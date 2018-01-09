@@ -104,7 +104,6 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
 
         @Override
         protected void convert(BaseViewHolder helper, FreeTryReadListBean.DataEntity item) {
-            final TextView tv_collect_count = helper.getView(R.id.tv_collect_count);
             ImageView iv_tupian=helper.getView(R.id.iv_tupian);
             Glide.with(mContext).load(item.getImgurl()).into(iv_tupian);
             helper.setText(R.id.tv_name,item.getName())
@@ -112,23 +111,24 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
                     .setText(R.id.tv_look_count, item.getIs_view() == 0 ? item.getView_count() + "" : item.getView_count_true() + "")
                     .setText(R.id.tv_collect_count, item.getIs_collect() == 0 ? item.getCollect_count() + "" : item.getCollect_count_true() + "")
                     .setText(R.id.tv_rss_count, item.getIs_rss() == 0 ? item.getRss_count() + "" : item.getRss_count_true() + "");
-            tv_collect_count.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+//            final TextView tv_collect_count = helper.getView(R.id.tv_collect_count);
+//            tv_collect_count.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
 //                    if (isCollected) {
 //                        Drawable drawable = getResources().getDrawable(R.drawable.zhuanlan_collect);
 //                        /// 这一步必须要做,否则不会显示.
 //                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-//                        tv_collect.setCompoundDrawables(drawable, null, null, null);
+//                        tv_collect_count.setCompoundDrawables(drawable, null, null, null);
 //                    } else {
 //                        Drawable drawable = getResources().getDrawable(R.drawable.music_collected);
 //                        /// 这一步必须要做,否则不会显示.
 //                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-//                        tv_collect.setCompoundDrawables(drawable, null, null, null);
+//                        tv_collect_count.setCompoundDrawables(drawable, null, null, null);
 //                    }
 //                    isCollected = !isCollected;
-                }
-            });
+//                }
+//            });
         }
     }
 }
