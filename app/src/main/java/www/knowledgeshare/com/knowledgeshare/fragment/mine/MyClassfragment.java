@@ -11,11 +11,16 @@ import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.FavoriteBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.SoftMusicDetailActivity;
@@ -44,7 +49,15 @@ public class MyClassfragment extends BaseFragment {
         recyclerView = inflate.findViewById(R.id.class_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         requestFavorite();
+        EventBus.getDefault().register(this);
         return inflate;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("refrashCollect")) {
+           requestFavorite();
+        }
     }
 
     private void requestFavorite() {
@@ -88,5 +101,11 @@ public class MyClassfragment extends BaseFragment {
     @Override
     protected void initData() {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

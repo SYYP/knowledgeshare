@@ -213,6 +213,8 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             if (list.get(position).getType() == 0) myviewhiodler3.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
                             if (list.get(position).getType() == 1) myviewhiodler1.class_xinxin.setImageResource(R.drawable.weiguanzhuxin);
                             notifyDataSetChanged();
+                            EventBean eventBean = new EventBean("refrashCollect");
+                            EventBus.getDefault().postSticky(eventBean);
                         }
                     }
                 });
