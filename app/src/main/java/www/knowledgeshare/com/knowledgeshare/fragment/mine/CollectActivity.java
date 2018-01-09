@@ -12,12 +12,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.adapter.BuyTabAdapter;
 import www.knowledgeshare.com.knowledgeshare.view.NoScrollViewPager;
 
@@ -42,6 +47,22 @@ public class CollectActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mycollect);
         initView();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("collect_show")) {
+            setISshow(true);
+        }else if (eventBean.getMsg().equals("collect_show2")){
+            ClickPopShow();
+        }
     }
 
     private void initView() {
@@ -54,21 +75,21 @@ public class CollectActivity extends BaseActivity {
         collect_viewpager = (NoScrollViewPager) findViewById(R.id.collect_viewpager);
 
         title_back_iv.setVisibility(View.VISIBLE);
-        title_content_tv .setText("收藏");
-      title_back_iv.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-              finish();
-          }
-      });
+        title_content_tv.setText("收藏");
+        title_back_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         initData();
     }
 
     private void initData() {
 
-       MyClassfragment myclassfragment=new MyClassfragment();
-        Myjinjufragment myjinjufragment=new Myjinjufragment();
-        fragmentList=new ArrayList<>();
+        MyClassfragment myclassfragment = new MyClassfragment();
+        Myjinjufragment myjinjufragment = new Myjinjufragment();
+        fragmentList = new ArrayList<>();
         fragmentList.add(myclassfragment);
         fragmentList.add(myjinjufragment);
         tab_list = new ArrayList<>();
@@ -90,10 +111,11 @@ public class CollectActivity extends BaseActivity {
         linearLayout.setDividerDrawable(ContextCompat.getDrawable(this,
                 R.drawable.layout_divider_vertical));
 
-        BuyTabAdapter adapter = new BuyTabAdapter(getSupportFragmentManager(),fragmentList,tab_list);
+        BuyTabAdapter adapter = new BuyTabAdapter(getSupportFragmentManager(), fragmentList, tab_list);
         collect_viewpager.setAdapter(adapter);
-        collect_tablayout.setupWithViewPager( collect_viewpager);
+        collect_tablayout.setupWithViewPager(collect_viewpager);
     }
+
     //动态设置指示器下划线长度
     public void setIndicator(TabLayout tabs, int leftDip, int rightDip) {
         Class<?> tabLayout = tabs.getClass();

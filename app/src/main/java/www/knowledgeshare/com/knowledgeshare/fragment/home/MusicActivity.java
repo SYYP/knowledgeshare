@@ -93,21 +93,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void myEvent(EventBean eventBean) {
-        if (eventBean.getMsg().equals("isplaying")) {
-            //防止当小型播放器出现但还没有播放的时候，用户点击进入了播放主界面，进入了主界面之后音乐播放了但界面UI没变化
-            if (mMyBinder.isPlaying()) {
-                iv_pause.setImageResource(R.drawable.bofang_yellow_big);
-            } else {
-                iv_pause.setImageResource(R.drawable.pause_yellow_big);
-            }
-            play_seek.setMax(mMyBinder.getProgress());
-            music_duration.setText(time.format(mMyBinder.getProgress()) + "");
-//            mMyBinder.refreshhuanchong();
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(MusicTypeBean musicTypeBean) {
         if (musicTypeBean.getMsg().equals("musicplayertype")) {
             //接收到播放主界面要刷新的数据

@@ -41,7 +41,7 @@ public class HistroyUtils {
     public static boolean isInserted(String video_name) {
         List<BofangHistroyBean> all = search();
         for (int i = 0; i < all.size(); i++) {
-            if (all.get(i).getVideo_name().equals(video_name)) {
+            if (all.get(i).getVideo_name() != null && all.get(i).getVideo_name().equals(video_name)) {
                 return true;
             }
         }
