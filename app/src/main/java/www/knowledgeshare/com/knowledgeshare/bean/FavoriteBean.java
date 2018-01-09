@@ -67,14 +67,14 @@ public class FavoriteBean extends BaseBean implements Serializable {
         private String day_week;
         private String description;
 
-        private List<ChildBean> childBeen;
+        private ChildBean childBean;
 
-        public List<ChildBean> getChildBeen() {
-            return childBeen;
+        public ChildBean getChildBean() {
+            return childBean;
         }
 
-        public void setChildBeen(List<ChildBean> childBeen) {
-            this.childBeen = childBeen;
+        public void setChildBean(ChildBean childBean) {
+            this.childBean = childBean;
         }
 
         public static class ChildBean{
