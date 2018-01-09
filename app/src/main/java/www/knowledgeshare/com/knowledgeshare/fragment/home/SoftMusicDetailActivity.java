@@ -42,6 +42,7 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.MyAccountActivity;
 import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
@@ -825,6 +826,8 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                 }
                             }
                         });
+                EventBean eventBean = new EventBean("number");
+                EventBus.getDefault().postSticky(eventBean);
                 mDialog.dismiss();
             }
         });

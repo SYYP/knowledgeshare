@@ -43,6 +43,7 @@
                         android:layout_gravity="center"
                         android:src="@drawable/icon_download"/>
                     <ImageView
+                        android:id="@+id/iv_download_number"
                         android:layout_width="10dp"
                         android:layout_height="10dp"
                         android:layout_marginLeft="20dp"

@@ -14,6 +14,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.lzy.okgo.db.DownloadManager;
+import com.lzy.okserver.OkDownload;
+import com.lzy.okserver.download.DownloadTask;
+import com.orhanobut.logger.Logger;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +33,7 @@ import butterknife.Unbinder;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.DownLoadActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.adapter.BuyTabAdapter;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.SearchActivity;
 import www.knowledgeshare.com.knowledgeshare.view.NoScrollViewPager;
@@ -45,6 +55,8 @@ public class BuyFragment extends BaseFragment implements View.OnClickListener {
     TabLayout buyTablayout;
     @BindView(R.id.buy_viewpager)
     NoScrollViewPager buyViewpager;
+    @BindView(R.id.iv_download_number)
+    ImageView ivDownloadNumber;
     Unbinder unbinder;
 
     private List<Fragment> fragmentList;
@@ -60,6 +72,7 @@ public class BuyFragment extends BaseFragment implements View.OnClickListener {
     protected View initView() {
         View inflate = View.inflate(mContext, R.layout.fragment_buy, null);
         unbinder = ButterKnife.bind(this, inflate);
+        EventBus.getDefault().register(this);
         return inflate;
     }
 
@@ -101,6 +114,26 @@ public class BuyFragment extends BaseFragment implements View.OnClickListener {
         buyViewpager.setAdapter(adapter);
         buyTablayout.setupWithViewPager(buyViewpager);
 
+        initNumber();
+    }
+
+    private void initNumber() {
+        List<DownloadTask> taskList = OkDownload.restore(DownloadManager.getInstance().getDownloading());
+        if (taskList.size() == 0){
+            tvDownloadNumber.setText("");
+            ivDownloadNumber.setVisibility(View.GONE);
+        }else {
+            ivDownloadNumber.setVisibility(View.VISIBLE);
+            tvDownloadNumber.setText(taskList.size()+"");
+            Logger.e("正在下载的数量："+ taskList.size());
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("number")) {
+            initNumber();
+        }
     }
 
     //动态设置指示器下划线长度
@@ -139,6 +172,7 @@ public class BuyFragment extends BaseFragment implements View.OnClickListener {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override

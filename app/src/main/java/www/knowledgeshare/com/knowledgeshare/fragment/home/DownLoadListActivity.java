@@ -20,12 +20,15 @@ import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.OkDownload;
 import com.orhanobut.logger.Logger;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
@@ -210,6 +213,8 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
                                 });
                     }
                 }
+                EventBean eventBean = new EventBean("number");
+                EventBus.getDefault().postSticky(eventBean);
                 break;
         }
     }

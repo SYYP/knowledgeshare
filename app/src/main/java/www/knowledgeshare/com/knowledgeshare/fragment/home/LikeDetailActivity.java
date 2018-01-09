@@ -43,6 +43,7 @@ import www.knowledgeshare.com.knowledgeshare.activity.MyAccountActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.ShoppingCartActivity;
 import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
@@ -573,6 +574,8 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                 }
                             }
                         });
+                EventBean eventBean = new EventBean("number");
+                EventBus.getDefault().postSticky(eventBean);
                 mDialog.dismiss();
             }
         });

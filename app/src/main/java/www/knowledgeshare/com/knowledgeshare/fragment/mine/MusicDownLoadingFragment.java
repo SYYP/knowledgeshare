@@ -47,7 +47,6 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.MusicDownLoadBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
-import www.knowledgeshare.com.knowledgeshare.fragment.buy.adapter.DownloadAdapter;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
@@ -104,6 +103,9 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
         okDownload.addOnAllTaskEndListener(this);
         if (values.size() == 0 ){
             kongzhiLl.setVisibility(View.GONE);
+        }else {
+            EventBean eventBean = new EventBean("number");
+            EventBus.getDefault().postSticky(eventBean);
         }
     }
 
@@ -124,7 +126,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
     public void onDestroy() {
         super.onDestroy();
         okDownload.removeOnAllTaskEndListener(this);
-        adapter.unRegister();
+//        adapter.unRegister();
     }
 
     @Override
@@ -413,6 +415,8 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
 //            Toast.makeText(context, "下载完成:" + progress.filePath, Toast.LENGTH_SHORT).show();
                 Toast.makeText(context, "下载完成" , Toast.LENGTH_SHORT).show();
                 updateData(type);
+                EventBean eventBean = new EventBean("number");
+                EventBus.getDefault().postSticky(eventBean);
             }
 
             @Override

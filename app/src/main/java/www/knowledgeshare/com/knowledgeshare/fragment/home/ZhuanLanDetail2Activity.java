@@ -749,6 +749,8 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听
                         .start();
+                EventBean eventBean = new EventBean("number");
+                EventBus.getDefault().postSticky(eventBean);
                 break;
             case R.id.tv_writeliuyan:
                 Intent intent = new Intent(this, LiuYanActivity.class);

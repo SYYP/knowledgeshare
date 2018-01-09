@@ -30,8 +30,12 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.db.DownloadManager;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.lzy.okserver.OkDownload;
+import com.lzy.okserver.download.DownloadTask;
+import com.orhanobut.logger.Logger;
 import com.youth.banner.Banner;
 
 import org.greenrobot.eventbus.EventBus;
@@ -121,6 +125,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private LikeNewAdapter mLikeNewAdapter;
     private List<HomeBean.FreeEntity.ChildEntity> mMFreeChild;
     private MusicTypeBean mMusicTypeBean;
+    private ImageView iv_download_number;
 
     @Override
     protected void lazyLoad() {
@@ -135,6 +140,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         tv_search.setOnClickListener(this);
         iv_download = (ImageView) inflate.findViewById(R.id.iv_download);
         tv_download_number = (TextView) inflate.findViewById(R.id.tv_download_number);
+        iv_download_number = inflate.findViewById(R.id.iv_download_number);
         ll_download = (LinearLayout) inflate.findViewById(R.id.ll_download);
         ll_download.setOnClickListener(this);
         banner = (Banner) inflate.findViewById(R.id.banner);
@@ -278,6 +284,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 histroyBeanList.add(bofangHistroyBean);
             }
             MediaService.insertBoFangHistroyList(histroyBeanList);
+        } else if (eventBean.getMsg().equals("number")) {
+            initNumber();
         }
     }
 
@@ -365,6 +373,19 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         initAnim();
         initListener();
         initMusic();
+        initNumber();
+    }
+
+    private void initNumber() {
+        List<DownloadTask> taskList = OkDownload.restore(DownloadManager.getInstance().getDownloading());
+        if (taskList.size() == 0){
+            tv_download_number.setText("");
+            iv_download_number.setVisibility(View.GONE);
+        }else {
+            iv_download_number.setVisibility(View.VISIBLE);
+            tv_download_number.setText(taskList.size()+"");
+            Logger.e("正在下载的数量："+ taskList.size());
+        }
     }
 
     private void initbanner() {
