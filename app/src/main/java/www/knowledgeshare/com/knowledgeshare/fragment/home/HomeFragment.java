@@ -32,8 +32,10 @@ import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.db.DownloadManager;
 import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Progress;
 import com.lzy.okgo.model.Response;
 import com.lzy.okserver.OkDownload;
+import com.lzy.okserver.download.DownloadListener;
 import com.lzy.okserver.download.DownloadTask;
 import com.orhanobut.logger.Logger;
 import com.youth.banner.Banner;
@@ -42,6 +44,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +55,7 @@ import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.buy.BuyFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBannerBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeDaShiBanNewBean;
@@ -377,7 +381,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void initNumber() {
+        int TYPE_ING = 2;
         List<DownloadTask> taskList = OkDownload.restore(DownloadManager.getInstance().getDownloading());
+        for (int i = 0; i < taskList.size(); i++) {
+            DownloadTask task = taskList.get(i);
+            String tag = TYPE_ING+ "_" + task.progress.tag;
+            task.register(new ListDownloadListener(tag));
+        }
         if (taskList.size() == 0){
             tv_download_number.setText("");
             iv_download_number.setVisibility(View.GONE);
@@ -385,6 +395,40 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             iv_download_number.setVisibility(View.VISIBLE);
             tv_download_number.setText(taskList.size()+"");
             Logger.e("正在下载的数量："+ taskList.size());
+        }
+    }
+
+    private class ListDownloadListener extends DownloadListener {
+
+        public ListDownloadListener(Object tag) {
+            super(tag);
+        }
+
+        @Override
+        public void onStart(Progress progress) {
+        }
+
+        @Override
+        public void onProgress(Progress progress) {
+
+        }
+
+        @Override
+        public void onError(Progress progress) {
+            Throwable throwable = progress.exception;
+            if (throwable != null) throwable.printStackTrace();
+        }
+
+        @Override
+        public void onFinish(File file, Progress progress) {
+//            Toast.makeText(context, "下载完成:" + progress.filePath, Toast.LENGTH_SHORT).show();
+            EventBean eventBean = new EventBean("number");
+            EventBus.getDefault().postSticky(eventBean);
+        }
+
+        @Override
+        public void onRemove(Progress progress) {
+
         }
     }
 
