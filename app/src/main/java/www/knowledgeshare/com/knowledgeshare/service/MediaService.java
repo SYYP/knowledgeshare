@@ -453,6 +453,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 isPrepared = false;
                 isClosed = true;
                 Notifier.showPause(mPlayerBean);
+                currPosition=0;
                 //                mMediaPlayer = null;
             }
         }

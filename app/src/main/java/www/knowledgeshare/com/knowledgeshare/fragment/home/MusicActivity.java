@@ -295,19 +295,21 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
         play_seek.setProgress(0);
         play_seek.setMax(100);
         mMusicTypeBean = (MusicTypeBean) getIntent().getSerializableExtra("data");
-        tv_title.setText(mMusicTypeBean.getVideo_name());
-        Glide.with(this).load(mMusicTypeBean.getT_head()).into(iv_bigphoto);
-        isCollected = mMusicTypeBean.isCollected();
-        if (isCollected) {
-            Drawable drawable = getResources().getDrawable(R.drawable.music_collected);
-            /// 这一步必须要做,否则不会显示.
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            tv_collect.setCompoundDrawables(null, drawable, null, null);
-        } else {
-            Drawable drawable = getResources().getDrawable(R.drawable.music_collect);
-            /// 这一步必须要做,否则不会显示.
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            tv_collect.setCompoundDrawables(null, drawable, null, null);
+        if (mMusicTypeBean != null) {
+            tv_title.setText(mMusicTypeBean.getVideo_name());
+            Glide.with(this).load(mMusicTypeBean.getT_head()).into(iv_bigphoto);
+            isCollected = mMusicTypeBean.isCollected();
+            if (isCollected) {
+                Drawable drawable = getResources().getDrawable(R.drawable.music_collected);
+                /// 这一步必须要做,否则不会显示.
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                tv_collect.setCompoundDrawables(null, drawable, null, null);
+            } else {
+                Drawable drawable = getResources().getDrawable(R.drawable.music_collect);
+                /// 这一步必须要做,否则不会显示.
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                tv_collect.setCompoundDrawables(null, drawable, null, null);
+            }
         }
         List<BofangHistroyBean> search = HistroyUtils.search();
         if (search != null && search.size() > 0) {
@@ -472,12 +474,12 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                                      listBean.setIconUrl(dataEntity.getImage());
                                      list.add(listBean);
                                      DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
-                                             "free", dataEntity.getId() + "", "", dataEntity.getImage(), "", "", list.size() + "", list);
+                                             "free", listBean.getTypeId() + "", "", dataEntity.getImage(), "", "", list.size() + "", list);
                                      DownUtil.add(downLoadListsBean);
                                      GetRequest<File> request = OkGo.<File>get(dataEntity.getVideo_url());
-                                     OkDownload.request(dataEntity.getId() + "_" + dataEntity.getId(), request)
+                                     OkDownload.request(listBean.getTypeId() + "_" + dataEntity.getId(), request)
                                              .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download")
-                                             .fileName(dataEntity.getVideo_name() + dataEntity.getId() + "_" + dataEntity.getId() + ".mp3")
+                                             .fileName(dataEntity.getVideo_name() + listBean.getTypeId() + "_" + dataEntity.getId() + ".mp3")
                                              .extra3(downLoadListsBean)//额外数据
                                              .save()
                                              .register(new LogDownloadListener())//当前任务的回调监听
@@ -485,7 +487,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
 
                                      OkGo.<File>get(dataEntity.getTxt_url())
                                              .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download"
-                                                     , dataEntity.getId() + "-" + dataEntity.getId() + dataEntity.getVideo_name() + ".txt") {
+                                                     , listBean.getTypeId() + "-" + dataEntity.getId() + dataEntity.getVideo_name() + ".txt") {
                                                  @Override
                                                  public void onSuccess(Response<File> response) {
                                                      int code = response.code();
@@ -496,11 +498,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                                              });
                                      EventBean eventBean = new EventBean("number");
                                      EventBus.getDefault().postSticky(eventBean);
-                                     mDialog.dismiss();
                                  }
                              }
                     );
-        }else if (type.equals("everydaycomment")){
+        } else if (type.equals("everydaycomment")) {
             OkGo.<DownBean1>post(MyContants.LXKURL + "down")
                     .tag(this)
                     .params(params)
@@ -524,12 +525,12 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                                      listBean.setIconUrl(dataEntity.getImage());
                                      list.add(listBean);
                                      DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
-                                             "comment", dataEntity.getId() + "", "", dataEntity.getImage(), "", "", list.size() + "", list);
+                                             "comment", listBean.getTypeId() + "", "", dataEntity.getImage(), "", "", list.size() + "", list);
                                      DownUtil.add(downLoadListsBean);
                                      GetRequest<File> request = OkGo.<File>get(dataEntity.getVideo_url());
-                                     OkDownload.request(dataEntity.getId() + "_" + dataEntity.getId(), request)
+                                     OkDownload.request(listBean.getTypeId() + "_" + dataEntity.getId(), request)
                                              .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download")
-                                             .fileName(dataEntity.getVideo_name() + dataEntity.getId() + "_" + dataEntity.getId() + ".mp3")
+                                             .fileName(dataEntity.getVideo_name() + listBean.getTypeId() + "_" + dataEntity.getId() + ".mp3")
                                              .extra3(downLoadListsBean)//额外数据
                                              .save()
                                              .register(new LogDownloadListener())//当前任务的回调监听
@@ -537,7 +538,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
 
                                      OkGo.<File>get(dataEntity.getTxt_url())
                                              .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download"
-                                                     , dataEntity.getId() + "-" + dataEntity.getId() + dataEntity.getVideo_name() + ".txt") {
+                                                     , listBean.getTypeId() + "-" + dataEntity.getId() + dataEntity.getVideo_name() + ".txt") {
                                                  @Override
                                                  public void onSuccess(Response<File> response) {
                                                      int code = response.code();
@@ -548,11 +549,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                                              });
                                      EventBean eventBean = new EventBean("number");
                                      EventBus.getDefault().postSticky(eventBean);
-                                     mDialog.dismiss();
                                  }
                              }
                     );
-        } else if (type.equals("softmusicdetail")){
+        } else if (type.equals("softmusicdetail")) {
             OkGo.<DownBean2>post(MyContants.LXKURL + "down")
                     .tag(this)
                     .params(params)
@@ -567,7 +567,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                                      DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
                                      listBean.setTypeId(dataEntity.getId() + "");
                                      listBean.setChildId(xk_data.getId() + "");
-                                     listBean.setName(dataEntity.getXk_name());
+                                     listBean.setName(xk_data.getName());
                                      listBean.setVideoTime(xk_data.getVideo_time());
                                      listBean.setDate("");
                                      listBean.setTime(xk_data.getVideo_time());
@@ -578,7 +578,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                                      list.add(listBean);
                                      DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                                              "xiaoke", dataEntity.getId() + "", dataEntity.getXk_name(), dataEntity.getXk_image(),
-                                             dataEntity.getT_name(), dataEntity.getXk_teacher_tags(), 1 + "", list);
+                                             dataEntity.getT_name(), dataEntity.getXk_teacher_tags(), "1", list);
                                      DownUtil.add(downLoadListsBean);
                                      GetRequest<File> request = OkGo.<File>get(xk_data.getVideo_url());
                                      OkDownload.request(dataEntity.getId() + "_" + xk_data.getId(), request)
@@ -601,11 +601,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                                              });
                                      EventBean eventBean = new EventBean("number");
                                      EventBus.getDefault().postSticky(eventBean);
-                                     mDialog.dismiss();
                                  }
                              }
                     );
-        }else if (type.equals("zhuanlandetail")){
+        } else if (type.equals("zhuanlandetail")) {
             OkGo.<DownBean3>post(MyContants.LXKURL + "down")
                     .tag(this)
                     .params(params)
@@ -620,12 +619,12 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                                      DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
                                      listBean.setTypeId(dataEntity.getId() + "");
                                      listBean.setChildId(zl_data.getId() + "");
-                                     listBean.setName(dataEntity.getZl_name());
+                                     listBean.setName(zl_data.getName());
                                      listBean.setVideoTime(zl_data.getVideo_time());
                                      listBean.setDate("");
                                      listBean.setTime(zl_data.getVideo_time());
                                      listBean.setVideoUrl(zl_data.getVideo_url());
-                                     listBean.setTxtUrl("");
+                                     listBean.setTxtUrl(zl_data.getTxt_url());
                                      listBean.setIconUrl(dataEntity.getZl_image());
                                      listBean.settName(zl_data.getT_name());
                                      list.add(listBean);

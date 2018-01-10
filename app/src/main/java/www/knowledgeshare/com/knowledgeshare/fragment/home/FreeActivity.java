@@ -704,16 +704,16 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 listBean.settName(childEntity.getT_name());
                 list.add(listBean);
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
-                        "free", "freeId", "", childEntity.getT_header(), "", "", list.size() + "", list);
+                        "free", listBean.getTypeId(), "", childEntity.getT_header(), "", "", list.size() + "", list);
                 DownUtil.add(downLoadListsBean);
                 /*DownLoadListBean DownLoadListBean = new DownLoadListBean(-1,childEntity.getId(),-4,-3,
                         childEntity.getVideo_name(),childEntity.getVideo_time(), split[0], split[1],
                         childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
                 DownUtils.add(DownLoadListBean);*/
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
-                OkDownload.request("freeId" + "_" + childEntity.getId(), request)
+                OkDownload.request(listBean.getTypeId() + "_" + childEntity.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download")
-                        .fileName(childEntity.getVideo_name() + "freeId" + "_" + childEntity.getId() + ".mp3")
+                        .fileName(childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")
                         .extra3(downLoadListsBean)//额外数据
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听
@@ -721,7 +721,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
 
                 OkGo.<File>get(childEntity.getTxt_url())
                         .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download"
-                                , "freeId" + "-" + childEntity.getId() + childEntity.getVideo_name() + ".txt") {
+                                , listBean.getTypeId() + "-" + childEntity.getId() + childEntity.getVideo_name() + ".txt") {
                             @Override
                             public void onSuccess(Response<File> response) {
                                 int code = response.code();

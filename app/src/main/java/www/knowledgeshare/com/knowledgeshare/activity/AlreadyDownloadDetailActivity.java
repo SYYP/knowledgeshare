@@ -139,20 +139,17 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                                    mytype="free";
                                                }else if (type.equals("comment")){
                                                    mytype="everydaycomment";
-                                               }else {
+                                               }else if (type.equals("xiaoke")){
                                                    mytype="softmusicdetail";
+                                               }else {
+                                                   mytype="zhuanlandetail";
                                                }
                                                setISshow(true);
-                                               DownLoadListsBean.ListBean listBean = list.get(0);
+                                               DownLoadListsBean.ListBean listBean = list.get(position);
                                                PlayerBean playerBean = new PlayerBean(listBean.getIconUrl(), listBean.getName(),
                                                        "", "", loadFromSDFile(listBean.getName() + listBean.getTypeId() + "_"
                                                        + listBean.getChildId() + ".mp3"),position);
                                                gobofang(playerBean);
-                                               MusicTypeBean musicTypeBean = new MusicTypeBean(mytype,
-                                                       listBean.getIconUrl(), listBean.getName(), listBean.getTypeId(),
-                                                       listBean.isSave());
-                                               musicTypeBean.setMsg("musicplayertype");
-                                               EventBus.getDefault().postSticky(musicTypeBean);
                                                //还要设置一个播放主界面的list数据，因为自动播放下一首上一首的时候主界面的数据也得变
                                                List<MusicTypeBean> musicTypeBeanList=new ArrayList<MusicTypeBean>();
                                                for (int i = 0; i < list.size(); i++) {
@@ -160,7 +157,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                                    MusicTypeBean musicTypeBean1 = new MusicTypeBean(mytype,
                                                            listBean1.getIconUrl(), listBean1.getName(), listBean1.getTypeId(),
                                                            listBean1.isSave());
-                                                   musicTypeBean.setMsg("musicplayertype");
+                                                   musicTypeBean1.setMsg("musicplayertype");
                                                    musicTypeBeanList.add(musicTypeBean1);
                                                }
                                                MediaService.insertMusicTypeList(musicTypeBeanList);
