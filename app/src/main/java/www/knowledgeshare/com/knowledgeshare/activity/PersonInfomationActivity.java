@@ -38,6 +38,8 @@ import com.orhanobut.logger.Logger;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalSelectionDialog;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -51,6 +53,7 @@ import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.UserInfoBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
@@ -370,6 +373,8 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                         int code = response.code();
                         if (code >= 200 && code <= 204){
                             Glide.with(PersonInfomationActivity.this).load(response.body().getUrl()).into(faceIv);
+                            EventBean eventBean = new EventBean("userinfo");
+                            EventBus.getDefault().postSticky(eventBean);
                         }
                     }
                 });
@@ -477,6 +482,8 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                         int code = response.code();
                         if (code >= 200 && code <= 204){
                             TUtils.showShort(PersonInfomationActivity.this,response.body().getMessage());
+                            EventBean eventBean = new EventBean("userinfo");
+                            EventBus.getDefault().postSticky(eventBean);
                         }else {
                             TUtils.showShort(PersonInfomationActivity.this,response.body().getMessage());
                         }
