@@ -701,6 +701,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 listBean.setVideoUrl(childEntity.getVideo_url());
                 listBean.setTxtUrl(childEntity.getTxt_url());
                 listBean.setIconUrl(childEntity.getT_header());
+                listBean.settName(childEntity.getT_name());
                 list.add(listBean);
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                         "free", mFreeBean.getId() + "", "", childEntity.getT_header(), "", "", list.size() + "", list);

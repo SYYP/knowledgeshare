@@ -544,6 +544,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                 listBean.setVideoUrl(childEntity.getVideo_url());
                 listBean.setTxtUrl(childEntity.getTxt_url());
                 listBean.setIconUrl(childEntity.getT_header());
+                listBean.settName(childEntity.getT_name());
                 list.add(listBean);
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                         "xiaoke", mMusicDetailBean.getXk_class_id() + "", childEntity.getParent_name(), childEntity.getT_header(),

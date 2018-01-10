@@ -345,7 +345,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
 
             sizeTv.setText(helper.getPosition() + 1 + "");
             titleTv.setText(item.getName());
-            //            nameTv.setText(item.getName());
+            nameTv.setText(item.gettName());
             timeTv.setText(item.getTime());
             checkBox.setChecked(item.isChecked());
 

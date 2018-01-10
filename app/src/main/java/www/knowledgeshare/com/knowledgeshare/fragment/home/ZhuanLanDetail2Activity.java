@@ -730,6 +730,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 listBean.setVideoUrl(mFreeTryReadDetailBean.getVideo_url());
                 listBean.setTxtUrl(mFreeTryReadDetailBean.getTxt_url());
                 listBean.setIconUrl(mFreeTryReadDetailBean.getT_header());
+                listBean.settName(mFreeTryReadDetailBean.getT_name());
                 list.add(listBean);
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                         "zhuanlan", mFreeTryReadDetailBean.getZl_id() + "", getIntent().getStringExtra("title"), mFreeTryReadDetailBean.getT_header(),

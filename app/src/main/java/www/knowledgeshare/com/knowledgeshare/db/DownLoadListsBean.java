@@ -105,9 +105,18 @@ public class DownLoadListsBean extends DataSupport implements Serializable {
         private String videoUrl;
         private String txtUrl;
         private String iconUrl;
+        private String tName;
         private boolean save;
         private boolean isChecked=true;
         private boolean isVisibility = false;
+
+        public String gettName() {
+            return tName;
+        }
+
+        public void settName(String tName) {
+            this.tName = tName;
+        }
 
         public boolean isVisibility() {
             return isVisibility;

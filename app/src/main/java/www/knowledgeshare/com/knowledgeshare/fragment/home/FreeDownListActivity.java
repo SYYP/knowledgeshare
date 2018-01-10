@@ -186,6 +186,7 @@ public class FreeDownListActivity extends BaseActivity implements View.OnClickLi
                         listBean.setVideoUrl(childEntity.getVideo_url());
                         listBean.setTxtUrl(childEntity.getTxt_url());
                         listBean.setIconUrl(childEntity.getT_header());
+                        listBean.settName(childEntity.getT_name());
                         list.add(listBean);
                         DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                                 "free", freeBean.getId()+"", "", childEntity.getT_header(), "", "",list.size()+"",list);
