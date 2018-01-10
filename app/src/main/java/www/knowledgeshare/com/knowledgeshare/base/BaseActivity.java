@@ -10,11 +10,13 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CustomPopupWindow;
 
 
@@ -41,7 +43,12 @@ public class BaseActivity extends AppCompatActivity {
         if (musicPop == null) {
             musicPop = new CustomPopupWindow(this);
         }
-            initMusic();
+        if (!NetWorkUtils.isNetworkConnected(this)){
+            Toast.makeText(this, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
+        }else if (!NetWorkUtils.isMobileConnected(this)){
+            Toast.makeText(this, "当前网络不可用，请检查或重试", Toast.LENGTH_SHORT).show();
+        }
+        initMusic();
     }
 
     private void initMusic() {
@@ -71,10 +78,10 @@ public class BaseActivity extends AppCompatActivity {
     public void SlidePopShow() {
         if (isshow && !musicPop.isShowing() && mMyBinder.isPlaying()) {
             musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
-//            EventBean eventBean = new EventBean("rotate");
-//            EventBus.getDefault().postSticky(eventBean);
-//            EventBean eventBean2 = new EventBean("home_bofang");
-//            EventBus.getDefault().postSticky(eventBean2);
+            //            EventBean eventBean = new EventBean("rotate");
+            //            EventBus.getDefault().postSticky(eventBean);
+            //            EventBean eventBean2 = new EventBean("home_bofang");
+            //            EventBus.getDefault().postSticky(eventBean2);
         }
     }
 
@@ -112,7 +119,7 @@ public class BaseActivity extends AppCompatActivity {
         if (activityList != null) {
             activityList.remove(this);
         }
-//        unbindService(mServiceConnection);
+        //        unbindService(mServiceConnection);
     }
 
     public static void removeAllActivitys() {

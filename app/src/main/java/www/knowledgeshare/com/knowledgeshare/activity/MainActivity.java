@@ -41,7 +41,9 @@ import www.knowledgeshare.com.knowledgeshare.db.StudyTimeBean;
 import www.knowledgeshare.com.knowledgeshare.db.StudyTimeUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.BuyFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.HomeFragment;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.SoftMusicDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.WebActivity;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBannerBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.RefreshToken;
@@ -179,8 +181,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         int code = response.code();
                         HomeBannerBean bannerBean = response.body();
                         if (response.code() >= 200 && response.code() <= 204) {
-                            HomeBannerBean.CtivityEntity ctivity = bannerBean.getCtivity();
-                            if (ctivity!=null){
+                            final HomeBannerBean.CtivityEntity ctivity = bannerBean.getCtivity();
+                            if (ctivity != null) {
                                 mBuilder = new BaseDialog.Builder(MainActivity.this);
                                 mDialog = mBuilder.setViewId(R.layout.dialog_pop)
                                         //设置dialogpadding
@@ -201,15 +203,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                         mDialog.dismiss();
                                     }
                                 });
-                                ImageView iv_pop=mDialog.getView(R.id.iv_pop);
+                                ImageView iv_pop = mDialog.getView(R.id.iv_pop);
                                 Glide.with(MainActivity.this).load(ctivity.getImgurl()).into(iv_pop);
                                 iv_pop.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         mDialog.dismiss();
-                                        Intent intent = new Intent(MainActivity.this, WebActivity.class);
-                                        intent.putExtra("lxk", "lxk");
-                                        startActivity(intent);
+                                        if (ctivity != null) {
+                                            if (ctivity.getCourse_id() == 0) {
+                                                Intent intent = new Intent(MainActivity.this, WebActivity.class);
+                                                intent.putExtra("url", ctivity.getLink());
+                                                startActivity(intent);
+                                            } else {
+                                                if (ctivity.getType() == 1) {
+                                                    Intent intent = new Intent(MainActivity.this, SoftMusicDetailActivity.class);
+                                                    intent.putExtra("id", ctivity.getCourse_id() + "");
+                                                    startActivity(intent);
+                                                } else if (ctivity.getType() == 2) {
+                                                    Intent intent = new Intent(MainActivity.this, ZhuanLanActivity.class);
+                                                    intent.putExtra("id", ctivity.getCourse_id() + "");
+                                                    startActivity(intent);
+                                                }
+                                            }
+                                        }
                                     }
                                 });
                                 mDialog.show();

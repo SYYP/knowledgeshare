@@ -39,6 +39,7 @@ import com.lzy.okserver.download.DownloadListener;
 import com.lzy.okserver.download.DownloadTask;
 import com.orhanobut.logger.Logger;
 import com.youth.banner.Banner;
+import com.youth.banner.listener.OnBannerListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -55,7 +56,6 @@ import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
-import www.knowledgeshare.com.knowledgeshare.fragment.buy.BuyFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBannerBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeDaShiBanNewBean;
@@ -247,8 +247,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             myposition = 0;
             HomeBean.FreeEntity.ChildEntity item = mMFreeChild.get(0);
             //刷新小型播放器
-            PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(),
-                    item.getVideo_url(),0);
+            PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getParent_name(),
+                    item.getVideo_url(), 0);
             gobofang(playerBean);
             //设置进入播放主界面的数据
             mMusicTypeBean = new MusicTypeBean("free",
@@ -257,7 +257,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             mMusicTypeBean.setMsg("musicplayertype");
             EventBus.getDefault().postSticky(mMusicTypeBean);
             //还要设置一个播放主界面的list数据，因为自动播放下一首上一首的时候主界面的数据也得变
-            List<MusicTypeBean> musicTypeBeanList=new ArrayList<MusicTypeBean>();
+            List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
             for (int i = 0; i < mMFreeChild.size(); i++) {
                 HomeBean.FreeEntity.ChildEntity childEntity = mMFreeChild.get(i);
                 MusicTypeBean musicTypeBean = new MusicTypeBean("free",
@@ -272,18 +272,18 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             List<PlayerBean> playerBeanList = new ArrayList<PlayerBean>();
             for (int i = 0; i < mMFreeChild.size(); i++) {
                 HomeBean.FreeEntity.ChildEntity entity = mMFreeChild.get(i);
-                PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getT_tag(), entity.getVideo_url());
+                PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getParent_name(), entity.getVideo_url());
                 playerBeanList.add(playerBean1);
             }
             MediaService.insertMusicList(playerBeanList);
             //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
-            List<BofangHistroyBean> histroyBeanList=new ArrayList<BofangHistroyBean>();
+            List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
             for (int i = 0; i < mMFreeChild.size(); i++) {
                 HomeBean.FreeEntity.ChildEntity childEntity = mMFreeChild.get(i);
                 BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", childEntity.getId(), childEntity.getVideo_name(),
                         childEntity.getCreated_at(), childEntity.getVideo_url(), childEntity.getGood_count(),
                         childEntity.getCollect_count(), childEntity.getView_count(), childEntity.getIs_good() == 1 ? true : false,
-                        childEntity.isIsfav(), childEntity.getT_header(), childEntity.getT_tag(), childEntity.getShare_h5_url()
+                        childEntity.isIsfav(), childEntity.getT_header(), childEntity.getParent_name(), childEntity.getShare_h5_url()
                         , SystemClock.currentThreadTimeMillis());
                 histroyBeanList.add(bofangHistroyBean);
             }
@@ -385,16 +385,16 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         List<DownloadTask> taskList = OkDownload.restore(DownloadManager.getInstance().getDownloading());
         for (int i = 0; i < taskList.size(); i++) {
             DownloadTask task = taskList.get(i);
-            String tag = TYPE_ING+ "_" + task.progress.tag;
+            String tag = TYPE_ING + "_" + task.progress.tag;
             task.register(new ListDownloadListener(tag));
         }
-        if (taskList.size() == 0){
+        if (taskList.size() == 0) {
             tv_download_number.setText("");
             iv_download_number.setVisibility(View.GONE);
-        }else {
+        } else {
             iv_download_number.setVisibility(View.VISIBLE);
-            tv_download_number.setText(taskList.size()+"");
-            Logger.e("正在下载的数量："+ taskList.size());
+            tv_download_number.setText(taskList.size() + "");
+            Logger.e("正在下载的数量：" + taskList.size());
         }
     }
 
@@ -416,12 +416,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         @Override
         public void onError(Progress progress) {
             Throwable throwable = progress.exception;
-            if (throwable != null) throwable.printStackTrace();
+            if (throwable != null)
+                throwable.printStackTrace();
         }
 
         @Override
         public void onFinish(File file, Progress progress) {
-//            Toast.makeText(context, "下载完成:" + progress.filePath, Toast.LENGTH_SHORT).show();
+            //            Toast.makeText(context, "下载完成:" + progress.filePath, Toast.LENGTH_SHORT).show();
             EventBean eventBean = new EventBean("number");
             EventBus.getDefault().postSticky(eventBean);
         }
@@ -445,7 +446,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         int code = response.code();
                         HomeBannerBean bannerBean = response.body();
                         if (response.code() >= 200 && response.code() <= 204) {
-                            List<HomeBannerBean.HomeslideEntity> homeslide = bannerBean.getHomeslide();
+                            final List<HomeBannerBean.HomeslideEntity> homeslide = bannerBean.getHomeslide();
                             for (int i = 0; i < homeslide.size(); i++) {
                                 String imgurl = homeslide.get(i).getImgurl();
                                 bannerList.add(imgurl);
@@ -454,6 +455,29 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             layoutParams.height = MyUtils.getScreenWidth(mContext) / 2;
                             banner.setLayoutParams(layoutParams);
                             BannerUtils.startBanner(banner, bannerList);
+                            banner.setOnBannerListener(new OnBannerListener() {
+                                @Override
+                                public void OnBannerClick(int position) {
+                                    HomeBannerBean.HomeslideEntity entity = homeslide.get(position);
+                                    if (entity != null) {
+                                        if (entity.getCourse_id() == 0) {
+                                            Intent intent = new Intent(mContext, WebActivity.class);
+                                            intent.putExtra("url", entity.getLink());
+                                            startActivity(intent);
+                                        } else {
+                                            if (entity.getType()==1){
+                                                Intent intent = new Intent(mContext, SoftMusicDetailActivity.class);
+                                                intent.putExtra("id", entity.getCourse_id()+"");
+                                                startActivity(intent);
+                                            }else if (entity.getType()==2){
+                                                Intent intent = new Intent(mContext, ZhuanLanActivity.class);
+                                                intent.putExtra("id", entity.getCourse_id()+"");
+                                                startActivity(intent);
+                                            }
+                                        }
+                                    }
+                                }
+                            });
                         } else {
 
                         }
@@ -561,8 +585,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     mytype = "zhuanlan";
                     myposition = helper.getAdapterPosition();
                     //刷新小型播放器
-                    PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(),
-                            item.getVideo_url(),helper.getAdapterPosition());
+                    PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getParent_name(),
+                            item.getVideo_url(), helper.getAdapterPosition());
                     gobofang(playerBean);
                     //设置进入播放主界面的数据
                     mMusicTypeBean = new MusicTypeBean("free",
@@ -571,7 +595,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     mMusicTypeBean.setMsg("musicplayertype");
                     EventBus.getDefault().postSticky(mMusicTypeBean);
                     //还要设置一个播放主界面的list数据，因为自动播放下一首上一首的时候主界面的数据也得变
-                    List<MusicTypeBean> musicTypeBeanList=new ArrayList<MusicTypeBean>();
+                    List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
                     for (int i = 0; i < mMFreeChild.size(); i++) {
                         HomeBean.FreeEntity.ChildEntity childEntity = mMFreeChild.get(i);
                         MusicTypeBean musicTypeBean = new MusicTypeBean("free",
@@ -586,18 +610,18 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     List<PlayerBean> playerBeanList = new ArrayList<PlayerBean>();
                     for (int i = 0; i < mMFreeChild.size(); i++) {
                         HomeBean.FreeEntity.ChildEntity entity = mMFreeChild.get(i);
-                        PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getT_tag(), entity.getVideo_url());
+                        PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getParent_name(), entity.getVideo_url());
                         playerBeanList.add(playerBean1);
                     }
                     MediaService.insertMusicList(playerBeanList);
                     //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
-                    List<BofangHistroyBean> histroyBeanList=new ArrayList<BofangHistroyBean>();
+                    List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
                     for (int i = 0; i < mMFreeChild.size(); i++) {
                         HomeBean.FreeEntity.ChildEntity childEntity = mMFreeChild.get(i);
                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", childEntity.getId(), childEntity.getVideo_name(),
                                 childEntity.getCreated_at(), childEntity.getVideo_url(), childEntity.getGood_count(),
                                 childEntity.getCollect_count(), childEntity.getView_count(), childEntity.getIs_good() == 1 ? true : false,
-                                childEntity.isIsfav(), childEntity.getT_header(), childEntity.getT_tag(), childEntity.getShare_h5_url()
+                                childEntity.isIsfav(), childEntity.getT_header(), childEntity.getParent_name(), childEntity.getShare_h5_url()
                                 , SystemClock.currentThreadTimeMillis());
                         histroyBeanList.add(bofangHistroyBean);
                     }
@@ -631,7 +655,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     myposition = helper.getAdapterPosition();
                     //刷新小型播放器
                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(),
-                            item.getVideo_url(),helper.getAdapterPosition());
+                            item.getVideo_url(), helper.getAdapterPosition());
                     gobofang(playerBean);
                     //设置进入播放主界面的数据
                     mMusicTypeBean = new MusicTypeBean("everydaycomment",
@@ -640,7 +664,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     mMusicTypeBean.setMsg("musicplayertype");
                     EventBus.getDefault().postSticky(mMusicTypeBean);
                     //还要设置一个播放主界面的list数据，因为自动播放下一首上一首的时候主界面的数据也得变
-                    List<MusicTypeBean> musicTypeBeanList=new ArrayList<MusicTypeBean>();
+                    List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
                     for (int i = 0; i < mDaily.size(); i++) {
                         HomeBean.DailyEntity dailyEntity = mDaily.get(i);
                         MusicTypeBean musicTypeBean = new MusicTypeBean("free",
@@ -660,7 +684,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     MediaService.insertMusicList(playerBeanList);
 
                     //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
-                    List<BofangHistroyBean> histroyBeanList=new ArrayList<BofangHistroyBean>();
+                    List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
                     for (int i = 0; i < mDaily.size(); i++) {
                         HomeBean.DailyEntity dailyEntity = mDaily.get(i);
                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", dailyEntity.getId(), dailyEntity.getVideo_name(),

@@ -57,7 +57,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
     private static String subtitle;
     private static String header;
     private static MusicTypeBean mMusicTypeBean;
-    private long pretime;
+    private static long pretime;
 
     public CustomPopupWindow(Activity context) {
         super(context);
@@ -98,8 +98,6 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
                 params.put("type", "zl");
             }
             params.put("date", MyUtils.getCurrentDate());
-            //学习时长
-            pretime = SystemClock.currentThreadTimeMillis();
             OkGo.<DianZanbean>post(MyContants.LXKURL + "user/study-add")
                     .tag(this)
                     .headers(headers)
@@ -120,6 +118,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
         }
     }
 
+    //学习时长
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("home_pause") || eventBean.getMsg().equals("norotate")) {
@@ -131,11 +130,13 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
                 StudyTimeUtils.add(studyTimeBean);
             } else {
                 long oneTime = StudyTimeUtils.getOneTime("music", mMusicTypeBean.getId());
-                lasttime+=oneTime;
+                lasttime += oneTime;
                 StudyTimeUtils.updateTime("music", mMusicTypeBean.getId(), lasttime);
             }
+        } else if (eventBean.getMsg().equals("home_bofang") || eventBean.getMsg().equals("rotate")) {
+            //学习时长
+            pretime = SystemClock.currentThreadTimeMillis();
         }
-
     }
 
     /**

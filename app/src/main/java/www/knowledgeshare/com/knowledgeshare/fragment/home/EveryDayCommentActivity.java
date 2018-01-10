@@ -201,7 +201,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                     EveryDayBean.DailysEntity item = mDailys.get(position);
                                     //刷新小型播放器
                                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(),
-                                            item.getT_tag(), item.getVideo_url(),position);
+                                            item.getParent_name(), item.getVideo_url(),position);
                                     gobofang(playerBean);
                                     addListenCount(mDailys.get(position).getId() + "");
                                     //设置进入播放主界面的数据
@@ -218,7 +218,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                     List<PlayerBean> list = new ArrayList<PlayerBean>();
                                     for (int i = 0; i < mDailys.size(); i++) {
                                         EveryDayBean.DailysEntity entity = mDailys.get(i);
-                                        PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getT_tag(), entity.getVideo_url());
+                                        PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getParent_name(), entity.getVideo_url());
                                         list.add(playerBean1);
                                     }
                                     MediaService.insertMusicList(list);
@@ -229,7 +229,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("everydaycomment", entity.getId(), entity.getVideo_name(),
                                                 entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
                                                 entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
-                                                , entity.getT_header(), entity.getT_tag(),entity.getShare_h5_url(),
+                                                , entity.getT_header(), entity.getParent_name(),entity.getShare_h5_url(),
                                                 SystemClock.currentThreadTimeMillis());
                                         histroyBeanList.add(bofangHistroyBean);
                                     }

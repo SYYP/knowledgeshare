@@ -423,6 +423,15 @@ public class FreeBean implements Serializable{
         private String t_tag;
         private boolean isChecked=true;
         private String share_h5_url;
+        private String parent_name;
+
+        public String getParent_name() {
+            return parent_name;
+        }
+
+        public void setParent_name(String parent_name) {
+            this.parent_name = parent_name;
+        }
         private String t_name;
 
         public String getT_name() {

@@ -24,6 +24,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.youth.banner.Banner;
+import com.youth.banner.listener.OnBannerListener;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -34,7 +35,6 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
-import www.knowledgeshare.com.knowledgeshare.db.HistroyUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.GuDianBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
@@ -141,6 +141,30 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
                                          bannerList.add(mSlide.get(i).getImgurl());
                                      }
                                  }
+                                 banner.setOnBannerListener(new OnBannerListener() {
+                                     @Override
+                                     public void OnBannerClick(int position) {
+                                         GuDianBean.SlideEntity entity = mSlide.get(position);
+                                         mSlide.get(position);
+                                         if (entity != null) {
+                                             if (entity.getCourse_id() == 0) {
+                                                 Intent intent = new Intent(GuDianActivity.this, WebActivity.class);
+                                                 intent.putExtra("url", entity.getLink());
+                                                 startActivity(intent);
+                                             } else {
+                                                 if (entity.getType()==1){
+                                                     Intent intent = new Intent(GuDianActivity.this, SoftMusicDetailActivity.class);
+                                                     intent.putExtra("id", entity.getCourse_id()+"");
+                                                     startActivity(intent);
+                                                 }else if (entity.getType()==2){
+                                                     Intent intent = new Intent(GuDianActivity.this, ZhuanLanActivity.class);
+                                                     intent.putExtra("id", entity.getCourse_id()+"");
+                                                     startActivity(intent);
+                                                 }
+                                             }
+                                         }
+                                     }
+                                 });
                                  BannerUtils.startBanner(banner, bannerList);
                                  mXiaoke = mGuDianBean.getXiaoke();
                                  mZhuanlan = mGuDianBean.getZhuanlan();
@@ -219,28 +243,42 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
                 public void onClick(View view) {
                     setISshow(true);
                     GuDianBean.XiaokeEntity xiaokeEntity = mXiaoke.get(helper.getAdapterPosition());
-                    GuDianBean.XiaokeEntity.TryVideoEntity try_video = xiaokeEntity.getTry_video();
-                    PlayerBean playerBean = new PlayerBean(try_video.getT_header(), try_video.getParent_name(),
-                            try_video.getT_tag(), try_video.getVideo_url());
+                    List<GuDianBean.XiaokeEntity.TryVideoEntity> list = xiaokeEntity.getTry_video();
+                    GuDianBean.XiaokeEntity.TryVideoEntity tryVideoEntity = list.get(helper.getAdapterPosition());
+                    PlayerBean playerBean = new PlayerBean(tryVideoEntity.getT_header(), tryVideoEntity.getName(),
+                            tryVideoEntity.getParent_name(), tryVideoEntity.getVideo_url(), helper.getAdapterPosition());
                     gobofang(playerBean);
-                    MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
-                            try_video.getT_header(), try_video.getParent_name(), try_video.getId() + "", try_video.isIsfav());
-                    musicTypeBean.setMsg("musicplayertype");
-                    EventBus.getDefault().postSticky(musicTypeBean);
-                    //设置播放列表
-                    List<PlayerBean> list = new ArrayList<PlayerBean>();
-                    list.add(playerBean);
-                    MediaService.insertMusicList(list);
-                    if (!HistroyUtils.isInserted(try_video.getParent_name())) {
-                        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", try_video.getId(), try_video.getParent_name(),
+                    //设置进入播放主界面的数据
+                    List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
+                    for (int i = 0; i < list.size(); i++) {
+                        GuDianBean.XiaokeEntity.TryVideoEntity try_video = list.get(i);
+                        MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
+                                try_video.getT_header(), try_video.getName(), try_video.getId() + "", try_video.isIsfav());
+                        musicTypeBean.setMsg("musicplayertype");
+                        musicTypeBeanList.add(musicTypeBean);
+                    }
+                    MediaService.insertMusicTypeList(musicTypeBeanList);
+                    //加入默认的播放列表
+                    List<PlayerBean> playerBeanList = new ArrayList<PlayerBean>();
+                    for (int i = 0; i < list.size(); i++) {
+                        GuDianBean.XiaokeEntity.TryVideoEntity tryVideoEntity1 = list.get(i);
+                        PlayerBean playerBean1 = new PlayerBean(tryVideoEntity1.getT_header(), tryVideoEntity1.getName(),
+                                tryVideoEntity1.getParent_name(), tryVideoEntity1.getVideo_url());
+                        playerBeanList.add(playerBean1);
+                    }
+                    MediaService.insertMusicList(playerBeanList);
+                    //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
+                    List<BofangHistroyBean> histroyBeanList=new ArrayList<BofangHistroyBean>();
+                    for (int i = 0; i < list.size(); i++) {
+                        GuDianBean.XiaokeEntity.TryVideoEntity try_video = list.get(i);
+                        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", try_video.getId(), try_video.getName(),
                                 try_video.getCreated_at(), try_video.getVideo_url(), try_video.getGood_count(),
                                 try_video.getCollect_count(), try_video.getView_count(), try_video.isIslive(), try_video.isIsfav()
-                                , try_video.getT_header(), try_video.getT_tag(), try_video.getShare_h5_url()
+                                , try_video.getT_header(), try_video.getParent_name(), try_video.getShare_h5_url()
                                 , SystemClock.currentThreadTimeMillis());
-                        HistroyUtils.add(bofangHistroyBean);
-                    } else {
-                        HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(), try_video.getVideo_old_name());
+                        histroyBeanList.add(bofangHistroyBean);
                     }
+                    MediaService.insertBoFangHistroyList(histroyBeanList);
                 }
             });
         }

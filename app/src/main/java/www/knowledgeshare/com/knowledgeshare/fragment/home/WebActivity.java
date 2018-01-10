@@ -33,11 +33,6 @@ public class WebActivity extends BaseActivity {
                 finish();
             }
         });
-        if (getIntent().getStringExtra("lxk").equals("lxk")){//假的
-            pb.setVisibility(View.GONE);
-            webView.setVisibility(View.GONE);
-        }
-
         url=getIntent().getStringExtra("url");
         webView.setWebViewClient(new WebViewClient() {
             @Override

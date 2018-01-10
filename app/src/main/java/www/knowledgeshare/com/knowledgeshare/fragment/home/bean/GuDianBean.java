@@ -7,13 +7,12 @@ import java.util.List;
  */
 
 public class GuDianBean {
-
     /**
      * h5_url : http://thinks.iask.in/class.html?type=gd
-     * xiaoke : [{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/3x4.png","try_video":{"video_time":"04:42","parent_name":"如何成为一个合格的歌唱者1","islive":false,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/music2.mp3","share_h5_url":"http://thinks.iask.in/player.html?id=8&type=xk","t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","isfav":false,"video_type":"xk"},"teacher_name":"张老师","nodule_count":"2节","xk_name":"如何成为一个合格的歌唱者1","buy_count":"3人","xk_id":8,"xk_teacher_tags":"好声音","time_count":"07:02","xk_price":"￥180/年"}]
+     * xiaoke : [{"xk_image":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/3x4.png","try_video":[{"video_time":"04:42","good_count":0,"t_tag":"","parent_name":"如何成为一个合格的歌唱者8","share_h5_url":"http://thinks.iask.in/player.html?id=8&type=xk","txt_url":"xiaoke/20171208/1.txt","is_view":1,"is_try":0,"created_at":"2017-12-25 07:04:02","video_old_name":"男低音2.mp3","isfav":false,"is_collect":1,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/music2.mp3","view_count_true":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","t_name":"","id":16,"islive":false,"is_good":1,"txt_old_name":"男低音2.txt","xk_id":8,"collect_count":0,"video_type":"xk","collect_count_true":0,"name":"男低音，如何通过技巧正确的发音，提高男低音的魅力2","view_count":0},{"video_time":"02:20","good_count":0,"t_tag":"","parent_name":"如何成为一个合格的歌唱者8","share_h5_url":"http://thinks.iask.in/player.html?id=8&type=xk","txt_url":"xiaoke/20171208/1.txt","is_view":1,"is_try":0,"created_at":"2017-12-25 07:04:01","video_old_name":"男低音.mp3","isfav":false,"is_collect":1,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/music1.mp3","view_count_true":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","t_name":"","id":15,"islive":false,"is_good":1,"txt_old_name":"男低音.txt","xk_id":8,"collect_count":0,"video_type":"xk","collect_count_true":0,"name":"男低音，如何通过技巧正确的发音，提高男低音的魅力","view_count":0}],"teacher_name":"张老师","nodule_count":"2节","xk_name":"如何成为一个合格的歌唱者8","buy_count":"3人","xk_id":8,"xk_teacher_tags":"好声音","time_count":"07:02","xk_price":"￥180/年"}]
      * slide : [{"imgurl":"banner/20171208/banner.png","course_id":1,"name":"和催宗顺在一起","link":"","created_at":"2017-12-08 11:12:24","id":1,"sort":0,"state":1,"type":1}]
      * introduce : 此专栏简单的介绍，一个优秀的音乐老师
-     * zhuanlan : [{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音1","zl_update_time":"28天前更新","video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","zl_name":"崔宗顺的男低音歌唱家的秘密5","id":5,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/3x4.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"},{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音1","zl_update_time":"28天前更新","video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","zl_name":"崔宗顺的男低音歌唱家的秘密1","id":1,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/3x4.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"}]
+     * zhuanlan : [{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音1","zl_update_time":"33天前更新","video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","zl_name":"崔宗顺的男低音歌唱家的秘密5","id":5,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/3x4.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"},{"zl_price":"￥160/年","zl_update_name":"专栏小节，如何成为男高音1","zl_update_time":"33天前更新","video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3","zl_name":"崔宗顺的男低音歌唱家的秘密1","id":1,"zl_img":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/3x4.png","zl_introduce":"韩宗顺美国音乐艺术家协会会员，有着丰富的音乐经验，音乐带头人。"}]
      */
     private String h5_url;
     private List<XiaokeEntity> xiaoke;
@@ -64,10 +63,10 @@ public class GuDianBean {
     public static class XiaokeEntity {
         /**
          * xk_image : http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/3x4.png
-         * try_video : {"video_time":"04:42","parent_name":"如何成为一个合格的歌唱者1","islive":false,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/music2.mp3","share_h5_url":"http://thinks.iask.in/player.html?id=8&type=xk","t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","isfav":false,"video_type":"xk"}
+         * try_video : [{"video_time":"04:42","good_count":0,"t_tag":"","parent_name":"如何成为一个合格的歌唱者8","share_h5_url":"http://thinks.iask.in/player.html?id=8&type=xk","txt_url":"xiaoke/20171208/1.txt","is_view":1,"is_try":0,"created_at":"2017-12-25 07:04:02","video_old_name":"男低音2.mp3","isfav":false,"is_collect":1,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/music2.mp3","view_count_true":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","t_name":"","id":16,"islive":false,"is_good":1,"txt_old_name":"男低音2.txt","xk_id":8,"collect_count":0,"video_type":"xk","collect_count_true":0,"name":"男低音，如何通过技巧正确的发音，提高男低音的魅力2","view_count":0},{"video_time":"02:20","good_count":0,"t_tag":"","parent_name":"如何成为一个合格的歌唱者8","share_h5_url":"http://thinks.iask.in/player.html?id=8&type=xk","txt_url":"xiaoke/20171208/1.txt","is_view":1,"is_try":0,"created_at":"2017-12-25 07:04:01","video_old_name":"男低音.mp3","isfav":false,"is_collect":1,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/music1.mp3","view_count_true":0,"t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20171208/1x1.png","t_name":"","id":15,"islive":false,"is_good":1,"txt_old_name":"男低音.txt","xk_id":8,"collect_count":0,"video_type":"xk","collect_count_true":0,"name":"男低音，如何通过技巧正确的发音，提高男低音的魅力","view_count":0}]
          * teacher_name : 张老师
          * nodule_count : 2节
-         * xk_name : 如何成为一个合格的歌唱者1
+         * xk_name : 如何成为一个合格的歌唱者8
          * buy_count : 3人
          * xk_id : 8
          * xk_teacher_tags : 好声音
@@ -75,7 +74,7 @@ public class GuDianBean {
          * xk_price : ￥180/年
          */
         private String xk_image;
-        private TryVideoEntity try_video;
+        private List<TryVideoEntity> try_video;
         private String teacher_name;
         private String nodule_count;
         private String xk_name;
@@ -89,7 +88,7 @@ public class GuDianBean {
             this.xk_image = xk_image;
         }
 
-        public void setTry_video(TryVideoEntity try_video) {
+        public void setTry_video(List<TryVideoEntity> try_video) {
             this.try_video = try_video;
         }
 
@@ -129,7 +128,7 @@ public class GuDianBean {
             return xk_image;
         }
 
-        public TryVideoEntity getTry_video() {
+        public List<TryVideoEntity> getTry_video() {
             return try_video;
         }
 
@@ -166,12 +165,11 @@ public class GuDianBean {
         }
 
         public static class TryVideoEntity {
-
             /**
              * video_time : 04:42
              * good_count : 0
              * t_tag :
-             * parent_name : 如何成为一个合格的歌唱者1
+             * parent_name : 如何成为一个合格的歌唱者8
              * share_h5_url : http://thinks.iask.in/player.html?id=8&type=xk
              * txt_url : xiaoke/20171208/1.txt
              * is_view : 1
@@ -541,7 +539,7 @@ public class GuDianBean {
         /**
          * zl_price : ￥160/年
          * zl_update_name : 专栏小节，如何成为男高音1
-         * zl_update_time : 28天前更新
+         * zl_update_time : 33天前更新
          * video_url : http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3
          * zl_name : 崔宗顺的男低音歌唱家的秘密5
          * id : 5

@@ -47,6 +47,7 @@ import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
 import www.knowledgeshare.com.knowledgeshare.db.StudyTimeBean;
@@ -338,12 +339,12 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                  mComment = mFreeTryReadDetailBean.getComment();
                                  mLiuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan, mComment);
                                  recycler_liuyan.setAdapter(mLiuYanAdapter);
-                                 if (mFreeTryReadDetailBean.isfav()) {
+                                 if (mFreeTryReadDetailBean.isIsfav()) {
                                      iv_collect.setImageResource(R.drawable.xinxin);
                                  } else {
                                      iv_collect.setImageResource(R.drawable.weiguanzhuxin);
                                  }
-                                 initWebView(mFreeTryReadDetailBean.getH5_url());
+                                 initWebView(mFreeTryReadDetailBean.getZl_h5_url());
                              }
                          }
                 );
@@ -690,17 +691,30 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                     setISshow(true);
                     if (mMyBinder.isClosed()) {
                         PlayerBean playerBean = new PlayerBean(mFreeTryReadDetailBean.getT_header(),
-                                mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getT_tag(), mFreeTryReadDetailBean.getVideo_url());
+                                mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getT_tag(),
+                                mFreeTryReadDetailBean.getVideo_url());
                         gobofang(playerBean);
                         addListenCount(mFreeTryReadDetailBean.getId() + "");
                         MusicTypeBean musicTypeBean = new MusicTypeBean("zhuanlandetail",
                                 mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getName(), mId,
-                                mFreeTryReadDetailBean.isfav());
+                                mFreeTryReadDetailBean.isIsfav());
                         musicTypeBean.setMsg("musicplayertype");
                         EventBus.getDefault().postSticky(musicTypeBean);
                         List<PlayerBean> list = new ArrayList<PlayerBean>();
                         list.add(playerBean);
                         MediaService.insertMusicList(list);
+                        //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
+                        List<BofangHistroyBean> histroyBeanList=new ArrayList<BofangHistroyBean>();
+                            BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("zhuanlandetail", mFreeTryReadDetailBean.getId(),
+                                    mFreeTryReadDetailBean.getName(),
+                                    mFreeTryReadDetailBean.getCreated_at(), mFreeTryReadDetailBean.getVideo_url(),
+                                    mFreeTryReadDetailBean.getRss_count(),
+                                    mFreeTryReadDetailBean.getCollect_count(), mFreeTryReadDetailBean.getView_count(),
+                                    mFreeTryReadDetailBean.isIsfav(), mFreeTryReadDetailBean.isIsfav(),
+                                    mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getT_tag(),
+                                    mFreeTryReadDetailBean.getH5_url(), SystemClock.currentThreadTimeMillis());
+                            histroyBeanList.add(bofangHistroyBean);
+                        MediaService.insertBoFangHistroyList(histroyBeanList);
                     } else {
                         mMyBinder.playMusic();
                     }
@@ -728,7 +742,8 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 listBean.setDate(split[0]);
                 listBean.setTime(split[0]);
                 listBean.setVideoUrl(mFreeTryReadDetailBean.getVideo_url());
-                listBean.setTxtUrl(mFreeTryReadDetailBean.getTxt_url());
+                listBean.setTxtUrl("");
+//                listBean.setTxtUrl(mFreeTryReadDetailBean.getTxt_url());
                 listBean.setIconUrl(mFreeTryReadDetailBean.getT_header());
                 listBean.settName(mFreeTryReadDetailBean.getT_name());
                 list.add(listBean);

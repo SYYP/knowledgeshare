@@ -244,7 +244,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                     setISshow(true);
                                     FreeBean.ChildEntity item = mChild.get(position);
                                     //刷新小型播放器
-                                    PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(),
+                                    PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getParent_name(),
                                             item.getVideo_url(),position);
                                     gobofang(playerBean);
                                     addListenCount(mFreeAdapter.getData().get(position).getId() + "");
@@ -263,7 +263,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                     List<PlayerBean> list = new ArrayList<PlayerBean>();
                                     for (int i = 0; i < mChild.size(); i++) {
                                         FreeBean.ChildEntity entity = mChild.get(i);
-                                        PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getT_tag(), entity.getVideo_url());
+                                        PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getParent_name(), entity.getVideo_url());
                                         list.add(playerBean1);
                                     }
                                     MediaService.insertMusicList(list);
@@ -274,7 +274,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", childEntity.getId(), childEntity.getVideo_name(),
                                                 childEntity.getCreated_at(), childEntity.getVideo_url(), childEntity.getGood_count(),
                                                 childEntity.getCollect_count(), childEntity.getView_count(), childEntity.isIslive(), childEntity.isIsfav(),
-                                                childEntity.getT_header(), childEntity.getT_tag(),
+                                                childEntity.getT_header(), childEntity.getParent_name(),
                                                 childEntity.getShare_h5_url(), SystemClock.currentThreadTimeMillis());
                                         histroyBeanList.add(bofangHistroyBean);
                                     }
@@ -692,7 +692,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 String[] split = created_at.split(" ");
                 List<DownLoadListsBean.ListBean> list = new ArrayList<>();
                 DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
-                listBean.setTypeId(mFreeBean.getId() + "");
+                listBean.setTypeId("freeId");
                 listBean.setChildId(childEntity.getId() + "");
                 listBean.setName(childEntity.getVideo_name());
                 listBean.setVideoTime(childEntity.getVideo_time());
@@ -704,16 +704,16 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 listBean.settName(childEntity.getT_name());
                 list.add(listBean);
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
-                        "free", mFreeBean.getId() + "", "", childEntity.getT_header(), "", "", list.size() + "", list);
+                        "free", "freeId", "", childEntity.getT_header(), "", "", list.size() + "", list);
                 DownUtil.add(downLoadListsBean);
                 /*DownLoadListBean DownLoadListBean = new DownLoadListBean(-1,childEntity.getId(),-4,-3,
                         childEntity.getVideo_name(),childEntity.getVideo_time(), split[0], split[1],
                         childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
                 DownUtils.add(DownLoadListBean);*/
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
-                OkDownload.request(mFreeBean.getId() + "_" + childEntity.getId(), request)
+                OkDownload.request("freeId" + "_" + childEntity.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download")
-                        .fileName(childEntity.getVideo_name() + mFreeBean.getId() + "_" + childEntity.getId() + ".mp3")
+                        .fileName(childEntity.getVideo_name() + "freeId" + "_" + childEntity.getId() + ".mp3")
                         .extra3(downLoadListsBean)//额外数据
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听
@@ -721,7 +721,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
 
                 OkGo.<File>get(childEntity.getTxt_url())
                         .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download"
-                                , mFreeBean.getId() + "-" + childEntity.getId() + childEntity.getVideo_name() + ".txt") {
+                                , "freeId" + "-" + childEntity.getId() + childEntity.getVideo_name() + ".txt") {
                             @Override
                             public void onSuccess(Response<File> response) {
                                 int code = response.code();
