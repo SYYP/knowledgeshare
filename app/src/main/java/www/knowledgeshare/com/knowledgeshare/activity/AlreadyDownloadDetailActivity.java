@@ -370,7 +370,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                 public void onClick(View view) {
                     Intent intent = new Intent(mContext, WenGaoFileActivity.class);
                     intent.putExtra("img", item.getIconUrl());
-                    intent.putExtra("title", item.getName());
+                    intent.putExtra("title", item.gettName());
                     intent.putExtra("id", item.getTypeId());
                     intent.putExtra("childId", item.getChildId());
                     intent.putExtra("type", type);

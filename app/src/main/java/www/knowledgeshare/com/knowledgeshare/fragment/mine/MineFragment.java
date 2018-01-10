@@ -16,6 +16,10 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.Response;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -31,6 +35,7 @@ import www.knowledgeshare.com.knowledgeshare.activity.SettingActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.TaskDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.UserInfoBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
@@ -71,6 +76,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     protected View initView() {
         View inflate = View.inflate(mContext, R.layout.fragment_mine, null);
         unbinder = ButterKnife.bind(this, inflate);
+        EventBus.getDefault().register(this);
         titleMessageIv.setVisibility(View.VISIBLE);
         titleSettingIv.setVisibility(View.VISIBLE);
         titleContentTv.setText("我的");
@@ -122,6 +128,13 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                         }
                     }
                 });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("userinfo")) {
+            requestUserInfo();
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.O)
@@ -251,6 +264,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        EventBus.getDefault().unregister(this);
     }
 
 }
