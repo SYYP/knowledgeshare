@@ -38,7 +38,7 @@
                     android:id="@+id/learn_time_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="18"
+                    android:text="0"
                     android:textSize="20sp"
                     android:textColor="@color/yellow"/>
                 <TextView
@@ -70,12 +70,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24px"
-                android:orientation="horizontal">
+                android:orientation="horizontal" android:id="@+id/0">
                 <TextView
                     android:id="@+id/learn_date_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5"
+                    android:text="0"
                     android:textSize="20dp"
                     android:textColor="@color/yellow"/>
                 <TextView
