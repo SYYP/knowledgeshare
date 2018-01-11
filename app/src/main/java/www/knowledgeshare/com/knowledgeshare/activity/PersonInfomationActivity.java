@@ -351,6 +351,8 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                     // 图片选择结果回调
                     selectList = PictureSelector.obtainMultipleResult(data);
                     cutPath = selectList.get(0).getCutPath();
+//                    cutPath = selectList.get(0).getPath();
+//                    Glide.with(this).load(cutPath).into(faceIv);
                     File file = new File(cutPath);
                     requestUploadAvatar(file);
                     break;

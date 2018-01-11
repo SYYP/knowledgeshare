@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -24,9 +25,18 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.orhanobut.logger.Logger;
+import com.umeng.socialize.Config;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMAuthListener;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareConfig;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.zackratos.ultimatebar.UltimateBar;
 
+import java.util.Map;
 import java.util.UUID;
 
 import www.knowledgeshare.com.knowledgeshare.R;
@@ -59,6 +69,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private ImageView colse_back;
     private ImageView img_weixin;
     private String uniqueId;
+    private UMShareAPI umShareAPI;
+    private UMShareConfig config;
+
+
 
 
     @Override
@@ -103,6 +117,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 }
             }
         });
+
+        initUM();
     }
 
     @Override
@@ -118,9 +134,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             case R.id.login_phone:
                 login_phone.setCursorVisible(true);
                 break;
-            /*
-              注册
-             */
+            //注册
             case R.id.no_account:
                 Intent intent = new Intent(this, RegisterActivity.class);
                 startActivity(intent);
@@ -133,11 +147,60 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 finish();
                 break;
             case R.id.weixin:
-                Intent intent2 = new Intent(this, BindPhoneActivity.class);
+                /*Intent intent2 = new Intent(this, BindPhoneActivity.class);
                 startActivity(intent2);
-                finish();
+                finish();*/
+
+                config.setSinaAuthType(UMShareConfig.AUTH_TYPE_SSO);
+                umShareAPI.setShareConfig(config);
+                umShareAPI.getPlatformInfo(this,SHARE_MEDIA.WEIXIN,umAuthListener);
                 break;
         }
+    }
+
+    private void initUM() {
+        Config.DEBUG = true;
+        umShareAPI = UMShareAPI.get(this);
+        PlatformConfig.setWeixin("wxf33afce9142929dc","1ec3dd295f384088757e5fd5500ef897");
+        config = new UMShareConfig();
+
+    }
+
+    private UMAuthListener umAuthListener = new UMAuthListener() {
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+            //授权开始的回调
+        }
+        @Override
+        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
+
+            String openid = data.get("openid");
+            String userFace = data.get("iconurl");
+            String name = data.get("screen_name");
+            Logger.e("openid:"+openid+"\n"+"userFace:"+userFace+"\n"+"name:"+name);
+            requestWeChat();
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, int action, Throwable t) {
+            Toast.makeText( getApplicationContext(), "Authorize fail", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform, int action) {
+            Toast.makeText( getApplicationContext(), "Authorize cancel", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private void requestWeChat() {
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+
     }
 
     private void login() {
@@ -192,6 +255,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         LoginBean loginBean = response.body();
                         if ( response.code() >= 200 && response.code() <= 204){
                             SpUtils.putString(LoginActivity.this,"id",loginBean.getUser().getId());
+                            SpUtils.putString(LoginActivity.this,"name",loginBean.getUser().getUser_name());
                             String token = loginBean.getToken();
                             SpUtils.putString(LoginActivity.this,"token",token);
                             long ttlMs = loginBean.getTtl() * 60 * 1000L;

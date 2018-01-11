@@ -132,7 +132,7 @@
         <!-- 友盟第三方登录及分享start -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="59acf7747f2c746f2e000b36"/>
+            android:value="5a570e16a40fa33281000067"/>
         <!-- 新浪分享 -->
         <activity
             android:name="com.umeng.socialize.media.WBShareCallBackActivity"
@@ -184,10 +184,9 @@
         <!-- 友盟第三方登录及分享end -->
         <!-- 高德定位 -->
         <service android:name="com.amap.api.location.APSService"/>
-
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="94711a4ce9bc8a3bb9c0811c8e97e58b">
+            android:value="b53f336a0ed74fffecfe1bfe4542c4b4">
         </meta-data>
         <!-- 支付宝支付配置start -->
         <activity

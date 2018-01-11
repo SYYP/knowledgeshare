@@ -184,7 +184,6 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                             android:layout_height="wrap_content" />
                     </RelativeLayout>
                     <LinearLayout
-
                         android:id="@+id/study_liner"
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="15dp"
@@ -220,6 +219,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                     </RelativeLayout>
                 </RelativeLayout>
                 <LinearLayout
+                    android:id="@+id/note_ll"
                     android:layout_marginLeft="3dp"
                     android:layout_marginRight="3dp"
                     android:layout_marginTop="10dp"

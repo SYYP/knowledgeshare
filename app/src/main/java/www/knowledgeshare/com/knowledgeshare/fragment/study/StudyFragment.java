@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,18 +21,30 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.services.weather.LocalWeatherForecastResult;
+import com.amap.api.services.weather.LocalWeatherLive;
+import com.amap.api.services.weather.LocalWeatherLiveResult;
+import com.amap.api.services.weather.WeatherSearch;
+import com.amap.api.services.weather.WeatherSearchQuery;
 import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.MyApplication;
@@ -56,7 +69,7 @@ import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 /**
  * Created by Administrator on 2017/11/17.
  */
-public class StudyFragment extends BaseFragment implements View.OnClickListener {
+public class StudyFragment extends BaseFragment implements View.OnClickListener, AMapLocationListener, WeatherSearch.OnWeatherSearchListener {
     public TextView tv_search;
     public ImageView iv_message;
     public LinearLayout ll_download;
@@ -83,7 +96,6 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener 
     private View rootView;
     int i;
     List<NoteListBean.NoteBean> list = new ArrayList<>();
-    List<NoteListBean.NoteBean> listAll = new ArrayList<>();
 
     private TextView study_name, tv_suishenting;
     private int favoriteId;
@@ -91,6 +103,11 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener 
     private SpringView springView;
     private int lastId;
     private RelativeLayout historyRl;
+    //声明AMapLocationClientOption对象
+    public AMapLocationClientOption mLocationOption = null;
+    private AMapLocationClient mapLocationClient;
+    private WeatherSearch mweathersearch;
+    private LinearLayout noteLl;
 
     @Override
     protected void lazyLoad() {
@@ -130,10 +147,13 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener 
         tv_suishenting.setOnClickListener(this);
         this.springView = rootView.findViewById(R.id.springview);
         this.historyRl = rootView.findViewById(R.id.history_rl);
+        this.noteLl = rootView.findViewById(R.id.note_ll);
         study_recycler = rootView.findViewById(R.id.study_recycle);
         study_collect = rootView.findViewById(R.id.study_collect);
         study_xinxin = rootView.findViewById(R.id.study_xinxin);
         study_recycler.setNestedScrollingEnabled(false);
+        study_name.setText("Hi  "+SpUtils.getString(mContext,"name",""));
+        initMap();
         initLoadMore();
         requestNoteList("");
 
@@ -174,6 +194,37 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener 
         return rootView;
     }
 
+    private void initMap() {
+        //初始化AMapLocationClientOption对象
+        mLocationOption = new AMapLocationClientOption();
+        AMapLocationClientOption option = new AMapLocationClientOption();
+        //设置定位模式为AMapLocationMode.Hight_Accuracy，高精度模式。
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        //获取一次定位结果：
+        //该方法默认为false。
+        mLocationOption.setOnceLocation(true);
+        //获取最近3s内精度最高的一次定位结果：
+        //设置setOnceLocationLatest(boolean b)接口为true，启动定位时SDK会返回最近3s内精度最高的一次定位结果。如果设置其为true，
+        // setOnceLocation(boolean b)接口也会被设置为true，反之不会，默认为false。
+        mLocationOption.setOnceLocationLatest(true);
+        //设置是否返回地址信息（默认返回地址信息）
+        mLocationOption.setNeedAddress(true);
+        //设置是否允许模拟位置,默认为true，允许模拟位置
+        mLocationOption.setMockEnable(true);
+        //单位是毫秒，默认30000毫秒，建议超时时间不要低于8000毫秒。
+        mLocationOption.setHttpTimeOut(20000);
+        //关闭缓存机制
+        mLocationOption.setLocationCacheEnable(false);
+        mapLocationClient = new AMapLocationClient(mContext);
+        //给定位客户端对象设置定位参数
+        mapLocationClient.setLocationOption(mLocationOption);
+        mapLocationClient.setLocationListener(this);
+        //启动定位
+        mapLocationClient.startLocation();
+
+
+    }
+
     private void initLoadMore() {
         springView.setType(SpringView.Type.FOLLOW);
         springView.setListener(new SpringView.OnFreshListener() {
@@ -182,7 +233,6 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        listAll.clear();
                         requestNoteList("");
                     }
                 }, 2000);
@@ -193,7 +243,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        requestNoteList(lastId + "");
+                        requestNoteList("");
                         springView.onFinishFreshAndLoad();
                     }
                 }, 2000);
@@ -257,6 +307,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener 
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
         params.put("after", after);
+        Logger.e(after);
         OkGo.<NoteListBean>post(MyContants.noteList)
                 .tag(this)
                 .headers(headers)
@@ -269,14 +320,16 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener 
                             list = response.body().getNote();
                             List<NoteListBean.GoldBean> gold = response.body().getGold();
                             if (list.size() > 0) {
-                                listAll.addAll(list);
+                                noteLl.setVisibility(View.VISIBLE);
                             } else {
-                                TUtils.showShort(mContext, "没有更多数据了");
+                                noteLl.setVisibility(View.GONE);
                             }
-                            Studyadapter studyadapter = new Studyadapter(getActivity(), listAll);
+                            Studyadapter studyadapter = new Studyadapter(getActivity(), list);
                             study_recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
                             study_recycler.setAdapter(studyadapter);
+
                             if (gold.size() > 0) {
+                                historyRl.setVisibility(View.VISIBLE);
                                 study_day.setText(gold.get(0).getDay());
                                 study_date.setText(gold.get(0).getDisplay_at());
                                 study_count.setText(gold.get(0).getContent());
@@ -354,6 +407,55 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener 
                 );*/
     }
 
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        if (aMapLocation != null) {
+            if (aMapLocation.getErrorCode() == 0) {
+                study_city.setText(aMapLocation.getCity()+aMapLocation.getDistrict());
+                //检索参数为城市和天气类型，实况天气为WEATHER_TYPE_LIVE、天气预报为WEATHER_TYPE_FORECAST
+                WeatherSearchQuery mquery = new WeatherSearchQuery(aMapLocation.getCity(),WeatherSearchQuery.WEATHER_TYPE_LIVE);
+                mweathersearch = new WeatherSearch(mContext);
+                mweathersearch.setOnWeatherSearchListener(this);
+                mweathersearch.setQuery(mquery);
+                mweathersearch.searchWeatherAsyn(); //异步搜索
+
+                Logger.e(aMapLocation.getLocationType()+"\n" +aMapLocation.getLatitude()+"\n" +aMapLocation.getLongitude()+"\n"
+                        +aMapLocation.getAccuracy()+"\n" +aMapLocation.getAddress()+"\n" +aMapLocation.getProvince()+"\n"
+                        +aMapLocation.getCity()+"\n" +aMapLocation.getDistrict()+"\n" +aMapLocation.getStreet()+"\n"
+                        +aMapLocation.getCityCode()+"\n" +aMapLocation.getAdCode()+"\n" +aMapLocation.getAoiName()+"\n"
+                        +aMapLocation.getBuildingId()+"\n" +aMapLocation.getFloor()+"\n" +aMapLocation.getGpsAccuracyStatus()+"\n");
+                mapLocationClient.stopLocation();//停止定位后，本地定位服务并不会被销毁
+            }else {
+                //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
+                Log.e("AmapError","location Error, ErrCode:"
+                        + aMapLocation.getErrorCode() + ", errInfo:"
+                        + aMapLocation.getErrorInfo());
+            }
+        }
+    }
+
+    @Override
+    public void onWeatherLiveSearched(LocalWeatherLiveResult weatherLiveResult , int rCode) {
+        if (rCode == 1000) {
+            if (weatherLiveResult != null && weatherLiveResult.getLiveResult() != null) {
+                LocalWeatherLive weatherlive = weatherLiveResult.getLiveResult();
+                study_weather.setText(weatherlive.getWeather());
+                study_wendu.setText(weatherlive.getTemperature()+"°");
+//                wind.setText(weatherlive.getWindDirection()+"风     "+weatherlive.getWindPower()+"级");
+//                humidity.setText("湿度         "+weatherlive.getHumidity()+"%");
+            }else {
+                TUtils.showShort(mContext,"没有天气信息");
+            }
+        }else {
+            TUtils.showShort(mContext,"获取天气信息失败");
+        }
+    }
+
+    @Override
+    public void onWeatherForecastSearched(LocalWeatherForecastResult localWeatherForecastResult, int i) {
+
+    }
+
     class Studyadapter extends RecyclerView.Adapter<Studyadapter.MyViewholder> {
         private Context context;
         List<NoteListBean.NoteBean> list = new ArrayList<>();
@@ -383,8 +485,6 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener 
                 @Override
                 public void onClick(View view) {
                     showTips(list.get(position).getId(), position);
-
-
                 }
             });
 
