@@ -45,8 +45,6 @@ public class BaseActivity extends AppCompatActivity {
         }
         if (!NetWorkUtils.isNetworkConnected(this)){
             Toast.makeText(this, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
-        }else if (!NetWorkUtils.isMobileConnected(this)){
-            Toast.makeText(this, "当前网络不可用，请检查或重试", Toast.LENGTH_SHORT).show();
         }
         initMusic();
     }

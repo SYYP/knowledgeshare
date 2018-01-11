@@ -332,7 +332,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener 
                                  PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getT_tag(), item.getVideo_url());
                                  gobofang(playerBean);
                                  MusicTypeBean musicTypeBean = new MusicTypeBean("free",
-                                         item.getT_header(), item.getVideo_name(), item.getId() + "", item.isIsfav());
+                                         item.getT_header(), item.getVideo_name(), item.getChildId() + "", item.isIsfav());
                                  musicTypeBean.setMsg("musicplayertype");
                                  EventBus.getDefault().postSticky(musicTypeBean);
                                  List<PlayerBean> list = new ArrayList<PlayerBean>();
@@ -343,7 +343,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener 
                                  }
                                  MediaService.insertMusicList(list);
                                  if (!HistroyUtils.isInserted(item.getVideo_name())) {
-                                     BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", item.getId(), item.getVideo_name(),
+                                     BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", item.getChildId(), item.getVideo_name(),
                                              item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                              item.getCollect_count(), item.getView_count(), item.getIs_good() == 1 ? true : false,
                                              item.isIsfav(), item.getT_header(), item.getT_tag(),item.getShare_h5_url());

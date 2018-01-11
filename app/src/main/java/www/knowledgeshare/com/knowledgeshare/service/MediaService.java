@@ -169,6 +169,16 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 MusicTypeBean musicTypeBean = musicTypeBeanList.get(currPosition);
                 EventBus.getDefault().postSticky(musicTypeBean);//播放上一首下一首的时候刷新播放主界面的数据
             }
+            //播放下一首上一首的时候增加播放历史数据库中的数据
+            if (bofangHistroyBeanList != null && musicTypeBeanList.size() > 0) {
+                BofangHistroyBean bofangHistroyBean = bofangHistroyBeanList.get(currPosition);
+                if (!HistroyUtils.isInserted(bofangHistroyBean.getVideo_name())) {
+                    bofangHistroyBean.setTime(SystemClock.currentThreadTimeMillis());
+                    HistroyUtils.add(bofangHistroyBean);
+                } else {
+                    HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(), bofangHistroyBean.getVideo_name());
+                }
+            }
             registerReceiver(mNoisyReceiver, mNoisyFilter);
             mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
             isClosed = false;
@@ -189,6 +199,16 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 if (musicTypeBeanList != null && musicTypeBeanList.size() > 0) {
                     MusicTypeBean musicTypeBean = musicTypeBeanList.get(currPosition);
                     EventBus.getDefault().postSticky(musicTypeBean);//播放上一首下一首的时候刷新播放主界面的数据
+                }
+                //播放下一首上一首的时候增加播放历史数据库中的数据
+                if (bofangHistroyBeanList != null && musicTypeBeanList.size() > 0) {
+                    BofangHistroyBean bofangHistroyBean = bofangHistroyBeanList.get(currPosition);
+                    if (!HistroyUtils.isInserted(bofangHistroyBean.getVideo_name())) {
+                        bofangHistroyBean.setTime(SystemClock.currentThreadTimeMillis());
+                        HistroyUtils.add(bofangHistroyBean);
+                    } else {
+                        HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(), bofangHistroyBean.getVideo_name());
+                    }
                 }
                 registerReceiver(mNoisyReceiver, mNoisyFilter);
                 mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);

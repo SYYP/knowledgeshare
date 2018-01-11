@@ -112,15 +112,23 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     setISshow(true);
                     BofangHistroyBean item = mList.get(position);
-                    PlayerBean playerBean = new PlayerBean(item.getT_header(),
-                            item.getVideo_name(), item.getT_tag(), item.getVideo_url(), position);
-                    gobofang(playerBean);
+                    if (!item.isLocal()) {
+                        PlayerBean playerBean = new PlayerBean(item.getT_header(),
+                                item.getVideo_name(), item.getParentName(), item.getVideo_url(), position);
+                        gobofang(playerBean);
+                    }else {
+                        //本地已经下载好的播放
+                        PlayerBean playerBean2 = new PlayerBean(item.getT_header(),
+                                item.getVideo_name(), item.getParentName(), "", loadFromSDFile(item.getType(),
+                                item.getVideo_name() + item.getParentId() + "_" + item.getChildId() + ".mp3"), position);
+                        gobofang2(playerBean2);
+                    }
                     //设置进入播放主界面的数据
                     List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
                     for (int i = 0; i < mList.size(); i++) {
                         BofangHistroyBean bean = mList.get(i);
                         MusicTypeBean musicTypeBean = new MusicTypeBean(bean.getType(),
-                                bean.getT_header(), bean.getVideo_name(), bean.getId() + "", bean.isCollected());
+                                bean.getT_header(), bean.getVideo_name(), bean.getChildId() + "", bean.isCollected());
                         musicTypeBean.setMsg("musicplayertype");
                         musicTypeBeanList.add(musicTypeBean);
                     }
@@ -129,7 +137,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                     List<PlayerBean> list = new ArrayList<PlayerBean>();
                     for (int i = 0; i < mList.size(); i++) {
                         BofangHistroyBean entity = mList.get(i);
-                        PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getT_tag(), entity.getVideo_url());
+                        PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getParentName(), entity.getVideo_url());
                         list.add(playerBean1);
                     }
                     MediaService.insertMusicList(list);
@@ -137,10 +145,10 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                     List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
                     for (int i = 0; i < mList.size(); i++) {
                         BofangHistroyBean bean = mList.get(i);
-                        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean(bean.getType(), bean.getId(), bean.getVideo_name(),
+                        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean(bean.getType(), bean.getChildId(), bean.getVideo_name(),
                                 bean.getCreated_at(), bean.getVideo_url(), bean.getGood_count(),
                                 bean.getCollect_count(), bean.getView_count(), bean.isDianzan(), bean.isCollected(),
-                                bean.getT_header(), bean.getT_tag(),
+                                bean.getT_header(), bean.getParentName(),
                                 bean.getH5_url(), SystemClock.currentThreadTimeMillis(), bean.getParentId(),
                                 bean.getParentName(), bean.getTxt_url());
                         histroyBeanList.add(bofangHistroyBean);
@@ -160,6 +168,42 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                 }
             }
         });
+    }
+
+    private void gobofang2(final PlayerBean playerBean) {
+        mMyBinder.setMusicLocal(playerBean);
+        ClickPopShow();
+        playerBean.setMsg("refreshplayer");
+        EventBus.getDefault().postSticky(playerBean);
+    }
+
+    private String loadFromSDFile(String type,String fname) {
+        fname = "/" + fname;
+        String result = null;
+        try {
+            switch (type) {
+                case "free":
+                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download" + fname);
+                    result = Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download" + fname;
+                    break;
+                case "everydaycomment":
+                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download" + fname);
+                    result = Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download" + fname;
+                    break;
+                case "softmusicdetail":
+                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download" + fname);
+                    result = Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download" + fname;
+                    break;
+                case "zhuanlandetail":
+                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download" + fname);
+                    result = Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download" + fname;
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(BoFangListActivity.this, "没有找到指定文件", Toast.LENGTH_SHORT).show();
+        }
+        return result;
     }
 
     private BaseDialog mNetDialog;
@@ -702,7 +746,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                 @Override
                 public void onClick(View view) {
                     mType = item.getType();
-                    showListDialog(helper.getAdapterPosition(), item.isCollected(), item.isDianzan(), item.getId());
+                    showListDialog(helper.getAdapterPosition(), item.isCollected(), item.isDianzan(), item.getChildId());
                 }
             });
             helper.getView(R.id.iv_wengao).setOnClickListener(new View.OnClickListener() {
@@ -711,7 +755,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                     mType = item.getType();
                     Intent intent = new Intent(BoFangListActivity.this, WenGaoActivity.class);
                     intent.putExtra("type", mType);
-                    intent.putExtra("id", item.getId() + "");
+                    intent.putExtra("id", item.getChildId() + "");
                     startActivity(intent);
                 }
             });

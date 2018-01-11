@@ -8,7 +8,7 @@ import org.litepal.crud.DataSupport;
 
 public class BofangHistroyBean extends DataSupport {
     private String type;
-    private int id;
+    private int childId;
     private String parentId;
     private String video_name;
     private String created_at;
@@ -24,6 +24,15 @@ public class BofangHistroyBean extends DataSupport {
     private long time;//用时间戳来控制排列顺序
     private String txt_url;
     private String parentName;
+    private boolean isLocal;//判断是不是本地音乐
+
+    public boolean isLocal() {
+        return isLocal;
+    }
+
+    public void setLocal(boolean local) {
+        isLocal = local;
+    }
 
     public String getParentName() {
         return parentName;
@@ -97,12 +106,12 @@ public class BofangHistroyBean extends DataSupport {
         isCollected = collected;
     }
 
-    public int getId() {
-        return id;
+    public int getChildId() {
+        return childId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setChildId(int childId) {
+        this.childId = childId;
     }
 
     public String getType() {
@@ -161,12 +170,12 @@ public class BofangHistroyBean extends DataSupport {
         this.view_count = view_count;
     }
 
-    public BofangHistroyBean(String type, int id, String video_name, String created_at, String video_url,
+    public BofangHistroyBean(String type, int childId, String video_name, String created_at, String video_url,
                              int good_count, int collect_count, int view_count,
                              boolean isDianzan, boolean isCollected, String t_header,
                              String t_tag, String h5_url, long time, String parentId, String parentName,String txt_url) {
         this.type = type;
-        this.id = id;
+        this.childId = childId;
         this.video_name = video_name;
         this.created_at = created_at;
         this.video_url = video_url;

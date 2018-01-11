@@ -171,7 +171,7 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
                         SoftMusicDetailBean.ChildEntity childEntity = list.get(i);
                         String created_at = childEntity.getCreated_at();
                         String[] split = created_at.split(" ");
-                        /*DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(),childEntity.getXk_id(),
+                        /*DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getChildId(),childEntity.getXk_id(),
                                 childEntity.getName(),childEntity.getVideo_time(), split[0], split[1],
                                 childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
                         DownUtils.add(DownLoadListBean);*/

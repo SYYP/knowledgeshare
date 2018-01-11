@@ -146,12 +146,6 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                                } else {
                                                    mytype = "zhuanlandetail";
                                                }
-                                               setISshow(true);
-                                               DownLoadListsBean.ListBean listBean = list.get(position);
-                                               PlayerBean playerBean = new PlayerBean(listBean.getIconUrl(), listBean.getName(),
-                                                       "", "", loadFromSDFile(listBean.getName() + listBean.getTypeId() + "_"
-                                                       + listBean.getChildId() + ".mp3"), position);
-                                               gobofang(playerBean);
                                                //还要设置一个播放主界面的list数据，因为自动播放下一首上一首的时候主界面的数据也得变
                                                List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
                                                for (int i = 0; i < list.size(); i++) {
@@ -177,16 +171,23 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                                List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
                                                for (int i = 0; i < list.size(); i++) {
                                                    DownLoadListsBean.ListBean entity = list.get(i);
-                                                   BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail",
+                                                   BofangHistroyBean bofangHistroyBean = new BofangHistroyBean(mytype,
                                                            Integer.parseInt(entity.getChildId()), entity.getName(),
                                                            entity.getDate(), entity.getVideoUrl(), entity.getGood_count(),
                                                            entity.getCollect_count(), entity.getView_count(), entity.isDianzan(), entity.isCollected()
                                                            , entity.getIconUrl(), entity.getParentName(), entity.getH5_url()
-                                                           , SystemClock.currentThreadTimeMillis(), entity.getTypeId() + "",
+                                                           , SystemClock.currentThreadTimeMillis(), entity.getTypeId(),
                                                            entity.getParentName(), entity.getTxtUrl());
+                                                   bofangHistroyBean.setLocal(true);
                                                    histroyBeanList.add(bofangHistroyBean);
                                                }
                                                MediaService.insertBoFangHistroyList(histroyBeanList);
+                                               setISshow(true);
+                                               DownLoadListsBean.ListBean listBean = list.get(position);
+                                               PlayerBean playerBean = new PlayerBean(listBean.getIconUrl(), listBean.getName(),
+                                                       listBean.getParentName(), "", loadFromSDFile(listBean.getName() + listBean.getTypeId() + "_"
+                                                       + listBean.getChildId() + ".mp3"), position);
+                                               gobofang(playerBean);
                                            }
                                        }
 

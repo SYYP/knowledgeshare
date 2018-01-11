@@ -761,7 +761,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                         mFreeTryReadDetailBean.getT_name(), mFreeTryReadDetailBean.getT_tag(), "1", list);
                 DownUtil.add(downLoadListsBean);
 
-                /*DownLoadListBean DownLoadListBean = new DownLoadListBean(mFreeTryReadDetailBean.getId(), mFreeTryReadDetailBean.getZl_id(), -3,
+                /*DownLoadListBean DownLoadListBean = new DownLoadListBean(mFreeTryReadDetailBean.getChildId(), mFreeTryReadDetailBean.getZl_id(), -3,
                         mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getVideo_time(), split[0], split[0],
                         mFreeTryReadDetailBean.getVideo_url(), mFreeTryReadDetailBean.getTxt_url(), mFreeTryReadDetailBean.getT_header());
                 DownUtils.add(DownLoadListBean);*/

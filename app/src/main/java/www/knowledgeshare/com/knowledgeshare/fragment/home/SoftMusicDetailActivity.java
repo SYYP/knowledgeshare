@@ -812,7 +812,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                         childEntity.getT_name(), childEntity.getT_tag(), mChild.size() + "", list);
                 DownUtil.add(downLoadListsBean);
 
-                /*DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getId(), childEntity.getXk_id(),
+                /*DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getChildId(), childEntity.getXk_id(),
                         childEntity.getName(), childEntity.getVideo_time(), split[0], split[1],
                         childEntity.getVideo_url(), childEntity.getTxt_url(), childEntity.getT_header());
                 DownUtils.add(DownLoadListBean);*/

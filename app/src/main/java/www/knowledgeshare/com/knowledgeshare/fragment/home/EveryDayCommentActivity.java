@@ -481,7 +481,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                         "comment", "commentId", "", childEntity.getT_header(), "", "", list.size() + "", list);
                 DownUtil.add(downLoadListsBean);
 
-                /*DownLoadListBean DownLoadListBean = new DownLoadListBean(-2,childEntity.getId(),-4,-3,-1,
+                /*DownLoadListBean DownLoadListBean = new DownLoadListBean(-2,childEntity.getChildId(),-4,-3,-1,
                         childEntity.getVideo_name(),childEntity.getVideo_time(), split[0], split[1],
                         childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
                 DownUtils.add(DownLoadListBean);*/
