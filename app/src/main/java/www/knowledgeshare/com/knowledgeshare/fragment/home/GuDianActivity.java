@@ -275,7 +275,8 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
                                 try_video.getCreated_at(), try_video.getVideo_url(), try_video.getGood_count(),
                                 try_video.getCollect_count(), try_video.getView_count(), try_video.isIslive(), try_video.isIsfav()
                                 , try_video.getT_header(), try_video.getParent_name(), try_video.getShare_h5_url()
-                                , SystemClock.currentThreadTimeMillis());
+                                , SystemClock.currentThreadTimeMillis(),mXiaoke.get(helper.getAdapterPosition()).getXk_id() + "",
+                                try_video.getParent_name(),try_video.getTxt_url());
                         histroyBeanList.add(bofangHistroyBean);
                     }
                     MediaService.insertBoFangHistroyList(histroyBeanList);

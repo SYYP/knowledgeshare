@@ -31,8 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.activity.MainActivity;
-import www.knowledgeshare.com.knowledgeshare.activity.SettingActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.FavoriteBean;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
@@ -46,7 +44,6 @@ import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
-import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
 import static android.content.Context.BIND_AUTO_CREATE;
@@ -317,7 +314,9 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                                 item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                 item.getCollect_count(), item.getView_count(), item.isIslive(), item.isIsfav(),
                                 item.getT_header(), item.getT_tag(),
-                                item.getShare_h5_url(), SystemClock.currentThreadTimeMillis());
+                                item.getShare_h5_url(), SystemClock.currentThreadTimeMillis()
+                                ,dataBean.getId() + "",
+                                item.getParent_name(),item.getTxt_url());
                         histroyBeanList.add(bofangHistroyBean);
                         MediaService.insertBoFangHistroyList(histroyBeanList);
                     }

@@ -28,12 +28,9 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
-import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
-import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.EveryDayBean;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeBean;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 
 /**
@@ -184,6 +181,13 @@ public class CommentDownActivity extends BaseActivity implements View.OnClickLis
                         listBean.setTxtUrl(childEntity.getTxt_url());
                         listBean.setIconUrl(childEntity.getT_header());
                         listBean.settName(childEntity.getT_name());
+                        listBean.setParentName("");
+                        listBean.setH5_url(childEntity.getShare_h5_url());
+                        listBean.setGood_count(childEntity.getGood_count());
+                        listBean.setCollect_count(childEntity.getCollect_count());
+                        listBean.setView_count(childEntity.getView_count());
+                        listBean.setDianzan(childEntity.isIslive());
+                        listBean.setCollected(childEntity.isIsfav());
                         list.add(listBean);
                         DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                                 "comment", "commentId", "", childEntity.getT_header(), "", "",list.size()+"",list);

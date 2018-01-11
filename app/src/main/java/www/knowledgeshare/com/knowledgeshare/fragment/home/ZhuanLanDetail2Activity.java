@@ -712,7 +712,9 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                     mFreeTryReadDetailBean.getCollect_count(), mFreeTryReadDetailBean.getView_count(),
                                     mFreeTryReadDetailBean.isIsfav(), mFreeTryReadDetailBean.isIsfav(),
                                     mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getT_tag(),
-                                    mFreeTryReadDetailBean.getH5_url(), SystemClock.currentThreadTimeMillis());
+                                    mFreeTryReadDetailBean.getH5_url(), SystemClock.currentThreadTimeMillis()
+                                    ,mFreeTryReadDetailBean.getZl_id()+ "",
+                                    mFreeTryReadDetailBean.getParent_name(),"");
                             histroyBeanList.add(bofangHistroyBean);
                         MediaService.insertBoFangHistroyList(histroyBeanList);
                     } else {
@@ -746,6 +748,13 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
 //                listBean.setTxtUrl(mFreeTryReadDetailBean.getTxt_url());
                 listBean.setIconUrl(mFreeTryReadDetailBean.getT_header());
                 listBean.settName(mFreeTryReadDetailBean.getT_name());
+                listBean.setParentName(mFreeTryReadDetailBean.getParent_name());
+                listBean.setH5_url(mFreeTryReadDetailBean.getH5_url());
+                listBean.setGood_count(mFreeTryReadDetailBean.getRss_count());
+                listBean.setCollect_count(mFreeTryReadDetailBean.getCollect_count());
+                listBean.setView_count(mFreeTryReadDetailBean.getView_count());
+                listBean.setDianzan(mFreeTryReadDetailBean.isIsfav());
+                listBean.setCollected(mFreeTryReadDetailBean.isIsfav());
                 list.add(listBean);
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                         "zhuanlan", mFreeTryReadDetailBean.getZl_id() + "", getIntent().getStringExtra("title"), mFreeTryReadDetailBean.getT_header(),

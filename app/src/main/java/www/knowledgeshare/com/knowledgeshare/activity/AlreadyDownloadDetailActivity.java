@@ -6,6 +6,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,6 +37,7 @@ import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
+import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
@@ -134,24 +136,24 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                            @Override
                                            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                               String mytype="";
+                                               String mytype = "";
                                                if (type.equals("free")) {
-                                                   mytype="free";
-                                               }else if (type.equals("comment")){
-                                                   mytype="everydaycomment";
-                                               }else if (type.equals("xiaoke")){
-                                                   mytype="softmusicdetail";
-                                               }else {
-                                                   mytype="zhuanlandetail";
+                                                   mytype = "free";
+                                               } else if (type.equals("comment")) {
+                                                   mytype = "everydaycomment";
+                                               } else if (type.equals("xiaoke")) {
+                                                   mytype = "softmusicdetail";
+                                               } else {
+                                                   mytype = "zhuanlandetail";
                                                }
                                                setISshow(true);
                                                DownLoadListsBean.ListBean listBean = list.get(position);
                                                PlayerBean playerBean = new PlayerBean(listBean.getIconUrl(), listBean.getName(),
                                                        "", "", loadFromSDFile(listBean.getName() + listBean.getTypeId() + "_"
-                                                       + listBean.getChildId() + ".mp3"),position);
+                                                       + listBean.getChildId() + ".mp3"), position);
                                                gobofang(playerBean);
                                                //还要设置一个播放主界面的list数据，因为自动播放下一首上一首的时候主界面的数据也得变
-                                               List<MusicTypeBean> musicTypeBeanList=new ArrayList<MusicTypeBean>();
+                                               List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
                                                for (int i = 0; i < list.size(); i++) {
                                                    DownLoadListsBean.ListBean listBean1 = list.get(i);
                                                    MusicTypeBean musicTypeBean1 = new MusicTypeBean(mytype,
@@ -171,6 +173,20 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                                    beanList.add(playerBean1);
                                                }
                                                MediaService.insertMusicList(beanList);
+                                               //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
+                                               List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
+                                               for (int i = 0; i < list.size(); i++) {
+                                                   DownLoadListsBean.ListBean entity = list.get(i);
+                                                   BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail",
+                                                           Integer.parseInt(entity.getChildId()), entity.getName(),
+                                                           entity.getDate(), entity.getVideoUrl(), entity.getGood_count(),
+                                                           entity.getCollect_count(), entity.getView_count(), entity.isDianzan(), entity.isCollected()
+                                                           , entity.getIconUrl(), entity.getParentName(), entity.getH5_url()
+                                                           , SystemClock.currentThreadTimeMillis(), entity.getTypeId() + "",
+                                                           entity.getParentName(), entity.getTxtUrl());
+                                                   histroyBeanList.add(bofangHistroyBean);
+                                               }
+                                               MediaService.insertBoFangHistroyList(histroyBeanList);
                                            }
                                        }
 

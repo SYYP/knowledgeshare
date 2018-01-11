@@ -284,7 +284,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         childEntity.getCreated_at(), childEntity.getVideo_url(), childEntity.getGood_count(),
                         childEntity.getCollect_count(), childEntity.getView_count(), childEntity.getIs_good() == 1 ? true : false,
                         childEntity.isIsfav(), childEntity.getT_header(), childEntity.getParent_name(), childEntity.getShare_h5_url()
-                        , SystemClock.currentThreadTimeMillis());
+                        , SystemClock.currentThreadTimeMillis(),"freeId",childEntity.getParent_name(),childEntity.getTxt_url());
                 histroyBeanList.add(bofangHistroyBean);
             }
             MediaService.insertBoFangHistroyList(histroyBeanList);
@@ -622,7 +622,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                 childEntity.getCreated_at(), childEntity.getVideo_url(), childEntity.getGood_count(),
                                 childEntity.getCollect_count(), childEntity.getView_count(), childEntity.getIs_good() == 1 ? true : false,
                                 childEntity.isIsfav(), childEntity.getT_header(), childEntity.getParent_name(), childEntity.getShare_h5_url()
-                                , SystemClock.currentThreadTimeMillis());
+                                , SystemClock.currentThreadTimeMillis(),"freeId",childEntity.getParent_name(),childEntity.getTxt_url());
                         histroyBeanList.add(bofangHistroyBean);
                     }
                     MediaService.insertBoFangHistroyList(histroyBeanList);
@@ -691,7 +691,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                 dailyEntity.getCreated_at(), dailyEntity.getVideo_url(), dailyEntity.getGood_count(),
                                 dailyEntity.getCollect_count(), dailyEntity.getView_count(), dailyEntity.getIs_good() == 1 ? true : false,
                                 dailyEntity.isIsfav(), dailyEntity.getT_header(), dailyEntity.getT_tag(), dailyEntity.getShare_h5_url()
-                                , SystemClock.currentThreadTimeMillis());
+                                , SystemClock.currentThreadTimeMillis(),"commentId",dailyEntity.getParent_name(),dailyEntity.getTxt_url());
                         histroyBeanList.add(bofangHistroyBean);
                     }
                     MediaService.insertBoFangHistroyList(histroyBeanList);

@@ -109,6 +109,69 @@ public class DownLoadListsBean extends DataSupport implements Serializable {
         private boolean save;
         private boolean isChecked=true;
         private boolean isVisibility = false;
+        private String parentName;
+        private String h5_url;
+        private int good_count;
+        private int collect_count;
+        private int view_count;
+        private boolean isDianzan;
+        private boolean isCollected;
+
+        public String getH5_url() {
+            return h5_url;
+        }
+
+        public void setH5_url(String h5_url) {
+            this.h5_url = h5_url;
+        }
+
+        public String getParentName() {
+            return parentName;
+        }
+
+        public void setParentName(String parentName) {
+            this.parentName = parentName;
+        }
+
+        public int getGood_count() {
+            return good_count;
+        }
+
+        public void setGood_count(int good_count) {
+            this.good_count = good_count;
+        }
+
+        public int getCollect_count() {
+            return collect_count;
+        }
+
+        public void setCollect_count(int collect_count) {
+            this.collect_count = collect_count;
+        }
+
+        public int getView_count() {
+            return view_count;
+        }
+
+        public void setView_count(int view_count) {
+            this.view_count = view_count;
+        }
+
+        public boolean isDianzan() {
+            return isDianzan;
+        }
+
+        public void setDianzan(boolean dianzan) {
+            isDianzan = dianzan;
+        }
+
+        public boolean isCollected() {
+            return isCollected;
+        }
+
+        public void setCollected(boolean collected) {
+            isCollected = collected;
+        }
 
         public String gettName() {
             return tName;

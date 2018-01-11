@@ -9,6 +9,7 @@ import org.litepal.crud.DataSupport;
 public class BofangHistroyBean extends DataSupport {
     private String type;
     private int id;
+    private String parentId;
     private String video_name;
     private String created_at;
     private String video_url;
@@ -21,6 +22,32 @@ public class BofangHistroyBean extends DataSupport {
     private String t_tag;
     private String h5_url;
     private long time;//用时间戳来控制排列顺序
+    private String txt_url;
+    private String parentName;
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getTxt_url() {
+        return txt_url;
+    }
+
+    public void setTxt_url(String txt_url) {
+        this.txt_url = txt_url;
+    }
 
     public long getTime() {
         return time;
@@ -137,7 +164,7 @@ public class BofangHistroyBean extends DataSupport {
     public BofangHistroyBean(String type, int id, String video_name, String created_at, String video_url,
                              int good_count, int collect_count, int view_count,
                              boolean isDianzan, boolean isCollected, String t_header,
-                             String t_tag, String h5_url,long time) {
+                             String t_tag, String h5_url, long time, String parentId, String parentName,String txt_url) {
         this.type = type;
         this.id = id;
         this.video_name = video_name;
@@ -151,6 +178,9 @@ public class BofangHistroyBean extends DataSupport {
         this.t_header = t_header;
         this.t_tag = t_tag;
         this.h5_url = h5_url;
-        this.time=time;
+        this.time = time;
+        this.parentId = parentId;
+        this.parentName = parentName;
+        this.txt_url=txt_url;
     }
 }

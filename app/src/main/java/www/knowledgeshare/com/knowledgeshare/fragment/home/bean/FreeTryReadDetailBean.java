@@ -64,6 +64,15 @@ public class FreeTryReadDetailBean {
     private String name;
     private List<CommentEntity> comment;
     private int view_count;
+    private String parent_name;
+
+    public String getParent_name() {
+        return parent_name;
+    }
+
+    public void setParent_name(String parent_name) {
+        this.parent_name = parent_name;
+    }
 
     public void setVideo_time(String video_time) {
         this.video_time = video_time;

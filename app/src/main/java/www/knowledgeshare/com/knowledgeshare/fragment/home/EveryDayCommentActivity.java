@@ -230,7 +230,8 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                                 entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
                                                 entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
                                                 , entity.getT_header(), entity.getParent_name(),entity.getShare_h5_url(),
-                                                SystemClock.currentThreadTimeMillis());
+                                                SystemClock.currentThreadTimeMillis()
+                                                ,"commentId",entity.getParent_name(),entity.getTxt_url());
                                         histroyBeanList.add(bofangHistroyBean);
                                     }
                                     MediaService.insertBoFangHistroyList(histroyBeanList);
@@ -468,6 +469,13 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                 listBean.setTxtUrl(childEntity.getTxt_url());
                 listBean.setIconUrl(childEntity.getT_header());
                 listBean.settName(childEntity.getT_name());
+                listBean.setParentName("");
+                listBean.setH5_url(childEntity.getShare_h5_url());
+                listBean.setGood_count(childEntity.getGood_count());
+                listBean.setCollect_count(childEntity.getCollect_count());
+                listBean.setView_count(childEntity.getView_count());
+                listBean.setDianzan(childEntity.isIslive());
+                listBean.setCollected(childEntity.isIsfav());
                 list.add(listBean);
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                         "comment", "commentId", "", childEntity.getT_header(), "", "", list.size() + "", list);

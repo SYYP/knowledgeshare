@@ -3,6 +3,7 @@ package www.knowledgeshare.com.knowledgeshare.fragment.home;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -18,26 +19,38 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.GetRequest;
+import com.lzy.okserver.OkDownload;
+import com.orhanobut.logger.Logger;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
 import www.knowledgeshare.com.knowledgeshare.db.HistroyUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DownBean1;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DownBean2;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DownBean3;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
@@ -128,7 +141,8 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                                 bean.getCreated_at(), bean.getVideo_url(), bean.getGood_count(),
                                 bean.getCollect_count(), bean.getView_count(), bean.isDianzan(), bean.isCollected(),
                                 bean.getT_header(), bean.getT_tag(),
-                                bean.getH5_url(), SystemClock.currentThreadTimeMillis());
+                                bean.getH5_url(), SystemClock.currentThreadTimeMillis(), bean.getParentId(),
+                                bean.getParentName(), bean.getTxt_url());
                         histroyBeanList.add(bofangHistroyBean);
                     }
                     MediaService.insertBoFangHistroyList(histroyBeanList);
@@ -281,10 +295,223 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
         mDialog.getView(R.id.tv_download).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(BoFangListActivity.this, "已加入下载列表", Toast.LENGTH_SHORT).show();
+                goDownload(id);
                 mDialog.dismiss();
             }
         });
+    }
+
+    private void goDownload(int id) {
+        HttpParams params = new HttpParams();
+        params.put("id", id + "");
+        String type = mType;
+        if (type.equals("free")) {
+            params.put("video_type", "free");
+        } else if (type.equals("everydaycomment")) {
+            params.put("video_type", "daily");
+        } else if (type.equals("softmusicdetail")) {
+            params.put("video_type", "xk");
+        } else if (type.equals("zhuanlandetail")) {
+            params.put("video_type", "zl");
+        }
+
+        if (type.equals("free")) {
+            OkGo.<DownBean1>post(MyContants.LXKURL + "down")
+                    .tag(this)
+                    .params(params)
+                    .execute(new JsonCallback<DownBean1>(DownBean1.class) {
+                                 @Override
+                                 public void onSuccess(Response<DownBean1> response) {
+                                     int code = response.code();
+                                     DownBean1 downBean1 = response.body();
+                                     List<DownBean1.DataEntity> data = downBean1.getData();
+                                     DownBean1.DataEntity dataEntity = data.get(0);
+                                     List<DownLoadListsBean.ListBean> list = new ArrayList<>();
+                                     DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
+                                     listBean.setTypeId("freeId");
+                                     listBean.setChildId(dataEntity.getId() + "");
+                                     listBean.setName(dataEntity.getVideo_name());
+                                     listBean.setVideoTime(dataEntity.getVideo_time());
+                                     listBean.setDate("");
+                                     listBean.setTime(dataEntity.getVideo_time());
+                                     listBean.setVideoUrl(dataEntity.getVideo_url());
+                                     listBean.setTxtUrl(dataEntity.getTxt_url());
+                                     listBean.setIconUrl(dataEntity.getImage());
+                                     list.add(listBean);
+                                     DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
+                                             "free", listBean.getTypeId() + "", "", dataEntity.getImage(), "", "", list.size() + "", list);
+                                     DownUtil.add(downLoadListsBean);
+                                     GetRequest<File> request = OkGo.<File>get(dataEntity.getVideo_url());
+                                     OkDownload.request(listBean.getTypeId() + "_" + dataEntity.getId(), request)
+                                             .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download")
+                                             .fileName(dataEntity.getVideo_name() + listBean.getTypeId() + "_" + dataEntity.getId() + ".mp3")
+                                             .extra3(downLoadListsBean)//额外数据
+                                             .save()
+                                             .register(new LogDownloadListener())//当前任务的回调监听
+                                             .start();
+
+                                     OkGo.<File>get(dataEntity.getTxt_url())
+                                             .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download"
+                                                     , listBean.getTypeId() + "-" + dataEntity.getId() + dataEntity.getVideo_name() + ".txt") {
+                                                 @Override
+                                                 public void onSuccess(Response<File> response) {
+                                                     int code = response.code();
+                                                     if (code >= 200 && code <= 204) {
+                                                         Logger.e("文稿下载完成");
+                                                     }
+                                                 }
+                                             });
+                                     EventBean eventBean = new EventBean("number");
+                                     EventBus.getDefault().postSticky(eventBean);
+                                 }
+                             }
+                    );
+        } else if (type.equals("everydaycomment")) {
+            OkGo.<DownBean1>post(MyContants.LXKURL + "down")
+                    .tag(this)
+                    .params(params)
+                    .execute(new JsonCallback<DownBean1>(DownBean1.class) {
+                                 @Override
+                                 public void onSuccess(Response<DownBean1> response) {
+                                     int code = response.code();
+                                     DownBean1 downBean1 = response.body();
+                                     List<DownBean1.DataEntity> data = downBean1.getData();
+                                     DownBean1.DataEntity dataEntity = data.get(0);
+                                     List<DownLoadListsBean.ListBean> list = new ArrayList<>();
+                                     DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
+                                     listBean.setTypeId("commentId");
+                                     listBean.setChildId(dataEntity.getId() + "");
+                                     listBean.setName(dataEntity.getVideo_name());
+                                     listBean.setVideoTime(dataEntity.getVideo_time());
+                                     listBean.setDate("");
+                                     listBean.setTime(dataEntity.getVideo_time());
+                                     listBean.setVideoUrl(dataEntity.getVideo_url());
+                                     listBean.setTxtUrl(dataEntity.getTxt_url());
+                                     listBean.setIconUrl(dataEntity.getImage());
+                                     list.add(listBean);
+                                     DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
+                                             "comment", listBean.getTypeId() + "", "", dataEntity.getImage(), "", "", list.size() + "", list);
+                                     DownUtil.add(downLoadListsBean);
+                                     GetRequest<File> request = OkGo.<File>get(dataEntity.getVideo_url());
+                                     OkDownload.request(listBean.getTypeId() + "_" + dataEntity.getId(), request)
+                                             .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download")
+                                             .fileName(dataEntity.getVideo_name() + listBean.getTypeId() + "_" + dataEntity.getId() + ".mp3")
+                                             .extra3(downLoadListsBean)//额外数据
+                                             .save()
+                                             .register(new LogDownloadListener())//当前任务的回调监听
+                                             .start();
+
+                                     OkGo.<File>get(dataEntity.getTxt_url())
+                                             .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download"
+                                                     , listBean.getTypeId() + "-" + dataEntity.getId() + dataEntity.getVideo_name() + ".txt") {
+                                                 @Override
+                                                 public void onSuccess(Response<File> response) {
+                                                     int code = response.code();
+                                                     if (code >= 200 && code <= 204) {
+                                                         Logger.e("文稿下载完成");
+                                                     }
+                                                 }
+                                             });
+                                     EventBean eventBean = new EventBean("number");
+                                     EventBus.getDefault().postSticky(eventBean);
+                                 }
+                             }
+                    );
+        } else if (type.equals("softmusicdetail")) {
+            OkGo.<DownBean2>post(MyContants.LXKURL + "down")
+                    .tag(this)
+                    .params(params)
+                    .execute(new JsonCallback<DownBean2>(DownBean2.class) {
+                                 @Override
+                                 public void onSuccess(Response<DownBean2> response) {
+                                     int code = response.code();
+                                     DownBean2 downBean2 = response.body();
+                                     DownBean2.DataEntity dataEntity = downBean2.getData().get(0);
+                                     DownBean2.DataEntity.XkDataEntity xk_data = dataEntity.getXk_data();
+                                     List<DownLoadListsBean.ListBean> list = new ArrayList<>();
+                                     DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
+                                     listBean.setTypeId(dataEntity.getId() + "");
+                                     listBean.setChildId(xk_data.getId() + "");
+                                     listBean.setName(xk_data.getName());
+                                     listBean.setVideoTime(xk_data.getVideo_time());
+                                     listBean.setDate("");
+                                     listBean.setTime(xk_data.getVideo_time());
+                                     listBean.setVideoUrl(xk_data.getVideo_url());
+                                     listBean.setTxtUrl(xk_data.getTxt_url());
+                                     listBean.setIconUrl(dataEntity.getXk_image());
+                                     listBean.settName(xk_data.getT_name());
+                                     list.add(listBean);
+                                     DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
+                                             "xiaoke", dataEntity.getId() + "", dataEntity.getXk_name(), dataEntity.getXk_image(),
+                                             dataEntity.getT_name(), dataEntity.getXk_teacher_tags(), "1", list);
+                                     DownUtil.add(downLoadListsBean);
+                                     GetRequest<File> request = OkGo.<File>get(xk_data.getVideo_url());
+                                     OkDownload.request(dataEntity.getId() + "_" + xk_data.getId(), request)
+                                             .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download")
+                                             .fileName(xk_data.getName() + dataEntity.getId() + "_" + xk_data.getId() + ".mp3")
+                                             .extra3(downLoadListsBean)
+                                             .save()
+                                             .register(new LogDownloadListener())//当前任务的回调监听
+                                             .start();
+                                     OkGo.<File>get(xk_data.getTxt_url())
+                                             .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download"
+                                                     , dataEntity.getId() + "-" + xk_data.getId() + xk_data.getName() + ".txt") {
+                                                 @Override
+                                                 public void onSuccess(Response<File> response) {
+                                                     int code = response.code();
+                                                     if (code >= 200 && code <= 204) {
+                                                         Logger.e("文稿下载完成");
+                                                     }
+                                                 }
+                                             });
+                                     EventBean eventBean = new EventBean("number");
+                                     EventBus.getDefault().postSticky(eventBean);
+                                 }
+                             }
+                    );
+        } else if (type.equals("zhuanlandetail")) {
+            OkGo.<DownBean3>post(MyContants.LXKURL + "down")
+                    .tag(this)
+                    .params(params)
+                    .execute(new JsonCallback<DownBean3>(DownBean3.class) {
+                                 @Override
+                                 public void onSuccess(Response<DownBean3> response) {
+                                     int code = response.code();
+                                     DownBean3 downBean3 = response.body();
+                                     DownBean3.DataEntity dataEntity = downBean3.getData().get(0);
+                                     DownBean3.DataEntity.ZlDataEntity zl_data = dataEntity.getZl_data();
+                                     List<DownLoadListsBean.ListBean> list = new ArrayList<>();
+                                     DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
+                                     listBean.setTypeId(dataEntity.getId() + "");
+                                     listBean.setChildId(zl_data.getId() + "");
+                                     listBean.setName(zl_data.getName());
+                                     listBean.setVideoTime(zl_data.getVideo_time());
+                                     listBean.setDate("");
+                                     listBean.setTime(zl_data.getVideo_time());
+                                     listBean.setVideoUrl(zl_data.getVideo_url());
+                                     listBean.setTxtUrl(zl_data.getTxt_url());
+                                     listBean.setIconUrl(dataEntity.getZl_image());
+                                     listBean.settName(zl_data.getT_name());
+                                     list.add(listBean);
+                                     DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
+                                             "zhuanlan", dataEntity.getId() + "", getIntent().getStringExtra("title"),
+                                             dataEntity.getZl_image(),
+                                             zl_data.getT_name(), dataEntity.getZl_teacher_tags(), "1", list);
+                                     DownUtil.add(downLoadListsBean);
+                                     GetRequest<File> request = OkGo.<File>get(zl_data.getVideo_url());
+                                     OkDownload.request(dataEntity.getId() + "_" + zl_data.getId(), request)
+                                             .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download")
+                                             .fileName(zl_data.getName() + dataEntity.getId() + "_" + zl_data.getId() + ".mp3")
+                                             .extra3(downLoadListsBean)
+                                             .save()
+                                             .register(new LogDownloadListener())//当前任务的回调监听
+                                             .start();
+                                     EventBean eventBean = new EventBean("number");
+                                     EventBus.getDefault().postSticky(eventBean);
+                                 }
+                             }
+                    );
+        }
     }
 
     private void changeCollect(final int adapterPosition, int id) {
