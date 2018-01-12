@@ -19,6 +19,7 @@ import com.lzy.okgo.model.Response;
 
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
@@ -105,7 +106,7 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
         @Override
         protected void convert(BaseViewHolder helper, FreeTryReadListBean.DataEntity item) {
             ImageView iv_tupian=helper.getView(R.id.iv_tupian);
-            Glide.with(mContext).load(item.getImgurl()).into(iv_tupian);
+            Glide.with(MyApplication.getGloableContext()).load(item.getImgurl()).into(iv_tupian);
             helper.setText(R.id.tv_name,item.getName())
                     .setText(R.id.tv_introduce,item.getDescription())
                     .setText(R.id.tv_look_count, item.getIs_view() == 0 ? item.getView_count() + "" : item.getView_count_true() + "")

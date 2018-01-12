@@ -124,7 +124,12 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
         if (eventBean.getMsg().equals("home_pause") || eventBean.getMsg().equals("norotate")) {
             //我在用户退出APP的时候发了eventbus，就是为了这边接收到然后刷新学习时间
             long lasttime = SystemClock.currentThreadTimeMillis() - pretime;
-            if (!StudyTimeUtils.isHave("music", mMusicTypeBean.getId())) {
+            //我这边不判断数据库中是否有这条记录，是因为麻烦，还要根据type和id判断，容易和文稿界面和专栏详情界面冲突了
+            //所以我直接每播放一次就存一次数据库
+            StudyTimeBean studyTimeBean = new StudyTimeBean(Integer.parseInt(mMusicTypeBean.getId()), "music",
+                    MyUtils.getCurrentDate(), lasttime);
+            StudyTimeUtils.add(studyTimeBean);
+            /*if (!StudyTimeUtils.isHave("music", mMusicTypeBean.getId())) {
                 StudyTimeBean studyTimeBean = new StudyTimeBean(Integer.parseInt(mMusicTypeBean.getId()), "music",
                         MyUtils.getCurrentDate(), lasttime);
                 StudyTimeUtils.add(studyTimeBean);
@@ -132,7 +137,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
                 long oneTime = StudyTimeUtils.getOneTime("music", mMusicTypeBean.getId());
                 lasttime += oneTime;
                 StudyTimeUtils.updateTime("music", mMusicTypeBean.getId(), lasttime);
-            }
+            }*/
         } else if (eventBean.getMsg().equals("home_bofang") || eventBean.getMsg().equals("rotate")) {
             //学习时长
             pretime = SystemClock.currentThreadTimeMillis();

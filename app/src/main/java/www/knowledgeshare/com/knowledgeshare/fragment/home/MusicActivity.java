@@ -16,7 +16,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.model.HttpHeaders;
@@ -25,6 +24,7 @@ import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.OkDownload;
 import com.orhanobut.logger.Logger;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -49,6 +49,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DownBean2;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DownBean3;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HuanChongBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.VideoCollectBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
@@ -94,6 +95,55 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
         initView();
         initDialog();
         initMusic();
+        initCollect();
+    }
+
+    private void initCollect() {
+        HttpParams params = new HttpParams();
+        params.put("userid", SpUtils.getString(this, "id", ""));
+        if (mMusicTypeBean.getType().equals("free")) {
+            params.put("type", "free");
+        } else if (mMusicTypeBean.getType().equals("everydaycomment")) {
+            params.put("type", "daily");
+        } else if (mMusicTypeBean.getType().equals("softmusicdetail")) {
+            params.put("type", "xk");
+        } else if (mMusicTypeBean.getType().equals("zhuanlandetail")) {
+            params.put("type", "zl");
+        }
+        params.put("id", mMusicTypeBean.getId());
+        OkGo.<VideoCollectBean>post(MyContants.LXKURL + "video/fav-live")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<VideoCollectBean>(VideoCollectBean.class) {
+                    @Override
+                    public void onSuccess(Response<VideoCollectBean> response) {
+                        int code = response.code();
+                        VideoCollectBean videoCollectBean = response.body();
+                        if (response.code() >= 200 && response.code() <= 204) {
+                            Logger.e(code + "");
+                            VideoCollectBean.DataEntity dataEntity = videoCollectBean.getData().get(0);
+                            if (dataEntity.isIslive()){
+
+                            }else {
+
+                            }
+                            //是否收藏
+                            isCollected = dataEntity.isIsfav();
+                            if (isCollected) {
+                                Drawable drawable = getResources().getDrawable(R.drawable.music_collected);
+                                /// 这一步必须要做,否则不会显示.
+                                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                tv_collect.setCompoundDrawables(null, drawable, null, null);
+                            } else {
+                                Drawable drawable = getResources().getDrawable(R.drawable.music_collect);
+                                /// 这一步必须要做,否则不会显示.
+                                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                tv_collect.setCompoundDrawables(null, drawable, null, null);
+                            }
+                        } else {
+                        }
+                    }
+                });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -121,19 +171,13 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
             //接收到播放主界面要刷新的数据
             mMusicTypeBean = musicTypeBean;
             tv_title.setText(mMusicTypeBean.getVideo_name());
-            Glide.with(this).load(mMusicTypeBean.getT_head()).into(iv_bigphoto);
-            isCollected = mMusicTypeBean.isCollected();
-            if (isCollected) {
-                Drawable drawable = getResources().getDrawable(R.drawable.music_collected);
-                /// 这一步必须要做,否则不会显示.
-                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                tv_collect.setCompoundDrawables(null, drawable, null, null);
-            } else {
-                Drawable drawable = getResources().getDrawable(R.drawable.music_collect);
-                /// 这一步必须要做,否则不会显示.
-                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                tv_collect.setCompoundDrawables(null, drawable, null, null);
-            }
+            //用glide会闪烁，而且网上的方法不好使，于是我就使用Picasso就OK了
+//            RequestOptions options=new RequestOptions();
+//            options.centerCrop();
+//            options.dontAnimate();
+//            Glide.with(this).load(mMusicTypeBean.getT_head()).apply(options).into(iv_bigphoto);
+            Picasso.with(this).load(mMusicTypeBean.getT_head()).into(iv_bigphoto);
+            Logger.e("sdjhsajdsajkdjksahdjksadhsajdkashdhsa");
             List<BofangHistroyBean> search = HistroyUtils.search();
             if (search != null && search.size() > 0) {
                 tv_liebiao.setText(1 + "/" + search.size());
@@ -145,6 +189,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
             }
             play_seek.setMax(mMyBinder.getProgress());
             music_duration.setText(time.format(mMyBinder.getProgress()) + "");
+            initCollect();
         }
     }
 
@@ -297,19 +342,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
         mMusicTypeBean = (MusicTypeBean) getIntent().getSerializableExtra("data");
         if (mMusicTypeBean != null) {
             tv_title.setText(mMusicTypeBean.getVideo_name());
-            Glide.with(this).load(mMusicTypeBean.getT_head()).into(iv_bigphoto);
-            isCollected = mMusicTypeBean.isCollected();
-            if (isCollected) {
-                Drawable drawable = getResources().getDrawable(R.drawable.music_collected);
-                /// 这一步必须要做,否则不会显示.
-                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                tv_collect.setCompoundDrawables(null, drawable, null, null);
-            } else {
-                Drawable drawable = getResources().getDrawable(R.drawable.music_collect);
-                /// 这一步必须要做,否则不会显示.
-                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                tv_collect.setCompoundDrawables(null, drawable, null, null);
-            }
+            Picasso.with(this).load(mMusicTypeBean.getT_head()).into(iv_bigphoto);
+//            Glide.with(this).load(mMusicTypeBean.getT_head()).into(iv_bigphoto);
         }
         List<BofangHistroyBean> search = HistroyUtils.search();
         if (search != null && search.size() > 0) {

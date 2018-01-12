@@ -181,6 +181,7 @@ public class LiuYanActivity extends BaseActivity implements View.OnClickListener
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
                                  Toast.makeText(LiuYanActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 finish();
                              }
 
                              @Override
@@ -189,7 +190,6 @@ public class LiuYanActivity extends BaseActivity implements View.OnClickListener
                              }
                          }
                 );
-        //        finish();
     }
 
     @Override

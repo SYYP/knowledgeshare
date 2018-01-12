@@ -47,6 +47,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DownBean1;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DownBean2;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DownBean3;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.VideoCollectBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
@@ -55,6 +56,7 @@ import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
+import static www.knowledgeshare.com.knowledgeshare.R.id.tv_collect;
 import static www.knowledgeshare.com.knowledgeshare.base.UMShareActivity.shareWebUrl;
 
 public class BoFangListActivity extends BaseActivity implements View.OnClickListener {
@@ -80,6 +82,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
         initDialog();
         initNETDialog();
     }
+
 
     private void initDialog() {
         mBuilder = new BaseDialog.Builder(this);
@@ -116,7 +119,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                         PlayerBean playerBean = new PlayerBean(item.getT_header(),
                                 item.getVideo_name(), item.getParentName(), item.getVideo_url(), position);
                         gobofang(playerBean);
-                    }else {
+                    } else {
                         //本地已经下载好的播放
                         PlayerBean playerBean2 = new PlayerBean(item.getT_header(),
                                 item.getVideo_name(), item.getParentName(), "", loadFromSDFile(item.getType(),
@@ -177,7 +180,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
         EventBus.getDefault().postSticky(playerBean);
     }
 
-    private String loadFromSDFile(String type,String fname) {
+    private String loadFromSDFile(String type, String fname) {
         fname = "/" + fname;
         String result = null;
         try {
@@ -270,7 +273,62 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    private void showListDialog(final int adapterPosition, boolean collected, boolean dianzan, final int id) {
+    private void initCollect(String type, String id) {
+        HttpParams params = new HttpParams();
+        params.put("userid", SpUtils.getString(this, "id", ""));
+        if (type.equals("free")) {
+            params.put("type", "free");
+        } else if (type.equals("everydaycomment")) {
+            params.put("type", "daily");
+        } else if (type.equals("softmusicdetail")) {
+            params.put("type", "xk");
+        } else if (type.equals("zhuanlandetail")) {
+            params.put("type", "zl");
+        }
+        params.put("id", id);
+        OkGo.<VideoCollectBean>post(MyContants.LXKURL + "video/fav-live")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<VideoCollectBean>(VideoCollectBean.class) {
+                    @Override
+                    public void onSuccess(Response<VideoCollectBean> response) {
+                        int code = response.code();
+                        VideoCollectBean videoCollectBean = response.body();
+                        if (response.code() >= 200 && response.code() <= 204) {
+                            Logger.e(code + "");
+                            VideoCollectBean.DataEntity dataEntity = videoCollectBean.getData().get(0);
+                            mDianzan = dataEntity.isIslive();
+                            if (mDianzan) {
+                                Drawable drawable = getResources().getDrawable(R.drawable.dianzan_shixin);
+                                /// 这一步必须要做,否则不会显示.
+                                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                            } else {
+                                Drawable drawable = getResources().getDrawable(R.drawable.dianzan_yellow_big);
+                                /// 这一步必须要做,否则不会显示.
+                                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                            }
+                            //是否收藏
+                            mIsCollected = dataEntity.isIsfav();
+                            if (mIsCollected) {
+                                Drawable drawable = getResources().getDrawable(R.drawable.collect_shixin);
+                                /// 这一步必须要做,否则不会显示.
+                                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                mTv_collect.setCompoundDrawables(null, drawable, null, null);
+                            } else {
+                                Drawable drawable = getResources().getDrawable(R.drawable.bofanglist_collect);
+                                /// 这一步必须要做,否则不会显示.
+                                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                mTv_collect.setCompoundDrawables(null, drawable, null, null);
+                            }
+                        } else {
+                        }
+                    }
+                });
+    }
+
+    private void showListDialog(final int adapterPosition, final int id, String type) {
         mDialog = mBuilder.setViewId(R.layout.dialog_free)
                 //设置dialogpadding
                 .setPaddingdp(10, 0, 10, 0)
@@ -298,42 +356,19 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                 showShareDialog(adapterPosition);
             }
         });
-        mTv_collect = mDialog.getView(R.id.tv_collect);
-        mIsCollected = collected;
-        if (mIsCollected) {
-            Drawable drawable = getResources().getDrawable(R.drawable.collect_shixin);
-            /// 这一步必须要做,否则不会显示.
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            mTv_collect.setCompoundDrawables(null, drawable, null, null);
-        } else {
-            Drawable drawable = getResources().getDrawable(R.drawable.bofanglist_collect);
-            /// 这一步必须要做,否则不会显示.
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            mTv_collect.setCompoundDrawables(null, drawable, null, null);
-        }
-        mTv_collect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeCollect(adapterPosition, id);
-            }
-        });
+        mTv_collect = mDialog.getView(tv_collect);
         mTv_dianzan = mDialog.getView(R.id.tv_dianzan);
-        mDianzan = dianzan;
-        if (mDianzan) {
-            Drawable drawable = getResources().getDrawable(R.drawable.dianzan_shixin);
-            /// 这一步必须要做,否则不会显示.
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
-        } else {
-            Drawable drawable = getResources().getDrawable(R.drawable.dianzan_yellow_big);
-            /// 这一步必须要做,否则不会显示.
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
-        }
+        initCollect(type, id + "");
         mTv_dianzan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeDianzan(adapterPosition, id);
+            }
+        });
+        mTv_collect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeCollect(adapterPosition, id);
             }
         });
         mDialog.getView(R.id.tv_download).setOnClickListener(new View.OnClickListener() {
@@ -746,7 +781,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                 @Override
                 public void onClick(View view) {
                     mType = item.getType();
-                    showListDialog(helper.getAdapterPosition(), item.isCollected(), item.isDianzan(), item.getChildId());
+                    showListDialog(helper.getAdapterPosition(), item.getChildId(), item.getType());
                 }
             });
             helper.getView(R.id.iv_wengao).setOnClickListener(new View.OnClickListener() {

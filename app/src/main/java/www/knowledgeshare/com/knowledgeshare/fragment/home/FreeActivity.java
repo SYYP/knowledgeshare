@@ -38,6 +38,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
@@ -215,7 +216,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                         if (response.code() >= 200 && response.code() <= 204) {
                             Logger.e(code + "");
                             mTeacher_has = mFreeBean.getTeacher_has();
-                            Glide.with(FreeActivity.this).load(mFreeBean.getImgurl()).into(iv_beijing);
+                            Glide.with(MyApplication.getGloableContext()).load(mFreeBean.getImgurl()).into(iv_beijing);
                             tv_teacher_intro.setText(mTeacher_has.getT_introduce());
                             isGuanzhu = mTeacher_has.isIsfollow();
                             if (isGuanzhu) {
@@ -451,7 +452,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
             } else {
                 iv_dianzan.setImageResource(R.drawable.free_dianzan);
             }
-            Glide.with(mContext).load(item.getUser_avatar()).into(iv_head);
+            Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into(iv_head);
             helper.setText(R.id.tv_name, item.getUser_name())
                     .setText(R.id.tv_time, item.getCreated_at())
                     .setText(R.id.tv_content, item.getContent())

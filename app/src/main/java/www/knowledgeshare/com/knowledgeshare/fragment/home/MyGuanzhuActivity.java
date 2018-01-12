@@ -23,6 +23,7 @@ import com.lzy.okgo.model.Response;
 
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
@@ -98,7 +99,7 @@ public class MyGuanzhuActivity extends BaseActivity implements View.OnClickListe
         @Override
         protected void convert(final BaseViewHolder helper, MyFollowBean.DataEntity item) {
             ImageView iv_teacher_head = helper.getView(R.id.iv_teacher_head);
-            Glide.with(mContext).load(item.getT_header()).into(iv_teacher_head);
+            Glide.with(MyApplication.getGloableContext()).load(item.getT_header()).into(iv_teacher_head);
             helper.setText(R.id.tv_teacher_name, item.getT_name())
                     .setText(R.id.tv_teacher_intro, item.getT_tag());
             helper.getView(R.id.iv_quxiaoguanzhu).setOnClickListener(new View.OnClickListener() {

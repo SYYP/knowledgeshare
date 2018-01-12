@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
@@ -203,7 +204,7 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
         @Override
         protected void convert(BaseViewHolder helper, final GuDianBean.ZhuanlanEntity item) {
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-            Glide.with(mContext).load(item.getZl_img()).into(imageView);
+            Glide.with(MyApplication.getGloableContext()).load(item.getZl_img()).into(imageView);
             helper.setText(R.id.tv_name, item.getZl_name())
                     .setText(R.id.tv_introduce, item.getZl_introduce())
                     .setText(R.id.tv_update_name, item.getZl_update_name())
@@ -230,7 +231,7 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
         @Override
         protected void convert(final BaseViewHolder helper, GuDianBean.XiaokeEntity item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-            Glide.with(mContext).load(item.getXk_image()).into(imageView);
+            Glide.with(MyApplication.getGloableContext()).load(item.getXk_image()).into(imageView);
             helper.setText(R.id.tv_buy_count, item.getBuy_count())
                     .setText(R.id.tv_name, item.getXk_name())
                     .setText(R.id.tv_jie_count, item.getNodule_count())

@@ -38,6 +38,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.MyAccountActivity;
 import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
@@ -279,7 +280,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                              public void onSuccess(Response<SoftMusicDetailBean> response) {
                                  int code = response.code();
                                  mMusicDetailBean = response.body();
-                                 Glide.with(SoftMusicDetailActivity.this).load(mMusicDetailBean.getImgurl()).into(iv_beijing);
+                                 Glide.with(MyApplication.getGloableContext()).load(mMusicDetailBean.getImgurl()).into(iv_beijing);
                                  mTeacher = mMusicDetailBean.getTeacher();
                                  tv_teacher_intro.setText(mTeacher.getT_introduce());
                                  isGuanzhu = mTeacher.isIsfollow();
@@ -551,7 +552,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
             } else {
                 iv_dianzan.setImageResource(R.drawable.free_dianzan);
             }
-            Glide.with(mContext).load(item.getUser_avatar()).into(iv_head);
+            Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into(iv_head);
             helper.setText(R.id.tv_name, item.getUser_name())
                     .setText(R.id.tv_time, item.getCreated_at())
                     .setText(R.id.tv_content, item.getContent())
@@ -1124,7 +1125,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                 Intent intent = new Intent(this, LiuYanActivity.class);
                 intent.putExtra("teacher_id", mMusicDetailBean.getXk_teacher_id() + "");
                 intent.putExtra("type", "softmusicdetail-root");
-                intent.putExtra("xiaoke_id", mMusicDetailBean.getXk_class_id() + "");
+                intent.putExtra("xiaoke_id", mMusicDetailBean.getId() + "");
                 startActivity(intent);
                 break;
             case R.id.tv_tryread:

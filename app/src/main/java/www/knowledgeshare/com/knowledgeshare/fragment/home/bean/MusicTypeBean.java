@@ -54,6 +54,7 @@ public class MusicTypeBean implements Serializable {
         this.id = id;
     }
 
+    //这个属性暂时不用了，通过接口获取，暂时先保留这个属性，不改
     public boolean isCollected() {
         return isCollected;
     }

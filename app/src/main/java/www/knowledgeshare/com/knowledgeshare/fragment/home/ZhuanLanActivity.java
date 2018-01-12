@@ -27,6 +27,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.MyAccountActivity;
 import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
@@ -109,7 +110,7 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                              public void onSuccess(Response<ZhuanLanBean> response) {
                                  int code = response.code();
                                  mZhuanLanBean = response.body();
-                                 Glide.with(ZhuanLanActivity.this).load(mZhuanLanBean.getZl_img()).into(iv_beijing);
+                                 Glide.with(MyApplication.getGloableContext()).load(mZhuanLanBean.getZl_img()).into(iv_beijing);
                                  tv_shiyirenqun.setText(mZhuanLanBean.getZl_suitable());
                                  tv_zhuanlanjianjie.setText(mZhuanLanBean.getZl_introduce());
                                  tv_readxuzhi.setText(mZhuanLanBean.getZl_look());

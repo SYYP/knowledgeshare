@@ -22,6 +22,7 @@ import com.lzy.okgo.model.Response;
 
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
@@ -96,7 +97,7 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
                              public void onSuccess(Response<TeacherDetailBean> response) {
                                  int code = response.code();
                                  mTeacherDetailBean = response.body();
-                                 Glide.with(TeacherDetailActivity.this).load(mTeacherDetailBean.getT_img()).into(iv_bigphoto);
+                                 Glide.with(MyApplication.getGloableContext()).load(mTeacherDetailBean.getT_img()).into(iv_bigphoto);
                                  tv_teacher_intro.setText(mTeacherDetailBean.getT_introduce());
                                  mXiaoke = mTeacherDetailBean.getXiaoke();
                                  mZhuanlan = mTeacherDetailBean.getZhuanlan();
@@ -136,7 +137,7 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
         @Override
         protected void convert(BaseViewHolder helper, final TeacherDetailBean.ZhuanlanEntity item) {
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-            Glide.with(mContext).load(item.getZl_img()).into(imageView);
+            Glide.with(MyApplication.getGloableContext()).load(item.getZl_img()).into(imageView);
             helper.setText(R.id.tv_name, item.getZl_name())
                     .setText(R.id.tv_introduce, item.getZl_introduce())
                     .setText(R.id.tv_update_name, item.getZl_update_name())
@@ -155,7 +156,7 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
         @Override
         protected void convert(BaseViewHolder helper, final TeacherDetailBean.XiaokeEntity item) {
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-            Glide.with(mContext).load(item.getXk_image()).into(imageView);
+            Glide.with(MyApplication.getGloableContext()).load(item.getXk_image()).into(imageView);
             helper.setText(R.id.tv_buy_count, item.getBuy_count())
                     .setText(R.id.tv_name, item.getXk_name())
                     .setText(R.id.tv_jie_count, item.getNodule_count())

@@ -24,6 +24,7 @@ import com.lzy.okgo.model.Response;
 
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
@@ -158,6 +159,7 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
         activity_gu_dian = (LinearLayout) findViewById(R.id.activity_gu_dian);
         rgp.check(R.id.rb_gudian);
         recycler_dashiban.setLayoutManager(new LinearLayoutManager(this));
+        recycler_dashiban.requestDisallowInterceptTouchEvent(true);
         rgp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -198,7 +200,7 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
         protected void convert(BaseViewHolder helper, MusicMasterMoreBean.DataEntity item) {
             after = item.getId() + "";
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-            Glide.with(mContext).load(item.getZl_img()).into(imageView);
+            Glide.with(MyApplication.getGloableContext()).load(item.getZl_img()).into(imageView);
             helper.setVisible(R.id.iv_bofang, false);
             helper.setText(R.id.tv_name, item.getZl_name())
                     .setText(R.id.tv_introduce, item.getZl_introduce())

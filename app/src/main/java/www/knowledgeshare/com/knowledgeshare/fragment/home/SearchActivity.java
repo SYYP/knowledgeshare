@@ -31,6 +31,7 @@ import com.orhanobut.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.SearchHistoryEntity;
@@ -212,7 +213,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                 ll_hot.setVisibility(View.GONE);
                                 doSavehistory(content);
                                 ll_result.setVisibility(View.VISIBLE);
-                                mMDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban, mZhuanlan);
+                                mMDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban1, mZhuanlan);
                                 recycler_dashiban.setAdapter(mMDaShiBanAdapter);
                                 mMDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                     @Override
@@ -362,7 +363,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
             layoutParams.height = MyUtils.dip2px(SearchActivity.this, 90);
             imageView.setLayoutParams(layoutParams);
-            Glide.with(mContext).load(item.getZl_img()).into(imageView);
+            Glide.with(MyApplication.getGloableContext()).load(item.getZl_img()).into(imageView);
             helper.setText(R.id.tv_name, item.getZl_name())
                     .setText(R.id.tv_introduce, item.getZl_introduce())
                     .setText(R.id.tv_update_name, item.getZl_update_name())
@@ -383,7 +384,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
             layoutParams.height = MyUtils.dip2px(SearchActivity.this, 130);
             imageView.setLayoutParams(layoutParams);
-            Glide.with(mContext).load(item.getXk_image()).into(imageView);
+            Glide.with(MyApplication.getGloableContext()).load(item.getXk_image()).into(imageView);
             helper.setText(R.id.tv_buy_count, item.getBuy_count())
                     .setText(R.id.tv_name, item.getXk_name())
                     .setText(R.id.tv_jie_count, item.getNodule_count())

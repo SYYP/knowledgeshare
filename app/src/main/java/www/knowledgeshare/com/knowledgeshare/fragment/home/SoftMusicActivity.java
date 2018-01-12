@@ -22,11 +22,13 @@ import com.lzy.okgo.model.Response;
 
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicMoreBean;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
 import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
@@ -94,7 +96,7 @@ public class SoftMusicActivity extends BaseActivity implements View.OnClickListe
 
     private void initData() {
         HttpParams params = new HttpParams();
-//        params.put("userid", SpUtils.getString(this, "id", ""));
+        params.put("userid", SpUtils.getString(this, "id", ""));
         if (isLoadMore) {
             params.put("after", after);
         }
@@ -158,7 +160,7 @@ public class SoftMusicActivity extends BaseActivity implements View.OnClickListe
         protected void convert(BaseViewHolder helper, SoftMusicMoreBean.DataEntity item) {
             after = item.getXk_id() + "";
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-            Glide.with(mContext).load(item.getXk_image()).into(imageView);
+            Glide.with(MyApplication.getGloableContext()).load(item.getXk_image()).into(imageView);
             helper.setVisible(R.id.iv_bofang, false);
             helper.setText(R.id.tv_buy_count, item.getBuy_count())
                     .setText(R.id.tv_name, item.getXk_name())

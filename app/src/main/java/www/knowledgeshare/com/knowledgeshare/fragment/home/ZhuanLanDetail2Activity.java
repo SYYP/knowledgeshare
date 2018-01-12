@@ -329,7 +329,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                              public void onSuccess(Response<FreeTryReadDetailBean> response) {
                                  int code = response.code();
                                  mFreeTryReadDetailBean = response.body();
-                                 Glide.with(ZhuanLanDetail2Activity.this).load(mFreeTryReadDetailBean.getT_header()).into(iv_teacher_head);
+                                 Glide.with(MyApplication.getGloableContext()).load(mFreeTryReadDetailBean.getT_header()).into(iv_teacher_head);
                                  tv_teacher_name.setText(mFreeTryReadDetailBean.getT_name());
                                  tv_time1.setText(mFreeTryReadDetailBean.getCreated_at());
                                  tv_time2.setText(mFreeTryReadDetailBean.getVideo_time());
@@ -398,7 +398,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
             } else {
                 iv_dianzan.setImageResource(R.drawable.free_dianzan);
             }
-            Glide.with(mContext).load(item.getUser_avatar()).into(iv_head);
+            Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into(iv_head);
             helper.setText(R.id.tv_name, item.getUser_name())
                     .setText(R.id.tv_time, item.getCreated_at())
                     .setText(R.id.tv_content, item.getContent())

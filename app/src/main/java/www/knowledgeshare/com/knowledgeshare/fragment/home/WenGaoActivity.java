@@ -265,7 +265,7 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
                         mWenGaoBean = response.body();
                         if (response.code() >= 200 && response.code() <= 204) {
                             Logger.e(code + "");
-                            Glide.with(WenGaoActivity.this).load(mWenGaoBean.getT_header()).into(iv_teacher_head);
+                            Glide.with(MyApplication.getGloableContext()).load(mWenGaoBean.getT_header()).into(iv_teacher_head);
                             tv_teacher_name.setText(mWenGaoBean.getT_name());
                             tv_ke_name.setText(mWenGaoBean.getVideo_name());
                             tv_content.setText(mWenGaoBean.getContent());
@@ -305,7 +305,7 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
             } else {
                 iv_dianzan.setImageResource(R.drawable.free_dianzan);
             }
-            Glide.with(mContext).load(item.getUser_avatar()).into(iv_head);
+            Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into(iv_head);
             helper.setText(R.id.tv_name, item.getUser_name())
                     .setText(R.id.tv_time, item.getCreated_at())
                     .setText(R.id.tv_content, item.getContent())
