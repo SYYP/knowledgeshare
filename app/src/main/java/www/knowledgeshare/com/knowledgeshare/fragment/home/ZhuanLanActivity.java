@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -23,6 +24,9 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.tencent.mm.sdk.modelpay.PayReq;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.List;
@@ -39,6 +43,7 @@ import www.knowledgeshare.com.knowledgeshare.db.LookUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.OrderBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.TimeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.ZhuanLanBean;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
@@ -70,6 +75,9 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
     private LinearLayout rootView01;
     private TextView readTv;
     private Intent intent;
+    // IWXAPI 是第三方app和微信通信的openapi接口
+    private IWXAPI api;
+    private String WX_APPID = "wxf33afce9142929dc";// 微信appid
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +87,10 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
         initData();
         initDialog();
         initListener();
+        // 通过WXAPIFactory工厂，获取IWXAPI的实例
+        api = WXAPIFactory.createWXAPI(this, WX_APPID, false);
+        // 将该app注册到微信
+        api.registerApp(WX_APPID);
     }
 
     private void initListener() {
@@ -95,7 +107,7 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
     }
 
     private void initData() {
-        if (getIntent().getStringExtra("type") != null){
+        if (getIntent().getStringExtra("type") != null) {
             rootView.setVisibility(View.GONE);
             rootView01.setVisibility(View.VISIBLE);
         }
@@ -144,6 +156,11 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
     }
 
     private void showBuyDialog() {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(ZhuanLanActivity.this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         OkGo.<TimeBean>get(MyContants.LXKURL + "order/expire-time")
@@ -212,33 +229,78 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                 );
     }
 
-    private void goPay(String order_sn, String type) {
+    private void goPay(String order_sn, final String type) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
         params.put("order_sn", order_sn);
         params.put("type", type);
         params.put("from", "android");
-        OkGo.<BaseBean>post(MyContants.LXKURL + "order/pay")
-                .tag(this)
-                .headers(headers)
-                .params(params)
-                .execute(new DialogCallback<BaseBean>(ZhuanLanActivity.this, BaseBean.class) {
-                             @Override
-                             public void onSuccess(Response<BaseBean> response) {
-                                 int code = response.code();
-                                 BaseBean baseBean = response.body();
-                                 String message = baseBean.getMessage();
-                                 if (message.equals("余额不足")) {
-                                     showChongzhiDialog();
-                                 } else if (message.equals("支付成功")) {
-                                     showPaySuccessDialog();
-                                 } else {
-                                     Toast.makeText(ZhuanLanActivity.this, message, Toast.LENGTH_SHORT).show();
+        if (type.equals("1")) {//余额支付
+            OkGo.<BaseBean>post(MyContants.LXKURL + "order/pay")
+                    .tag(this)
+                    .headers(headers)
+                    .params(params)
+                    .execute(new DialogCallback<BaseBean>(ZhuanLanActivity.this, BaseBean.class) {
+                                 @Override
+                                 public void onSuccess(Response<BaseBean> response) {
+                                     int code = response.code();
+                                     BaseBean baseBean = response.body();
+                                     String message = baseBean.getMessage();
+                                     if (message.equals("余额不足")) {
+                                         showChongzhiDialog();
+                                     } else if (message.equals("支付成功")) {
+                                         showPaySuccessDialog();
+                                     } else {
+                                         Toast.makeText(ZhuanLanActivity.this, message, Toast.LENGTH_SHORT).show();
+                                     }
+
                                  }
                              }
-                         }
-                );
+                    );
+        } else if (type.equals("2")) {//微信支付
+//            OkGo.<WXPayBean>post(MyContants.LXKURL + "order/pay")
+//                    .tag(this)
+//                    .headers(headers)
+//                    .params(params)
+//                    .execute(new DialogCallback<WXPayBean>(ZhuanLanActivity.this, WXPayBean.class) {
+//                                 @Override
+//                                 public void onSuccess(Response<WXPayBean> response) {
+//                                     int code = response.code();
+//                                     WXPayBean wxPayBean = response.body();
+//                                     PayReq req = new PayReq();
+//                                     req.appId = wxPayBean.getAppid();// 微信开放平台审核通过的应用APPID
+//                                     req.partnerId = wxPayBean.getPartnerid();// 微信支付分配的商户号
+//                                     req.prepayId = wxPayBean.getPrepayid();// 预支付订单号，app服务器调用“统一下单”接口获取
+//                                     req.nonceStr = wxPayBean.getNoncestr();// 随机字符串，不长于32位，服务器小哥会给咱生成
+//                                     req.timeStamp = wxPayBean.getTimestamp()+"";// 时间戳，app服务器小哥给出
+//                                     req.packageValue = wxPayBean.getPackage();// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
+//                                     req.sign = wxPayBean.getSign();// 签名，服务器小哥给出
+//                                     //                        req.extData = "app data"; // optional
+//                                     // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
+//                                     api.sendReq(req);//调起支付
+//                                 }
+//
+//                                 @Override
+//                                 public void onError(Response<WXPayBean> response) {
+//                                     super.onError(response);
+//                                 }
+//                             }
+//                    );
+            PayReq req = new PayReq();
+            req.appId = "wxf33afce9142929dc";// 微信开放平台审核通过的应用APPID
+            req.partnerId = "1496250722";// 微信支付分配的商户号
+            req.prepayId = "wx20180112183123d3221539130045389555";// 预支付订单号，app服务器调用“统一下单”接口获取
+            req.nonceStr = "oulxcrnod5mbs5srgzswdi5a8bzoq5rb";// 随机字符串，不长于32位，服务器小哥会给咱生成
+            req.timeStamp = "1515753083";// 时间戳，app服务器小哥给出
+            req.packageValue = "Sign=WXPay";// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
+            req.sign = "CCE873181D88AA6E1214C47919075A66";// 签名，服务器小哥给出
+            //                        req.extData = "app data"; // optional
+            // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
+            api.sendReq(req);//调起支付
+        } else if (type.equals("3")) {//支付宝支付
+
+        }
     }
 
     private void showShareDialog() {

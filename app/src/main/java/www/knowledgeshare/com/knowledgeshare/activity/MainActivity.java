@@ -139,6 +139,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    //每次应用启动的时候上传一下学习时间
     private void setStudyTime() {
         List<StudyTimeBean> search = StudyTimeUtils.search();
         if (search != null && search.size() > 0) {
@@ -155,7 +156,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                  @Override
                                  public void onSuccess(Response<DianZanbean> response) {
                                      int code = response.code();
-                                     StudyTimeUtils.deleteAll();
+                                     if (response.code() >= 200 && response.code() <= 204) {
+                                         StudyTimeUtils.deleteAll();//成功的话就删除掉上次启动保存的学习时间数据表
+                                     }
                                  }
                              }
                     );
