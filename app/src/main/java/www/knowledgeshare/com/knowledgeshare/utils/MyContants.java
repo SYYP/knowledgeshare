@@ -82,5 +82,8 @@ public class MyContants {
     public static final String notes = BASEURL + "api/v2/user/notes";
     //签到
     public static final String signIn = BASEURL + "api/v2/user/sign-in";
-
+    //是否绑定手机
+    public static String isBindMobile=BASEURL + "api/v2/is-bind-mobile";
+    //绑定手机
+    public static String bindMobile=BASEURL + "api/v2/bind-mobile";
 }
