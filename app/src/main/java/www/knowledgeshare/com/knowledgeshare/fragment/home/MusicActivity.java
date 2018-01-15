@@ -101,6 +101,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void initCollect() {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            return;
+        }
         HttpParams params = new HttpParams();
         params.put("userid", SpUtils.getString(this, "id", ""));
         if (mMusicTypeBean.getType().equals("free")) {

@@ -221,10 +221,13 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                 .execute(new JsonCallback<OrderBean>(OrderBean.class) {
                              @Override
                              public void onSuccess(Response<OrderBean> response) {
-                                 int code = response.code();
                                  OrderBean orderBean = response.body();
-                                 String order_sn = orderBean.getOrder_sn();
-                                 goPay(order_sn, type);
+                                 if (response.code() >= 200 && response.code() <= 204) {
+                                     String order_sn = orderBean.getOrder_sn();
+                                     goPay(order_sn, type);
+                                 } else {
+                                     Toast.makeText(ZhuanLanActivity.this, orderBean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 }
                              }
                          }
                 );
@@ -274,8 +277,8 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                                      req.partnerId = wxPayBean.getPartnerid();// 微信支付分配的商户号
                                      req.prepayId = wxPayBean.getPrepayid();// 预支付订单号，app服务器调用“统一下单”接口获取
                                      req.nonceStr = wxPayBean.getNoncestr();// 随机字符串，不长于32位，服务器小哥会给咱生成
-                                     req.timeStamp = wxPayBean.getTimestamp()+"";// 时间戳，app服务器小哥给出
-                                     req.packageValue = wxPayBean.getPackage();// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
+                                     req.timeStamp = wxPayBean.getTimestamp() + "";// 时间戳，app服务器小哥给出
+                                     req.packageValue = wxPayBean.getPackage1();// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
                                      req.sign = wxPayBean.getSign();// 签名，服务器小哥给出
                                      //                        req.extData = "app data"; // optional
                                      // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
@@ -288,17 +291,6 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                                  }
                              }
                     );
-//            PayReq req = new PayReq();
-//            req.appId = "wxf33afce9142929dc";// 微信开放平台审核通过的应用APPID
-//            req.partnerId = "1496250722";// 微信支付分配的商户号
-//            req.prepayId = "wx20180112183123d3221539130045389555";// 预支付订单号，app服务器调用“统一下单”接口获取
-//            req.nonceStr = "oulxcrnod5mbs5srgzswdi5a8bzoq5rb";// 随机字符串，不长于32位，服务器小哥会给咱生成
-//            req.timeStamp = "1515753083";// 时间戳，app服务器小哥给出
-//            req.packageValue = "Sign=WXPay";// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
-//            req.sign = "CCE873181D88AA6E1214C47919075A66";// 签名，服务器小哥给出
-//            //                        req.extData = "app data"; // optional
-//            // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
-//            api.sendReq(req);//调起支付
         } else if (type.equals("3")) {//支付宝支付
 
         }

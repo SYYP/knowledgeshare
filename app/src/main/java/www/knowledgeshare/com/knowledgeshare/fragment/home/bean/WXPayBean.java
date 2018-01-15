@@ -1,7 +1,5 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home.bean;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by Administrator on 2018/1/12.
  */
@@ -19,12 +17,19 @@ public class WXPayBean {
      */
     private String appid;
     private String sign;
-    @SerializedName("package")
-    private String packageX;
+    private String package1;
     private String partnerid;
     private String prepayid;
     private String noncestr;
     private int timestamp;
+
+    public String getPackage1() {
+        return package1;
+    }
+
+    public void setPackage1(String package1) {
+        this.package1 = package1;
+    }
 
     public void setAppid(String appid) {
         this.appid = appid;
@@ -34,9 +39,6 @@ public class WXPayBean {
         this.sign = sign;
     }
 
-    public void setPackage(String package1) {
-        this.packageX=package1;
-    }
 
     public void setPartnerid(String partnerid) {
         this.partnerid = partnerid;
@@ -60,10 +62,6 @@ public class WXPayBean {
 
     public String getSign() {
         return sign;
-    }
-
-    public String getPackage() {
-        return packageX;
     }
 
     public String getPartnerid() {

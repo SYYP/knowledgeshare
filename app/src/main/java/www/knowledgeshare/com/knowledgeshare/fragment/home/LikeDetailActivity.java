@@ -31,6 +31,9 @@ import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.OkDownload;
 import com.orhanobut.logger.Logger;
+import com.tencent.mm.sdk.modelpay.PayReq;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
@@ -58,6 +61,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.OrderBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicDetailBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.WXPayBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
@@ -109,6 +113,9 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
     private String mId;
     private BaseDialog mNetDialog;
     private Intent intent;
+    // IWXAPI 是第三方app和微信通信的openapi接口
+    private IWXAPI api;
+    private String WX_APPID = "wxf33afce9142929dc";// 微信appid
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +126,10 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
         initData();
         initListener();
         initNETDialog();
+        // 通过WXAPIFactory工厂，获取IWXAPI的实例
+        api = WXAPIFactory.createWXAPI(this, WX_APPID, false);
+        // 将该app注册到微信
+        api.registerApp(WX_APPID);
     }
 
     private void initNETDialog() {
@@ -304,11 +315,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                              SoftMusicDetailBean.ChildEntity item = mChild.get(position);
                                              //刷新小型播放器
                                              PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_old_name(), item.getParent_name(),
-                                                     item.getVideo_url(),position);
+                                                     item.getVideo_url(), position);
                                              gobofang(playerBean);
                                              addListenCount(item.getId() + "");
                                              //设置进入播放主界面的数据
-                                             List<MusicTypeBean> musicTypeBeanList=new ArrayList<MusicTypeBean>();
+                                             List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
                                              for (int i = 0; i < mChild.size(); i++) {
                                                  SoftMusicDetailBean.ChildEntity childEntity = mChild.get(i);
                                                  MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
@@ -326,15 +337,15 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                              }
                                              MediaService.insertMusicList(list);
                                              //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
-                                             List<BofangHistroyBean> histroyBeanList=new ArrayList<BofangHistroyBean>();
+                                             List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
                                              for (int i = 0; i < mChild.size(); i++) {
                                                  SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
                                                  BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", entity.getId(), entity.getVideo_old_name(),
                                                          entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
                                                          entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
-                                                         , entity.getT_header(), entity.getParent_name(),entity.getShare_h5_url()
-                                                         , SystemClock.currentThreadTimeMillis(),mMusicDetailBean.getXk_class_id() + "",
-                                                         entity.getParent_name(),entity.getTxt_url());
+                                                         , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url()
+                                                         , SystemClock.currentThreadTimeMillis(), mMusicDetailBean.getXk_class_id() + "",
+                                                         entity.getParent_name(), entity.getTxt_url());
                                                  histroyBeanList.add(bofangHistroyBean);
                                              }
                                              MediaService.insertBoFangHistroyList(histroyBeanList);
@@ -363,7 +374,6 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
     private void loadMoreComment(String after) {
         String userid = SpUtils.getString(this, "id", "");
         if (TextUtils.isEmpty(userid)) {
-            startActivity(new Intent(this, LoginActivity.class));
             return;
         }
         HttpParams params = new HttpParams();
@@ -926,42 +936,79 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                 .execute(new DialogCallback<OrderBean>(LikeDetailActivity.this, OrderBean.class) {
                              @Override
                              public void onSuccess(Response<OrderBean> response) {
-                                 int code = response.code();
                                  OrderBean orderBean = response.body();
-                                 String order_sn = orderBean.getOrder_sn();
-                                 goPay(order_sn, type);
+                                 if (response.code() >= 200 && response.code() <= 204) {
+                                     String order_sn = orderBean.getOrder_sn();
+                                     goPay(order_sn, type);
+                                 } else {
+                                     Toast.makeText(LikeDetailActivity.this, orderBean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 }
                              }
                          }
                 );
     }
 
-    private void goPay(String order_sn, String type) {
+    private void goPay(String order_sn, final String type) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
         params.put("order_sn", order_sn);
         params.put("type", type);
         params.put("from", "android");
-        OkGo.<BaseBean>post(MyContants.LXKURL + "order/pay")
-                .tag(this)
-                .headers(headers)
-                .params(params)
-                .execute(new DialogCallback<BaseBean>(LikeDetailActivity.this, BaseBean.class) {
-                             @Override
-                             public void onSuccess(Response<BaseBean> response) {
-                                 int code = response.code();
-                                 BaseBean baseBean = response.body();
-                                 String message = baseBean.getMessage();
-                                 if (message.equals("余额不足")) {
-                                     showChongzhiDialog();
-                                 } else if (message.equals("支付成功")) {
-                                     showPaySuccessDialog();
-                                 } else {
-                                     Toast.makeText(LikeDetailActivity.this, message, Toast.LENGTH_SHORT).show();
+        if (type.equals("1")) {//余额支付
+            OkGo.<BaseBean>post(MyContants.LXKURL + "order/pay")
+                    .tag(this)
+                    .headers(headers)
+                    .params(params)
+                    .execute(new DialogCallback<BaseBean>(LikeDetailActivity.this, BaseBean.class) {
+                                 @Override
+                                 public void onSuccess(Response<BaseBean> response) {
+                                     int code = response.code();
+                                     BaseBean baseBean = response.body();
+                                     String message = baseBean.getMessage();
+                                     if (message.equals("余额不足")) {
+                                         showChongzhiDialog();
+                                     } else if (message.equals("支付成功")) {
+                                         showPaySuccessDialog();
+                                     } else {
+                                         Toast.makeText(LikeDetailActivity.this, message, Toast.LENGTH_SHORT).show();
+                                     }
+
                                  }
                              }
-                         }
-                );
+                    );
+        } else if (type.equals("2")) {//微信支付
+            OkGo.<WXPayBean>post(MyContants.LXKURL + "order/pay")
+                    .tag(this)
+                    .headers(headers)
+                    .params(params)
+                    .execute(new DialogCallback<WXPayBean>(LikeDetailActivity.this, WXPayBean.class) {
+                                 @Override
+                                 public void onSuccess(Response<WXPayBean> response) {
+                                     int code = response.code();
+                                     WXPayBean wxPayBean = response.body();
+                                     PayReq req = new PayReq();
+                                     req.appId = wxPayBean.getAppid();// 微信开放平台审核通过的应用APPID
+                                     req.partnerId = wxPayBean.getPartnerid();// 微信支付分配的商户号
+                                     req.prepayId = wxPayBean.getPrepayid();// 预支付订单号，app服务器调用“统一下单”接口获取
+                                     req.nonceStr = wxPayBean.getNoncestr();// 随机字符串，不长于32位，服务器小哥会给咱生成
+                                     req.timeStamp = wxPayBean.getTimestamp()+"";// 时间戳，app服务器小哥给出
+                                     req.packageValue = wxPayBean.getPackage1();// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
+                                     req.sign = wxPayBean.getSign();// 签名，服务器小哥给出
+                                     //                        req.extData = "app data"; // optional
+                                     // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
+                                     api.sendReq(req);//调起支付
+                                 }
+
+                                 @Override
+                                 public void onError(Response<WXPayBean> response) {
+                                     super.onError(response);
+                                 }
+                             }
+                    );
+        } else if (type.equals("3")) {//支付宝支付
+
+        }
     }
 
     private class LiuYanAdapter extends BaseQuickAdapter<CommentMoreBean.DataEntity, BaseViewHolder> {
@@ -996,10 +1043,8 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                 public void onClick(View view) {
                     boolean islive = item.isIslive();
                     if (islive) {
-                        mComment.get(helper.getAdapterPosition()).setIslive(false);
                         nodianzan(helper.getAdapterPosition(), item.getId(), item.getLive());
                     } else {
-                        mComment.get(helper.getAdapterPosition()).setIslive(true);
                         dianzan(helper.getAdapterPosition(), item.getId(), item.getLive());
                     }
                     mLiuYanAdapter.notifyDataSetChanged();
@@ -1030,6 +1075,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
+                                 mComment.get(adapterPosition).setIslive(true);
                                  Toast.makeText(LikeDetailActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
                                  mComment.get(adapterPosition).setLive(count + 1);
                                  mLiuYanAdapter.notifyDataSetChanged();
@@ -1057,6 +1103,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
+                                 mComment.get(adapterPosition).setIslive(false);
                                  Toast.makeText(LikeDetailActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
                                  mComment.get(adapterPosition).setLive(count - 1);
                                  mLiuYanAdapter.notifyDataSetChanged();
@@ -1109,29 +1156,28 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
             case R.id.tv_guanzhu:
             case R.id.iv_guanzhu:
                 if (isGuanzhu) {
-                    iv_guanzhu.setImageResource(R.drawable.free_quxiaoguanzhu);
                     noguanzhu(mMusicDetailBean.getXk_teacher_id());
                 } else {
-                    iv_guanzhu.setImageResource(R.drawable.free_guanzhu);
                     guanzhu(mMusicDetailBean.getXk_teacher_id());
                 }
-                isGuanzhu = !isGuanzhu;
                 break;
             case R.id.tv_dianzan_count:
             case R.id.iv_dianzan:
                 if (isZan) {
-                    iv_dianzan.setImageResource(R.drawable.free_dianzan);
                     nodianzanTeacher(mMusicDetailBean.getXk_teacher_id());
                 } else {
-                    iv_dianzan.setImageResource(R.drawable.free_yizan);
                     dianzanTeacher(mMusicDetailBean.getXk_teacher_id());
                 }
-                isZan = !isZan;
                 break;
         }
     }
 
     private void insertShopCar() {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -1152,6 +1198,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
     }
 
     private void guanzhu(int teacher_id) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -1165,7 +1216,9 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
+                                 iv_guanzhu.setImageResource(R.drawable.free_guanzhu);
                                  tv_guanzhu.setText("已关注");
+                                 isGuanzhu = !isGuanzhu;
                                  Toast.makeText(LikeDetailActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
                              }
                          }
@@ -1173,6 +1226,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
     }
 
     private void noguanzhu(int teacher_id) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -1186,7 +1244,9 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
+                                 iv_guanzhu.setImageResource(R.drawable.free_quxiaoguanzhu);
                                  tv_guanzhu.setText("关注");
+                                 isGuanzhu = !isGuanzhu;
                                  Toast.makeText(LikeDetailActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
                              }
                          }
@@ -1194,6 +1254,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
     }
 
     private void dianzanTeacher(int teacher_id) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -1207,8 +1272,10 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
+                                 iv_dianzan.setImageResource(R.drawable.free_yizan);
                                  Toast.makeText(LikeDetailActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
                                  mTeacher_zan_count += 1;
+                                 isZan = !isZan;
                                  tv_dianzan_count.setText(mTeacher_zan_count + "");
                              }
                          }
@@ -1216,6 +1283,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
     }
 
     private void nodianzanTeacher(int teacher_id) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -1229,6 +1301,8 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
+                                 iv_dianzan.setImageResource(R.drawable.free_dianzan);
+                                 isZan = !isZan;
                                  Toast.makeText(LikeDetailActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
                                  mTeacher_zan_count -= 1;
                                  tv_dianzan_count.setText(mTeacher_zan_count + "");

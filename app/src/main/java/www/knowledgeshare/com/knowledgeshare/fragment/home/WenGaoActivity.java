@@ -45,6 +45,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.WenGaoBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.web.ActionSelectListener;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.web.CustomActionWebView;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
@@ -162,6 +163,11 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
     }
 
     private void addNote(String selectText) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -325,10 +331,8 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
                 public void onClick(View view) {
                     boolean islive = item.isIslive();
                     if (islive) {
-                        mComment.get(helper.getAdapterPosition()).setIslive(false);
                         nodianzan(helper.getAdapterPosition(), item.getId(), item.getLive());
                     } else {
-                        mComment.get(helper.getAdapterPosition()).setIslive(true);
                         dianzan(helper.getAdapterPosition(), item.getId(), item.getLive());
                     }
                     mLiuYanAdapter.notifyDataSetChanged();
@@ -338,6 +342,11 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
     }
 
     private void changeCollect() {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -386,6 +395,11 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
     }
 
     private void dianzan(final int adapterPosition, int id, final int count) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -399,6 +413,7 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
+                                 mComment.get(adapterPosition).setIslive(true);
                                  Toast.makeText(WenGaoActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
                                  mComment.get(adapterPosition).setLive(count + 1);
                                  mLiuYanAdapter.notifyDataSetChanged();
@@ -408,6 +423,11 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
     }
 
     private void nodianzan(final int adapterPosition, int id, final int count) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -421,6 +441,7 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
+                                 mComment.get(adapterPosition).setIslive(true);
                                  Toast.makeText(WenGaoActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
                                  mComment.get(adapterPosition).setLive(count - 1);
                                  mLiuYanAdapter.notifyDataSetChanged();

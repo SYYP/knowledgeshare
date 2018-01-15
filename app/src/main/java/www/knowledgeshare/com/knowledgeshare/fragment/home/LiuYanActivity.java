@@ -1,5 +1,6 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -28,6 +29,7 @@ import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.LiuYanListFree;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
@@ -142,6 +144,11 @@ public class LiuYanActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void submit() {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         String liuyan = edt_liuyan.getText().toString().trim();
         if (TextUtils.isEmpty(liuyan)) {
             Toast.makeText(this, "留言不能为空", Toast.LENGTH_SHORT).show();

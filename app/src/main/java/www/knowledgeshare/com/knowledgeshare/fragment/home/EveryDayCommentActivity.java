@@ -173,8 +173,6 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                     @Override
                     public void onSuccess(Response<EveryDayBean> response) {
                         int code = response.code();
-                        everyDayBean = response.body();
-                        mDailys = everyDayBean.getDailys();
                         EveryDayBean everyDayBean = response.body();
                         if (response.code() >= 200 && response.code() <= 204) {
                             if (isLoadMore) {
@@ -184,11 +182,8 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                     return;
                                 }
                                 mDailys.addAll(dailys);
-                                mLieBiaoAdapter.notifyDataSetChanged();
                             } else {
                                 mDailys = everyDayBean.getDailys();
-                                mLieBiaoAdapter = new LieBiaoAdapter(R.layout.item_free, mDailys);
-                                recycler_liebiao.setAdapter(mLieBiaoAdapter);
                             }
                             Glide.with(EveryDayCommentActivity.this).load(everyDayBean.getImgurl()).into(iv_beijing);
                             tv_jie_count.setText("已更新：" + everyDayBean.getUpdate_count() + "节");
