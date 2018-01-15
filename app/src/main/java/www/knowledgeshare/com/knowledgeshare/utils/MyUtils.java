@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -48,15 +47,6 @@ public class MyUtils {
         bit.compress(Bitmap.CompressFormat.JPEG, 40, bos);//参数100表示不压缩
         byte[] bytes = bos.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
-    }
-
-    public static boolean islogin(Context context) {
-        String userid = SpUtils.getString(context, "user_id", "");
-        if (TextUtils.isEmpty(userid)) {
-//            Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        return true;
     }
 
     /**

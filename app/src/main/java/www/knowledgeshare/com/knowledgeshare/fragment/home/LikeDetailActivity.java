@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -58,6 +59,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.OrderBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicDetailBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
@@ -359,6 +361,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
     }
 
     private void loadMoreComment(String after) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpParams params = new HttpParams();
         params.put("userid", SpUtils.getString(this, "id", ""));
         params.put("after", after);
@@ -592,6 +599,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
     }
 
     private void changeCollect(final int adapterPosition, int id) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -634,6 +646,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
     }
 
     private void changeDianzan(final int adapterPosition, int id) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -847,6 +864,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
     }
 
     private void showPayStyleDialog() {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         mDialog = mBuilder.setViewId(R.layout.dialog_buy)
                 //设置dialogpadding
                 .setPaddingdp(10, 0, 10, 0)
@@ -990,6 +1012,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
     }
 
     private void dianzan(final int adapterPosition, int id, final int count) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -1012,6 +1039,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
     }
 
     private void nodianzan(final int adapterPosition, int id, final int count) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();

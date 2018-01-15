@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebResourceError;
@@ -107,30 +108,33 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
     }
 
     private void setTimeRecord() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.put("Authorization", "Bearer " + SpUtils.getString(MyApplication.getGloableContext(), "token", ""));
-        HttpParams params = new HttpParams();
-        params.put("id", mId);
-        if (mType.equals("free")) {
-            params.put("type", "free");
-        } else if (mType.equals("everydaycomment")) {
-            params.put("type", "daily");
-        } else if (mType.equals("softmusicdetail")) {
-            params.put("type", "xk");
-        }
-        params.put("date", MyUtils.getCurrentDate());
-        OkGo.<DianZanbean>post(MyContants.LXKURL + "user/study-add")
-                .tag(this)
-                .headers(headers)
-                .params(params)
-                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
-                             @Override
-                             public void onSuccess(Response<DianZanbean> response) {
-                                 int code = response.code();
+        String userid = SpUtils.getString(this, "id", "");
+        if (!TextUtils.isEmpty(userid)) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.put("Authorization", "Bearer " + SpUtils.getString(MyApplication.getGloableContext(), "token", ""));
+            HttpParams params = new HttpParams();
+            params.put("id", mId);
+            if (mType.equals("free")) {
+                params.put("type", "free");
+            } else if (mType.equals("everydaycomment")) {
+                params.put("type", "daily");
+            } else if (mType.equals("softmusicdetail")) {
+                params.put("type", "xk");
+            }
+            params.put("date", MyUtils.getCurrentDate());
+            OkGo.<DianZanbean>post(MyContants.LXKURL + "user/study-add")
+                    .tag(this)
+                    .headers(headers)
+                    .params(params)
+                    .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                                 @Override
+                                 public void onSuccess(Response<DianZanbean> response) {
+                                     int code = response.code();
 
+                                 }
                              }
-                         }
-                );
+                    );
+        }
     }
 
     private void initWebView(String url) {

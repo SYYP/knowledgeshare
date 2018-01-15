@@ -20,6 +20,7 @@ import org.zackratos.ultimatebar.UltimateBar;
 import java.util.ArrayList;
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.GuidePageBean;
@@ -40,7 +41,7 @@ public class GuidePageActivity extends BaseActivity {
     private int[] imgurls = {R.drawable.yindao_1, R.drawable.yindao_2, R.drawable.yindao_3,R.drawable.yindao_4
     ,R.drawable.yindao_5};
     private LinearLayout liner;
-    private List<GuidePageBean.GuideBean> list = new ArrayList<>();
+    private List<GuidePageBean.GuideEntity> list = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,7 +85,7 @@ public class GuidePageActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<GuidePageBean> response) {
                         GuidePageBean guidePageBean = response.body();
-                        if ( response.code() >= 200 && response.code() <= 204){
+                        if (response.code() >= 200 && response.code() <= 204){
                             list = guidePageBean.getGuide();
                             if (list != null){
                                 if (mGuidePagerAdapter == null) {
@@ -119,7 +120,7 @@ public class GuidePageActivity extends BaseActivity {
                 }
             });
 //            imageView.setImageResource();
-            Glide.with(GuidePageActivity.this).load(list.get(position).getImgurl()).into(imageView);
+            Glide.with(MyApplication.getGloableContext()).load(list.get(position).getImgurl()).into(imageView);
 //            Glide.with(GuidePageActivity.this).load(list.get(position).getImgurl()).into(imageView);
             container.addView(view);
             return view;

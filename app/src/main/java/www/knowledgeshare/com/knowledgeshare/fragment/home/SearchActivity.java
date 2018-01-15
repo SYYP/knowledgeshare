@@ -228,8 +228,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                 mYinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                        Intent intent = new Intent(mContext, SoftMusicDetailActivity.class);
-                                        Intent intent1 = intent.putExtra("id", mYinYueKeAdapter.getData().get(position).getXk_id() + "");
+                                        Intent intent = new Intent(SearchActivity.this, SoftMusicDetailActivity.class);
+                                        intent.putExtra("id", mYinYueKeAdapter.getData().get(position).getXk_id() + "");
                                         startActivity(intent);
                                     }
                                 });
@@ -333,7 +333,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private void setHot() {
         liushiview.removeAllViews();
         for (int i = 0; i < hotNameList.size(); i++) {
-            TextView tv = (TextView) View.inflate(this, R.layout.search_hot_item, null);
+            final TextView tv = (TextView) View.inflate(this, R.layout.search_hot_item, null);
             tv.setText(hotNameList.get(i));
             FluidLayout.LayoutParams params = new FluidLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -341,11 +341,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             );
             params.setMargins(12, 12, 12, 12);
             liushiview.addView(tv, params);
-            final int finalI = i;
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    doSearch(hotNameList.get(finalI));
+                    doSearch(tv.getText().toString());
                 }
             });
         }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -50,6 +51,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DownBean3;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HuanChongBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.VideoCollectBean;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
@@ -352,6 +354,11 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void changeCollect() {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();

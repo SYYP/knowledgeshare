@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebResourceError;
@@ -60,6 +61,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.TimeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.web.ActionSelectListener;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.web.CustomActionWebView;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
@@ -116,7 +118,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     }
 
     private void setStudyTime() {
-        pretime= SystemClock.currentThreadTimeMillis();
+        pretime = SystemClock.currentThreadTimeMillis();
     }
 
     @Override
@@ -129,30 +131,33 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
             StudyTimeUtils.add(studyTimeBean);
         } else {
             long oneTime = StudyTimeUtils.getOneTime("zhuanlandetail", mId);
-            lasttime+=oneTime;
+            lasttime += oneTime;
             StudyTimeUtils.updateTime("zhuanlandetail", mId, lasttime);
         }
     }
 
     private void setTimeRecord() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.put("Authorization", "Bearer " + SpUtils.getString(MyApplication.getGloableContext(), "token", ""));
-        HttpParams params = new HttpParams();
-        params.put("id", mId);
-        params.put("type", "zl");
-        params.put("date", MyUtils.getCurrentDate());
-        OkGo.<DianZanbean>post(MyContants.LXKURL + "user/study-add")
-                .tag(this)
-                .headers(headers)
-                .params(params)
-                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
-                             @Override
-                             public void onSuccess(Response<DianZanbean> response) {
-                                 int code = response.code();
+        String userid = SpUtils.getString(this, "id", "");
+        if (!TextUtils.isEmpty(userid)) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.put("Authorization", "Bearer " + SpUtils.getString(MyApplication.getGloableContext(), "token", ""));
+            HttpParams params = new HttpParams();
+            params.put("id", mId);
+            params.put("type", "zl");
+            params.put("date", MyUtils.getCurrentDate());
+            OkGo.<DianZanbean>post(MyContants.LXKURL + "user/study-add")
+                    .tag(this)
+                    .headers(headers)
+                    .params(params)
+                    .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                                 @Override
+                                 public void onSuccess(Response<DianZanbean> response) {
+                                     int code = response.code();
 
+                                 }
                              }
-                         }
-                );
+                    );
+        }
     }
 
     private void initWebView(String url) {
@@ -180,6 +185,11 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     }
 
     private void addNote(String selectText) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -430,6 +440,11 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     }
 
     private void dianzan(final int adapterPosition, int id, final int count) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -452,6 +467,11 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     }
 
     private void nodianzan(final int adapterPosition, int id, final int count) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -474,6 +494,11 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     }
 
     private void showBuyDialog() {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         OkGo.<TimeBean>get(MyContants.LXKURL + "order/expire-time")
@@ -520,6 +545,11 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     }
 
     private void showPayStyleDialog() {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         mDialog = mBuilder.setViewId(R.layout.dialog_buy)
                 //设置dialogpadding
                 .setPaddingdp(10, 0, 10, 0)
@@ -704,18 +734,18 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                         list.add(playerBean);
                         MediaService.insertMusicList(list);
                         //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
-                        List<BofangHistroyBean> histroyBeanList=new ArrayList<BofangHistroyBean>();
-                            BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("zhuanlandetail", mFreeTryReadDetailBean.getId(),
-                                    mFreeTryReadDetailBean.getName(),
-                                    mFreeTryReadDetailBean.getCreated_at(), mFreeTryReadDetailBean.getVideo_url(),
-                                    mFreeTryReadDetailBean.getRss_count(),
-                                    mFreeTryReadDetailBean.getCollect_count(), mFreeTryReadDetailBean.getView_count(),
-                                    mFreeTryReadDetailBean.isIsfav(), mFreeTryReadDetailBean.isIsfav(),
-                                    mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getT_tag(),
-                                    mFreeTryReadDetailBean.getH5_url(), SystemClock.currentThreadTimeMillis()
-                                    ,mFreeTryReadDetailBean.getZl_id()+ "",
-                                    mFreeTryReadDetailBean.getParent_name(),"");
-                            histroyBeanList.add(bofangHistroyBean);
+                        List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
+                        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("zhuanlandetail", mFreeTryReadDetailBean.getId(),
+                                mFreeTryReadDetailBean.getName(),
+                                mFreeTryReadDetailBean.getCreated_at(), mFreeTryReadDetailBean.getVideo_url(),
+                                mFreeTryReadDetailBean.getRss_count(),
+                                mFreeTryReadDetailBean.getCollect_count(), mFreeTryReadDetailBean.getView_count(),
+                                mFreeTryReadDetailBean.isIsfav(), mFreeTryReadDetailBean.isIsfav(),
+                                mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getT_tag(),
+                                mFreeTryReadDetailBean.getH5_url(), SystemClock.currentThreadTimeMillis()
+                                , mFreeTryReadDetailBean.getZl_id() + "",
+                                mFreeTryReadDetailBean.getParent_name(), "");
+                        histroyBeanList.add(bofangHistroyBean);
                         MediaService.insertBoFangHistroyList(histroyBeanList);
                     } else {
                         mMyBinder.playMusic();
@@ -745,7 +775,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 listBean.setTime(split[0]);
                 listBean.setVideoUrl(mFreeTryReadDetailBean.getVideo_url());
                 listBean.setTxtUrl("");
-//                listBean.setTxtUrl(mFreeTryReadDetailBean.getTxt_url());
+                //                listBean.setTxtUrl(mFreeTryReadDetailBean.getTxt_url());
                 listBean.setIconUrl(mFreeTryReadDetailBean.getT_header());
                 listBean.settName(mFreeTryReadDetailBean.getT_name());
                 listBean.setParentName(mFreeTryReadDetailBean.getParent_name());

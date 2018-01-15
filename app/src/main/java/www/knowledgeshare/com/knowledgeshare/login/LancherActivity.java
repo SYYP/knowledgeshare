@@ -48,7 +48,7 @@ public class LancherActivity extends BaseActivity {
             }
         }
     };
-    private List<GuidePageBean.GuideBean> list;
+    private List<GuidePageBean.GuideEntity> list;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

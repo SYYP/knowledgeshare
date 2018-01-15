@@ -482,7 +482,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     private void initbanner() {
         HttpParams params2 = new HttpParams();
-        params2.put("type", false);
+//        params2.put("type", false);
         params2.put("from", "android");
         OkGo.<HomeBannerBean>get(MyContants.LXKURL + "bootstrappers")
                 .tag(this)

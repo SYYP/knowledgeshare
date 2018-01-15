@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -51,6 +52,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.EveryDayBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
@@ -512,6 +514,11 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
     }
 
     private void changeCollect(final int adapterPosition, int id) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -554,6 +561,11 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
     }
 
     private void changeDianzan(final int adapterPosition, int id) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();

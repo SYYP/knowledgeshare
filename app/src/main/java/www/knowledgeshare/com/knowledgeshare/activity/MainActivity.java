@@ -143,25 +143,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void setStudyTime() {
         List<StudyTimeBean> search = StudyTimeUtils.search();
         if (search != null && search.size() > 0) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.put("Authorization", "Bearer " + SpUtils.getString(MyApplication.getGloableContext(), "token", ""));
-            HttpParams params = new HttpParams();
-            params.put("date", StudyTimeUtils.getDate());
-            params.put("time", StudyTimeUtils.getTotalTime());
-            OkGo.<DianZanbean>post(MyContants.LXKURL + "user/add-time")
-                    .tag(this)
-                    .headers(headers)
-                    .params(params)
-                    .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
-                                 @Override
-                                 public void onSuccess(Response<DianZanbean> response) {
-                                     int code = response.code();
-                                     if (response.code() >= 200 && response.code() <= 204) {
-                                         StudyTimeUtils.deleteAll();//成功的话就删除掉上次启动保存的学习时间数据表
+            String userid = SpUtils.getString(this, "id", "");
+            if (!TextUtils.isEmpty(userid)) {
+                HttpHeaders headers = new HttpHeaders();
+                headers.put("Authorization", "Bearer " + SpUtils.getString(MyApplication.getGloableContext(), "token", ""));
+                HttpParams params = new HttpParams();
+                params.put("date", StudyTimeUtils.getDate());
+                params.put("time", StudyTimeUtils.getTotalTime());
+                OkGo.<DianZanbean>post(MyContants.LXKURL + "user/add-time")
+                        .tag(this)
+                        .headers(headers)
+                        .params(params)
+                        .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                                     @Override
+                                     public void onSuccess(Response<DianZanbean> response) {
+                                         int code = response.code();
+                                         if (response.code() >= 200 && response.code() <= 204) {
+                                             StudyTimeUtils.deleteAll();//成功的话就删除掉上次启动保存的学习时间数据表
+                                         }
                                      }
                                  }
-                             }
-                    );
+                        );
+            }
         }
     }
 
