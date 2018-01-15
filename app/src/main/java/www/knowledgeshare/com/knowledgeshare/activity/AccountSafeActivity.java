@@ -8,11 +8,15 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.login.AlterActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 public class AccountSafeActivity extends BaseActivity implements View.OnClickListener {
 
@@ -23,6 +27,8 @@ public class AccountSafeActivity extends BaseActivity implements View.OnClickLis
     @BindView(R.id.if_bangding_tv) TextView ifBangdingTv;
     @BindView(R.id.bdwx_rl) RelativeLayout bdwxRl;
     @BindView(R.id.xgmm_rl) RelativeLayout xgmmRl;
+    private String mobile;
+    private String wx_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,15 @@ public class AccountSafeActivity extends BaseActivity implements View.OnClickLis
         bdsjhRl.setOnClickListener(this);
         bdwxRl.setOnClickListener(this);
         xgmmRl.setOnClickListener(this);
+        mobile = SpUtils.getString(this, "mobile", "");
+        wx_id = SpUtils.getString(this, "wx_id", "");
+        Logger.e(mobile+"\n"+wx_id);
+        telTv.setText(mobile);
+        if (wx_id == null){
+            ifBangdingTv.setText("未绑定");
+        }else {
+            ifBangdingTv.setText("已绑定");
+        }
     }
 
     @Override
@@ -48,15 +63,19 @@ public class AccountSafeActivity extends BaseActivity implements View.OnClickLis
                 finish();
                 break;
             case R.id.bdsjh_rl:
-                Intent intent = new Intent(this, BindPhoneActivity.class);
-                intent.putExtra("no","no");
-                startActivity(intent);
+                if (mobile == null){
+                    Intent intent = new Intent(this, BindPhoneActivity.class);
+                    intent.putExtra("type","isbind");
+                    startActivity(intent);
+                }else {
+                    TUtils.showShort(this,"已绑定手机号");
+                }
                 break;
             case R.id.bdwx_rl:
-                if (TextUtils.equals("未绑定",ifBangdingTv.getText().toString())){
-                    ifBangdingTv.setText("已绑定");
+                if (wx_id == null){
+                    //TODO 请求绑定微信接口
                 }else {
-                    ifBangdingTv.setText("未绑定");
+                    TUtils.showShort(this,"已绑定微信");
                 }
                 break;
             case R.id.xgmm_rl:

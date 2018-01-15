@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -44,9 +45,7 @@ import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
-/**
- * Created by Administrator on 2017/11/17.
- */
+
 
 public class MineFragment extends BaseFragment implements View.OnClickListener {
 
@@ -117,10 +116,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                             mineNameTv.setText(userInfoBean.getUser_name());
                             if (SpUtils.getString(mContext,"userFace","") != null){
                                 if (!TextUtils.equals(SpUtils.getString(mContext,"userFace",""),userInfoBean.getUser_avatar())){
-                                    SpUtils.putString(mContext,"userFace",userInfoBean.getUser_avatar());
                                     Glide.with(mActivity).load(userInfoBean.getUser_avatar()).into(mineFaceIv);
+                                    SpUtils.putString(mContext,"userFace",userInfoBean.getUser_avatar());
                                 }
                             }
+                            SpUtils.putString(mContext,"mobile",userInfoBean.getUser_mobile());
+                            Logger.e(SpUtils.getString(mContext,"mobile",""));
                             user_level = userInfoBean.getUser_level();
                             user_integral = userInfoBean.getUser_integral();
                             getLevel(user_level, user_integral);

@@ -60,7 +60,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Hi!行走的肉夹馍"
             android:textColor="@color/white"
             android:textSize="18dp"/>
 
