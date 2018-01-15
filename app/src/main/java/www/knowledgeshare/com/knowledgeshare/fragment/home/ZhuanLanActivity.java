@@ -42,6 +42,7 @@ import www.knowledgeshare.com.knowledgeshare.db.LookBean;
 import www.knowledgeshare.com.knowledgeshare.db.LookUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.OrderBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.TimeBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.WXPayBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.ZhuanLanBean;
 import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
@@ -259,45 +260,45 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                              }
                     );
         } else if (type.equals("2")) {//微信支付
-//            OkGo.<WXPayBean>post(MyContants.LXKURL + "order/pay")
-//                    .tag(this)
-//                    .headers(headers)
-//                    .params(params)
-//                    .execute(new DialogCallback<WXPayBean>(ZhuanLanActivity.this, WXPayBean.class) {
-//                                 @Override
-//                                 public void onSuccess(Response<WXPayBean> response) {
-//                                     int code = response.code();
-//                                     WXPayBean wxPayBean = response.body();
-//                                     PayReq req = new PayReq();
-//                                     req.appId = wxPayBean.getAppid();// 微信开放平台审核通过的应用APPID
-//                                     req.partnerId = wxPayBean.getPartnerid();// 微信支付分配的商户号
-//                                     req.prepayId = wxPayBean.getPrepayid();// 预支付订单号，app服务器调用“统一下单”接口获取
-//                                     req.nonceStr = wxPayBean.getNoncestr();// 随机字符串，不长于32位，服务器小哥会给咱生成
-//                                     req.timeStamp = wxPayBean.getTimestamp()+"";// 时间戳，app服务器小哥给出
-//                                     req.packageValue = wxPayBean.getPackage();// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
-//                                     req.sign = wxPayBean.getSign();// 签名，服务器小哥给出
-//                                     //                        req.extData = "app data"; // optional
-//                                     // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
-//                                     api.sendReq(req);//调起支付
-//                                 }
-//
-//                                 @Override
-//                                 public void onError(Response<WXPayBean> response) {
-//                                     super.onError(response);
-//                                 }
-//                             }
-//                    );
-            PayReq req = new PayReq();
-            req.appId = "wxf33afce9142929dc";// 微信开放平台审核通过的应用APPID
-            req.partnerId = "1496250722";// 微信支付分配的商户号
-            req.prepayId = "wx20180112183123d3221539130045389555";// 预支付订单号，app服务器调用“统一下单”接口获取
-            req.nonceStr = "oulxcrnod5mbs5srgzswdi5a8bzoq5rb";// 随机字符串，不长于32位，服务器小哥会给咱生成
-            req.timeStamp = "1515753083";// 时间戳，app服务器小哥给出
-            req.packageValue = "Sign=WXPay";// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
-            req.sign = "CCE873181D88AA6E1214C47919075A66";// 签名，服务器小哥给出
-            //                        req.extData = "app data"; // optional
-            // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
-            api.sendReq(req);//调起支付
+            OkGo.<WXPayBean>post(MyContants.LXKURL + "order/pay")
+                    .tag(this)
+                    .headers(headers)
+                    .params(params)
+                    .execute(new DialogCallback<WXPayBean>(ZhuanLanActivity.this, WXPayBean.class) {
+                                 @Override
+                                 public void onSuccess(Response<WXPayBean> response) {
+                                     int code = response.code();
+                                     WXPayBean wxPayBean = response.body();
+                                     PayReq req = new PayReq();
+                                     req.appId = wxPayBean.getAppid();// 微信开放平台审核通过的应用APPID
+                                     req.partnerId = wxPayBean.getPartnerid();// 微信支付分配的商户号
+                                     req.prepayId = wxPayBean.getPrepayid();// 预支付订单号，app服务器调用“统一下单”接口获取
+                                     req.nonceStr = wxPayBean.getNoncestr();// 随机字符串，不长于32位，服务器小哥会给咱生成
+                                     req.timeStamp = wxPayBean.getTimestamp()+"";// 时间戳，app服务器小哥给出
+                                     req.packageValue = wxPayBean.getPackage();// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
+                                     req.sign = wxPayBean.getSign();// 签名，服务器小哥给出
+                                     //                        req.extData = "app data"; // optional
+                                     // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
+                                     api.sendReq(req);//调起支付
+                                 }
+
+                                 @Override
+                                 public void onError(Response<WXPayBean> response) {
+                                     super.onError(response);
+                                 }
+                             }
+                    );
+//            PayReq req = new PayReq();
+//            req.appId = "wxf33afce9142929dc";// 微信开放平台审核通过的应用APPID
+//            req.partnerId = "1496250722";// 微信支付分配的商户号
+//            req.prepayId = "wx20180112183123d3221539130045389555";// 预支付订单号，app服务器调用“统一下单”接口获取
+//            req.nonceStr = "oulxcrnod5mbs5srgzswdi5a8bzoq5rb";// 随机字符串，不长于32位，服务器小哥会给咱生成
+//            req.timeStamp = "1515753083";// 时间戳，app服务器小哥给出
+//            req.packageValue = "Sign=WXPay";// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
+//            req.sign = "CCE873181D88AA6E1214C47919075A66";// 签名，服务器小哥给出
+//            //                        req.extData = "app data"; // optional
+//            // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
+//            api.sendReq(req);//调起支付
         } else if (type.equals("3")) {//支付宝支付
 
         }

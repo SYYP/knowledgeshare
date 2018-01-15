@@ -314,7 +314,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                              setISshow(true);
                                              SoftMusicDetailBean.ChildEntity item = mChild.get(position);
                                              //刷新小型播放器
-                                             PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_old_name(), item.getParent_name(), item.getVideo_url());
+                                             PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getName(), item.getParent_name(), item.getVideo_url());
                                              gobofang(playerBean);
                                              addListenCount(item.getId() + "");
                                              //设置进入播放主界面的数据
@@ -322,7 +322,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                              for (int i = 0; i < mChild.size(); i++) {
                                                  SoftMusicDetailBean.ChildEntity childEntity = mChild.get(i);
                                                  MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
-                                                         childEntity.getT_header(), childEntity.getVideo_old_name(), childEntity.getId() + "", childEntity.isIsfav());
+                                                         childEntity.getT_header(), childEntity.getName(), childEntity.getId() + "", childEntity.isIsfav());
                                                  musicTypeBean.setMsg("musicplayertype");
                                                  musicTypeBeanList.add(musicTypeBean);
                                              }
@@ -331,7 +331,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                              List<PlayerBean> list = new ArrayList<PlayerBean>();
                                              for (int i = 0; i < mChild.size(); i++) {
                                                  SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
-                                                 PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_old_name(), entity.getParent_name(),
+                                                 PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getName(), entity.getParent_name(),
                                                          entity.getVideo_url(), position);
                                                  list.add(playerBean1);
                                              }
@@ -340,7 +340,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                              List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
                                              for (int i = 0; i < mChild.size(); i++) {
                                                  SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
-                                                 BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", entity.getId(), entity.getVideo_old_name(),
+                                                 BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", entity.getId(), entity.getName(),
                                                          entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
                                                          entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
                                                          , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url()
@@ -504,7 +504,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
             }
             String created_at = item.getCreated_at();
             String[] split = created_at.split(" ");
-            helper.setText(R.id.tv_name, item.getVideo_old_name())
+            helper.setText(R.id.tv_name, item.getName())
                     .setText(R.id.tv_time, split[0] + "发布")
                     .setText(R.id.tv_look_count, item.getIs_view() == 0 ? item.getView_count() + "" : item.getView_count_true() + "")
                     .setText(R.id.tv_collect_count, item.getIs_collect() == 0 ? item.getCollect_count() + "" : item.getCollect_count_true() + "")

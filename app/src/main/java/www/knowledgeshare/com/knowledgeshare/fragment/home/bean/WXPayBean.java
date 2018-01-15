@@ -20,7 +20,7 @@ public class WXPayBean {
     private String appid;
     private String sign;
     @SerializedName("package")
-    private String package1;
+    private String packageX;
     private String partnerid;
     private String prepayid;
     private String noncestr;
@@ -35,7 +35,7 @@ public class WXPayBean {
     }
 
     public void setPackage(String package1) {
-        this.package1=package1;
+        this.packageX=package1;
     }
 
     public void setPartnerid(String partnerid) {
@@ -63,7 +63,7 @@ public class WXPayBean {
     }
 
     public String getPackage() {
-        return package1;
+        return packageX;
     }
 
     public String getPartnerid() {
