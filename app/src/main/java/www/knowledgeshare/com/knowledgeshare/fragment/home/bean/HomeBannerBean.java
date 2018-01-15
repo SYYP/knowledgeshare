@@ -8,15 +8,16 @@ import java.util.List;
 
 public class HomeBannerBean {
 
+
     /**
      * app_version : {"notes":"","type":"android","version":"1.0"}
      * homeslide : [{"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/banner/20171208/banner.png","course_id":3,"name":"和催宗顺一起","link":"","id":1,"sort":0,"state":1,"type":1},{"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/banner/20171208/banner.png","course_id":3,"name":"和催宗顺一起","link":"","id":2,"sort":0,"state":1,"type":1},{"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/homeslide/20180112/1856.png","course_id":1,"name":"78946132","link":" ","id":4,"sort":0,"state":1,"type":1},{"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/homeslide/20180112/T1L8K_Bgd_1RCvBVdK.jpg","course_id":3,"name":"阿萨德","link":"www.sohu.com","id":5,"sort":0,"state":1,"type":1}]
-     * ctivity : {"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/activity/20180112/80_20171218212320484050_1.jpg","course_id":0,"name":"测试a","link":"0","created_at":"2018-01-12 23:25:36","id":4,"state":1,"type":0}
+     * ctivity : [{"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/activity/146601780027000559.png","course_id":0,"name":"活动1","link":"0","created_at":"2017-12-13 11:05:05","id":1,"state":1,"type":0}]
      * guide : [{"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/guide/20180111/1856.png","imgurl1":"","imgurl2":"","imgurl3":"","imgurl4":"","description":"2321321","created_at":"2018-01-11 19:35:51","imgurl5":"","id":6,"sort":11111,"state":1},{"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/guide/20180112/80_20171218212320484050_1.jpg","imgurl1":"","imgurl2":"","imgurl3":"","imgurl4":"","description":"dasd asdas dsasa sa a","created_at":"2018-01-13 01:44:09","imgurl5":"","id":7,"sort":1,"state":1},{"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/guides/leading1.png","imgurl1":"","imgurl2":"","imgurl3":"","imgurl4":"","description":"引导","created_at":"2017-12-07 12:15:31","imgurl5":"","id":1,"sort":0,"state":1},{"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/guides/leading2.png","imgurl1":"","imgurl2":"","imgurl3":"","imgurl4":"","description":"引导","created_at":"2017-12-07 12:15:31","imgurl5":"","id":2,"sort":0,"state":1},{"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/guides/leading3.png","imgurl1":"","imgurl2":"","imgurl3":"","imgurl4":"","description":"引导","created_at":"2017-12-07 12:15:31","imgurl5":"","id":3,"sort":0,"state":1},{"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/guides/leading4.png","imgurl1":"","imgurl2":"","imgurl3":"","imgurl4":"","description":"引导","created_at":"2017-12-07 12:15:31","imgurl5":"","id":4,"sort":0,"state":1},{"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/guides/leading5.png","imgurl1":"","imgurl2":"","imgurl3":"","imgurl4":"","description":"引导","created_at":"2017-12-07 12:15:31","imgurl5":"","id":5,"sort":0,"state":1}]
      */
     private AppVersionEntity app_version;
     private List<HomeslideEntity> homeslide;
-    private CtivityEntity ctivity;
+    private List<CtivityEntity> ctivity;
     private List<GuideEntity> guide;
 
     public void setApp_version(AppVersionEntity app_version) {
@@ -27,7 +28,7 @@ public class HomeBannerBean {
         this.homeslide = homeslide;
     }
 
-    public void setCtivity(CtivityEntity ctivity) {
+    public void setCtivity(List<CtivityEntity> ctivity) {
         this.ctivity = ctivity;
     }
 
@@ -43,7 +44,7 @@ public class HomeBannerBean {
         return homeslide;
     }
 
-    public CtivityEntity getCtivity() {
+    public List<CtivityEntity> getCtivity() {
         return ctivity;
     }
 
@@ -173,12 +174,12 @@ public class HomeBannerBean {
 
     public static class CtivityEntity {
         /**
-         * imgurl : http://knowledges.oss-cn-qingdao.aliyuncs.com/activity/20180112/80_20171218212320484050_1.jpg
+         * imgurl : http://knowledges.oss-cn-qingdao.aliyuncs.com/activity/146601780027000559.png
          * course_id : 0
-         * name : 测试a
+         * name : 活动1
          * link : 0
-         * created_at : 2018-01-12 23:25:36
-         * id : 4
+         * created_at : 2017-12-13 11:05:05
+         * id : 1
          * state : 1
          * type : 0
          */

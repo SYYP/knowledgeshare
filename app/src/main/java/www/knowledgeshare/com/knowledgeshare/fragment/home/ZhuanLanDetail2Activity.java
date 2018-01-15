@@ -424,10 +424,8 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 public void onClick(View view) {
                     boolean islive = item.isIslive();
                     if (islive) {
-                        mComment.get(helper.getAdapterPosition()).setIslive(false);
                         nodianzan(helper.getAdapterPosition(), item.getId(), item.getLive());
                     } else {
-                        mComment.get(helper.getAdapterPosition()).setIslive(true);
                         dianzan(helper.getAdapterPosition(), item.getId(), item.getLive());
                     }
                     mLiuYanAdapter.notifyDataSetChanged();
@@ -458,6 +456,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
+                                 mComment.get(adapterPosition).setIslive(true);
                                  Toast.makeText(ZhuanLanDetail2Activity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
                                  mComment.get(adapterPosition).setLive(count + 1);
                                  mLiuYanAdapter.notifyDataSetChanged();
@@ -485,6 +484,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
+                                 mComment.get(adapterPosition).setIslive(false);
                                  Toast.makeText(ZhuanLanDetail2Activity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
                                  mComment.get(adapterPosition).setLive(count - 1);
                                  mLiuYanAdapter.notifyDataSetChanged();
@@ -706,13 +706,10 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 break;
             case R.id.iv_collect:
                 if (isCollected) {
-                    iv_collect.setImageResource(R.drawable.weiguanzhuxin);
                     noCollect();
                 } else {
-                    iv_collect.setImageResource(R.drawable.xinxin);
                     collect();
                 }
-                isCollected = !isCollected;
                 break;
             case R.id.iv_bofang:
                 if (!isBofang) {
@@ -850,7 +847,9 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
+                                 iv_collect.setImageResource(R.drawable.xinxin);
                                  Toast.makeText(ZhuanLanDetail2Activity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 isCollected = !isCollected;
                              }
                          }
                 );
@@ -871,7 +870,9 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
+                                 iv_collect.setImageResource(R.drawable.weiguanzhuxin);
                                  Toast.makeText(ZhuanLanDetail2Activity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 isCollected = !isCollected;
                              }
                          }
                 );

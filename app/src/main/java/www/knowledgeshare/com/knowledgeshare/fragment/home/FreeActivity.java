@@ -470,10 +470,8 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 public void onClick(View view) {
                     boolean islive = item.isIslive();
                     if (islive) {
-                        mComment.get(helper.getAdapterPosition()).setIslive(false);
                         nodianzan(helper.getAdapterPosition(), item.getId(), item.getLive());
                     } else {
-                        mComment.get(helper.getAdapterPosition()).setIslive(true);
                         dianzan(helper.getAdapterPosition(), item.getId(), item.getLive());
                     }
                     mLiuYanAdapter.notifyDataSetChanged();
@@ -486,6 +484,11 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
     }
 
     private void dianzan(final int adapterPosition, int id, final int count) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -499,6 +502,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
+                                 mComment.get(adapterPosition).setIslive(true);
                                  Toast.makeText(FreeActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
                                  mComment.get(adapterPosition).setLive(count + 1);
                                  mLiuYanAdapter.notifyDataSetChanged();
@@ -508,6 +512,11 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
     }
 
     private void nodianzan(final int adapterPosition, int id, final int count) {
+        String userid = SpUtils.getString(this, "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -521,6 +530,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
+                                 mComment.get(adapterPosition).setIslive(false);
                                  Toast.makeText(FreeActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
                                  mComment.get(adapterPosition).setLive(count - 1);
                                  mLiuYanAdapter.notifyDataSetChanged();
@@ -868,24 +878,18 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
             case R.id.tv_guanzhu:
             case R.id.iv_guanzhu:
                 if (isGuanzhu) {
-                    iv_guanzhu.setImageResource(R.drawable.free_quxiaoguanzhu);
                     noguanzhu(mFreeBean.getTeacher_id());
                 } else {
-                    iv_guanzhu.setImageResource(R.drawable.free_guanzhu);
                     guanzhu(mFreeBean.getTeacher_id());
                 }
-                isGuanzhu = !isGuanzhu;
                 break;
             case R.id.tv_dianzan_count:
             case R.id.iv_dianzan:
                 if (isZan) {
-                    iv_dianzan.setImageResource(R.drawable.free_dianzan);
                     nodianzanTeacher(mFreeBean.getTeacher_id());
                 } else {
-                    iv_dianzan.setImageResource(R.drawable.free_yizan);
                     dianzanTeacher(mFreeBean.getTeacher_id());
                 }
-                isZan = !isZan;
                 break;
             case R.id.tv_writeliuyan:
                 Intent intent = new Intent(this, LiuYanActivity.class);
@@ -916,7 +920,9 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
                                  tv_guanzhu.setText("已关注");
+                                 iv_guanzhu.setImageResource(R.drawable.free_guanzhu);
                                  Toast.makeText(FreeActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 isGuanzhu = !isGuanzhu;
                              }
                          }
                 );
@@ -942,7 +948,9 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
                                  tv_guanzhu.setText("关注");
+                                 iv_guanzhu.setImageResource(R.drawable.free_quxiaoguanzhu);
                                  Toast.makeText(FreeActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 isGuanzhu = !isGuanzhu;
                              }
                          }
                 );
@@ -967,9 +975,11 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
+                                 iv_dianzan.setImageResource(R.drawable.free_yizan);
                                  Toast.makeText(FreeActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
                                  mTeacher_zan_count += 1;
                                  tv_dianzan_count.setText(mTeacher_zan_count + "");
+                                 isZan = !isZan;
                              }
                          }
                 );
@@ -994,9 +1004,11 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
+                                 iv_dianzan.setImageResource(R.drawable.free_dianzan);
                                  Toast.makeText(FreeActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
                                  mTeacher_zan_count -= 1;
                                  tv_dianzan_count.setText(mTeacher_zan_count + "");
+                                 isZan = !isZan;
                              }
                          }
                 );
