@@ -83,7 +83,11 @@ public class MyContants {
     //签到
     public static final String signIn = BASEURL + "api/v2/user/sign-in";
     //是否绑定手机
-    public static String isBindMobile=BASEURL + "api/v2/is-bind-mobile";
+    public static final String isBindMobile = BASEURL + "api/v2/is-bind-mobile";
     //绑定手机
-    public static String bindMobile=BASEURL + "api/v2/bind-mobile";
+    public static final String bindMobile = BASEURL + "api/v2/bind-mobile";
+    //个人中心绑定微信（token）
+    public static final String bindWx = BASEURL + "api/v2/user/bind-wx";
+    //删除消息通知（token）
+    public static final String delNotification = BASEURL + "api/v2/user/del-notification";
 }

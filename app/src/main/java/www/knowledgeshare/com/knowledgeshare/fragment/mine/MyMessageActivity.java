@@ -18,16 +18,20 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
  * date : ${Date}
@@ -48,6 +52,7 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
     private boolean isAllChecked;
     final static int ONE = 0, TWO = 1, THREE = 2;
     private Messageadapter messageadapter;
+    StringBuilder sb = new StringBuilder();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -156,10 +161,38 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
     private void deleteCollect() {
         for (int i = list.size()-1; i >= 0; i--) {
             if (list.get(i).isaBoolean()){
-                list.remove(i);
+                sb.append(list.get(i).getNotid()+",");
             }
         }
-        messageadapter.notifyDataSetChanged();
+        //当循环结束后截取最后一个逗号
+        String tag = sb.substring(0,sb.length()-1);
+        Logger.e(tag);
+        requestDelNotification(tag);
+
+    }
+
+    private void requestDelNotification(String ids) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("ids",ids);
+
+        OkGo.<BaseBean>post(MyContants.delNotification)
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<BaseBean>(MyMessageActivity.this,BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        int code = response.code();
+                        if (code >= 200 && code <= 204){
+                            TUtils.showShort(MyMessageActivity.this,response.body().getMessage());
+                            requestNotification();
+                        }else {
+                            TUtils.showShort(MyMessageActivity.this,response.body().getMessage());
+                        }
+                    }
+                });
     }
 
     @Override
