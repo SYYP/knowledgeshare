@@ -188,7 +188,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         HomeBannerBean bannerBean = response.body();
                         if (response.code() >= 200 && response.code() <= 204) {
                             final List<HomeBannerBean.CtivityEntity> ctivity = bannerBean.getCtivity();
-                            if (ctivity != null) {
+                            if (ctivity != null && ctivity.size() > 0) {
                                 mBuilder = new BaseDialog.Builder(MainActivity.this);
                                 mDialog = mBuilder.setViewId(R.layout.dialog_pop)
                                         //设置dialogpadding
@@ -210,34 +210,34 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                     }
                                 });
                                 final ImageView iv_pop = mDialog.getView(R.id.iv_pop);
+                                final HomeBannerBean.CtivityEntity ctivityEntity = ctivity.get(0);
+                                if (ctivityEntity != null) {
+                                    Glide.with(MainActivity.this).load(ctivityEntity.getImgurl()).into(iv_pop);
+                                    mDialog.show();
+                                }
                                 iv_pop.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         mDialog.dismiss();
-                                        if (ctivity != null) {
-                                            HomeBannerBean.CtivityEntity ctivityEntity = ctivity.get(0);
-                                            if (ctivityEntity != null) {
-                                                Glide.with(MainActivity.this).load(ctivityEntity.getImgurl()).into(iv_pop);
-                                                if (ctivityEntity.getCourse_id() == 0) {
-                                                    Intent intent = new Intent(MainActivity.this, WebActivity.class);
-                                                    intent.putExtra("url", ctivityEntity.getLink());
+                                        if (ctivityEntity != null) {
+                                            if (ctivityEntity.getCourse_id() == 0) {
+                                                Intent intent = new Intent(MainActivity.this, WebActivity.class);
+                                                intent.putExtra("url", ctivityEntity.getLink());
+                                                startActivity(intent);
+                                            } else {
+                                                if (ctivityEntity.getType() == 1) {
+                                                    Intent intent = new Intent(MainActivity.this, SoftMusicDetailActivity.class);
+                                                    intent.putExtra("id", ctivityEntity.getCourse_id() + "");
                                                     startActivity(intent);
-                                                } else {
-                                                    if (ctivityEntity.getType() == 1) {
-                                                        Intent intent = new Intent(MainActivity.this, SoftMusicDetailActivity.class);
-                                                        intent.putExtra("id", ctivityEntity.getCourse_id() + "");
-                                                        startActivity(intent);
-                                                    } else if (ctivityEntity.getType() == 2) {
-                                                        Intent intent = new Intent(MainActivity.this, ZhuanLanActivity.class);
-                                                        intent.putExtra("id", ctivityEntity.getCourse_id() + "");
-                                                        startActivity(intent);
-                                                    }
+                                                } else if (ctivityEntity.getType() == 2) {
+                                                    Intent intent = new Intent(MainActivity.this, ZhuanLanActivity.class);
+                                                    intent.putExtra("id", ctivityEntity.getCourse_id() + "");
+                                                    startActivity(intent);
                                                 }
                                             }
                                         }
                                     }
                                 });
-                                mDialog.show();
                             }
                         } else {
 
