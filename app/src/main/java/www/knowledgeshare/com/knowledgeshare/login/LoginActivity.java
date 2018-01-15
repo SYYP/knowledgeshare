@@ -106,7 +106,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         colse_back.setOnClickListener(this);
         img_weixin.setOnClickListener(this);
 
-        if (TextUtils.isEmpty(SpUtils.getString(LoginActivity.this,"zhanghao",""))){
+        if (!TextUtils.isEmpty(SpUtils.getString(LoginActivity.this,"zhanghao",""))){
             login_phone.setText(SpUtils.getString(LoginActivity.this,"zhanghao",""));
             login_pwd.setText(SpUtils.getString(LoginActivity.this,"mima",""));
         }
@@ -152,7 +152,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             case R.id.weixin:
                 config.setSinaAuthType(UMShareConfig.AUTH_TYPE_SSO);
                 umShareAPI.setShareConfig(config);
-                umShareAPI.deleteOauth(this, SHARE_MEDIA.WEIXIN, null);
                 umShareAPI.doOauthVerify(this,SHARE_MEDIA.WEIXIN,umAuthListener);
                 break;
         }

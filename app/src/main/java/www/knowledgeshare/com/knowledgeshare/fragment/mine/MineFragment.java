@@ -120,6 +120,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                                     SpUtils.putString(mContext,"userFace",userInfoBean.getUser_avatar());
                                 }
                             }
+                            if (userInfoBean.is_sign()){
+                                qiandaoBtn.setBackground(mActivity.getResources().getDrawable(R.drawable.bg_qiandao_hui));
+                                qiandaoBtn.setText("已签到");
+                                qiandaoBtn.setClickable(false);
+                            }
                             SpUtils.putString(mContext,"mobile",userInfoBean.getUser_mobile());
                             Logger.e(SpUtils.getString(mContext,"mobile",""));
                             user_level = userInfoBean.getUser_level();

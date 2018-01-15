@@ -54,7 +54,6 @@ public class GuidePageActivity extends BaseActivity {
         liner = (LinearLayout) findViewById(R.id.liner);
         vp.setOffscreenPageLimit(5);
         requestGuide();
-        vp.setOnPageChangeListener(new ViewPagerIndicator(GuidePageActivity.this,vp,liner,list.size()));
         vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -89,6 +88,7 @@ public class GuidePageActivity extends BaseActivity {
                             list = guidePageBean.getGuide();
                             if (list != null){
                                 if (mGuidePagerAdapter == null) {
+                                    vp.setOnPageChangeListener(new ViewPagerIndicator(GuidePageActivity.this,vp,liner,list.size()));
                                     mGuidePagerAdapter = new GuidePagerAdapter();
                                 }
                                 vp.setAdapter(mGuidePagerAdapter);

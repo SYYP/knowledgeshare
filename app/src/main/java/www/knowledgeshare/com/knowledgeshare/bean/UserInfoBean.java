@@ -43,7 +43,16 @@ public class UserInfoBean extends BaseBean implements Serializable {
     private String user_android_balance;
     private String user_ios_balance;
     private int is_lock;
+    private boolean is_sign;
     private List<LevelBean> level;
+
+    public boolean is_sign() {
+        return is_sign;
+    }
+
+    public void setIs_sign(boolean is_sign) {
+        this.is_sign = is_sign;
+    }
 
     public int getId() {
         return id;

@@ -24,10 +24,18 @@ public class Messagebean {
          * created_at : 2017-12-26 08:36:40
          * content : 每天首次评论获得10点
          */
-
+        private String notid;
         private String created_at;
         private String content;
         private boolean aBoolean;
+
+        public String getNotid() {
+            return notid;
+        }
+
+        public void setNotid(String notid) {
+            this.notid = notid;
+        }
 
         public boolean isaBoolean() {
             return aBoolean;
