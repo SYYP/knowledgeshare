@@ -92,4 +92,6 @@ public class MyContants {
     public static final String delNotification = BASEURL + "api/v2/user/del-notification";
     //任务详情
     public static final String taskList = BASEURL + "api/v2/user/task-list";
+    //我的账号 金额列表
+    public static final String changeShow = BASEURL + "api/v2/user/recharge-show";
 }

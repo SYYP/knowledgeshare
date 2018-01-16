@@ -46,7 +46,7 @@ public class CommentDownActivity extends BaseActivity implements View.OnClickLis
     private MyAdapter mMyAdapter;
     private boolean isAllChecked = true;
     private EveryDayBean everyDayBean;
-    private List<EveryDayBean.DailysEntity> list;
+    private List<EveryDayBean.DailysBean> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,14 +123,14 @@ public class CommentDownActivity extends BaseActivity implements View.OnClickLis
         iv_quanxuan.setImageResource(R.drawable.noquanxuan);
     }
 
-    private class MyAdapter extends BaseQuickAdapter<EveryDayBean.DailysEntity, BaseViewHolder> {
+    private class MyAdapter extends BaseQuickAdapter<EveryDayBean.DailysBean, BaseViewHolder> {
 
-        public MyAdapter(@LayoutRes int layoutResId, @Nullable List<EveryDayBean.DailysEntity> data) {
+        public MyAdapter(@LayoutRes int layoutResId, @Nullable List<EveryDayBean.DailysBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(final BaseViewHolder helper, EveryDayBean.DailysEntity item) {
+        protected void convert(final BaseViewHolder helper, EveryDayBean.DailysBean item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_ischeck);
             if (item.isChecked()) {
                 imageView.setImageResource(R.drawable.quanxuan_red);
@@ -165,7 +165,7 @@ public class CommentDownActivity extends BaseActivity implements View.OnClickLis
             case R.id.tv_download:
                 for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).isChecked()){
-                        EveryDayBean.DailysEntity childEntity = list.get(i);
+                        EveryDayBean.DailysBean childEntity = list.get(i);
                         String created_at = childEntity.getCreated_at();
                         String[] split = created_at.split(" ");
 

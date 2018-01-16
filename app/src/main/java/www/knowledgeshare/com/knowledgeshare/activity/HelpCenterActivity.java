@@ -40,6 +40,7 @@ public class HelpCenterActivity extends BaseActivity implements View.OnClickList
     private List<HeleCenterBean> list = new ArrayList<>();
     private HelpCenterAdapter adapter;
     private int id;
+    private List<HeleCenterBean.DataBean> data = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +82,8 @@ public class HelpCenterActivity extends BaseActivity implements View.OnClickList
                     public void onSuccess(Response<HeleCenterBean> response) {
                         int code = response.code();
                         if (code >= 200 && code <= 204){
-                            list.add(response.body());
-                            adapter = new HelpCenterAdapter(R.layout.item_help_center, list);
+                            data = response.body().getData();
+                            adapter = new HelpCenterAdapter(R.layout.item_help_center, data);
                             recyclerBzzx.setAdapter(adapter);
                             adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
@@ -107,17 +108,17 @@ public class HelpCenterActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    private class HelpCenterAdapter extends BaseQuickAdapter<HeleCenterBean,BaseViewHolder>{
+    private class HelpCenterAdapter extends BaseQuickAdapter<HeleCenterBean.DataBean,BaseViewHolder>{
 
-        public HelpCenterAdapter(@LayoutRes int layoutResId, @Nullable List<HeleCenterBean> data) {
+        public HelpCenterAdapter(@LayoutRes int layoutResId, @Nullable List<HeleCenterBean.DataBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, HeleCenterBean item) {
+        protected void convert(BaseViewHolder helper, HeleCenterBean.DataBean item) {
             TextView titleTv = helper.getView(R.id.title_tv);
-            titleTv.setText(item.getData().get(helper.getPosition()).getTitle());
-            id = item.getData().get(helper.getPosition()).getId();
+            titleTv.setText(item.getTitle());
+            id = item.getId();
         }
     }
 }

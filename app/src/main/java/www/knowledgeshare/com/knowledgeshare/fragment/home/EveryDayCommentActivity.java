@@ -80,7 +80,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
     private boolean mIsCollected;
     private boolean mDianzan;
     private LieBiaoAdapter mLieBiaoAdapter;
-    private List<EveryDayBean.DailysEntity> mDailys;
+    private List<EveryDayBean.DailysBean> mDailys;
     private BaseDialog mNetDialog;
     private String after = "";
     private SpringView springview;
@@ -173,10 +173,10 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                     @Override
                     public void onSuccess(Response<EveryDayBean> response) {
                         int code = response.code();
-                        EveryDayBean everyDayBean = response.body();
+                        everyDayBean = response.body();
                         if (response.code() >= 200 && response.code() <= 204) {
                             if (isLoadMore) {
-                                List<EveryDayBean.DailysEntity> dailys = everyDayBean.getDailys();
+                                List<EveryDayBean.DailysBean> dailys = everyDayBean.getDailys();
                                 if (dailys == null || dailys.size() == 0) {
                                     Toast.makeText(EveryDayCommentActivity.this, "已无更多数据", Toast.LENGTH_SHORT).show();
                                     return;
@@ -195,7 +195,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     setISshow(true);
-                                    EveryDayBean.DailysEntity item = mDailys.get(position);
+                                    EveryDayBean.DailysBean item = mDailys.get(position);
                                     //刷新小型播放器
                                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(),
                                             item.getParent_name(), item.getVideo_url(),position);
@@ -204,7 +204,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                     //设置进入播放主界面的数据
                                     List<MusicTypeBean> musicTypeBeanList=new ArrayList<MusicTypeBean>();
                                     for (int i = 0; i < mDailys.size(); i++) {
-                                        EveryDayBean.DailysEntity entity = mDailys.get(i);
+                                        EveryDayBean.DailysBean entity = mDailys.get(i);
                                         MusicTypeBean musicTypeBean = new MusicTypeBean("everydaycomment",
                                                 entity.getT_header(), entity.getVideo_name(), entity.getId() + "", entity.isIsfav());
                                         musicTypeBean.setMsg("musicplayertype");
@@ -214,7 +214,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                     //加入默认的播放列表
                                     List<PlayerBean> list = new ArrayList<PlayerBean>();
                                     for (int i = 0; i < mDailys.size(); i++) {
-                                        EveryDayBean.DailysEntity entity = mDailys.get(i);
+                                        EveryDayBean.DailysBean entity = mDailys.get(i);
                                         PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getParent_name(), entity.getVideo_url());
                                         list.add(playerBean1);
                                     }
@@ -222,7 +222,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                     //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
                                     List<BofangHistroyBean> histroyBeanList=new ArrayList<BofangHistroyBean>();
                                     for (int i = 0; i < mDailys.size(); i++) {
-                                        EveryDayBean.DailysEntity entity = mDailys.get(i);
+                                        EveryDayBean.DailysBean entity = mDailys.get(i);
                                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("everydaycomment", entity.getId(), entity.getVideo_name(),
                                                 entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
                                                 entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
@@ -340,14 +340,14 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
         springview = (SpringView) findViewById(R.id.springview);
     }
 
-    private class LieBiaoAdapter extends BaseQuickAdapter<EveryDayBean.DailysEntity, BaseViewHolder> {
+    private class LieBiaoAdapter extends BaseQuickAdapter<EveryDayBean.DailysBean, BaseViewHolder> {
 
-        public LieBiaoAdapter(@LayoutRes int layoutResId, @Nullable List<EveryDayBean.DailysEntity> data) {
+        public LieBiaoAdapter(@LayoutRes int layoutResId, @Nullable List<EveryDayBean.DailysBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(final BaseViewHolder helper, final EveryDayBean.DailysEntity item) {
+        protected void convert(final BaseViewHolder helper, final EveryDayBean.DailysBean item) {
             after = item.getId() + "";
             String created_at = item.getCreated_at();
             String[] split = created_at.split(" ");
@@ -450,7 +450,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
         mDialog.getView(R.id.tv_download).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EveryDayBean.DailysEntity childEntity = mDailys.get(adapterPosition);
+                EveryDayBean.DailysBean childEntity = mDailys.get(adapterPosition);
                 String created_at = childEntity.getCreated_at();
                 String[] split = created_at.split(" ");
 
@@ -622,7 +622,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                 mDialog.dismiss();
             }
         });
-        final EveryDayBean.DailysEntity entity = mDailys.get(adapterPosition);
+        final EveryDayBean.DailysBean entity = mDailys.get(adapterPosition);
         mDialog.getView(R.id.tv_weixin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

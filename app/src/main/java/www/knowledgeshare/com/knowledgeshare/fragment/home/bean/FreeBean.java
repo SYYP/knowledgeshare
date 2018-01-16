@@ -133,7 +133,7 @@ public class FreeBean implements Serializable{
         return child;
     }
 
-    public static class CommentEntity {
+    public static class CommentEntity implements Serializable{
         /**
          * user_avatar :
          * islive : false
@@ -268,7 +268,7 @@ public class FreeBean implements Serializable{
         }
     }
 
-    public static class TeacherHasEntity {
+    public static class TeacherHasEntity implements Serializable{
         /**
          * t_tag : 中国好声音
          * islive : false
@@ -383,7 +383,7 @@ public class FreeBean implements Serializable{
         }
     }
 
-    public static class ChildEntity {
+    public static class ChildEntity implements Serializable{
         /**
          * video_time : 00:00
          * good_count : 100
