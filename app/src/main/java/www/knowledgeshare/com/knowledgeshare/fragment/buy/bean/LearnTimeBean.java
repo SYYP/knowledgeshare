@@ -16,6 +16,15 @@ public class LearnTimeBean  implements Serializable{
      */
     private String date;
     private String content;
+    private int count;
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 
     public String getDate() {
         return date;
@@ -33,6 +42,11 @@ public class LearnTimeBean  implements Serializable{
         this.content = content;
     }
 
+    public LearnTimeBean(String date, int count, String content) {
+        this.date = date;
+        this.count = count;
+        this.content = content;
+    }
     public LearnTimeBean(String date, String content) {
         this.date = date;
         this.content = content;

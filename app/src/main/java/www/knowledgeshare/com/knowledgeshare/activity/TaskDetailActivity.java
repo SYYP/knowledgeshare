@@ -13,17 +13,33 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.TaskListBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.LearnContentBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.LearnTimeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.TaskDetailBean;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.FullyLinearLayoutManager;
 
 public class TaskDetailActivity extends BaseActivity implements View.OnClickListener {
@@ -36,6 +52,8 @@ public class TaskDetailActivity extends BaseActivity implements View.OnClickList
     TextView titleContentRightTv;
     @BindView(R.id.recycler_task)
     RecyclerView recyclerTask;
+    private TaskDetailAdapter adapter;
+    private String jifen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,21 +74,67 @@ public class TaskDetailActivity extends BaseActivity implements View.OnClickList
     }
 
     private void initData() {
+        jifen = getIntent().getStringExtra("jifen");
         recyclerTask.setLayoutManager(new LinearLayoutManager(this));
         recyclerTask.setNestedScrollingEnabled(false);
-        List<TaskDetailBean> list = new ArrayList<>();
+        requestTask();
+        /*List<TaskDetailBean> list = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             TaskDetailBean taskDetailBean = new TaskDetailBean();
             taskDetailBean.setMonth("11月份");
             taskDetailBean.setAllJifen("+10积分");
             list.add(taskDetailBean);
-        }
-        TaskDetailAdapter adapter = new TaskDetailAdapter(R.layout.item_task_detail,list);
-        recyclerTask.addItemDecoration(new SpaceItemDecoration(20));
-        recyclerTask.setAdapter(adapter);
-        View header = LayoutInflater.from(this).inflate(R.layout.header_taskdetail,recyclerTask,false);
-        adapter.addHeaderView(header);
+        }*/
 
+
+    }
+
+    private void requestTask() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        OkGo.<String>post(MyContants.taskList)
+                .tag(this)
+                .headers(headers)
+                .params("after","")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        int code = response.code();
+                        if (code >= 200 && code <= 204){
+                            String body = response.body();
+                            try {
+                                JSONObject jsonObject = new JSONObject(body);
+                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                    Logger.e(jsonObject1.toString());
+                                    Iterator keys = jsonObject1.keys();
+                                    List<LearnTimeBean> list = new ArrayList<LearnTimeBean>();
+                                    while (keys.hasNext()){
+                                        String key = String.valueOf(keys.next());
+                                        JSONObject data = jsonObject1.getJSONObject(key);
+                                        Logger.e(data.toString());
+                                        int count = data.getInt("count");
+                                        Logger.e(count+"");
+                                        JSONArray child = data.getJSONArray("child");
+                                        Logger.e(child.toString());
+                                        LearnTimeBean bean = new LearnTimeBean(key,count,child.toString());
+                                        list.add(bean);
+                                    }
+                                    adapter = new TaskDetailAdapter(R.layout.item_task_detail,list);
+                                    recyclerTask.addItemDecoration(new SpaceItemDecoration(20));
+                                    recyclerTask.setAdapter(adapter);
+                                    View header = LayoutInflater.from(TaskDetailActivity.this).inflate(R.layout.header_taskdetail,recyclerTask,false);
+                                    TextView totalJifen = header.findViewById(R.id.total_jf_tv);
+                                    totalJifen.setText(jifen);
+                                    adapter.addHeaderView(header);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
     }
 
     @Override
@@ -85,9 +149,9 @@ public class TaskDetailActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    private class TaskDetailAdapter extends BaseQuickAdapter<TaskDetailBean,BaseViewHolder>{
+    private class TaskDetailAdapter extends BaseQuickAdapter<LearnTimeBean,BaseViewHolder>{
 
-        public TaskDetailAdapter(@LayoutRes int layoutResId, @Nullable List<TaskDetailBean> data) {
+        public TaskDetailAdapter(@LayoutRes int layoutResId, @Nullable List<LearnTimeBean> data) {
             super(layoutResId, data);
         }
 
@@ -97,28 +161,17 @@ public class TaskDetailActivity extends BaseActivity implements View.OnClickList
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, TaskDetailBean item) {
+        protected void convert(BaseViewHolder helper, LearnTimeBean item) {
             TextView monthTv = helper.getView(R.id.month_tv);
             TextView jifenTv = helper.getView(R.id.jifen_tv);
             RecyclerView recyclerTaskDetail = helper.getView(R.id.recycler_task_detail);
+            monthTv.setText(item.getDate());
+            jifenTv.setText("+" + item.getCount() + "积分");
 
-            monthTv.setText(item.getMonth());
-            jifenTv.setText(item.getAllJifen());
-
-            List<TaskDetailBean> list1 = new ArrayList<>();
-            for (int i = 0; i < 4; i++) {
-                TaskDetailBean taskDetailBean = new TaskDetailBean();
-                taskDetailBean.setName("购买课程");
-                taskDetailBean.setDate("5日");
-                taskDetailBean.setTime("11:00");
-                taskDetailBean.setJifen("+5积分");
-                list1.add(taskDetailBean);
-            }
-
+            List<TaskListBean> beanList = JSON.parseArray(item.getContent(), TaskListBean.class);
             recyclerTaskDetail.setLayoutManager(new FullyLinearLayoutManager(mContext));
             recyclerTaskDetail.setNestedScrollingEnabled(false);
-
-            TaskDetailsAdapter detailsAdapter = new TaskDetailsAdapter(R.layout.item_task_details,list1);
+            TaskDetailsAdapter detailsAdapter = new TaskDetailsAdapter(R.layout.item_task_details,beanList);
             recyclerTaskDetail.setAdapter(detailsAdapter);
         }
     }
@@ -141,23 +194,23 @@ public class TaskDetailActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    private class TaskDetailsAdapter extends BaseQuickAdapter<TaskDetailBean,BaseViewHolder>{
+    private class TaskDetailsAdapter extends BaseQuickAdapter<TaskListBean,BaseViewHolder>{
 
-        public TaskDetailsAdapter(@LayoutRes int layoutResId, @Nullable List<TaskDetailBean> data) {
+        public TaskDetailsAdapter(@LayoutRes int layoutResId, @Nullable List<TaskListBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, TaskDetailBean item) {
+        protected void convert(BaseViewHolder helper, TaskListBean item) {
             TextView nameTv = helper.getView(R.id.name_tv);
             TextView dateTv = helper.getView(R.id.date_tv);
             TextView timeTv = helper.getView(R.id.time_tv);
             TextView jifenTv = helper.getView(R.id.jifen_tv);
 
             nameTv.setText(item.getName());
-            dateTv.setText(item.getDate());
+            dateTv.setText(item.getDay());
             timeTv.setText(item.getTime());
-            jifenTv.setText(item.getJifen());
+            jifenTv.setText("+"+item.getCount()+"积分");
         }
     }
 }

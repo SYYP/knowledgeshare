@@ -64,6 +64,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private Intent intent;
     private int user_level;
     private int user_integral;
+    private int user_education;
 
 
     @Override
@@ -127,6 +128,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                             }
                             SpUtils.putString(mContext,"mobile",userInfoBean.getUser_mobile());
                             Logger.e(SpUtils.getString(mContext,"mobile",""));
+                            user_education = userInfoBean.getUser_education();
                             user_level = userInfoBean.getUser_level();
                             user_integral = userInfoBean.getUser_integral();
                             getLevel(user_level, user_integral);
@@ -216,7 +218,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.rwxq_ll://任务详情
-                startActivity(new Intent(getActivity(),TaskDetailActivity.class));
+                Intent intent1 = new Intent(getActivity(),TaskDetailActivity.class);
+                intent1.putExtra("jifen",user_education+"");
+                startActivity(intent1);
                 break;
             case R.id.xxsj_rl://学习时间
                 startActivity(new Intent(getActivity(), LearningTimeActivity.class));

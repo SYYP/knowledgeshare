@@ -90,4 +90,6 @@ public class MyContants {
     public static final String bindWx = BASEURL + "api/v2/user/bind-wx";
     //删除消息通知（token）
     public static final String delNotification = BASEURL + "api/v2/user/del-notification";
+    //任务详情
+    public static final String taskList = BASEURL + "api/v2/user/task-list";
 }

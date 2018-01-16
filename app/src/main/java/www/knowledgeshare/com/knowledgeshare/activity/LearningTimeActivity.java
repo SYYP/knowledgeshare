@@ -86,7 +86,7 @@ public class LearningTimeActivity extends BaseActivity implements View.OnClickLi
                                 String key = String.valueOf(keys.next());
                                 Logger.e(key);
                                 JSONArray timeData = data.getJSONArray(key);
-                                LearnTimeBean bean=new LearnTimeBean(key,timeData.toString());
+                                LearnTimeBean bean= new LearnTimeBean(key,timeData.toString());
                                 beanList.add(bean);
                                 Logger.e(timeData.toString());
                             }
