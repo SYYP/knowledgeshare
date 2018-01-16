@@ -53,6 +53,7 @@
                         android:textColor="@color/text_black"/>
                 </LinearLayout>
                 <LinearLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
@@ -95,6 +96,7 @@
                         android:background="@drawable/bg_yellow2"/>
                 </LinearLayout>
                 <LinearLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
@@ -136,6 +138,14 @@
                         android:textSize="26dp"
                         android:background="@drawable/bg_yellow2"/>
                 </LinearLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_money"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginRight="35dp"/>
                 <TextView
                     android:id="@+id/pay_money_tv"
                     android:layout_width="match_parent"

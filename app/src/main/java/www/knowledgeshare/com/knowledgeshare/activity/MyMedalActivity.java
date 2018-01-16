@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 import static www.knowledgeshare.com.knowledgeshare.R.*;
 
@@ -53,8 +54,10 @@ public class MyMedalActivity extends BaseActivity implements View.OnClickListene
         titleContentRightTv.setText("勋章优惠说明");
         titleContentRightTv.setOnClickListener(this);
         String level = getIntent().getStringExtra("level");
-        Logger.e(level);
-        showShareDialog(level);
+        boolean isShow = SpUtils.getBoolean(MyMedalActivity.this, "isShow", false);
+        if (!level.equals("0") && isShow){
+            showShareDialog(level);
+        }
     }
 
     private void initDialog() {
@@ -118,6 +121,7 @@ public class MyMedalActivity extends BaseActivity implements View.OnClickListene
                 break;
         }
         mDialog.show();
+        SpUtils.putBoolean(MyMedalActivity.this,"isShow",true);
         mDialog.getView(id.tv_cancel).setOnClickListener(new View.OnClickListener() {
 
             private Drawable five;

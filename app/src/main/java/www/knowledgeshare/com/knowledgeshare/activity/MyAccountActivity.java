@@ -2,17 +2,34 @@ package www.knowledgeshare.com.knowledgeshare.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.Response;
+
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.ChangeShowBean;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBean;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 /**
  * 我的账户
@@ -32,8 +49,11 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
     @BindView(R.id.query_tv) TextView queryTv;
     @BindView(R.id.gmjl_tv) TextView gmjlTv;
     @BindView(R.id.gwc_tv) TextView gwcTv;
+    @BindView(R.id.recycler_money) RecyclerView recyclerView;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
+    private List<ChangeShowBean.MoneyBean> money;
+    private TextView moneyTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +79,68 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
         queryTv.setOnClickListener(this);
         gmjlTv.setOnClickListener(this);
         gwcTv.setOnClickListener(this);
+        recyclerView.setLayoutManager(new GridLayoutManager(MyAccountActivity.this, 3));
+        recyclerView.setNestedScrollingEnabled(false);
+        requestChange();
+    }
+
+    private void requestChange() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        OkGo.<ChangeShowBean>get(MyContants.changeShow)
+                .tag(this)
+                .headers(headers)
+                .execute(new JsonCallback<ChangeShowBean>(ChangeShowBean.class) {
+                    @Override
+                    public void onSuccess(Response<ChangeShowBean> response) {
+                        int code = response.code();
+                        if (code >= 200 && code <= 204){
+                            money = response.body().getMoney();
+                            money.get(0).setChecked(true);
+                            ChangeShowAdapter adapter = new ChangeShowAdapter(R.layout.item_change_show,money);
+                            recyclerView.setAdapter(adapter);
+                        }
+                    }
+                });
+    }
+
+    private class ChangeShowAdapter extends BaseQuickAdapter<ChangeShowBean.MoneyBean, BaseViewHolder>{
+
+        public ChangeShowAdapter(@LayoutRes int layoutResId, @Nullable List<ChangeShowBean.MoneyBean> data) {
+            super(layoutResId, data);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder helper, final ChangeShowBean.MoneyBean item) {
+            final int position = helper.getAdapterPosition();
+
+            moneyTv = helper.getView(R.id.money_tv);
+            moneyTv.setText(item.getData());
+
+            if (item.isChecked()){
+                moneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow3));
+                moneyTv.setTextColor(getResources().getColor(R.color.white));
+            }else {
+                moneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                moneyTv.setTextColor(getResources().getColor(R.color.yellow));
+            }
+
+            moneyTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    for (int i = 0; i < money.size(); i++) {
+                        money.get(i).setChecked(false);
+                        moneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow2));
+                        moneyTv.setTextColor(getResources().getColor(R.color.yellow));
+                    }
+                    item.setChecked(true);
+                    moneyTv.setBackground(getResources().getDrawable(R.drawable.bg_yellow3));
+                    moneyTv.setTextColor(getResources().getColor(R.color.white));
+                    payMoneyTv.setText("支付金额："+money.get(position).getData()+"元");
+                    notifyDataSetChanged();
+                }
+            });
+        }
     }
 
     @Override
