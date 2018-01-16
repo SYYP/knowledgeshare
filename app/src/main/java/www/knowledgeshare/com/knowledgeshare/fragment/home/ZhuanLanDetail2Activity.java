@@ -401,6 +401,9 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         recycler_liuyan.setNestedScrollingEnabled(false);
         nestView = (NestedScrollView) findViewById(R.id.nestView);
         webview = (CustomActionWebView) findViewById(R.id.webview);
+        if (getIntent().getStringExtra("type") != null) {
+            tv_buy.setVisibility(View.GONE);
+        }
     }
 
     private class LiuYanAdapter extends BaseQuickAdapter<FreeTryReadDetailBean.CommentEntity, BaseViewHolder> {

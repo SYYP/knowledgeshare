@@ -183,7 +183,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
 //            options.dontAnimate();
 //            Glide.with(this).load(mMusicTypeBean.getT_head()).apply(options).into(iv_bigphoto);
             Picasso.with(this).load(mMusicTypeBean.getT_head()).into(iv_bigphoto);
-            Logger.e("sdjhsajdsajkdjksahdjksadhsajdkashdhsa");
             List<BofangHistroyBean> search = HistroyUtils.search();
             if (search != null && search.size() > 0) {
                 tv_liebiao.setText(1 + "/" + search.size());

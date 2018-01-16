@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -51,7 +52,7 @@ import static com.taobao.accs.ACCSManager.mContext;
 public class SearchActivity extends BaseActivity implements View.OnClickListener {
     private EditText et_search;
     private TextView tv_back;
-    private ImageView iv_delete,iv_delete_text;
+    private ImageView iv_delete, iv_delete_text;
     private RecyclerView recycler_lishi;
     private RecyclerView recycler_hot;
     private List<String> hotNameList = new ArrayList<>();
@@ -233,9 +234,17 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                         startActivity(intent);
                                     }
                                 });
+                            } else {
+                                Toast.makeText(SearchActivity.this, "抱歉，没有该课程~", Toast.LENGTH_SHORT).show();
                             }
                         } else {
+                            Toast.makeText(SearchActivity.this, "抱歉，没有该课程~", Toast.LENGTH_SHORT).show();
                         }
+                    }
+
+                    @Override
+                    public void onError(Response<SearchBean> response) {
+                        super.onError(response);
                     }
                 });
     }

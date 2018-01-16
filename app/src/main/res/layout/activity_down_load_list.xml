@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/quanxuan_red"/>
+                android:src="@drawable/noquanxuan"/>
             <TextView
                 android:id="@+id/tv_quanxuan"
                 android:layout_width="wrap_content"

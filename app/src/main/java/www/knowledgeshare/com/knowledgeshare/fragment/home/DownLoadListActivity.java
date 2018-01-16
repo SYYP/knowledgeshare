@@ -1,6 +1,5 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.LayoutRes;
@@ -29,10 +28,8 @@ import java.util.List;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
-import www.knowledgeshare.com.knowledgeshare.db.DownLoadListBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
-import www.knowledgeshare.com.knowledgeshare.db.DownUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicDetailBean;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 
@@ -44,7 +41,7 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
     private TextView tv_quanxuan;
     private TextView tv_download;
     private MyAdapter mMyAdapter;
-    private boolean isAllChecked = true;
+    private boolean isAllChecked;
     private SoftMusicDetailBean childEntityBean;
     private List<SoftMusicDetailBean.ChildEntity> list;
     private List<DownLoadListsBean.ListBean> downList = new ArrayList<>();

@@ -1153,10 +1153,18 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                              public void onSuccess(Response<HomeDaShiBanNewBean> response) {
                                  int code = response.code();
                                  HomeDaShiBanNewBean zhuanLanMoreBean = response.body();
-                                 List<HomeDaShiBanNewBean.DataEntity> data = zhuanLanMoreBean.getData();
+                                 final List<HomeDaShiBanNewBean.DataEntity> data = zhuanLanMoreBean.getData();
                                  mDaShiBanNewAdapter = new DaShiBanNewAdapter(R.layout.item_dashiban, data);
                                  recycler_dashiban.setAdapter(mDaShiBanNewAdapter);
                                  iv_dashi_refresh.clearAnimation();
+                                 mDaShiBanNewAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                     @Override
+                                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                         Intent intent = new Intent(mContext, ZhuanLanActivity.class);
+                                         intent.putExtra("id", data.get(position).getId() + "");
+                                         startActivity(intent);
+                                     }
+                                 });
                              }
                          }
                 );
@@ -1177,13 +1185,15 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                              @Override
                              public void onSuccess(Response<LikeMoreBean> response) {
                                  int code = response.code();
-                                 LikeMoreBean likeMoreBean = response.body();
+                                 final LikeMoreBean likeMoreBean = response.body();
                                  mLikeNewAdapter = new LikeNewAdapter(R.layout.item_like, likeMoreBean.getData());
                                  recycler_like.setAdapter(mLikeNewAdapter);
                                  mLikeNewAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                         startActivity(new Intent(mContext, LikeDetailActivity.class));
+                                         Intent intent = new Intent(mContext, LikeDetailActivity.class);
+                                         intent.putExtra("id", likeMoreBean.getData().get(position).getXk_id() + "");
+                                         startActivity(intent);
                                      }
                                  });
                                  iv_like_refresh.clearAnimation();

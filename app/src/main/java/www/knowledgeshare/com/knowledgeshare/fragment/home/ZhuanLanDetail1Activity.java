@@ -65,6 +65,9 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
                                          Intent intent = new Intent(ZhuanLanDetail1Activity.this, ZhuanLanDetail2Activity.class);
                                          intent.putExtra("id",mData.get(position).getId()+"");
                                          intent.putExtra("title",getIntent().getStringExtra("title"));
+                                         if (getIntent().getStringExtra("type") != null) {
+                                             intent.putExtra("type","alreadyBuy");
+                                         }
                                          startActivity(intent);
                                      }
                                  });

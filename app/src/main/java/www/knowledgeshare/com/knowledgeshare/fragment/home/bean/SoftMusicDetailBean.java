@@ -474,7 +474,7 @@ public class SoftMusicDetailBean implements Serializable{
         private String t_tag;
         private String t_name;
         private String parent_name;
-        private boolean isChecked=true;
+        private boolean isChecked;
         private String share_h5_url;
 
         public String getShare_h5_url() {

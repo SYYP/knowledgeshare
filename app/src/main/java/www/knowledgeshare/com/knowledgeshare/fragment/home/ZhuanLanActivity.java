@@ -520,6 +520,9 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                 intent = new Intent(this, ZhuanLanDetail1Activity.class);
                 intent.putExtra("id", mZhuanLanBean.getId() + "");
                 intent.putExtra("title", mZhuanLanBean.getZl_name());
+                if (getIntent().getStringExtra("type") != null) {
+                    intent.putExtra("type","alreadyBuy");
+                }
                 startActivity(intent);
                 break;
         }
