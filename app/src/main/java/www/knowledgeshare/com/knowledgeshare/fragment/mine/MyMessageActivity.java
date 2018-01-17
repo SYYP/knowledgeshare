@@ -112,7 +112,10 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
                                             checkall.setChecked(false);
                                         }
                                     }else {
-                                        startActivity(new Intent(MyMessageActivity.this,MessageDetailActivity.class));
+                                        Intent intent = new Intent(MyMessageActivity.this,MessageDetailActivity.class);
+                                        intent.putExtra("content",list.get(position).getContent());
+                                        intent.putExtra("time",list.get(position).getCreated_at());
+                                        startActivity(intent);
                                     }
                                     messageadapter.notifyDataSetChanged();
                                 }
