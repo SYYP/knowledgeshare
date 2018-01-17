@@ -9,6 +9,7 @@
         <mapping class="www.knowledgeshare.com.knowledgeshare.db.LookBean" />
         <mapping class="www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean"/>
         <mapping class="www.knowledgeshare.com.knowledgeshare.db.StudyTimeBean"/>
+        <mapping class="www.knowledgeshare.com.knowledgeshare.db.BofangjinduBean"/>
         <!--mapping 标签主要是用于做映射对象的，一个对象对应一张表，每个实体类是对应一张表的。
         创建实体类，就相当于创建了一张表。-->
     </list>

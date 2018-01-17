@@ -39,6 +39,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,8 +52,10 @@ import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
+import www.knowledgeshare.com.knowledgeshare.db.BofangjinduBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
+import www.knowledgeshare.com.knowledgeshare.db.JinduUtils;
 import www.knowledgeshare.com.knowledgeshare.db.LookBean;
 import www.knowledgeshare.com.knowledgeshare.db.LookUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.CommentMoreBean;
@@ -119,6 +122,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
     // IWXAPI 是第三方app和微信通信的openapi接口
     private IWXAPI api;
     private String WX_APPID = "wxf33afce9142929dc";// 微信appid
+    private int size = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -326,6 +330,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                          } else {
                                              setISshow(true);
                                              SoftMusicDetailBean.ChildEntity item = mChild.get(position);
+                                             item.setChecked(true);
                                              //刷新小型播放器
                                              PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getName(), item.getParent_name(), item.getVideo_url());
                                              gobofang(playerBean);
@@ -382,6 +387,22 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                              }
                          }
                 );
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        for (int i = 0; i < mChild.size(); i++) {
+            if (mChild.get(i).isChecked()){
+                size++;
+            }
+        }
+        double jindu = new BigDecimal((float)size/mChild.size()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        Logger.e(jindu+"");
+        BofangjinduBean bean = new BofangjinduBean(mMusicDetailBean.getId()+"",jindu);
+        JinduUtils.add(bean);
+        EventBean eventBean = new EventBean("jindu");
+        EventBus.getDefault().postSticky(eventBean);
     }
 
     private void addListenCount(String id) {

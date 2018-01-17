@@ -29,18 +29,27 @@ public class BuyXkBean  extends  BaseBean implements Serializable{
          * buy_count : 5
          */
 
-        private int id;
+        private String id;
         private String xk_name;
         private String xk_teacher_tags;
         private String xk_price;
         private String xk_image;
         private int buy_count;
+        private double jindu;
 
-        public int getId() {
+        public double getJindu() {
+            return jindu;
+        }
+
+        public void setJindu(double jindu) {
+            this.jindu = jindu;
+        }
+
+        public String getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(String id) {
             this.id = id;
         }
 

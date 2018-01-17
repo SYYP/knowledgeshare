@@ -6,6 +6,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,6 +19,11 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +34,10 @@ import butterknife.Unbinder;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.BuyXkBean;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
+import www.knowledgeshare.com.knowledgeshare.db.BofangjinduBean;
+import www.knowledgeshare.com.knowledgeshare.db.JinduUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.SoftMusicDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
@@ -49,7 +58,8 @@ public class EasyMusicLessonFragment extends BaseFragment {
     Unbinder unbinder;
     private List<BuyXkBean.DataBean> list = new ArrayList<>();
     private List<BuyXkBean.DataBean> listAll = new ArrayList<>();
-    private int lastId;
+    private String lastId;
+    private List<BofangjinduBean> search = new ArrayList<>();
 
     @Override
     protected void lazyLoad() {
@@ -60,6 +70,7 @@ public class EasyMusicLessonFragment extends BaseFragment {
     protected View initView() {
         View inflate = View.inflate(mContext, R.layout.fragment_easy_lesson, null);
         unbinder = ButterKnife.bind(this, inflate);
+        EventBus.getDefault().register(this);
         initLoadMore();
         return inflate;
     }
@@ -83,7 +94,7 @@ public class EasyMusicLessonFragment extends BaseFragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        requestBuyXk(lastId+"");
+                        requestBuyXk(lastId);
                         springView.onFinishFreshAndLoad();
                     }
                 }, 2000);
@@ -100,6 +111,14 @@ public class EasyMusicLessonFragment extends BaseFragment {
         requestBuyXk("");
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("jindu")) {
+            listAll.clear();
+            requestBuyXk("");
+        }
+    }
+
     private void requestBuyXk(String after) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
@@ -111,6 +130,9 @@ public class EasyMusicLessonFragment extends BaseFragment {
                 .headers(headers)
                 .params(params)
                 .execute(new DialogCallback<BuyXkBean>(mActivity, BuyXkBean.class) {
+
+                    private double jindu;
+
                     @Override
                     public void onSuccess(Response<BuyXkBean> response) {
                         int code = response.code();
@@ -120,6 +142,18 @@ public class EasyMusicLessonFragment extends BaseFragment {
                                 listAll.addAll(list);
                             }else {
                                 TUtils.showShort(mContext,"没有更多数据了");
+                            }
+
+                            search = JinduUtils.search();
+                            for (int i = 0; i < search.size(); i++) {
+                                for (int j = 0; j < listAll.size(); j++) {
+                                    if (search.get(i).getMid().equals(listAll.get(j).getId())){
+                                        BuyXkBean.DataBean dataBean = listAll.get(j);
+                                        jindu = search.get(j).getJindu();
+                                        dataBean.setJindu(jindu);
+                                        listAll.set(j,dataBean);
+                                    }
+                                }
                             }
                             EasyMusicLessonAdapter adapter = new EasyMusicLessonAdapter(R.layout.item_easy_lesson, listAll);
                             recyclerEasy.setAdapter(adapter);
@@ -132,6 +166,7 @@ public class EasyMusicLessonFragment extends BaseFragment {
                                     startActivity(intent);
                                 }
                             });
+
 
                             springView.onFinishFreshAndLoad();
 
@@ -151,6 +186,7 @@ public class EasyMusicLessonFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        EventBus.getDefault().unregister(this);
     }
 
     private class EasyMusicLessonAdapter extends BaseQuickAdapter<BuyXkBean.DataBean, BaseViewHolder> {
@@ -170,6 +206,31 @@ public class EasyMusicLessonFragment extends BaseFragment {
 
 
             lastId = item.getId();
+            /*if (search.size() > 0){
+                for (int i = 0; i < search.size(); i++) {
+                    if (search.get(i).getMid().equals(lastId)){
+                        double jindu = search.get(i).getJindu();
+                        Logger.e(jindu+"");
+                        easyYbfTv.setText("以播放："+ jindu*100+"%");
+                    }
+                }
+            }
+
+           *//* if (search.size() >0 ){
+                double jindu = search.get(helper.getAdapterPosition()).getJindu();
+                Logger.e(jindu+"");
+                if (TextUtils.equals(lastId+"",search.get(helper.getAdapterPosition()).getMid())){
+                    easyYbfTv.setText("以播放："+ jindu*100+"%");
+                }
+            }*//*else {
+                easyYbfTv.setText("以播放：0%");
+            }*/
+            if (item.getJindu() > 0){
+                easyYbfTv.setText("已播放："+ item.getJindu()*100+"%");
+            }else {
+                easyYbfTv.setText("已播放：0%");
+            }
+
 
             Glide.with(mContext).load(item.getXk_image()).into(easyFace);
             easyTitleTv.setText(item.getXk_name());
