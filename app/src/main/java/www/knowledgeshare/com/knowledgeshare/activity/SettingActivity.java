@@ -69,6 +69,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         } catch (Exception e) {
             e.printStackTrace();
         }
+        kfzxCallTv.setText(SpUtils.getString(this,"setphone",""));
+        youxiangTv.setText(SpUtils.getString(this,"setemail",""));
     }
 
     @Override

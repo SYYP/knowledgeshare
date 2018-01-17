@@ -11,21 +11,26 @@ public class UserInfoBean extends BaseBean implements Serializable {
 
     /**
      * id : 7
-     * user_name : power
+     * user_name : 哦哦KTV
      * user_mobile : 17611225393
-     * user_avatar : http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171221/axEwN18ufaWomXzyXHZx.jpg
+     * user_avatar : http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20180110/JYLOSmrhn2HXFB1ZvJam.jpg
      * wx_name :
+     * wx_unionid : okQsr1f5YnS6wQPMJjM_fRSpw-AU
      * user_birthday : 1990-07-28
      * user_level : 0
-     * user_integral : 0
+     * user_integral : 2181
      * user_age : 0
-     * user_industry : 0
+     * user_industry : 13
      * user_sex : 1
      * user_education : 5
-     * user_android_balance : 660.00
-     * user_ios_balance : 1000.00
+     * user_android_balance : 483.58
+     * user_ios_balance : 1000000.00
      * is_lock : 1
-     * level : [{"level_id":1,"level_name":"铜勋章","level_no_img":"","level_get_img":"","level_count":200,"level_discount":0,"level_voucher":3},{"level_id":2,"level_name":"银勋章","level_no_img":"","level_get_img":"","level_count":600,"level_discount":0,"level_voucher":8},{"level_id":3,"level_name":"金勋章","level_no_img":"","level_get_img":"","level_count":1500,"level_discount":98,"level_voucher":0},{"level_id":4,"level_name":"白金勋章","level_no_img":"","level_get_img":"","level_count":3000,"level_discount":95,"level_voucher":0},{"level_id":5,"level_name":"钻石勋章","level_no_img":"","level_get_img":"","level_count":5000,"level_discount":90,"level_voucher":0}]
+     * xk_notice_time : 2018-01-16 15:02:21
+     * study_day : 2
+     * is_sign : false
+     * level : [{"level_id":1,"level_name":"铜勋章","level_no_img":"userlevel/20180111/5a44a0577ca86.png","level_get_img":"userlevel/20180111/80_20171218212320484050_1.jpg","level_count":200,"level_discount":0,"level_voucher":3},{"level_id":2,"level_name":"银勋章","level_no_img":"","level_get_img":"","level_count":600,"level_discount":0,"level_voucher":8},{"level_id":3,"level_name":"金勋章","level_no_img":"","level_get_img":"","level_count":1500,"level_discount":98,"level_voucher":0},{"level_id":4,"level_name":"白金勋章","level_no_img":"","level_get_img":"","level_count":3000,"level_discount":95,"level_voucher":0},{"level_id":5,"level_name":"钻石勋章","level_no_img":"","level_get_img":"","level_count":5000,"level_discount":90,"level_voucher":0}]
+     * config : [{"id":4,"name":"tel","value":"110"},{"id":5,"name":"mail","value":"abc@111.com"}]
      */
 
     private int id;
@@ -33,6 +38,7 @@ public class UserInfoBean extends BaseBean implements Serializable {
     private String user_mobile;
     private String user_avatar;
     private String wx_name;
+    private String wx_unionid;
     private String user_birthday;
     private int user_level;
     private int user_integral;
@@ -43,16 +49,11 @@ public class UserInfoBean extends BaseBean implements Serializable {
     private String user_android_balance;
     private String user_ios_balance;
     private int is_lock;
+    private String xk_notice_time;
+    private int study_day;
     private boolean is_sign;
     private List<LevelBean> level;
-
-    public boolean is_sign() {
-        return is_sign;
-    }
-
-    public void setIs_sign(boolean is_sign) {
-        this.is_sign = is_sign;
-    }
+    private List<ConfigBean> config;
 
     public int getId() {
         return id;
@@ -92,6 +93,14 @@ public class UserInfoBean extends BaseBean implements Serializable {
 
     public void setWx_name(String wx_name) {
         this.wx_name = wx_name;
+    }
+
+    public String getWx_unionid() {
+        return wx_unionid;
+    }
+
+    public void setWx_unionid(String wx_unionid) {
+        this.wx_unionid = wx_unionid;
     }
 
     public String getUser_birthday() {
@@ -174,6 +183,30 @@ public class UserInfoBean extends BaseBean implements Serializable {
         this.is_lock = is_lock;
     }
 
+    public String getXk_notice_time() {
+        return xk_notice_time;
+    }
+
+    public void setXk_notice_time(String xk_notice_time) {
+        this.xk_notice_time = xk_notice_time;
+    }
+
+    public int getStudy_day() {
+        return study_day;
+    }
+
+    public void setStudy_day(int study_day) {
+        this.study_day = study_day;
+    }
+
+    public boolean isIs_sign() {
+        return is_sign;
+    }
+
+    public void setIs_sign(boolean is_sign) {
+        this.is_sign = is_sign;
+    }
+
     public List<LevelBean> getLevel() {
         return level;
     }
@@ -182,12 +215,20 @@ public class UserInfoBean extends BaseBean implements Serializable {
         this.level = level;
     }
 
+    public List<ConfigBean> getConfig() {
+        return config;
+    }
+
+    public void setConfig(List<ConfigBean> config) {
+        this.config = config;
+    }
+
     public static class LevelBean {
         /**
          * level_id : 1
          * level_name : 铜勋章
-         * level_no_img :
-         * level_get_img :
+         * level_no_img : userlevel/20180111/5a44a0577ca86.png
+         * level_get_img : userlevel/20180111/80_20171218212320484050_1.jpg
          * level_count : 200
          * level_discount : 0
          * level_voucher : 3
@@ -255,6 +296,42 @@ public class UserInfoBean extends BaseBean implements Serializable {
 
         public void setLevel_voucher(int level_voucher) {
             this.level_voucher = level_voucher;
+        }
+    }
+
+    public static class ConfigBean {
+        /**
+         * id : 4
+         * name : tel
+         * value : 110
+         */
+
+        private int id;
+        private String name;
+        private String value;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
         }
     }
 }

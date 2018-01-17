@@ -121,13 +121,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                                     SpUtils.putString(mContext,"userFace",userInfoBean.getUser_avatar());
                                 }
                             }
-                            if (userInfoBean.is_sign()){
+                            if (userInfoBean.isIs_sign()){
                                 qiandaoBtn.setBackground(mActivity.getResources().getDrawable(R.drawable.bg_qiandao_hui));
                                 qiandaoBtn.setText("已签到");
                                 qiandaoBtn.setClickable(false);
                             }
+                            SpUtils.putString(mContext,"setphone",userInfoBean.getConfig().get(0).getValue());
+                            SpUtils.putString(mContext,"setemail",userInfoBean.getConfig().get(1).getValue());
                             SpUtils.putString(mContext,"mobile",userInfoBean.getUser_mobile());
-                            Logger.e(SpUtils.getString(mContext,"mobile",""));
                             user_education = userInfoBean.getUser_education();
                             user_level = userInfoBean.getUser_level();
                             user_integral = userInfoBean.getUser_integral();
