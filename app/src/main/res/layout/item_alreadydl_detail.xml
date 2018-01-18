@@ -38,6 +38,7 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/size_tv"
             android:text="男低音，一个神秘又充满魅力的声部"
+            android:layout_marginRight="30dp"
             android:textColor="@color/text_black" />
 
         <TextView

@@ -41,6 +41,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         setContentView(R.layout.activity_setting);
         ButterKnife.bind(this);
         initView();
+        initData();
+    }
+
+    private void initData() {
+
     }
 
     private void initView() {

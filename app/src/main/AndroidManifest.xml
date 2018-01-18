@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="www.knowledgeshare.com.knowledgeshare">
+<manifest package="www.knowledgeshare.com.knowledgeshare"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- 这个权限用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <!-- 这个权限用于访问GPS定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <!-- 用于读取手机当前的状态 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 访问网络，网络定位需要上网 -->
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
     <!-- 阿里云推送相关权限 -->
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.REORDER_TASKS" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.RESTART_PACKAGES"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.REORDER_TASKS"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -41,9 +40,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".login.LancherActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
@@ -54,102 +53,101 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/file_paths"/>
         </provider>
 
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".login.ForgetActivity" />
-        <activity android:name=".login.AlterActivity" />
-        <activity android:name=".login.SetloginActivity" />
-        <activity android:name=".fragment.home.SearchActivity" />
-        <activity android:name=".fragment.home.GuDianActivity" />
-        <activity android:name=".fragment.home.FreeActivity" />
-        <activity android:name=".fragment.home.MyGuanzhuActivity" />
-        <activity android:name=".fragment.home.LikeDetailActivity" />
-        <activity android:name=".activity.MySubscriptionsActivity" />
-        <activity android:name=".activity.LearningTimeActivity" />
-        <activity android:name=".fragment.home.DemoActivity" />
-        <activity android:name=".fragment.home.MusicActivity" />
-        <activity android:name=".fragment.home.BoFangListActivity" />
-        <activity android:name=".fragment.home.TeacherDetailActivity" />
-        <activity android:name=".activity.LearningRecordActivity" />
-        <activity android:name=".activity.MyAccountActivity" />
-        <activity android:name=".activity.MyMedalActivity" />
-        <activity android:name=".activity.SettingActivity" />
-        <activity android:name=".fragment.home.EveryDayCommentActivity" />
-        <activity android:name=".fragment.home.SoftMusicActivity" />
-        <activity android:name=".fragment.home.MusicMasterActivity" />
-        <activity android:name=".login.GuidePageActivity" />
-        <activity android:name=".login.MessageActivity" />
-        <activity android:name=".login.bean.HobbyActivity" />
-        <activity android:name=".fragment.home.ZhuanLanActivity" />
-        <activity android:name=".fragment.home.ZhuanLanDetail1Activity" />
-        <activity android:name=".fragment.home.ZhuanLanDetail2Activity" />
-        <activity android:name=".activity.AccountSafeActivity" />
-        <activity android:name=".activity.BrowserHistoryActivity" />
-        <activity android:name=".activity.DownLoadActivity" />
-        <activity android:name=".activity.BindPhoneActivity" />
-        <activity android:name=".fragment.home.SoftMusicDetailActivity" />
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity android:name=".activity.RegisterActivity"/>
+        <activity android:name=".login.ForgetActivity"/>
+        <activity android:name=".login.AlterActivity"/>
+        <activity android:name=".login.SetloginActivity"/>
+        <activity android:name=".fragment.home.SearchActivity"/>
+        <activity android:name=".fragment.home.GuDianActivity"/>
+        <activity android:name=".fragment.home.FreeActivity"/>
+        <activity android:name=".fragment.home.MyGuanzhuActivity"/>
+        <activity android:name=".fragment.home.LikeDetailActivity"/>
+        <activity android:name=".activity.MySubscriptionsActivity"/>
+        <activity android:name=".activity.LearningTimeActivity"/>
+        <activity android:name=".fragment.home.DemoActivity"/>
+        <activity android:name=".fragment.home.MusicActivity"/>
+        <activity android:name=".fragment.home.BoFangListActivity"/>
+        <activity android:name=".fragment.home.TeacherDetailActivity"/>
+        <activity android:name=".activity.LearningRecordActivity"/>
+        <activity android:name=".activity.MyAccountActivity"/>
+        <activity android:name=".activity.MyMedalActivity"/>
+        <activity android:name=".activity.SettingActivity"/>
+        <activity android:name=".fragment.home.EveryDayCommentActivity"/>
+        <activity android:name=".fragment.home.SoftMusicActivity"/>
+        <activity android:name=".fragment.home.MusicMasterActivity"/>
+        <activity android:name=".login.GuidePageActivity"/>
+        <activity android:name=".login.MessageActivity"/>
+        <activity android:name=".login.bean.HobbyActivity"/>
+        <activity android:name=".fragment.home.ZhuanLanActivity"/>
+        <activity android:name=".fragment.home.ZhuanLanDetail1Activity"/>
+        <activity android:name=".fragment.home.ZhuanLanDetail2Activity"/>
+        <activity android:name=".activity.AccountSafeActivity"/>
+        <activity android:name=".activity.BrowserHistoryActivity"/>
+        <activity android:name=".activity.DownLoadActivity"/>
+        <activity android:name=".activity.BindPhoneActivity"/>
+        <activity android:name=".fragment.home.SoftMusicDetailActivity"/>
         <activity
             android:name=".fragment.home.LiuYanActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name=".fragment.home.DownLoadListActivity" />
-        <activity android:name=".login.StudyRecordActivity" />
-        <activity android:name=".fragment.home.WenGaoActivity" />
-        <activity android:name=".fragment.mine.CollectActivity" />
-        <activity android:name=".activity.PersonInfomationActivity" />
-        <activity android:name=".activity.PurchaseHistoryActivity" />
-        <activity android:name=".activity.ShoppingCartActivity" />
-        <activity android:name=".activity.QueryOrderActivity" />
-        <activity android:name=".activity.FeedBackActivity" />
-        <activity android:name=".activity.HelpCenterActivity" />
-        <activity android:name=".activity.HelpCenterDetailActivity" />
-        <activity android:name=".activity.UserAgreementActivity" />
-        <activity android:name=".activity.AboutUsActivity" />
-        <activity android:name=".activity.MedalDetailActivity" />
-        <activity android:name=".activity.TaskDetailActivity" />
-        <activity android:name=".activity.RulesPromotionActivity" />
-        <activity android:name=".activity.AlreadyDownloadDetailActivity" />
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity android:name=".fragment.home.DownLoadListActivity"/>
+        <activity android:name=".login.StudyRecordActivity"/>
+        <activity android:name=".fragment.home.WenGaoActivity"/>
+        <activity android:name=".fragment.mine.CollectActivity"/>
+        <activity android:name=".activity.PersonInfomationActivity"/>
+        <activity android:name=".activity.PurchaseHistoryActivity"/>
+        <activity android:name=".activity.ShoppingCartActivity"/>
+        <activity android:name=".activity.QueryOrderActivity"/>
+        <activity android:name=".activity.FeedBackActivity"/>
+        <activity android:name=".activity.HelpCenterActivity"/>
+        <activity android:name=".activity.HelpCenterDetailActivity"/>
+        <activity android:name=".activity.UserAgreementActivity"/>
+        <activity android:name=".activity.AboutUsActivity"/>
+        <activity android:name=".activity.MedalDetailActivity"/>
+        <activity android:name=".activity.TaskDetailActivity"/>
+        <activity android:name=".activity.RulesPromotionActivity"/>
+        <activity android:name=".activity.AlreadyDownloadDetailActivity"/>
 
-        <service android:name=".service.MediaService" />
+        <service android:name=".service.MediaService"/>
 
-        <activity android:name=".fragment.mine.MyMessageActivity" />
-        <activity android:name=".login.ResetpwdActivity" />
-        <activity android:name=".fragment.home.WebActivity" />
-        <activity android:name=".fragment.mine.MessageDetailActivity" />
-        <activity android:name=".activity.BuyZhuanLanActivity" />
-        <activity android:name=".fragment.home.FreeDownListActivity" />
-        <activity android:name=".fragment.home.CommentDownActivity" />
-        <activity android:name=".login.LoginActivity" />
-
+        <activity android:name=".fragment.mine.MyMessageActivity"/>
+        <activity android:name=".login.ResetpwdActivity"/>
+        <activity android:name=".fragment.home.WebActivity"/>
+        <activity android:name=".fragment.mine.MessageDetailActivity"/>
+        <activity android:name=".activity.BuyZhuanLanActivity"/>
+        <activity android:name=".fragment.home.FreeDownListActivity"/>
+        <activity android:name=".fragment.home.CommentDownActivity"/>
+        <activity android:name=".login.LoginActivity"/>
         <receiver android:name=".fragment.home.player.StatusBarReceiver">
             <intent-filter>
-                <action android:name="me.wcy.music.STATUS_BAR_ACTIONS" />
+                <action android:name="me.wcy.music.STATUS_BAR_ACTIONS"/>
             </intent-filter>
         </receiver>
         <!-- 友盟第三方登录及分享start -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="5a570e16a40fa33281000067" />
+            android:value="5a570e16a40fa33281000067"/>
         <!-- 新浪分享 -->
         <activity
             android:name="com.umeng.socialize.media.WBShareCallBackActivity"
             android:configChanges="keyboardHidden|orientation"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <activity
             android:name="com.sina.weibo.sdk.share.WbShareTransActivity"
             android:launchMode="singleTask"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
             <intent-filter>
-                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <!-- 微信分享 -->
@@ -158,76 +156,74 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <!-- qq精简版分享 -->
         <activity
             android:name="com.umeng.qq.tencent.AuthActivity"
             android:launchMode="singleTask"
             android:noHistory="true">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data android:scheme="tencent1106303149" />
+                <data android:scheme="tencent1106303149"/>
             </intent-filter>
         </activity>
         <activity
             android:name="com.umeng.qq.tencent.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <!-- 分享编辑页(只有新浪微博精简版，豆瓣人人腾讯微博领英twitter需要)： -->
         <activity
             android:name="com.umeng.socialize.editorpage.ShareActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/Theme.UMDefault" />
+            android:theme="@style/Theme.UMDefault"/>
         <!-- 友盟第三方登录及分享end -->
         <!-- 高德定位 -->
-        <service android:name="com.amap.api.location.APSService" />
-
+        <service android:name="com.amap.api.location.APSService"/>
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="b53f336a0ed74fffecfe1bfe4542c4b4" />
+            android:value="b53f336a0ed74fffecfe1bfe4542c4b4">
+        </meta-data>
         <!-- 支付宝支付配置start -->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:exported="false"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
             android:name="com.alipay.sdk.app.H5AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- 支付宝支付配置end -->
         <!-- 微信支付 -->
         <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
-            android:launchMode="singleTop" />
-        <!-- 阿里云推送 start -->
-        <meta-data
-            android:name="com.alibaba.app.appkey"
-            android:value="24749158" /> <!-- 请填写你自己的- appKey -->
-        <meta-data
-            android:name="com.alibaba.app.appsecret"
-            android:value="5ee21fa6d077ab78a402ae076247afc6" /> <!-- 请填写你自己的appSecret -->
+            android:launchMode="singleTop"/>
+        <!--阿里云推送 start-->
+        <meta-data android:name="com.alibaba.app.appkey"
+                   android:value="24749158"/> <!-- 请填写你自己的- appKey -->
+        <meta-data android:name="com.alibaba.app.appsecret"
+                   android:value="5ee21fa6d077ab78a402ae076247afc6"/> <!-- 请填写你自己的appSecret -->
         <!-- 消息接收监听器 （用户可自主扩展） -->
         <receiver
             android:name=".receiver.MyMessageReceiver"
             android:exported="false"> <!-- 为保证receiver安全，建议设置不可导出，如需对其他应用开放可通过android：permission进行限制 -->
             <intent-filter>
-                <action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED" />
+                <action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="com.alibaba.push2.action.NOTIFICATION_REMOVED" />
+                <action android:name="com.alibaba.push2.action.NOTIFICATION_REMOVED"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="com.alibaba.sdk.android.push.RECEIVE" />
+                <action android:name="com.alibaba.sdk.android.push.RECEIVE"/>
             </intent-filter>
         </receiver>
         <!-- 阿里云推送 end -->
@@ -235,6 +231,8 @@
         <activity android:name=".fragment.study.EditNoticeActivity" />
         <activity android:name=".activity.EditNoticeContentActivity" />
         <activity android:name=".activity.NoticeContentActivity"></activity>
+        <activity android:name=".fragment.home.SearchMusicActivity"/>
+        <activity android:name=".fragment.home.SearchMusicActivity2"/>
     </application>
 
 </manifest>

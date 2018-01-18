@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alipay.sdk.app.PayTask;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -56,10 +58,12 @@ import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
 import www.knowledgeshare.com.knowledgeshare.db.LookBean;
 import www.knowledgeshare.com.knowledgeshare.db.LookUtils;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.AliPayBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.CommentMoreBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.OrderBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.PayResult;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicDetailBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.WXPayBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
@@ -71,7 +75,6 @@ import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
-import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
 import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
 public class LikeDetailActivity extends UMShareActivity implements View.OnClickListener {
@@ -116,6 +119,46 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
     // IWXAPI 是第三方app和微信通信的openapi接口
     private IWXAPI api;
     private String WX_APPID = "wxf33afce9142929dc";// 微信appid
+    private static final int SDK_PAY_FLAG = 1;//支付宝
+    //-------------------------------------支付宝支付---------------------------------------------
+    private Handler mHandler = new Handler() {
+        @SuppressWarnings("unused")
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SDK_PAY_FLAG: {
+                    PayResult payResult = new PayResult((String) msg.obj);
+                    //                    Toast.makeText(ZhuanLanActivity.this, " " + payResult.getResultStatus(), Toast.LENGTH_SHORT).show();
+                    /**
+                     * 同步返回的结果必须放置到服务端进行验证（验证的规则请看https://doc.open.alipay.com/doc2/
+                     * detail.htm?spm=0.0.0.0.xdvAU6&treeId=59&articleId=103665&
+                     * docType=1) 建议商户依赖异步通知
+                     */
+                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                    String resultStatus = payResult.getResultStatus();
+                    // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        Toast.makeText(LikeDetailActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
+                        //                        finish();
+                    } else {
+                        // 判断resultStatus 为非"9000"则代表可能支付失败
+                        /*
+                        "8000"代表支付结果因为支付渠道原因或者系统原因还在等待支付结果确认，
+                        最终交易是否成功以服务端异步通知为准（小概率状态）
+                         */
+                        if (TextUtils.equals(resultStatus, "8000")) {
+                            Toast.makeText(LikeDetailActivity.this, "支付结果确认中", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
+                            Toast.makeText(LikeDetailActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,11 +254,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
 
             @Override
             public void onLoadmore() {
-                loadMoreComment(lastID + "");
+//                loadMoreComment(lastID + "");
             }
         });
         springview.setHeader(new MyHeader(this));
-        springview.setFooter(new MyFooter(this));
+//        springview.setFooter(new MyFooter(this));
     }
 
     private void initView() {
@@ -1007,7 +1050,39 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                              }
                     );
         } else if (type.equals("3")) {//支付宝支付
+            OkGo.<AliPayBean>post(MyContants.LXKURL + "order/pay")
+                    .tag(this)
+                    .headers(headers)
+                    .params(params)
+                    .execute(new DialogCallback<AliPayBean>(LikeDetailActivity.this, AliPayBean.class) {
+                                 @Override
+                                 public void onSuccess(Response<AliPayBean> response) {
+                                     int code = response.code();
+                                     final AliPayBean aliPayBean = response.body();
+                                     Runnable payRunnable = new Runnable() {
 
+                                         @Override
+                                         public void run() {
+                                             PayTask alipay = new PayTask(LikeDetailActivity.this);
+                                             String result = alipay.pay(aliPayBean.getAlipay(), true);//调用支付接口，获取支付结果
+                                             Message msg = new Message();
+                                             msg.what = SDK_PAY_FLAG;
+                                             msg.obj = result;
+                                             mHandler.sendMessage(msg);
+                                         }
+                                     };
+
+                                     // 必须异步调用，支付或者授权的行为需要在独立的非ui线程中执行
+                                     Thread payThread = new Thread(payRunnable);
+                                     payThread.start();
+                                 }
+
+                                 @Override
+                                 public void onError(Response<AliPayBean> response) {
+                                     super.onError(response);
+                                 }
+                             }
+                    );
         }
     }
 

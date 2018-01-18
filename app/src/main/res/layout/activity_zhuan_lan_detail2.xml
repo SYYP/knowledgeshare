@@ -84,11 +84,53 @@
                         android:layout_height="1dp"
                         android:layout_marginBottom="10dp"
                         android:background="@color/huise"></View>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_circle_white"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+                        <ImageView
+                            android:id="@+id/iv_bofang"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/pause_yellow_middle"/>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+                            <TextView
+                                android:id="@+id/tv_title2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="崔宗顺的男低音歌唱家秘籍"
+                                android:textColor="@color/textblack"/>
+                            <TextView
+                                android:id="@+id/tv_time2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginTop="5dp"
+                                android:drawableLeft="@drawable/icon_clock"
+                                android:drawablePadding="10dp"
+                                android:text="10:10"/>
+                        </LinearLayout>
+                        <ImageView
+                            android:id="@+id/iv_download"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/bofanglist_download"/>
+                    </LinearLayout>
                     <www.knowledgeshare.com.knowledgeshare.fragment.home.web.CustomActionWebView
                         android:id="@+id/webview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        ></www.knowledgeshare.com.knowledgeshare.fragment.home.web.CustomActionWebView>
+                    ></www.knowledgeshare.com.knowledgeshare.fragment.home.web.CustomActionWebView>
                     <ImageView
                         android:id="@+id/iv_beijing"
                         android:layout_width="match_parent"
@@ -124,49 +166,7 @@
                         android:drawablePadding="10dp"
                         android:text="10-10"/>
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/bg_circle_white"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
-                    <ImageView
-                        android:id="@+id/iv_bofang"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/pause_yellow_middle"/>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:padding="10dp">
-                        <TextView
-                            android:id="@+id/tv_title2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="崔宗顺的男低音歌唱家秘籍"
-                            android:textColor="@color/textblack"/>
-                        <TextView
-                            android:id="@+id/tv_time2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginTop="5dp"
-                            android:drawableLeft="@drawable/icon_clock"
-                            android:drawablePadding="10dp"
-                            android:text="10:10"/>
-                    </LinearLayout>
-                    <ImageView
-                        android:id="@+id/iv_download"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/bofanglist_download"/>
-                </LinearLayout>
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

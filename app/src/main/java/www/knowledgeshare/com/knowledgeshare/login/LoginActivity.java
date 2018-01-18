@@ -11,7 +11,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -32,8 +31,6 @@ import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareConfig;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.zackratos.ultimatebar.UltimateBar;
 
 import java.util.Map;
@@ -47,7 +44,6 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.bean.LoginBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
-import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
@@ -326,7 +322,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         params.put("password",new StringBuffer(login_pwd.getText().toString()).reverse().toString());
         //0--手机号登录  1--微信登录
         params.put("type","0");
-        params.put("device_token",uniqueId);
+        String device_token = SpUtils.getString(this, "device_token", "");
+        params.put("device_token",device_token);
+//        params.put("device_token",uniqueId);
         Logger.e(uniqueId);
 
         OkGo.<LoginBean>post(MyContants.login)

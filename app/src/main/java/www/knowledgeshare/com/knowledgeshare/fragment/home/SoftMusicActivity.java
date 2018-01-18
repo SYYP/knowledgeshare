@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -42,13 +43,15 @@ public class SoftMusicActivity extends BaseActivity implements View.OnClickListe
     private SpringView springview;
     private boolean isLoadMore;
     private String after = "";
+    private RadioGroup rgp;
+    private String type = "1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_soft_music);
         initView();
-        initData();
+        initData(type);
         initListener();
     }
 
@@ -72,7 +75,7 @@ public class SoftMusicActivity extends BaseActivity implements View.OnClickListe
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        initData();
+                        initData(type);
                         springview.onFinishFreshAndLoad();
                     }
                 }, 2000);
@@ -84,7 +87,7 @@ public class SoftMusicActivity extends BaseActivity implements View.OnClickListe
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        initData();
+                        initData(type);
                         springview.onFinishFreshAndLoad();
                     }
                 }, 2000);
@@ -92,14 +95,43 @@ public class SoftMusicActivity extends BaseActivity implements View.OnClickListe
         });
         springview.setHeader(new MyHeader(this));
         springview.setFooter(new MyFooter(this));
+        rgp.check(R.id.rb_gudian);
+        rgp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                switch (i) {
+                    case R.id.rb_gudian:
+                        type = "1";
+                        isLoadMore=false;
+                        initData(type);
+                        break;
+                    case R.id.rb_minzu:
+                        type = "2";
+                        isLoadMore=false;
+                        initData(type);
+                        break;
+                    case R.id.rb_liuxing:
+                        type = "3";
+                        isLoadMore=false;
+                        initData(type);
+                        break;
+                    case R.id.rb_suyang:
+                        type = "4";
+                        isLoadMore=false;
+                        initData(type);
+                        break;
+                }
+            }
+        });
     }
 
-    private void initData() {
+    private void initData(String type) {
         HttpParams params = new HttpParams();
         params.put("userid", SpUtils.getString(this, "id", ""));
         if (isLoadMore) {
             params.put("after", after);
         }
+        params.put("class_id", type);
         OkGo.<SoftMusicMoreBean>post(MyContants.LXKURL + "index/xk-more")
                 .tag(this)
                 .params(params)
@@ -148,6 +180,7 @@ public class SoftMusicActivity extends BaseActivity implements View.OnClickListe
         recycler_yinyueke.setNestedScrollingEnabled(false);
         springview = (SpringView) findViewById(R.id.springview);
         recycler_yinyueke.requestDisallowInterceptTouchEvent(true);
+        rgp = (RadioGroup) findViewById(R.id.rgp);
     }
 
     private class YinYueKeAdapter extends BaseQuickAdapter<SoftMusicMoreBean.DataEntity, BaseViewHolder> {

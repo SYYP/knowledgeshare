@@ -16,7 +16,7 @@
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/iv_tupian"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="90dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/demo1"
                 app:riv_corner_radius="5dip"
@@ -24,7 +24,7 @@
             <View
                 android:id="@+id/view_zhao"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="90dp"
                 android:background="@drawable/bg_zhezhao"></View>
             <TextView
                 android:id="@+id/tv_name"

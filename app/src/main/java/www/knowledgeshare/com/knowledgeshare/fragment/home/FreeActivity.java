@@ -34,6 +34,8 @@ import com.orhanobut.logger.Logger;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -103,8 +105,10 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
     private int mTeacher_zan_count;
     private TextView mTv_collect;
     private TextView mTv_dianzan;
-    private boolean isRefreshing;
+    private boolean isLoadMore;
     private Intent intent;
+    private String after;
+    private boolean backRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +119,15 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
         initDialog();
         initListener();
         initNETDialog();
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("refresh_free")) {
+            backRefresh=true;
+            after= eventBean.getMsg2();
+        }
     }
 
     private void initNETDialog() {
@@ -149,7 +162,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
         springview.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
-                isRefreshing = true;
+                isLoadMore = false;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -161,7 +174,15 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
 
             @Override
             public void onLoadmore() {
-                loadMoreComment(lastID + "");
+                isLoadMore = true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        initData();
+                        springview.onFinishFreshAndLoad();
+                    }
+                }, 2000);
+//                loadMoreComment(lastID + "");
             }
         });
         springview.setHeader(new MyHeader(this));
@@ -169,7 +190,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
     }
 
     private void loadMoreComment(String after) {
-        HttpParams params = new HttpParams();
+        /*HttpParams params = new HttpParams();
         params.put("userid", SpUtils.getString(this, "id", ""));
         params.put("after", after);
         OkGo.<CommentMoreBean>post(MyContants.LXKURL + "free/more-comment")
@@ -201,12 +222,15 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                         } else {
                         }
                     }
-                });
+                });*/
     }
 
     private void initData() {
         HttpParams params = new HttpParams();
         params.put("userid", SpUtils.getString(this, "id", ""));
+        if (isLoadMore) {
+            params.put("after", after);
+        }
         OkGo.<FreeBean>post(MyContants.LXKURL + "free")
                 .tag(this)
                 .params(params)
@@ -217,6 +241,19 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                         mFreeBean = response.body();
                         if (response.code() >= 200 && response.code() <= 204) {
                             Logger.e(code + "");
+                            if (isLoadMore) {
+                                List<FreeBean.ChildEntity> child = mFreeBean.getChild();
+                                if (child == null || child.size() == 0) {
+                                    Toast.makeText(FreeActivity.this, "已无更多数据", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                mChild.addAll(child);
+                                mFreeAdapter.notifyDataSetChanged();
+                            } else {
+                                mChild = mFreeBean.getChild();
+                                mFreeAdapter = new FreeAdapter(R.layout.item_free, mChild);
+                                recycler_free.setAdapter(mFreeAdapter);
+                            }
                             mTeacher_has = mFreeBean.getTeacher_has();
                             Glide.with(MyApplication.getGloableContext()).load(mFreeBean.getImgurl()).into(iv_beijing);
                             tv_teacher_intro.setText(mTeacher_has.getT_introduce());
@@ -238,9 +275,6 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                             tv_dianzan_count.setText(mTeacher_zan_count + "");
                             tv_shiyirenqun.setText(mFreeBean.getSuitable());
                             tv_readxuzhi.setText(mFreeBean.getLook());
-                            mChild = mFreeBean.getChild();
-                            mFreeAdapter = new FreeAdapter(R.layout.item_free, mChild);
-                            recycler_free.setAdapter(mFreeAdapter);
                             mFreeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -286,10 +320,6 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
 
                                 }
                             });
-                            if (!isRefreshing) {
-                                loadMoreComment("");
-                            }
-                            isRefreshing = false;
                         } else {
                         }
                     }
@@ -408,6 +438,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
 
         @Override
         protected void convert(final BaseViewHolder helper, final FreeBean.ChildEntity item) {
+            after=item.getId()+"";
             String created_at = item.getCreated_at();
             String[] split = created_at.split(" ");
             helper.setText(R.id.tv_name, item.getVideo_name())
@@ -855,6 +886,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -870,7 +902,9 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 startActivity(intent);
                 break;
             case R.id.tv_search:
-                startActivity(new Intent(this, SearchActivity.class));
+                Intent intent1 = new Intent(this, SearchMusicActivity.class);
+                intent1.putExtra("type","free");
+                startActivity(intent1);
                 break;
             case R.id.tv_share:
                 showShareDialog("root", 0);

@@ -28,7 +28,6 @@ import com.orhanobut.logger.PrettyFormatStrategy;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.UMShareConfig;
 
 import org.litepal.LitePalApplication;
 
@@ -36,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import okhttp3.OkHttpClient;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 /**
  * Created by Administrator on 2017/8/24.
@@ -75,6 +75,7 @@ public class MyApplication extends LitePalApplication {
                 //                Log.d(TAG, "init cloudchannel success");
                 String deviceId = pushService.getDeviceId();
                 System.out.println("xxxxxxxxx  "+deviceId);
+                SpUtils.putString(MyApplication.getGloableContext(),"device_token",deviceId);
             }
 
             @Override

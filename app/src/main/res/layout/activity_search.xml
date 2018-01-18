@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:background="@color/text_red_dark"
         android:padding="10dp">
+        <!--注意这里一定还要设置singLine=“true”，不然回车还是换行的功能。-->
         <EditText
             android:id="@+id/et_search"
             android:layout_width="wrap_content"
@@ -19,16 +20,18 @@
             android:drawablePadding="10dp"
             android:hint="请输入关键字搜索"
             android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:singleLine="true"
             android:minWidth="280dp"
             android:textSize="14sp"/>
         <ImageView
             android:id="@+id/iv_delete_text"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="260dp"
-            android:src="@drawable/iv_delete_text"/>
+            android:src="@drawable/iv_delete_text"
+            android:visibility="gone"/>
         <TextView
             android:id="@+id/tv_back"
             android:layout_width="wrap_content"
@@ -40,179 +43,189 @@
             android:textColor="@color/white"
             android:textSize="15sp"/>
     </RelativeLayout>
-    <android.support.v4.widget.NestedScrollView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#edecea"
-    >
-        <LinearLayout
-            android:id="@+id/ll_root_view"
+        android:layout_height="match_parent">
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:background="#edecea"
         >
             <LinearLayout
-                android:id="@+id/ll_lishi"
+                android:id="@+id/ll_root_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/bg_circle_white"
-                android:orientation="vertical">
-                <RelativeLayout
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+            >
+                <LinearLayout
+                    android:id="@+id/ll_lishi"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="15dp">
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/bg_circle_white"
+                    android:orientation="vertical">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="历史搜索"
+                            android:textColor="@color/textblack"
+                            android:textSize="15sp"/>
+                        <ImageView
+                            android:id="@+id/iv_delete"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:src="@drawable/icon_history_delete"/>
+                    </RelativeLayout>
+                    <TextView
+                        android:id="@+id/tv_nolishi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:text="暂无历史搜索"
+                        android:visibility="gone"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/huise"/>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_lishi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"></android.support.v7.widget.RecyclerView>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/ll_hot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/bg_wanjiao"
+                    android:orientation="vertical">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="历史搜索"
+                        android:padding="15dp"
+                        android:text="热门标签"
                         android:textColor="@color/textblack"
-                        android:textSize="15sp"/>
-                    <ImageView
-                        android:id="@+id/iv_delete"
-                        android:layout_width="wrap_content"
+                        android:textSize="15sp"
+                    />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/huise"
+                    />
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_hot"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:src="@drawable/icon_history_delete"/>
-                </RelativeLayout>
-                <TextView
-                    android:id="@+id/tv_nolishi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dp"
-                    android:text="暂无历史搜索"
-                    android:visibility="gone"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@color/huise"/>
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_lishi"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"></android.support.v7.widget.RecyclerView>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/ll_hot"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/bg_wanjiao"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dp"
-                    android:text="热门标签"
-                    android:textColor="@color/textblack"
-                    android:textSize="15sp"
-                />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@color/huise"
-                />
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_hot"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:visibility="gone"
-                ></android.support.v7.widget.RecyclerView>
-                <www.knowledgeshare.com.knowledgeshare.view.FluidLayout
-                    android:id="@+id/liushiview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                >
-                </www.knowledgeshare.com.knowledgeshare.view.FluidLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/ll_result"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
+                        android:padding="10dp"
+                        android:visibility="gone"
+                    ></android.support.v7.widget.RecyclerView>
+                    <www.knowledgeshare.com.knowledgeshare.view.FluidLayout
+                        android:id="@+id/liushiview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                    >
+                    </www.knowledgeshare.com.knowledgeshare.view.FluidLayout>
+                </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/ll_result"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/bg_circle_white"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
                     <LinearLayout
-                        android:id="@+id/ll_dashiban"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/bg_circle_white"
                         android:orientation="vertical">
                         <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:padding="10dp">
-                            <View
-                                android:layout_width="3dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginBottom="4dp"
-                                android:layout_marginTop="4dp"
-                                android:background="@color/text_red_dark"></View>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:padding="5dp"
-                                android:text="音乐大师班"
-                                android:textColor="@color/textblack"
-                                android:textSize="16sp"/>
-                        </LinearLayout>
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/recycler_dashiban"
+                            android:id="@+id/ll_dashiban"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                        ></android.support.v7.widget.RecyclerView>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:id="@+id/ll_yinyueke"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:padding="10dp">
+                                <View
+                                    android:layout_width="3dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginBottom="4dp"
+                                    android:layout_marginTop="4dp"
+                                    android:background="@color/text_red_dark"></View>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="5dp"
+                                    android:text="音乐大师班"
+                                    android:textColor="@color/textblack"
+                                    android:textSize="16sp"/>
+                            </LinearLayout>
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/recycler_dashiban"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                            ></android.support.v7.widget.RecyclerView>
+                        </LinearLayout>
                         <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:padding="10dp"
-                        >
-                            <View
-                                android:layout_width="3dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginBottom="4dp"
-                                android:layout_marginTop="4dp"
-                                android:background="@color/text_red_dark"></View>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:padding="5dp"
-                                android:text="轻松音乐课"
-                                android:textColor="@color/textblack"
-                                android:textSize="16sp"/>
-                        </LinearLayout>
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/recycler_yinyueke"
+                            android:id="@+id/ll_yinyueke"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"></android.support.v7.widget.RecyclerView>
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:padding="10dp"
+                            >
+                                <View
+                                    android:layout_width="3dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginBottom="4dp"
+                                    android:layout_marginTop="4dp"
+                                    android:background="@color/text_red_dark"></View>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="5dp"
+                                    android:text="轻松音乐课"
+                                    android:textColor="@color/textblack"
+                                    android:textSize="16sp"/>
+                            </LinearLayout>
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/recycler_yinyueke"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"></android.support.v7.widget.RecyclerView>
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+        </android.support.v4.widget.NestedScrollView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_search"
+            android:visibility="gone"
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+    </FrameLayout>
 </LinearLayout>

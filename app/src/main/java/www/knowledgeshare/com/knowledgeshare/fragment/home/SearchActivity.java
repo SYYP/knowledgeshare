@@ -11,8 +11,10 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,14 +41,13 @@ import www.knowledgeshare.com.knowledgeshare.bean.SearchHistoryEntity;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HotBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SearchBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SearchBean2;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SoftKeyboardTool;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.FluidLayout;
-
-import static com.taobao.accs.ACCSManager.mContext;
 
 
 public class SearchActivity extends BaseActivity implements View.OnClickListener {
@@ -55,6 +56,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private ImageView iv_delete, iv_delete_text;
     private RecyclerView recycler_lishi;
     private RecyclerView recycler_hot;
+    private RecyclerView recycler_search;
     private List<String> hotNameList = new ArrayList<>();
     private List<String> hotIdsList = new ArrayList<>();
     private RecyclerHistoryAdapter mHistoryAdapter;
@@ -70,6 +72,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private DaShiBanAdapter mDaShiBanAdapter;
     private YinYueKeAdapter mYinYueKeAdapter;
     private DaShiBanAdapter mMDaShiBanAdapter;
+    private SearchAdapter mSearchAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         iv_delete = (ImageView) findViewById(R.id.iv_delete);
         iv_delete.setOnClickListener(this);
         recycler_lishi = (RecyclerView) findViewById(R.id.recycler_lishi);
+        recycler_search = (RecyclerView) findViewById(R.id.recycler_search);
         recycler_hot = (RecyclerView) findViewById(R.id.recycler_hot);
         ll_lishi = (LinearLayout) findViewById(R.id.ll_lishi);
         ll_hot = (LinearLayout) findViewById(R.id.ll_hot);
@@ -91,10 +95,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         ll_root_view = (LinearLayout) findViewById(R.id.ll_root_view);
         recycler_dashiban = (RecyclerView) findViewById(R.id.recycler_dashiban);
         recycler_yinyueke = (RecyclerView) findViewById(R.id.recycler_yinyueke);
-        recycler_dashiban.setLayoutManager(new GridLayoutManager(mContext, 2));
+        recycler_dashiban.setLayoutManager(new GridLayoutManager(this, 2));
         recycler_dashiban.setNestedScrollingEnabled(false);
-        recycler_yinyueke.setLayoutManager(new GridLayoutManager(mContext, 2));
+        recycler_yinyueke.setLayoutManager(new GridLayoutManager(this, 2));
         recycler_yinyueke.setNestedScrollingEnabled(false);
+        recycler_search.setLayoutManager(new LinearLayoutManager(this));
+        recycler_search.setNestedScrollingEnabled(false);
         liushiview = (FluidLayout) findViewById(R.id.liushiview);
         initData();
         initListener();
@@ -172,7 +178,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             public void afterTextChanged(Editable s) {
                 if (!TextUtils.isEmpty(et_search.getText().toString())) {
                     doSearch(et_search.getText().toString());
-                    iv_delete_text.setVisibility(View.VISIBLE);
                 } else {
                     iv_delete_text.setVisibility(View.GONE);
                     ll_lishi.setVisibility(View.VISIBLE);
@@ -192,6 +197,60 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 }
             }
         });
+        et_search.setOnEditorActionListener(editorActionListener);
+    }
+
+
+    TextView.OnEditorActionListener editorActionListener = new TextView.OnEditorActionListener() {
+
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                //                SoftKeyboardTool.closeKeyboard(mSearchEt);//关闭软键盘
+                recycler_search.setVisibility(View.GONE);
+                ll_lishi.setVisibility(View.GONE);
+                ll_hot.setVisibility(View.GONE);
+                String content = et_search.getText().toString();
+                if (!TextUtils.isEmpty(content))
+                doSavehistory(content);
+                ll_result.setVisibility(View.VISIBLE);
+                mMDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban1, mZhuanlan);
+                recycler_dashiban.setAdapter(mMDaShiBanAdapter);
+                mMDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                        Intent intent = new Intent(SearchActivity.this, ZhuanLanActivity.class);
+                        intent.putExtra("id", mMDaShiBanAdapter.getData().get(position).getId() + "");
+                        startActivity(intent);
+                    }
+                });
+                mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, mXiaoke);
+                recycler_yinyueke.setAdapter(mYinYueKeAdapter);
+                mYinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                        Intent intent = new Intent(SearchActivity.this, SoftMusicDetailActivity.class);
+                        intent.putExtra("id", mYinYueKeAdapter.getData().get(position).getXk_id() + "");
+                        startActivity(intent);
+                    }
+                });
+                return true;
+            }
+            return false;
+        }
+    };
+
+
+    private class SearchAdapter extends BaseQuickAdapter<SearchBean2, BaseViewHolder> {
+
+        public SearchAdapter(@LayoutRes int layoutResId, @Nullable List<SearchBean2> data) {
+            super(layoutResId, data);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder helper, SearchBean2 item) {
+            helper.setText(R.id.tv_content, item.getName());
+        }
     }
 
     private void doSearch(final String content) {
@@ -210,28 +269,38 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                             mXiaoke = searchBean.getXiaoke();
                             mZhuanlan = searchBean.getZhuanlan();
                             if (mZhuanlan.size() > 0 || mXiaoke.size() > 0) {
-                                ll_lishi.setVisibility(View.GONE);
-                                ll_hot.setVisibility(View.GONE);
-                                doSavehistory(content);
-                                ll_result.setVisibility(View.VISIBLE);
-                                mMDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban1, mZhuanlan);
-                                recycler_dashiban.setAdapter(mMDaShiBanAdapter);
-                                mMDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                        Intent intent = new Intent(SearchActivity.this, ZhuanLanActivity.class);
-                                        intent.putExtra("id", mMDaShiBanAdapter.getData().get(position).getId() + "");
-                                        startActivity(intent);
+                                recycler_search.setVisibility(View.VISIBLE);
+                                final List<SearchBean2> list = new ArrayList<SearchBean2>();
+                                if (mZhuanlan != null && mZhuanlan.size() > 0) {
+                                    for (int i = 0; i < mZhuanlan.size(); i++) {
+                                        SearchBean.ZhuanlanEntity entity = mZhuanlan.get(i);
+                                        String zl_name = entity.getZl_name();
+                                        int id = entity.getId();
+                                        list.add(new SearchBean2(zl_name, "zl", id + ""));
                                     }
-                                });
-                                mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, mXiaoke);
-                                recycler_yinyueke.setAdapter(mYinYueKeAdapter);
-                                mYinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                }
+                                if (mXiaoke != null && mXiaoke.size() > 0) {
+                                    for (int i = 0; i < mXiaoke.size(); i++) {
+                                        SearchBean.XiaokeEntity entity = mXiaoke.get(i);
+                                        String xk_name = entity.getXk_name();
+                                        int id = entity.getXk_id();
+                                        list.add(new SearchBean2(xk_name, "xk", id + ""));
+                                    }
+                                }
+                                mSearchAdapter = new SearchAdapter(R.layout.item_search, list);
+                                recycler_search.setAdapter(mSearchAdapter);
+                                mSearchAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                        Intent intent = new Intent(SearchActivity.this, SoftMusicDetailActivity.class);
-                                        intent.putExtra("id", mYinYueKeAdapter.getData().get(position).getXk_id() + "");
-                                        startActivity(intent);
+                                        if (list.get(position).getType().equals("zl")) {
+                                            Intent intent = new Intent(SearchActivity.this, ZhuanLanActivity.class);
+                                            intent.putExtra("id", list.get(position).getId() + "");
+                                            startActivity(intent);
+                                        } else {
+                                            Intent intent = new Intent(SearchActivity.this, SoftMusicDetailActivity.class);
+                                            intent.putExtra("id", list.get(position).getId() + "");
+                                            startActivity(intent);
+                                        }
                                     }
                                 });
                             } else {

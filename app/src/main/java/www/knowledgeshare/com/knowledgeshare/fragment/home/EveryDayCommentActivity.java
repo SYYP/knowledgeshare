@@ -34,6 +34,8 @@ import com.orhanobut.logger.Logger;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -86,6 +88,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
     private SpringView springview;
     private boolean isLoadMore;
     private EveryDayBean everyDayBean;
+    private boolean backRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +99,15 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
         initDialog();
         initListener();
         initNETDialog();
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("refresh_daily")) {
+            backRefresh=true;
+            after= eventBean.getMsg2();
+        }
     }
 
     private void initNETDialog() {
@@ -198,11 +210,11 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                     EveryDayBean.DailysBean item = mDailys.get(position);
                                     //刷新小型播放器
                                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(),
-                                            item.getParent_name(), item.getVideo_url(),position);
+                                            item.getParent_name(), item.getVideo_url(), position);
                                     gobofang(playerBean);
                                     addListenCount(mDailys.get(position).getId() + "");
                                     //设置进入播放主界面的数据
-                                    List<MusicTypeBean> musicTypeBeanList=new ArrayList<MusicTypeBean>();
+                                    List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
                                     for (int i = 0; i < mDailys.size(); i++) {
                                         EveryDayBean.DailysBean entity = mDailys.get(i);
                                         MusicTypeBean musicTypeBean = new MusicTypeBean("everydaycomment",
@@ -220,15 +232,15 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                     }
                                     MediaService.insertMusicList(list);
                                     //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
-                                    List<BofangHistroyBean> histroyBeanList=new ArrayList<BofangHistroyBean>();
+                                    List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
                                     for (int i = 0; i < mDailys.size(); i++) {
                                         EveryDayBean.DailysBean entity = mDailys.get(i);
                                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("everydaycomment", entity.getId(), entity.getVideo_name(),
                                                 entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
                                                 entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
-                                                , entity.getT_header(), entity.getParent_name(),entity.getShare_h5_url(),
+                                                , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url(),
                                                 SystemClock.currentThreadTimeMillis()
-                                                ,"commentId",entity.getParent_name(),entity.getTxt_url());
+                                                , "commentId", entity.getParent_name(), entity.getTxt_url());
                                         histroyBeanList.add(bofangHistroyBean);
                                     }
                                     MediaService.insertBoFangHistroyList(histroyBeanList);
@@ -406,7 +418,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                showShareDialog("list",adapterPosition);
+                showShareDialog("list", adapterPosition);
             }
         });
         mTv_collect = mDialog.getView(R.id.tv_collect);
@@ -483,20 +495,20 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                         childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
                 DownUtils.add(DownLoadListBean);*/
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
-                OkDownload.request(downLoadListsBean.getTypeId()+"_"+childEntity.getId(), request)
+                OkDownload.request(downLoadListsBean.getTypeId() + "_" + childEntity.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download")
-                        .fileName(childEntity.getVideo_name()+listBean.getTypeId()+"_"+childEntity.getId()+".mp3")
+                        .fileName(childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")
                         .extra3(downLoadListsBean)//额外数据
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听
                         .start();
                 OkGo.<File>get(childEntity.getTxt_url())
                         .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download"
-                                ,downLoadListsBean.getTypeId()+"-"+childEntity.getId()+childEntity.getVideo_name()+".txt") {
+                                , downLoadListsBean.getTypeId() + "-" + childEntity.getId() + childEntity.getVideo_name() + ".txt") {
                             @Override
                             public void onSuccess(Response<File> response) {
                                 int code = response.code();
-                                if (code >= 200 && code <= 204){
+                                if (code >= 200 && code <= 204) {
                                     Logger.e("文稿下载完成");
                                 }
                             }
@@ -693,7 +705,8 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        unbindService(mServiceConnection);
+        //        unbindService(mServiceConnection);
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -703,10 +716,12 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                 finish();
                 break;
             case R.id.iv_share:
-                showShareDialog("root",0);
+                showShareDialog("root", 0);
                 break;
             case R.id.tv_search:
-                startActivity(new Intent(this, SearchActivity.class));
+                Intent intent1 = new Intent(this, SearchMusicActivity.class);
+                intent1.putExtra("type", "daily");
+                startActivity(intent1);
                 break;
             case R.id.tv_download:
                 EveryDayBean model = everyDayBean;
