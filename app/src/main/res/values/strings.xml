@@ -8,5 +8,7 @@
     <string name="zhaq">账号安全</string>
     <string name="yxxsc">已学习时长</string>
     <string name="lxxxts">连续学习天数</string>
+    <string name="ckgd"><u>查看更多</u></string>
+
 
 </resources>

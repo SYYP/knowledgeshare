@@ -8,7 +8,7 @@
     android:layout_height="wrap_content">
 <TextView
      android:id="@+id/item_title"
-   android:layout_centerVertical="true"
+    android:layout_centerVertical="true"
     android:layout_marginLeft="10dp"
     android:textColor="@color/textblack"
     android:textSize="14sp"
@@ -23,7 +23,6 @@
         android:textColor="@color/textblack"
         android:layout_alignParentRight="true"
         android:textSize="14sp"
-        android:text="编辑"
         android:drawableLeft="@drawable/study_bianji"
         android:drawablePadding="10dp"
         android:layout_centerVertical="true"
@@ -41,11 +40,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />-->
     <TextView
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="30dp"
         android:id="@+id/item_delete"
         android:textColor="@color/textblack"
         android:textSize="14sp"
-        android:text="删除"
         android:drawableLeft="@drawable/study_delete"
         android:drawablePadding="10dp"
         android:layout_centerVertical="true"
@@ -63,7 +61,7 @@
         android:layout_height="wrap_content" />-->
 
 </RelativeLayout>
-    <LinearLayout
+    <RelativeLayout
         android:layout_marginBottom="10dp"
         android:layout_marginTop="5dp"
         android:id="@+id/study_liner"
@@ -73,19 +71,35 @@
         android:background="#f5f5f5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <EditText
+        <TextView
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:id="@+id/item_count"
             android:background="@null"
-             android:textColor="@color/textblack"
-            android:textSize="13sp"
+            android:textColor="@color/textblack"
+            android:textSize="14sp"
+            android:maxLines="5"
+            android:ellipsize="end"
             android:lineSpacingMultiplier="1.1"
             android:lineSpacingExtra="3dp"
-            android:padding="10dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </LinearLayout>
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/item_look"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ckgd"
+            android:paddingRight="10dp"
+            android:paddingBottom="3dp"
+            android:textSize="13sp"
+            android:textColor="@color/red2"
+            android:layout_below="@+id/item_count"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
     <!--<View-->
         <!--android:background="@color/white"-->
         <!--android:layout_marginLeft="20dp"-->

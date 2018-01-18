@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_mine"
+    tools:context="www.knowledgeshare.com.knowledgeshare.activity.EditNoticeContentActivity">
+    <include layout="@layout/item_title_layout"/>
+    <EditText
+        android:id="@+id/notice_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_wanjiao2"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:padding="10dp"
+        android:lineSpacingMultiplier="1.1"
+        android:lineSpacingExtra="3dp"
+        android:minLines="10"
+        android:hint="请输入内容"
+        android:textColorHint="#666666"
+        android:gravity="start"
+        android:textSize="14sp"
+        android:textColor="@color/text_black"/>
+</LinearLayout>

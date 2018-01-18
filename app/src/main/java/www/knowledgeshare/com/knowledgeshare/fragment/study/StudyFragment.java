@@ -1,11 +1,15 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.study;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
+import android.text.Selection;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -14,6 +18,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -40,6 +45,8 @@ import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
@@ -49,6 +56,8 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.EditNoticeContentActivity;
+import www.knowledgeshare.com.knowledgeshare.activity.NoticeContentActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
@@ -108,6 +117,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     private AMapLocationClient mapLocationClient;
     private WeatherSearch mweathersearch;
     private LinearLayout noteLl;
+    private ImageView study_newNotice;
 
     @Override
     protected void lazyLoad() {
@@ -151,8 +161,10 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         study_recycler = rootView.findViewById(R.id.study_recycle);
         study_collect = rootView.findViewById(R.id.study_collect);
         study_xinxin = rootView.findViewById(R.id.study_xinxin);
+        study_newNotice = rootView.findViewById(R.id.study_new_notice);
         study_recycler.setNestedScrollingEnabled(false);
         study_name.setText("Hi  "+SpUtils.getString(mContext,"name",""));
+        EventBus.getDefault().register(this);
         initMap();
         initLoadMore();
         requestNoteList("");
@@ -189,6 +201,13 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), CollectActivity.class);
                 startActivity(intent);
+            }
+        });
+        //新增笔记
+        study_newNotice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(mContext,EditNoticeActivity.class));
             }
         });
         return rootView;
@@ -320,9 +339,9 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
                             list = response.body().getNote();
                             List<NoteListBean.GoldBean> gold = response.body().getGold();
                             if (list.size() > 0) {
-                                noteLl.setVisibility(View.VISIBLE);
+                                study_recycler.setVisibility(View.VISIBLE);
                             } else {
-                                noteLl.setVisibility(View.GONE);
+                                study_recycler.setVisibility(View.GONE);
                             }
                             Studyadapter studyadapter = new Studyadapter(getActivity(), list);
                             study_recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -349,6 +368,13 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
                         }
                     }
                 });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("noticerefrash")) {
+            requestNoteList("");
+        }
     }
 
     @Override
@@ -479,7 +505,16 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
             lastId = list.get(position).getId();
             holder.item_title.setText(list.get(position).getTitle());
             holder.item_count.setText(list.get(position).getContent());
-
+            holder.item_count.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    holder.item_count.getViewTreeObserver().removeOnPreDrawListener(this);
+                    if (holder.item_count.getLineCount() == 5){
+                        holder.item_look.setVisibility(View.VISIBLE);
+                    }
+                    return false;
+                }
+            });
             //删除
             holder.item_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -492,58 +527,21 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
             holder.item_compile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (bool) {
-                        holder.item_count.setFocusableInTouchMode(false);
-                        holder.item_count.setFocusable(false);
-                        Drawable drawable = context.getResources().getDrawable(R.drawable.study_bianji);
-                        /// 这一步必须要做,否则不会显示.
-                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                        holder.item_compile.setCompoundDrawables(drawable, null, null, null);
-                        holder.item_compile.setText("编辑");
-                        //关闭键盘
-                        SoftKeyboardTool.closeKeyboard(holder.item_count);
-                        MyApplication.stopClearClip();
-                        requesteditNote(list.get(position).getId(), holder.item_count.getText().toString());
-                    } else {
-                        holder.item_count.setFocusableInTouchMode(true);
-                        holder.item_count.setFocusable(true);
-                        Drawable drawable = context.getResources().getDrawable(R.drawable.study_finish);
-                        /// 这一步必须要做,否则不会显示.
-                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                        holder.item_compile.setCompoundDrawables(drawable, null, null, null);
-                        holder.item_compile.setText("完成");
-                        MyApplication.startClearClip(context);
-                        holder.item_count.setOnTouchListener(new View.OnTouchListener() {
-                            @Override
-                            public boolean onTouch(View view, MotionEvent motionEvent) {
-                                setInsertionDisabled(holder.item_count);
-                                return false;
-                            }
-                        });
-                    }
-                    bool = !bool;
-                    holder.item_count.setTextIsSelectable(false);
-                    holder.item_count.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
-                        @Override
-                        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-                            return false;
-                        }
+                    Intent intent = new Intent(mContext,NoticeContentActivity.class);
+                    intent.putExtra("content",holder.item_count.getText().toString());
+                    intent.putExtra("id",list.get(position).getId());
+                    startActivity(intent);
+                }
+            });
 
-                        @Override
-                        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-                            return false;
-                        }
-
-                        @Override
-                        public void onDestroyActionMode(ActionMode actionMode) {
-
-                        }
-                    });
+            //查看更多
+            holder.item_look.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext,NoticeContentActivity.class);
+                    intent.putExtra("content",holder.item_count.getText().toString());
+                    intent.putExtra("id",list.get(position).getId());
+                    startActivity(intent);
                 }
             });
         }
@@ -605,29 +603,6 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
                     });
         }
 
-        private void requesteditNote(int id, String content) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.put("Authorization", "Bearer " + SpUtils.getString(context, "token", ""));
-            HttpParams params = new HttpParams();
-            params.put("id", id + "");
-            params.put("content", content);
-            OkGo.<BaseBean>post(MyContants.editNote)
-                    .tag(this)
-                    .headers(headers)
-                    .params(params)
-                    .execute(new JsonCallback<BaseBean>(BaseBean.class) {
-                        @Override
-                        public void onSuccess(Response<BaseBean> response) {
-                            int code = response.code();
-                            if (code >= 200 && code <= 204) {
-                                TUtils.showShort(context, response.body().getMessage());
-                            } else {
-                                TUtils.showShort(context, response.body().getMessage());
-                            }
-                        }
-                    });
-        }
-
         @Override
         public int getItemCount() {
             return list != null ? list.size() : 0;
@@ -637,15 +612,17 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
             TextView item_title;
             TextView item_delete;
             TextView item_compile;
-            EditText item_count;
-            LinearLayout study_liner;
+            TextView item_count;
+            TextView item_look;
+            RelativeLayout study_liner;
 
             MyViewholder(View rootView) {
                 super(rootView);
                 item_title = (TextView) rootView.findViewById(R.id.item_title);
                 item_delete = (TextView) rootView.findViewById(R.id.item_delete);
                 item_compile = (TextView) rootView.findViewById(R.id.item_compile);
-                item_count = (EditText) rootView.findViewById(R.id.item_count);
+                item_count = (TextView) rootView.findViewById(R.id.item_count);
+                item_look = rootView.findViewById(R.id.item_look);
                 study_liner = rootView.findViewById(R.id.study_liner);
             }
         }
@@ -675,4 +652,9 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }
