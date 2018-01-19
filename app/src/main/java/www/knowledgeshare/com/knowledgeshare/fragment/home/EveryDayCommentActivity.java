@@ -105,8 +105,10 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("refresh_daily")) {
-            backRefresh=true;
             after= eventBean.getMsg2();
+            isLoadMore=false;
+            backRefresh=true;
+            initData();
         }
     }
 
@@ -175,8 +177,11 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
     private void initData() {
         HttpParams params = new HttpParams();
         params.put("userid", SpUtils.getString(this, "id", ""));
-        if (isLoadMore) {
+        if (isLoadMore || backRefresh) {
             params.put("after", after);
+        }
+        if (backRefresh){
+            params.put("is_search", "1");
         }
         OkGo.<EveryDayBean>post(MyContants.LXKURL + "daily")
                 .tag(this)

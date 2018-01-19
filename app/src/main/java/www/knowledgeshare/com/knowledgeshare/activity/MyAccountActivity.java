@@ -36,7 +36,6 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.ChangeShowBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.LikeDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.AliPayBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.PayResult;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.WXPayBean;
