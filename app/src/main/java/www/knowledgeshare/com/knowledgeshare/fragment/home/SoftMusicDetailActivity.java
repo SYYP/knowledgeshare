@@ -874,6 +874,11 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
         mDialog.getView(R.id.tv_download).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String userid = SpUtils.getString(MyApplication.getGloableContext(), "id", "");
+                if (TextUtils.isEmpty(userid)) {
+                    startActivity(new Intent(SoftMusicDetailActivity.this, LoginActivity.class));
+                    return;
+                }
                 SoftMusicDetailBean.ChildEntity childEntity = mChild.get(adapterPosition);
                 String created_at = childEntity.getCreated_at();
                 String[] split = created_at.split(" ");
@@ -897,6 +902,10 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                 listBean.setDianzan(childEntity.isIslive());
                 listBean.setCollected(childEntity.isIsfav());
                 list.add(listBean);
+                if (MyUtils.isHaveFile("xiaoke",childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId() + ".mp3")){
+                    Toast.makeText(SoftMusicDetailActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                         "xiaoke", mMusicDetailBean.getXk_class_id() + "", childEntity.getParent_name(), childEntity.getT_header(),
                         childEntity.getT_name(), childEntity.getT_tag(), mChild.size() + "", list);

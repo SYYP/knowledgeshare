@@ -881,6 +881,11 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 isBofang = !isBofang;
                 break;
             case R.id.iv_download:
+                String userid = SpUtils.getString(MyApplication.getGloableContext(), "id", "");
+                if (TextUtils.isEmpty(userid)) {
+                    startActivity(new Intent(this, LoginActivity.class));
+                    return;
+                }
                 String created_at = mFreeTryReadDetailBean.getCreated_at();
                 String[] split = created_at.split(" ");
 
@@ -905,6 +910,10 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 listBean.setDianzan(mFreeTryReadDetailBean.isIsfav());
                 listBean.setCollected(mFreeTryReadDetailBean.isIsfav());
                 list.add(listBean);
+                if (MyUtils.isHaveFile("zhuanlan",mFreeTryReadDetailBean.getName() + mFreeTryReadDetailBean.getZl_id() + "_" + mFreeTryReadDetailBean.getId() + ".mp3")){
+                    Toast.makeText(ZhuanLanDetail2Activity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                         "zhuanlan", mFreeTryReadDetailBean.getZl_id() + "", getIntent().getStringExtra("title"), mFreeTryReadDetailBean.getT_header(),
                         mFreeTryReadDetailBean.getT_name(), mFreeTryReadDetailBean.getT_tag(), "1", list);

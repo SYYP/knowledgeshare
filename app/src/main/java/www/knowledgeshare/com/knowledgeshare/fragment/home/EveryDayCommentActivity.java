@@ -41,6 +41,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
@@ -59,6 +60,7 @@ import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
@@ -467,6 +469,11 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
         mDialog.getView(R.id.tv_download).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String userid = SpUtils.getString(MyApplication.getGloableContext(), "id", "");
+                if (TextUtils.isEmpty(userid)) {
+                    startActivity(new Intent(EveryDayCommentActivity.this, LoginActivity.class));
+                    return;
+                }
                 EveryDayBean.DailysBean childEntity = mDailys.get(adapterPosition);
                 String created_at = childEntity.getCreated_at();
                 String[] split = created_at.split(" ");
@@ -491,6 +498,10 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                 listBean.setDianzan(childEntity.isIslive());
                 listBean.setCollected(childEntity.isIsfav());
                 list.add(listBean);
+                if (MyUtils.isHaveFile("comment",childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")){
+                    Toast.makeText(EveryDayCommentActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                         "comment", "commentId", "", childEntity.getT_header(), "", "", list.size() + "", list);
                 DownUtil.add(downLoadListsBean);

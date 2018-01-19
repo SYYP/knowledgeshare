@@ -61,6 +61,7 @@ import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
@@ -737,6 +738,11 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
         mDialog.getView(R.id.tv_download).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String userid = SpUtils.getString(MyApplication.getGloableContext(), "id", "");
+                if (TextUtils.isEmpty(userid)) {
+                    startActivity(new Intent(FreeActivity.this, LoginActivity.class));
+                    return;
+                }
                 FreeBean.ChildEntity childEntity = mChild.get(adapterPosition);
                 String created_at = childEntity.getCreated_at();
                 String[] split = created_at.split(" ");
@@ -760,6 +766,10 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 listBean.setDianzan(childEntity.isIslive());
                 listBean.setCollected(childEntity.isIsfav());
                 list.add(listBean);
+                if (MyUtils.isHaveFile("free",childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")){
+                    Toast.makeText(FreeActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                         "free", listBean.getTypeId(), "", childEntity.getT_header(), "", "", list.size() + "", list);
                 DownUtil.add(downLoadListsBean);

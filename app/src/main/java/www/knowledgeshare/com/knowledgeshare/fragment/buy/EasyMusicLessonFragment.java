@@ -6,7 +6,6 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,7 +18,6 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
-import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -147,7 +145,7 @@ public class EasyMusicLessonFragment extends BaseFragment {
                             search = JinduUtils.search();
                             for (int i = 0; i < search.size(); i++) {
                                 for (int j = 0; j < listAll.size(); j++) {
-                                    if (search.get(i).getMid().equals(listAll.get(j).getId())){
+                                    if (search.get(i).getMyId().equals(listAll.get(j).getId())){
                                         BuyXkBean.DataBean dataBean = listAll.get(j);
                                         jindu = search.get(j).getJindu();
                                         dataBean.setJindu(jindu);
@@ -166,7 +164,6 @@ public class EasyMusicLessonFragment extends BaseFragment {
                                     startActivity(intent);
                                 }
                             });
-
 
                             springView.onFinishFreshAndLoad();
 
@@ -208,7 +205,7 @@ public class EasyMusicLessonFragment extends BaseFragment {
             lastId = item.getId();
             /*if (search.size() > 0){
                 for (int i = 0; i < search.size(); i++) {
-                    if (search.get(i).getMid().equals(lastId)){
+                    if (search.get(i).getMyId().equals(lastId)){
                         double jindu = search.get(i).getJindu();
                         Logger.e(jindu+"");
                         easyYbfTv.setText("以播放："+ jindu*100+"%");
@@ -219,7 +216,7 @@ public class EasyMusicLessonFragment extends BaseFragment {
            *//* if (search.size() >0 ){
                 double jindu = search.get(helper.getAdapterPosition()).getJindu();
                 Logger.e(jindu+"");
-                if (TextUtils.equals(lastId+"",search.get(helper.getAdapterPosition()).getMid())){
+                if (TextUtils.equals(lastId+"",search.get(helper.getAdapterPosition()).getMyId())){
                     easyYbfTv.setText("以播放："+ jindu*100+"%");
                 }
             }*//*else {

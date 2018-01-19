@@ -1,7 +1,5 @@
 package www.knowledgeshare.com.knowledgeshare.db;
 
-import android.content.ContentValues;
-
 import org.litepal.crud.DataSupport;
 
 import java.util.List;
@@ -25,7 +23,7 @@ public class JinduUtils {
     }
 
     public static void add(BofangjinduBean bofangjinduBean) {
-        if (isInserted(bofangjinduBean.getMid())) {
+        if (isInserted(bofangjinduBean.getMyId())) {
 //            bofangjinduBean.save();
         } else {
             bofangjinduBean.save();//添加完数据别忘了保存，这个save()方法是实体类继承的DataSupport类中的
@@ -35,7 +33,7 @@ public class JinduUtils {
     public static boolean isInserted(String mid) {
         List<BofangjinduBean> all = search();
         for (int i = 0; i < all.size(); i++) {
-            if (all.get(i).getMid().equals(mid)) {
+            if (all.get(i).getMyId().equals(mid)) {
                 return true;
             }
         }

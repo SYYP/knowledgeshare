@@ -7,20 +7,20 @@ import org.litepal.crud.DataSupport;
  */
 
 public class BofangjinduBean extends DataSupport {
-    private String mid;
+    private String myId;
     private double jindu;
 
     public BofangjinduBean(String mid, double jindu){
-        this.mid = mid;
+        this.myId = mid;
         this.jindu = jindu;
     }
 
-    public String getMid() {
-        return mid;
+    public String getMyId() {
+        return myId;
     }
 
-    public void setMid(String mid) {
-        this.mid = mid;
+    public void setMyId(String myId) {
+        this.myId = myId;
     }
 
     public double getJindu() {

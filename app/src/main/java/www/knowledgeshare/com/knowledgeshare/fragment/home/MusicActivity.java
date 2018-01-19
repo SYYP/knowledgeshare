@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
@@ -56,6 +57,7 @@ import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class MusicActivity extends BaseActivity implements View.OnClickListener {
@@ -481,6 +483,11 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void goDownload() {
+        String userid = SpUtils.getString(MyApplication.getGloableContext(), "id", "");
+        if (TextUtils.isEmpty(userid)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         HttpParams params = new HttpParams();
         params.put("id", mMusicTypeBean.getId());
         String type = mMusicTypeBean.getType();
@@ -517,6 +524,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                                      listBean.setTxtUrl(dataEntity.getTxt_url());
                                      listBean.setIconUrl(dataEntity.getImage());
                                      list.add(listBean);
+                                     if (MyUtils.isHaveFile("free",dataEntity.getVideo_name() + listBean.getTypeId() + "_" + dataEntity.getId() + ".mp3")){
+                                         Toast.makeText(MusicActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+                                         return;
+                                     }
                                      DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                                              "free", listBean.getTypeId() + "", "", dataEntity.getImage(), "", "", list.size() + "", list);
                                      DownUtil.add(downLoadListsBean);
@@ -568,6 +579,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                                      listBean.setTxtUrl(dataEntity.getTxt_url());
                                      listBean.setIconUrl(dataEntity.getImage());
                                      list.add(listBean);
+                                     if (MyUtils.isHaveFile("comment",dataEntity.getVideo_name() + listBean.getTypeId() + "_" + dataEntity.getId() + ".mp3")){
+                                         Toast.makeText(MusicActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+                                         return;
+                                     }
                                      DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                                              "comment", listBean.getTypeId() + "", "", dataEntity.getImage(), "", "", list.size() + "", list);
                                      DownUtil.add(downLoadListsBean);
@@ -620,6 +635,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                                      listBean.setIconUrl(dataEntity.getXk_image());
                                      listBean.settName(xk_data.getT_name());
                                      list.add(listBean);
+                                     if (MyUtils.isHaveFile("xiaoke",xk_data.getName() + dataEntity.getId() + "_" + xk_data.getId() + ".mp3")){
+                                         Toast.makeText(MusicActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+                                         return;
+                                     }
                                      DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                                              "xiaoke", dataEntity.getId() + "", dataEntity.getXk_name(), dataEntity.getXk_image(),
                                              dataEntity.getT_name(), dataEntity.getXk_teacher_tags(), "1", list);
@@ -672,6 +691,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                                      listBean.setIconUrl(dataEntity.getZl_image());
                                      listBean.settName(zl_data.getT_name());
                                      list.add(listBean);
+                                     if (MyUtils.isHaveFile("zhuanlan",zl_data.getName() + dataEntity.getId() + "_" + zl_data.getId() + ".mp3")){
+                                         Toast.makeText(MusicActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+                                         return;
+                                     }
                                      DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                                              "zhuanlan", dataEntity.getId() + "", getIntent().getStringExtra("title"),
                                              dataEntity.getZl_image(),

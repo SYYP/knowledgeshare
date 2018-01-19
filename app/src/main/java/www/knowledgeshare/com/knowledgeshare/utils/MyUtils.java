@@ -8,12 +8,15 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.orhanobut.logger.Logger;
 
 import org.json.JSONObject;
 
@@ -111,8 +114,8 @@ public class MyUtils {
         return format;
     }
 
-    public static String go(Long ttl){
-        Date nowTime = new Date(System.currentTimeMillis()+ttl);
+    public static String go(Long ttl) {
+        Date nowTime = new Date(System.currentTimeMillis() + ttl);
         System.out.println(System.currentTimeMillis());
         SimpleDateFormat sdFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:dd");
         String retStrFormatNowDate = sdFormatter.format(nowTime);
@@ -137,11 +140,11 @@ public class MyUtils {
 
     //手机号判断逻辑
     public static boolean isMobileNO(String mobiles) {
-//        Pattern p = Pattern.compile("^(13[0-9]|14[57]|15[0-35-9]|17[6-8]|18[0-9])[0-9]{8}$");
-//        Matcher m = p.matcher(mobiles);
-//        return m.matches();
+        //        Pattern p = Pattern.compile("^(13[0-9]|14[57]|15[0-35-9]|17[6-8]|18[0-9])[0-9]{8}$");
+        //        Matcher m = p.matcher(mobiles);
+        //        return m.matches();
         //上面的验证会有些问题，手机号码格式不是固定的，所以就弄简单点
-        if (mobiles.length()==11){
+        if (mobiles.length() == 11) {
             return true;
         }
         return false;
@@ -262,11 +265,44 @@ public class MyUtils {
         return str;
     }
 
-    public static void setMargins (View v, int l, int t, int r, int b) {
+    public static void setMargins(View v, int l, int t, int r, int b) {
         if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
             p.setMargins(l, t, r, b);
             v.requestLayout();
         }
+    }
+
+    public static boolean isHaveFile(String type, String fname) {
+        fname = "/" + fname;
+        String result = null;
+        File f = null;
+        try {
+            switch (type) {
+                case "free":
+                    f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download" + fname);
+                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download" + fname);
+                    break;
+                case "comment":
+                    f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download" + fname);
+                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download" + fname);
+                    break;
+                case "xiaoke":
+                    f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download" + fname);
+                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download" + fname);
+                    break;
+                case "zhuanlan":
+                    f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download" + fname);
+                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download" + fname);
+                    break;
+            }
+            int length = (int) f.length();
+            if (length > 0) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

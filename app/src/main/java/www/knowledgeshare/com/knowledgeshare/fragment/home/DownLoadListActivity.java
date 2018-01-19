@@ -1,11 +1,13 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,13 +27,16 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SoftMusicDetailBean;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class DownLoadListActivity extends BaseActivity implements View.OnClickListener {
 
@@ -163,6 +168,11 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
                 isAllChecked = !isAllChecked;
                 break;
             case R.id.tv_download:
+                String userid = SpUtils.getString(MyApplication.getGloableContext(), "id", "");
+                if (TextUtils.isEmpty(userid)) {
+                    startActivity(new Intent(this, LoginActivity.class));
+                    return;
+                }
                 for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).isChecked()){
                         SoftMusicDetailBean.ChildEntity childEntity = list.get(i);
