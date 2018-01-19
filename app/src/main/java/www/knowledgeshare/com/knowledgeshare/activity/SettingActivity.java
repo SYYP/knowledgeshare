@@ -140,6 +140,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                             case 3:
                                 TUtils.showShort(SettingActivity.this,"退出");
                                 SpUtils.putBoolean(SettingActivity.this, "abool", false);
+                                SpUtils.putString(SettingActivity.this,"id","");
                                 removeAllActivitys();
                                 startActivity(new Intent(SettingActivity.this,MainActivity.class));
                                 break;
