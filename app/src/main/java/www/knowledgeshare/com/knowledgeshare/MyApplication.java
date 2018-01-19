@@ -68,6 +68,14 @@ public class MyApplication extends LitePalApplication {
      */
     private void initCloudChannel(final Context applicationContext) {
         PushServiceFactory.init(applicationContext);
+        /**
+         * 设置推送通知声音文件路径,
+         * 若不调用本接口，默认获取资源id为R.raw.alicloud_notification_sound的资源文件，
+         * 若没有获取到指定声音文件，取设备设置的声音，
+         * filePath 通知声音文件路径。
+         */
+//        PushServiceFactory.getCloudPushService().setNotificationSoundFilePath("android.resource://" +
+//                getGloableContext().getPackageName() + "/" + R.raw.notifacation);
         final CloudPushService pushService = PushServiceFactory.getCloudPushService();
         pushService.register(applicationContext, new CommonCallback() {
             @Override

@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:background="@drawable/bg_search"
-            android:drawableLeft="@drawable/icon_search_black"
+            android:drawableRight="@drawable/icon_search_black"
             android:drawablePadding="10dp"
             android:hint="请输入音频名称搜索"
             android:imeOptions="actionSearch"

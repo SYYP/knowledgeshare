@@ -59,6 +59,7 @@ public class MyMessageReceiver extends MessageReceiver {
         }
     }
 
+
     @Override
     public void onMessage(Context context, CPushMessage cPushMessage) {
         Log.e("MyMessageReceiver", "onMessage, messageId: " + cPushMessage.getMessageId() + ", title: " + cPushMessage.getTitle() + ", content:" + cPushMessage.getContent());

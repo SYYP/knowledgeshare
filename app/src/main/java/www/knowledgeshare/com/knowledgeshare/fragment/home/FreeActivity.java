@@ -125,8 +125,10 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("refresh_free")) {
-            backRefresh=true;
             after= eventBean.getMsg2();
+            backRefresh=true;
+            isLoadMore=false;
+            initData();
         }
     }
 
@@ -228,8 +230,11 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
     private void initData() {
         HttpParams params = new HttpParams();
         params.put("userid", SpUtils.getString(this, "id", ""));
-        if (isLoadMore) {
+        if (isLoadMore || backRefresh) {
             params.put("after", after);
+        }
+        if (backRefresh){
+            params.put("is_search", "1");
         }
         OkGo.<FreeBean>post(MyContants.LXKURL + "free")
                 .tag(this)
