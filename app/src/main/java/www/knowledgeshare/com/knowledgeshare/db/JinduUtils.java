@@ -26,7 +26,7 @@ public class JinduUtils {
 
     public static void add(BofangjinduBean bofangjinduBean) {
         if (isInserted(bofangjinduBean.getMid())) {
-            bofangjinduBean.save();
+//            bofangjinduBean.save();
         } else {
             bofangjinduBean.save();//添加完数据别忘了保存，这个save()方法是实体类继承的DataSupport类中的
         }
