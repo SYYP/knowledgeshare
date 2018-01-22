@@ -575,10 +575,14 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
             } else {
                 if (item.getIs_try() == 1) {
                     helper.setVisible(R.id.tv_trylisten, true);
-                    helper.setVisible(R.id.iv_wengao, true);
                 } else {
                     helper.setVisible(R.id.tv_trylisten, false);
-                    helper.setVisible(R.id.iv_wengao, false);
+                }
+                ImageView iv_wengao=helper.getView(R.id.iv_wengao);
+                if (item.getIs_try() == 1) {
+                    iv_wengao.setVisibility(View.VISIBLE);
+                }else {
+                    iv_wengao.setVisibility(View.INVISIBLE);
                 }
             }
             String created_at = item.getCreated_at();

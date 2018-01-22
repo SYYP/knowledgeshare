@@ -422,7 +422,34 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    doSearch(tv.getText().toString());
+//                    doSearch(tv.getText().toString());
+                    recycler_search.setVisibility(View.GONE);
+                    ll_lishi.setVisibility(View.GONE);
+                    ll_hot.setVisibility(View.GONE);
+                    String content = et_search.getText().toString();
+                    if (!TextUtils.isEmpty(content))
+                        doSavehistory(content);
+                    ll_result.setVisibility(View.VISIBLE);
+                    mMDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban1, mZhuanlan);
+                    recycler_dashiban.setAdapter(mMDaShiBanAdapter);
+                    mMDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                            Intent intent = new Intent(SearchActivity.this, ZhuanLanActivity.class);
+                            intent.putExtra("id", mMDaShiBanAdapter.getData().get(position).getId() + "");
+                            startActivity(intent);
+                        }
+                    });
+                    mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, mXiaoke);
+                    recycler_yinyueke.setAdapter(mYinYueKeAdapter);
+                    mYinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                            Intent intent = new Intent(SearchActivity.this, SoftMusicDetailActivity.class);
+                            intent.putExtra("id", mYinYueKeAdapter.getData().get(position).getXk_id() + "");
+                            startActivity(intent);
+                        }
+                    });
                 }
             });
         }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,6 +35,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.MusicActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
@@ -201,6 +203,11 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
                 mContext.overridePendingTransition(R.anim.bottom_in, 0);
                 break;
             case R.id.iv_mulu:
+                String userid = SpUtils.getString(mContext, "id", "");
+                if (TextUtils.isEmpty(userid)) {
+                    mContext.startActivity(new Intent(mContext, LoginActivity.class));
+                    return;
+                }
                 Intent intent11 = new Intent(mContext, BoFangListActivity.class);
                 mContext.startActivity(intent11);
                 break;

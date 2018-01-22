@@ -468,10 +468,14 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
         protected void convert(final BaseViewHolder helper, final SoftMusicDetailBean.ChildEntity item) {
             if (item.getIs_try() == 1) {
                 helper.setVisible(R.id.tv_trylisten, true);
-                helper.setVisible(R.id.iv_wengao, true);
             } else {
                 helper.setVisible(R.id.tv_trylisten, false);
-                helper.setVisible(R.id.iv_wengao, false);
+            }
+            ImageView iv_wengao=helper.getView(R.id.iv_wengao);
+            if (item.getIs_try() == 1) {
+                iv_wengao.setVisibility(View.VISIBLE);
+            }else {
+                iv_wengao.setVisibility(View.INVISIBLE);
             }
             String created_at = item.getCreated_at();
             String[] split = created_at.split(" ");
@@ -1219,6 +1223,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                 startActivity(new Intent(this, SearchActivity.class));
                 break;
             case R.id.iv_shopcar:
+                String userid = SpUtils.getString(this, "id", "");
+                if (TextUtils.isEmpty(userid)) {
+                    startActivity(new Intent(this, LoginActivity.class));
+                    return;
+                }
                 startActivity(new Intent(this, ShoppingCartActivity.class));
                 break;
             case R.id.tv_shopcar:
