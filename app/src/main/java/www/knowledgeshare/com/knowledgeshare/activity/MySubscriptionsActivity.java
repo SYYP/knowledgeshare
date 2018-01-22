@@ -18,6 +18,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,14 +86,20 @@ public class MySubscriptionsActivity extends BaseActivity implements View.OnClic
                         int code = response.code();
                         if (code >= 200 && code <= 204){
                             list.add(response.body());
-                            MySubAdapter adapter = new MySubAdapter(R.layout.item_my_sub,list);
-                            recyclerWddy.setAdapter(adapter);
-                            adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    startActivity(new Intent(MySubscriptionsActivity.this, ZhuanLanActivity.class));
-                                }
-                            });
+                            if (list.size() > 0){
+                                final List<MyRssBean.DataBean> data = response.body().getData();
+                                MySubAdapter adapter = new MySubAdapter(R.layout.item_my_sub,list);
+                                recyclerWddy.setAdapter(adapter);
+                                adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                        Intent intent = new Intent(MySubscriptionsActivity.this, ZhuanLanActivity.class);
+                                        intent.putExtra("id",data.get(position).getId()+"");
+                                        intent.putExtra("type","alreadyBuy");
+                                        startActivity(intent);
+                                    }
+                                });
+                            }
                         }
                     }
                 });

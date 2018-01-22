@@ -51,7 +51,7 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
     @BindView(R.id.null_rl) RelativeLayout nullRl;
     private List<ShoppingCartBean.DataBean> list = new ArrayList<>();
     private ShoppingCartAdapter adapter;
-    private float totalMoney;
+    private double totalMoney;
     private int num;
 
     @Override
@@ -134,7 +134,7 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
         for (int i = 0; i < list.size(); i++) {
             list.get(i).setChecked(true);
             String money = list.get(i).getXk_price();
-            int parseInt = Integer.parseInt(money);
+            double parseInt = Double.parseDouble(money);
             totalMoney += parseInt;
         }
 //        adapter.setNewData(list);
@@ -180,13 +180,14 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                     titleContentRightTv.setText("编辑");
                     totalMoney = 0;
                     num = 0;
-                    if (TextUtils.equals("0",list.size()+""))
+//                    if (TextUtils.equals("0",list.size()+""))
                     for (int i = 0; i < list.size(); i++) {
                         if (list.get(i).isChecked()){
                             String money = list.get(i).getXk_price();
-                            int parseInt = Integer.parseInt(money);
+                            double parseInt = Double.parseDouble(money);
                             totalMoney += parseInt;
                             num += 1;
+                            Logger.e("打印："+totalMoney+"\n"+num);
                         }
                     }
                     hejiTv.setText("合计：￥"+totalMoney);
@@ -295,7 +296,7 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                         for (int i = 0; i < list.size(); i++) {
                             if (list.get(i).isChecked()){
                                 String money = list.get(i).getXk_price();
-                                int parseInt = Integer.parseInt(money);
+                                double parseInt = Double.parseDouble(money);
                                 totalMoney += parseInt;
                                 num += 1;
                             }
@@ -312,7 +313,7 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                             for (int i = 0; i < list.size(); i++) {
                                 if (list.get(i).isChecked()){
                                     String money = list.get(i).getXk_price();
-                                    int parseInt = Integer.parseInt(money);
+                                    double parseInt = Double.parseDouble(money);
                                     totalMoney += parseInt;
                                     num += 1;
                                 }
@@ -328,7 +329,7 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                             for (int i = 0; i < list.size(); i++) {
                                 list.get(i).setChecked(true);
                                 String money = list.get(i).getXk_price();
-                                int parseInt = Integer.parseInt(money);
+                                double parseInt = Double.parseDouble(money);
                                 totalMoney += parseInt;
                             }
                             if (!TextUtils.equals("删除",jiesuanTv.getText().toString())){

@@ -150,7 +150,6 @@
                     android:id="@+id/pay_money_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="支付金额：28元"
                     android:textColor="@color/text_black"
                     android:gravity="center"
                     android:padding="10dp"/>

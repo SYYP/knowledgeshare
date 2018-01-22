@@ -29,7 +29,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_toRightOf="@id/class_bo"
-            android:text="男低音，一个神秘又充满魅力的声部"
+            android:layout_toLeftOf="@+id/collect_wengao"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            android:paddingRight="10dp"
             android:textColor="@color/text_black"
             android:textSize="14sp"/>
         <TextView
@@ -42,7 +45,6 @@
             android:drawableLeft="@drawable/class_time"
             android:drawablePadding="5dp"
             android:src="@drawable/class_time"
-            android:text="1:20:20"
             android:textSize="15sp"/>
         <TextView
             android:id="@+id/class_content"
@@ -51,8 +53,7 @@
             android:layout_below="@id/class_title"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="8dp"
-            android:layout_toRightOf="@id/class_time"
-            android:text="如何成为一个男高音？"/>
+            android:layout_toRightOf="@id/class_time" />
         <ImageView
             android:id="@+id/class_xinxin"
             android:layout_width="wrap_content"

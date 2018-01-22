@@ -20,21 +20,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/tv_01"
+            android:layout_toLeftOf="@+id/date_tv"
             android:paddingLeft="5dp"
-            android:text="1234567899874564"
+            android:paddingRight="5dp"
+            android:singleLine="true"
+            android:ellipsize="middle"
             android:textColor="#333333"/>
         <TextView
             android:id="@+id/date_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2017-12-5 10:12:49"
             android:textSize="12dp"
             android:layout_alignParentRight="true"/>
         <TextView
             android:id="@+id/name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="《凌晨4点的北京》"
             android:layout_toRightOf="@+id/tv_01"
             android:layout_below="@+id/tv_01"
             android:paddingTop="10dp"/>
@@ -42,7 +43,6 @@
             android:id="@+id/money_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="￥198.00"
             android:textColor="#b00505"
             android:layout_below="@+id/tv_01"
             android:paddingTop="10dp"

@@ -170,6 +170,7 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
                         if (code >= 200 && code <= 204) {
                             money = response.body().getMoney();
                             money.get(0).setChecked(true);
+                            payMoneyTv.setText("支付金额：" + money.get(0).getData() + "元");
                             ChangeShowAdapter adapter = new ChangeShowAdapter(R.layout.item_change_show, money);
                             recyclerView.setAdapter(adapter);
                         }

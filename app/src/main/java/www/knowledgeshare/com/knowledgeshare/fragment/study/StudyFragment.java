@@ -550,7 +550,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
             new NormalAlertDialog.Builder(context)
                     .setTitleVisible(true).setTitleText("提示")
                     .setTitleTextColor(R.color.text_black)
-                    .setContentText("是否取消收藏？")
+                    .setContentText("是否删除笔记？")
                     .setContentTextColor(R.color.text_black)
                     .setLeftButtonText("是")
                     .setLeftButtonTextColor(R.color.text_black)

@@ -36,6 +36,11 @@ public class MyMedalActivity extends BaseActivity implements View.OnClickListene
     @BindView(id.zuanshi_tv) TextView zuanshiTv;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
+    private Drawable five;
+    private Drawable four;
+    private Drawable three;
+    private Drawable two;
+    private Drawable one;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +60,10 @@ public class MyMedalActivity extends BaseActivity implements View.OnClickListene
         titleContentRightTv.setOnClickListener(this);
         String level = getIntent().getStringExtra("level");
         boolean isShow = SpUtils.getBoolean(MyMedalActivity.this, "isShow", false);
-        if (!level.equals("0") && isShow){
+        if (!level.equals("0") && !isShow){
             showShareDialog(level);
+        }else {
+            Show(level);
         }
     }
 
@@ -124,97 +131,97 @@ public class MyMedalActivity extends BaseActivity implements View.OnClickListene
         SpUtils.putBoolean(MyMedalActivity.this,"isShow",true);
         mDialog.getView(id.tv_cancel).setOnClickListener(new View.OnClickListener() {
 
-            private Drawable five;
-            private Drawable four;
-            private Drawable three;
-            private Drawable two;
-            private Drawable one;
+
 
             @Override
             public void onClick(View v) {
-                switch (level){
-                    case "1":
-                        one = getResources().getDrawable(drawable.power_tong);
-                        // 这一步必须要做,否则不会显示.
-                        one.setBounds(0, 0, one.getMinimumWidth(), one.getMinimumHeight());
-                        tongTv.setCompoundDrawables(null, one,null,null);
-                        break;
-                    case "2":
-                        one= getResources().getDrawable(drawable.power_tong);
-                        // 这一步必须要做,否则不会显示.
-                        one.setBounds(0, 0, one.getMinimumWidth(), one.getMinimumHeight());
-                        tongTv.setCompoundDrawables(null, one,null,null);
-
-                        two = getResources().getDrawable(drawable.power_yin);
-                        // 这一步必须要做,否则不会显示.
-                        two.setBounds(0, 0, two.getMinimumWidth(), two.getMinimumHeight());
-                        yinTv.setCompoundDrawables(null,two,null,null);
-                        break;
-                    case "3":
-                        one= getResources().getDrawable(drawable.power_tong);
-                        // 这一步必须要做,否则不会显示.
-                        one.setBounds(0, 0, one.getMinimumWidth(), one.getMinimumHeight());
-                        tongTv.setCompoundDrawables(null, one,null,null);
-
-                        two = getResources().getDrawable(drawable.power_yin);
-                        // 这一步必须要做,否则不会显示.
-                        two.setBounds(0, 0, two.getMinimumWidth(), two.getMinimumHeight());
-                        yinTv.setCompoundDrawables(null,two,null,null);
-
-                        three = getResources().getDrawable(drawable.power_jin);
-                        // 这一步必须要做,否则不会显示.
-                        three.setBounds(0, 0, three.getMinimumWidth(), three.getMinimumHeight());
-                        jinTv.setCompoundDrawables(null,three,null,null);
-                        break;
-                    case "4":
-                        one= getResources().getDrawable(drawable.power_tong);
-                        // 这一步必须要做,否则不会显示.
-                        one.setBounds(0, 0, one.getMinimumWidth(), one.getMinimumHeight());
-                        tongTv.setCompoundDrawables(null, one,null,null);
-
-                        two = getResources().getDrawable(drawable.power_yin);
-                        // 这一步必须要做,否则不会显示.
-                        two.setBounds(0, 0, two.getMinimumWidth(), two.getMinimumHeight());
-                        yinTv.setCompoundDrawables(null,two,null,null);
-
-                        three = getResources().getDrawable(drawable.power_jin);
-                        // 这一步必须要做,否则不会显示.
-                        three.setBounds(0, 0, three.getMinimumWidth(), three.getMinimumHeight());
-                        jinTv.setCompoundDrawables(null,three,null,null);
-
-                        four = getResources().getDrawable(drawable.power_baijin);
-                        // 这一步必须要做,否则不会显示.
-                        four.setBounds(0, 0, four.getMinimumWidth(), four.getMinimumHeight());
-                        baijinTv.setCompoundDrawables(null, four,null,null);
-                        break;
-                    case "5":
-                        one= getResources().getDrawable(drawable.power_tong);
-                        // 这一步必须要做,否则不会显示.
-                        one.setBounds(0, 0, one.getMinimumWidth(), one.getMinimumHeight());
-                        tongTv.setCompoundDrawables(null, one,null,null);
-
-                        two = getResources().getDrawable(drawable.power_yin);
-                        // 这一步必须要做,否则不会显示.
-                        two.setBounds(0, 0, two.getMinimumWidth(), two.getMinimumHeight());
-                        yinTv.setCompoundDrawables(null,two,null,null);
-
-                        three = getResources().getDrawable(drawable.power_jin);
-                        // 这一步必须要做,否则不会显示.
-                        three.setBounds(0, 0, three.getMinimumWidth(), three.getMinimumHeight());
-                        jinTv.setCompoundDrawables(null,three,null,null);
-
-                        four = getResources().getDrawable(drawable.power_baijin);
-                        // 这一步必须要做,否则不会显示.
-                        four.setBounds(0, 0, four.getMinimumWidth(), four.getMinimumHeight());
-                        baijinTv.setCompoundDrawables(null, four,null,null);
-
-                        five = getResources().getDrawable(drawable.power_zuanshi);
-                        // 这一步必须要做,否则不会显示.
-                        five.setBounds(0, 0, five.getMinimumWidth(), five.getMinimumHeight());
-                        zuanshiTv.setCompoundDrawables(null, five,null,null);
-                }
+                Show(level);
                 mDialog.dismiss();
             }
         });
+    }
+
+    private void Show(String level){
+        switch (level){
+            case "1":
+                one = getResources().getDrawable(drawable.power_tong);
+                // 这一步必须要做,否则不会显示.
+                one.setBounds(0, 0, one.getMinimumWidth(), one.getMinimumHeight());
+                tongTv.setCompoundDrawables(null, one,null,null);
+                break;
+            case "2":
+                one= getResources().getDrawable(drawable.power_tong);
+                // 这一步必须要做,否则不会显示.
+                one.setBounds(0, 0, one.getMinimumWidth(), one.getMinimumHeight());
+                tongTv.setCompoundDrawables(null, one,null,null);
+
+                two = getResources().getDrawable(drawable.power_yin);
+                // 这一步必须要做,否则不会显示.
+                two.setBounds(0, 0, two.getMinimumWidth(), two.getMinimumHeight());
+                yinTv.setCompoundDrawables(null,two,null,null);
+                break;
+            case "3":
+                one= getResources().getDrawable(drawable.power_tong);
+                // 这一步必须要做,否则不会显示.
+                one.setBounds(0, 0, one.getMinimumWidth(), one.getMinimumHeight());
+                tongTv.setCompoundDrawables(null, one,null,null);
+
+                two = getResources().getDrawable(drawable.power_yin);
+                // 这一步必须要做,否则不会显示.
+                two.setBounds(0, 0, two.getMinimumWidth(), two.getMinimumHeight());
+                yinTv.setCompoundDrawables(null,two,null,null);
+
+                three = getResources().getDrawable(drawable.power_jin);
+                // 这一步必须要做,否则不会显示.
+                three.setBounds(0, 0, three.getMinimumWidth(), three.getMinimumHeight());
+                jinTv.setCompoundDrawables(null,three,null,null);
+                break;
+            case "4":
+                one= getResources().getDrawable(drawable.power_tong);
+                // 这一步必须要做,否则不会显示.
+                one.setBounds(0, 0, one.getMinimumWidth(), one.getMinimumHeight());
+                tongTv.setCompoundDrawables(null, one,null,null);
+
+                two = getResources().getDrawable(drawable.power_yin);
+                // 这一步必须要做,否则不会显示.
+                two.setBounds(0, 0, two.getMinimumWidth(), two.getMinimumHeight());
+                yinTv.setCompoundDrawables(null,two,null,null);
+
+                three = getResources().getDrawable(drawable.power_jin);
+                // 这一步必须要做,否则不会显示.
+                three.setBounds(0, 0, three.getMinimumWidth(), three.getMinimumHeight());
+                jinTv.setCompoundDrawables(null,three,null,null);
+
+                four = getResources().getDrawable(drawable.power_baijin);
+                // 这一步必须要做,否则不会显示.
+                four.setBounds(0, 0, four.getMinimumWidth(), four.getMinimumHeight());
+                baijinTv.setCompoundDrawables(null, four,null,null);
+                break;
+            case "5":
+                one= getResources().getDrawable(drawable.power_tong);
+                // 这一步必须要做,否则不会显示.
+                one.setBounds(0, 0, one.getMinimumWidth(), one.getMinimumHeight());
+                tongTv.setCompoundDrawables(null, one,null,null);
+
+                two = getResources().getDrawable(drawable.power_yin);
+                // 这一步必须要做,否则不会显示.
+                two.setBounds(0, 0, two.getMinimumWidth(), two.getMinimumHeight());
+                yinTv.setCompoundDrawables(null,two,null,null);
+
+                three = getResources().getDrawable(drawable.power_jin);
+                // 这一步必须要做,否则不会显示.
+                three.setBounds(0, 0, three.getMinimumWidth(), three.getMinimumHeight());
+                jinTv.setCompoundDrawables(null,three,null,null);
+
+                four = getResources().getDrawable(drawable.power_baijin);
+                // 这一步必须要做,否则不会显示.
+                four.setBounds(0, 0, four.getMinimumWidth(), four.getMinimumHeight());
+                baijinTv.setCompoundDrawables(null, four,null,null);
+
+                five = getResources().getDrawable(drawable.power_zuanshi);
+                // 这一步必须要做,否则不会显示.
+                five.setBounds(0, 0, five.getMinimumWidth(), five.getMinimumHeight());
+                zuanshiTv.setCompoundDrawables(null, five,null,null);
+        }
     }
 }
