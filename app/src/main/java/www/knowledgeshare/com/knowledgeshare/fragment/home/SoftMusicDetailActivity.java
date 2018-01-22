@@ -330,6 +330,11 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
         HttpParams params = new HttpParams();
         params.put("id", mId);
         params.put("userid", SpUtils.getString(this, "id", ""));
+        if (getIntent().getStringExtra("type") != null) {
+            params.put("type", "2");
+        }else {
+            params.put("type", "1");
+        }
         OkGo.<SoftMusicDetailBean>post(MyContants.LXKURL + "xk/show")
                 .tag(this)
                 .params(params)

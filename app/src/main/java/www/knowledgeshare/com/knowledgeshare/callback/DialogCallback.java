@@ -1,15 +1,20 @@
 package www.knowledgeshare.com.knowledgeshare.callback;
 
 import android.app.Activity;
+import android.content.Intent;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.lzy.okgo.request.base.Request;
+
 import java.lang.reflect.Type;
 
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 
 /**
  * Created by Administrator on 2017/10/11.
@@ -20,6 +25,7 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
     private LoadingDialog dialog;
     private Class<T> clazz;
     private Type type;
+    private int code;
 
 
     private void initDialog(Activity activity) {
@@ -58,21 +64,31 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
     @Override
     public T convertResponse(Response response) throws Throwable {
         ResponseBody body = response.body();
+        code = response.code();
+        T data = null;
         if (body == null) return null;
 
-        T data = null;
-        Gson gson = new Gson();
-        JsonReader jsonReader = new JsonReader(body.charStream());
-        if (type != null) data = gson.fromJson(jsonReader,type);
-        if (clazz != null) data = gson.fromJson(jsonReader,clazz);
+            Gson gson = new Gson();
+            JsonReader jsonReader = new JsonReader(body.charStream());
+            if (type != null) data = gson.fromJson(jsonReader,type);
+            if (clazz != null) data = gson.fromJson(jsonReader,clazz);
         return data;
     }
+
 
     @Override
     public void onFinish() {
         //网络请求结束后关闭对话框
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
+            if (code == 410){
+                BaseActivity.removeAllActivitys();
+                Intent intent = new Intent(MyApplication.getGloableContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                MyApplication.getGloableContext()
+                        .startActivity(intent
+                        );
+            }
         }
     }
 }

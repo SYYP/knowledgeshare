@@ -48,10 +48,15 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
         String id = getIntent().getStringExtra("id");
         HttpParams params = new HttpParams();
         params.put("id", id);
+        if (getIntent().getStringExtra("type") != null) {
+            params.put("type", "2");
+        }else {
+            params.put("type", "1");
+        }
         OkGo.<FreeTryReadListBean>post(MyContants.LXKURL + "zl/free-trials")
                 .tag(this)
                 .params(params)
-                .execute(new DialogCallback<FreeTryReadListBean>(ZhuanLanDetail1Activity.this,FreeTryReadListBean.class) {
+                .execute(new DialogCallback<FreeTryReadListBean>(ZhuanLanDetail1Activity.this, FreeTryReadListBean.class) {
                              @Override
                              public void onSuccess(Response<FreeTryReadListBean> response) {
                                  int code = response.code();
@@ -63,10 +68,10 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                          Intent intent = new Intent(ZhuanLanDetail1Activity.this, ZhuanLanDetail2Activity.class);
-                                         intent.putExtra("id",mData.get(position).getId()+"");
-                                         intent.putExtra("title",getIntent().getStringExtra("title"));
+                                         intent.putExtra("id", mData.get(position).getId() + "");
+                                         intent.putExtra("title", getIntent().getStringExtra("title"));
                                          if (getIntent().getStringExtra("type") != null) {
-                                             intent.putExtra("type","alreadyBuy");
+                                             intent.putExtra("type", "alreadyBuy");
                                          }
                                          startActivity(intent);
                                      }
@@ -84,7 +89,7 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
                 finish();
             }
         });
-        tv_title= (TextView) findViewById(R.id.tv_title);
+        tv_title = (TextView) findViewById(R.id.tv_title);
         recycler = (RecyclerView) findViewById(R.id.recycler);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -108,31 +113,31 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
 
         @Override
         protected void convert(BaseViewHolder helper, FreeTryReadListBean.DataEntity item) {
-            ImageView iv_tupian=helper.getView(R.id.iv_tupian);
+            ImageView iv_tupian = helper.getView(R.id.iv_tupian);
             Glide.with(MyApplication.getGloableContext()).load(item.getImgurl()).into(iv_tupian);
-            helper.setText(R.id.tv_name,item.getName())
-                    .setText(R.id.tv_introduce,item.getDescription())
+            helper.setText(R.id.tv_name, item.getName())
+                    .setText(R.id.tv_introduce, item.getDescription())
                     .setText(R.id.tv_look_count, item.getIs_view() == 0 ? item.getView_count() + "" : item.getView_count_true() + "")
                     .setText(R.id.tv_collect_count, item.getIs_collect() == 0 ? item.getCollect_count() + "" : item.getCollect_count_true() + "")
                     .setText(R.id.tv_rss_count, item.getIs_rss() == 0 ? item.getRss_count() + "" : item.getRss_count_true() + "");
-//            final TextView tv_collect_count = helper.getView(R.id.tv_collect_count);
-//            tv_collect_count.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if (isCollected) {
-//                        Drawable drawable = getResources().getDrawable(R.drawable.zhuanlan_collect);
-//                        /// 这一步必须要做,否则不会显示.
-//                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-//                        tv_collect_count.setCompoundDrawables(drawable, null, null, null);
-//                    } else {
-//                        Drawable drawable = getResources().getDrawable(R.drawable.music_collected);
-//                        /// 这一步必须要做,否则不会显示.
-//                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-//                        tv_collect_count.setCompoundDrawables(drawable, null, null, null);
-//                    }
-//                    isCollected = !isCollected;
-//                }
-//            });
+            //            final TextView tv_collect_count = helper.getView(R.id.tv_collect_count);
+            //            tv_collect_count.setOnClickListener(new View.OnClickListener() {
+            //                @Override
+            //                public void onClick(View view) {
+            //                    if (isCollected) {
+            //                        Drawable drawable = getResources().getDrawable(R.drawable.zhuanlan_collect);
+            //                        /// 这一步必须要做,否则不会显示.
+            //                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            //                        tv_collect_count.setCompoundDrawables(drawable, null, null, null);
+            //                    } else {
+            //                        Drawable drawable = getResources().getDrawable(R.drawable.music_collected);
+            //                        /// 这一步必须要做,否则不会显示.
+            //                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            //                        tv_collect_count.setCompoundDrawables(drawable, null, null, null);
+            //                    }
+            //                    isCollected = !isCollected;
+            //                }
+            //            });
         }
     }
 }

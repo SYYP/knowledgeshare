@@ -110,7 +110,7 @@ public class MyApplication extends LitePalApplication {
         Config.DEBUG = true;
         UMShareAPI.get(this);
         PlatformConfig.setWeixin("wxf33afce9142929dc", "1ec3dd295f384088757e5fd5500ef897");
-        PlatformConfig.setQQZone("2908967596", "bzpyupup666");
+        PlatformConfig.setQQZone("1106658654", "y1mvhrTgQpG9fra1");
         PlatformConfig.setSinaWeibo("1418202942", "5e451c151d8f4ed063979bc03529abac", "http://www.baidu.com");//回调地址要跟微博开放平台的一样
     }
 

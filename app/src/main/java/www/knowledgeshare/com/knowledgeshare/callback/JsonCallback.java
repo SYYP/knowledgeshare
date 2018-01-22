@@ -2,6 +2,7 @@ package www.knowledgeshare.com.knowledgeshare.callback;
 
 
 import android.app.Activity;
+import android.content.Intent;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -12,11 +13,15 @@ import java.lang.reflect.Type;
 
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
+import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 
 public abstract class JsonCallback<T> extends AbsCallback<T> {
     private Type type;
     private Class<T> clazz;
     public Activity activity;
+    private int code;
 
     public JsonCallback() {
     }
@@ -51,12 +56,25 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
     public T convertResponse(Response response) throws Throwable {
         ResponseBody body = response.body();
         if (body == null) return null;
-
+        code = response.code();
         T data = null;
         Gson gson = new Gson();
         JsonReader jsonReader = new JsonReader(body.charStream());
         if (type != null) data = gson.fromJson(jsonReader,type);
         if (clazz != null) data = gson.fromJson(jsonReader,clazz);
         return data;
+    }
+
+    @Override
+    public void onFinish() {
+        super.onFinish();
+        if (code == 410){
+            BaseActivity.removeAllActivitys();
+            Intent intent = new Intent(MyApplication.getGloableContext(), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            MyApplication.getGloableContext()
+                    .startActivity(intent
+                    );
+        }
     }
 }
