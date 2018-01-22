@@ -213,11 +213,13 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void requestLogin(String wxId, String name, final int flag) {
+        String device_token = SpUtils.getString(this, "device_token", "");
         HttpParams params = new HttpParams();
         params.put("mobile",verifyPhone.getText().toString());
         params.put("code",verifyYanzheng.getText().toString());
         params.put("wx_unionid",wxId);
         params.put("wx_name",name);
+        params.put("device_token",device_token);
 
         OkGo.<LoginBean>post(MyContants.bindMobile)
                 .tag(this)

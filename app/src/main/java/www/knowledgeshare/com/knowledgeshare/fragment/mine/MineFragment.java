@@ -192,7 +192,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case 5:
                 progressBar.setVisibility(View.GONE);
                 endLl.setVisibility(View.GONE);
-                xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v5));
+                xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v5));
                 xzStartTv.setText("钻石勋章");
                 break;
         }
