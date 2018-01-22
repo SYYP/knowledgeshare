@@ -88,7 +88,7 @@ public class MySubscriptionsActivity extends BaseActivity implements View.OnClic
                             list.add(response.body());
                             if (list.size() > 0){
                                 final List<MyRssBean.DataBean> data = response.body().getData();
-                                MySubAdapter adapter = new MySubAdapter(R.layout.item_my_sub,list);
+                                MySubAdapter adapter = new MySubAdapter(R.layout.item_my_sub,data);
                                 recyclerWddy.setAdapter(adapter);
                                 adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                     @Override
@@ -114,14 +114,14 @@ public class MySubscriptionsActivity extends BaseActivity implements View.OnClic
         }
     }
 
-    private class MySubAdapter extends BaseQuickAdapter<MyRssBean, BaseViewHolder>{
+    private class MySubAdapter extends BaseQuickAdapter<MyRssBean.DataBean, BaseViewHolder>{
 
-        public MySubAdapter(@LayoutRes int layoutResId, @Nullable List<MyRssBean> data) {
+        public MySubAdapter(@LayoutRes int layoutResId, @Nullable List<MyRssBean.DataBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, MyRssBean item) {
+        protected void convert(BaseViewHolder helper, MyRssBean.DataBean item) {
             TextView subTitleTv = helper.getView(R.id.sub_title_tv);
             TextView subDescTv = helper.getView(R.id.sub_desc_tv);
             TextView subUpdataTv = helper.getView(R.id.sub_updata_tv);
@@ -130,14 +130,14 @@ public class MySubscriptionsActivity extends BaseActivity implements View.OnClic
             ImageView subFaceIv = helper.getView(R.id.sub_face_iv);
 
             int position = helper.getPosition();
-            if (!TextUtils.isEmpty(item.getData().get(position).getZl_img())){
-                Glide.with(mContext).load(item.getData().get(position).getZl_img()).into(subFaceIv);
+            if (!TextUtils.isEmpty(item.getZl_img())){
+                Glide.with(mContext).load(item.getZl_img()).into(subFaceIv);
             }
-            subTitleTv.setText(item.getData().get(position).getZl_name());
-            subDescTv.setText(item.getData().get(position).getZl_teacher_tags());
-            subUpdataTv.setText(item.getData().get(position).getZl_update_time());
-            subZlmcTv.setText(item.getData().get(position).getZl_update_name());
-            subMoneyTv.setText(item.getData().get(position).getZl_price());
+            subTitleTv.setText(item.getZl_name());
+            subDescTv.setText(item.getZl_teacher_tags());
+            subUpdataTv.setText(item.getZl_update_time());
+            subZlmcTv.setText(item.getZl_update_name());
+            subMoneyTv.setText(item.getZl_price());
         }
     }
 }
