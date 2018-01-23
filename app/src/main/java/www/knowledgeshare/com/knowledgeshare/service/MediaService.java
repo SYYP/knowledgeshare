@@ -56,6 +56,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
     private static List<MusicTypeBean> musicTypeBeanList = new ArrayList<>();//传进来的主界面播放数据的list
     private static List<BofangHistroyBean> bofangHistroyBeanList = new ArrayList<>();//传进来的播放列表的历史封装list
     private static int currPosition = 0;
+    private static boolean isSuishenting;
 
     @Override
     public void onCreate() {
@@ -86,6 +87,28 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
     * */
     public static void insertBoFangHistroyList(List<BofangHistroyBean> beanList) {
         bofangHistroyBeanList = beanList;
+    }
+
+    /*
+    * 我这边因为一开始没有考虑到音频列表的问题，所以在有播放的界面都是先播放一首，传进来一个playerBean,
+    * 然后再传进来List<PlayerBean>也就是音频列表，然后设置当前位置为0，这种处理也是可以的
+    * */
+    public static void insertMusicList2(List<PlayerBean> musiclist) {
+        musicList.addAll(musiclist);
+    }
+
+    /*
+    * 播放列表的主界面的数据的list，当播放下一首上一首的时候主界面的数据也要变化，所以要传进来
+    * */
+    public static void insertMusicTypeList2(List<MusicTypeBean> beanList) {
+        musicTypeBeanList.addAll(beanList);
+    }
+
+    /*
+    * 传进来的播放列表的历史封装list，当播放上一首下一首的时候播放历史也要增加
+    * */
+    public static void insertBoFangHistroyList2(List<BofangHistroyBean> beanList) {
+        bofangHistroyBeanList.addAll(beanList);
     }
 
     /*
@@ -275,7 +298,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             if (isClosed) {
                 mBinder.setMusicUrl(mMusicUrl);
                 mBinder.playMusic(mPlayerBean);
-            }else {
+            } else {
                 start();
             }
         }
@@ -473,7 +496,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 isPrepared = false;
                 isClosed = true;
                 Notifier.showPause(mPlayerBean);
-                currPosition=0;
+                currPosition = 0;
                 //                mMediaPlayer = null;
             }
         }
@@ -500,6 +523,9 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                         playerBean.setMsg("refreshplayer");
                         EventBus.getDefault().postSticky(playerBean);
                     }
+                }
+                if (isSuishenting && currPosition == musicList.size() - 1) {
+                    EventBus.getDefault().postSticky("suishentingcontinue");
                 }
             }
         }

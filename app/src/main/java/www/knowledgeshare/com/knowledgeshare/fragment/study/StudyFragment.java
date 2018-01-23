@@ -1,21 +1,12 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.study;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
-import android.text.Selection;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -49,14 +40,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.activity.EditNoticeContentActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.NoticeContentActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
@@ -68,7 +55,6 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.SearchActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.CollectActivity;
 import www.knowledgeshare.com.knowledgeshare.login.MessageActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
-import www.knowledgeshare.com.knowledgeshare.utils.SoftKeyboardTool;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TimeUtils;
@@ -392,7 +378,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void suishenting() {
-        EventBus.getDefault().post(new EventBean("morenbofang"));
+        EventBus.getDefault().post(new EventBean("suishenting"));
         /*HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         OkGo.<SuiShenTingBean>post(MyContants.LXKURL + "user/walkman")

@@ -245,11 +245,145 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             rl_bofang.setVisibility(View.GONE);
             allclose();
         } else if (eventBean.getMsg().equals("morenbofang")) {
-            isBofang = true;
-            rl_bofang.setVisibility(View.VISIBLE);
-            iv_delete.setVisibility(View.GONE);
-            mytype = "zhuanlan";
-            myposition = 0;
+            morenbofang();
+        } else if (eventBean.getMsg().equals("number")) {
+            initNumber();
+        } else if (eventBean.getMsg().equals("suishenting")) {
+            suishenting();
+        }
+    }
+
+    private void suishenting() {
+        morenbofang();
+//        mytype = "comment";
+//        myposition = 0;
+        if (mCommentListBeanData != null && mCommentListBeanData.size() > 0) {
+            CommentListBean.DataEntity dataEntity = mCommentListBeanData.get(myposition);
+            if (dataEntity != null) {
+                //还要设置一个播放主界面的list数据，因为自动播放下一首上一首的时候主界面的数据也得变
+                List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
+                for (int i = 0; i < mCommentListBeanData.size(); i++) {
+                    CommentListBean.DataEntity dataEntity1 = mCommentListBeanData.get(i);
+                    MusicTypeBean musicTypeBean = new MusicTypeBean("everydaycomment",
+                            dataEntity1.getT_header(), dataEntity1.getVideo_name(), dataEntity1.getId() + "",
+                            dataEntity1.getIs_collect() == 0 ? false : true);
+                    musicTypeBean.setMsg("musicplayertype");
+                    musicTypeBeanList.add(musicTypeBean);
+                }
+                MediaService.insertMusicTypeList2(musicTypeBeanList);
+                //加入默认的播放列表
+                List<PlayerBean> playerBeanList = new ArrayList<PlayerBean>();
+                for (int i = 0; i < mCommentListBeanData.size(); i++) {
+                    CommentListBean.DataEntity dataEntity1 = mCommentListBeanData.get(i);
+                    PlayerBean playerBean1 = new PlayerBean(dataEntity1.getT_header(), dataEntity1.getVideo_name(),
+                            dataEntity1.getT_tag(), dataEntity1.getVideo_url());
+                    playerBeanList.add(playerBean1);
+                }
+                MediaService.insertMusicList2(playerBeanList);
+
+                //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
+                List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
+                for (int i = 0; i < mCommentListBeanData.size(); i++) {
+                    CommentListBean.DataEntity dataEntity1 = mCommentListBeanData.get(i);
+                    BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("everydaycomment", dataEntity1.getId(), dataEntity1.getVideo_name(),
+                            dataEntity1.getCreated_at(), dataEntity1.getVideo_url(), dataEntity1.getGood_count(),
+                            dataEntity1.getCollect_count(), dataEntity1.getView_count(), dataEntity1.getIs_good() == 1 ? true : false,
+                            dataEntity1.isIsfav(), dataEntity1.getT_header(), dataEntity1.getT_tag(), dataEntity1.getShare_h5_url()
+                            , SystemClock.currentThreadTimeMillis(), "commentId", dataEntity1.getParent_name(), dataEntity1.getTxt_url());
+                    histroyBeanList.add(bofangHistroyBean);
+                }
+                MediaService.insertBoFangHistroyList2(histroyBeanList);
+            }
+        } else {
+            //还要设置一个播放主界面的list数据，因为自动播放下一首上一首的时候主界面的数据也得变
+            List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
+            for (int i = 0; i < mDaily.size(); i++) {
+                HomeBean.DailyEntity dailyEntity = mDaily.get(i);
+                MusicTypeBean musicTypeBean = new MusicTypeBean("everydaycomment",
+                        dailyEntity.getT_header(), dailyEntity.getVideo_name(), dailyEntity.getId() + "",
+                        dailyEntity.getIs_collect() == 0 ? false : true);
+                musicTypeBean.setMsg("musicplayertype");
+                musicTypeBeanList.add(musicTypeBean);
+            }
+            MediaService.insertMusicTypeList2(musicTypeBeanList);
+            //加入默认的播放列表
+            List<PlayerBean> playerBeanList = new ArrayList<PlayerBean>();
+            for (int i = 0; i < mDaily.size(); i++) {
+                HomeBean.DailyEntity entity = mDaily.get(i);
+                PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getT_tag(), entity.getVideo_url());
+                playerBeanList.add(playerBean1);
+            }
+            MediaService.insertMusicList2(playerBeanList);
+
+            //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
+            List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
+            for (int i = 0; i < mDaily.size(); i++) {
+                HomeBean.DailyEntity dailyEntity = mDaily.get(i);
+                BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("everydaycomment", dailyEntity.getId(), dailyEntity.getVideo_name(),
+                        dailyEntity.getCreated_at(), dailyEntity.getVideo_url(), dailyEntity.getGood_count(),
+                        dailyEntity.getCollect_count(), dailyEntity.getView_count(), dailyEntity.getIs_good() == 1 ? true : false,
+                        dailyEntity.isIsfav(), dailyEntity.getT_header(), dailyEntity.getT_tag(), dailyEntity.getShare_h5_url()
+                        , SystemClock.currentThreadTimeMillis(), "commentId", dailyEntity.getParent_name(), dailyEntity.getTxt_url());
+                histroyBeanList.add(bofangHistroyBean);
+            }
+            MediaService.insertBoFangHistroyList2(histroyBeanList);
+        }
+    }
+
+    private void morenbofang() {
+        isBofang = true;
+        rl_bofang.setVisibility(View.VISIBLE);
+        iv_delete.setVisibility(View.GONE);
+        mytype = "zhuanlan";
+        myposition = 0;
+        if (mFreeListBeanData != null && mFreeListBeanData.size() > 0) {
+            FreeListBean.DataEntity dataEntity = mFreeListBeanData.get(myposition);
+            if (dataEntity != null) {
+                //刷新小型播放器
+                PlayerBean playerBean = new PlayerBean(dataEntity.getT_header(), dataEntity.getVideo_name(), dataEntity.getParent_name(),
+                        dataEntity.getVideo_url(), myposition);
+                gobofang(playerBean);
+                //设置进入播放主界面的数据
+                mMusicTypeBean = new MusicTypeBean("free",
+                        dataEntity.getT_header(), dataEntity.getVideo_name(), dataEntity.getId() + "",
+                        dataEntity.getIs_collect() == 0 ? false : true);
+                mMusicTypeBean.setMsg("musicplayertype");
+                EventBus.getDefault().postSticky(mMusicTypeBean);
+                //还要设置一个播放主界面的list数据，因为自动播放下一首上一首的时候主界面的数据也得变
+                List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
+                for (int i = 0; i < mFreeListBeanData.size(); i++) {
+                    FreeListBean.DataEntity dataEntity1 = mFreeListBeanData.get(i);
+                    MusicTypeBean musicTypeBean = new MusicTypeBean("free",
+                            dataEntity1.getT_header(), dataEntity1.getVideo_name(), dataEntity1.getId() + "",
+                            dataEntity1.getIs_collect() == 0 ? false : true);
+                    musicTypeBean.setMsg("musicplayertype");
+                    musicTypeBeanList.add(musicTypeBean);
+                }
+                MediaService.insertMusicTypeList(musicTypeBeanList);
+
+                //加入默认的播放列表
+                List<PlayerBean> playerBeanList = new ArrayList<PlayerBean>();
+                for (int i = 0; i < mFreeListBeanData.size(); i++) {
+                    FreeListBean.DataEntity dataEntity1 = mFreeListBeanData.get(i);
+                    PlayerBean playerBean1 = new PlayerBean(dataEntity1.getT_header(), dataEntity1.getVideo_name(),
+                            dataEntity1.getParent_name(), dataEntity1.getVideo_url());
+                    playerBeanList.add(playerBean1);
+                }
+                MediaService.insertMusicList(playerBeanList);
+                //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
+                List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
+                for (int i = 0; i < mFreeListBeanData.size(); i++) {
+                    FreeListBean.DataEntity dataEntity1 = mFreeListBeanData.get(i);
+                    BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", dataEntity1.getId(), dataEntity1.getVideo_name(),
+                            dataEntity1.getCreated_at(), dataEntity1.getVideo_url(), dataEntity1.getGood_count(),
+                            dataEntity1.getCollect_count(), dataEntity1.getView_count(), dataEntity1.getIs_good() == 1 ? true : false,
+                            dataEntity1.isIsfav(), dataEntity1.getT_header(), dataEntity1.getParent_name(), dataEntity1.getShare_h5_url()
+                            , SystemClock.currentThreadTimeMillis(), "freeId", dataEntity1.getParent_name(), dataEntity1.getTxt_url());
+                    histroyBeanList.add(bofangHistroyBean);
+                }
+                MediaService.insertBoFangHistroyList(histroyBeanList);
+            }
+        } else {
             HomeBean.FreeEntity.ChildEntity item = mMFreeChild.get(0);
             //刷新小型播放器
             PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getParent_name(),
@@ -293,8 +427,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 histroyBeanList.add(bofangHistroyBean);
             }
             MediaService.insertBoFangHistroyList(histroyBeanList);
-        } else if (eventBean.getMsg().equals("number")) {
-            initNumber();
         }
     }
 
@@ -482,7 +614,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     private void initbanner() {
         HttpParams params2 = new HttpParams();
-//        params2.put("type", false);
+        //        params2.put("type", false);
         params2.put("from", "android");
         OkGo.<HomeBannerBean>get(MyContants.LXKURL + "bootstrappers")
                 .tag(this)
@@ -494,7 +626,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         HomeBannerBean bannerBean = response.body();
                         if (response.code() >= 200 && response.code() <= 204) {
                             final List<HomeBannerBean.HomeslideEntity> homeslide = bannerBean.getHomeslide();
-                            if (bannerList!=null){
+                            if (bannerList != null) {
                                 bannerList.clear();
                             }
                             for (int i = 0; i < homeslide.size(); i++) {
