@@ -135,7 +135,7 @@ public class MaestroClassFragment extends BaseFragment {
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(mContext, ZhuanLanActivity.class);
                                     intent.putExtra("type","alreadyBuy");
-                                    intent.putExtra("id",list.get(position).getId()+"");
+                                    intent.putExtra("id",listAll.get(position).getZl_id()+"");
                                     startActivity(intent);
                                 }
                             });

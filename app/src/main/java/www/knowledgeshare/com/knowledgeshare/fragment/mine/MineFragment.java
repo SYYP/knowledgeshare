@@ -220,7 +220,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.rwxq_ll://任务详情
                 Intent intent1 = new Intent(getActivity(),TaskDetailActivity.class);
-                intent1.putExtra("jifen",user_education+"");
+                intent1.putExtra("jifen",user_integral+"");
                 startActivity(intent1);
                 break;
             case R.id.xxsj_rl://学习时间

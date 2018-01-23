@@ -18,6 +18,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -160,7 +161,8 @@ public class EasyMusicLessonFragment extends BaseFragment {
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(mContext, SoftMusicDetailActivity.class);
                                     intent.putExtra("type","alreadyBuy");
-                                    intent.putExtra("id",list.get(position).getId()+"");
+                                    Logger.e(position+"");
+                                    intent.putExtra("id",listAll.get(position).getXk_id()+"");
                                     startActivity(intent);
                                 }
                             });
@@ -231,6 +233,7 @@ public class EasyMusicLessonFragment extends BaseFragment {
 
             Glide.with(mContext).load(item.getXk_image()).into(easyFace);
             easyTitleTv.setText(item.getXk_name());
+            easyNameTv.setText(item.getT_name());
             easyDescTv.setText(item.getXk_teacher_tags());
             easyGmrsTv.setText("购买人数："+item.getBuy_count()+"人");
 

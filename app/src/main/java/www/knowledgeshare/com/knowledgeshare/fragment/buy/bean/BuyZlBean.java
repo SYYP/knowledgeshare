@@ -32,11 +32,20 @@ public class BuyZlBean extends BaseBean implements Serializable {
          */
 
         private int id;
+        private int zl_id;
         private String zl_name;
         private String zl_teacher_tags;
         private String zl_update_name;
         private String zl_update_time;
         private String zl_img;
+
+        public int getZl_id() {
+            return zl_id;
+        }
+
+        public void setZl_id(int zl_id) {
+            this.zl_id = zl_id;
+        }
 
         public int getId() {
             return id;
