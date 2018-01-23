@@ -148,7 +148,7 @@ public class EasyMusicLessonFragment extends BaseFragment {
                                 for (int j = 0; j < listAll.size(); j++) {
                                     if (search.get(i).getMyId().equals(listAll.get(j).getId())){
                                         BuyXkBean.DataBean dataBean = listAll.get(j);
-                                        jindu = search.get(j).getJindu();
+                                        jindu = search.get(i).getJindu();
                                         dataBean.setJindu(jindu);
                                         listAll.set(j,dataBean);
                                     }

@@ -371,7 +371,8 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                  mLieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                         if (mLieBiaoAdapter.getData().get(position).getIs_try() != 1) {
+                                         if (mLieBiaoAdapter.getData().get(position).getIs_try() != 1
+                                                 &&getIntent().getStringExtra("type") == null) {
                                              showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
                                          } else {
                                              setISshow(true);
