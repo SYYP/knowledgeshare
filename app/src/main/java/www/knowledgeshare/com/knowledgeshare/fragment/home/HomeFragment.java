@@ -331,9 +331,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void morenbofang() {
-        isBofang = true;
-        rl_bofang.setVisibility(View.VISIBLE);
-        iv_delete.setVisibility(View.GONE);
+//        isBofang = true;
+//        rl_bofang.setVisibility(View.VISIBLE);
+//        iv_delete.setVisibility(View.GONE);
         mytype = "zhuanlan";
         myposition = 0;
         if (mFreeListBeanData != null && mFreeListBeanData.size() > 0) {
@@ -1121,6 +1121,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     @Override
                     public void onClick(View v) {
                         mDialog.dismiss();
+                        isBofang = false;
+                        rl_bofang.setVisibility(View.GONE);
+                        EventBus.getDefault().postSticky(new EventBean("norotate"));
                     }
                 });
             }
