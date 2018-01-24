@@ -106,8 +106,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setStudyTime();
         String gobuy = getIntent().getStringExtra("gobuy");
         if (gobuy!=null && gobuy.equals("gobuy")){
-            buyFragment = new BuyFragment();
+            if (buyFragment == null) {
+                buyFragment = new BuyFragment();
+            }
             addFragments(buyFragment);
+            iv_home.setImageResource(R.drawable.tab_home_normal);
+            iv_buy.setImageResource(R.drawable.tab_buy_red);
+            iv_study.setImageResource(R.drawable.tab_study_normal);
+            iv_mine.setImageResource(R.drawable.tab_mine_normal);
+            tv_home.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
+            tv_buy.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
+            tv_study.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
+            tv_mine.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
         }else {
             homeFragment = new HomeFragment();
             addFragments(homeFragment);
@@ -151,6 +161,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void pop() {
+        if (SpUtils.getBoolean(this,"homewindow",false)){
+            return;
+        }
         HttpParams params2 = new HttpParams();
         params2.put("type", false);
         params2.put("from", "android");
@@ -214,6 +227,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                         }
                                     }
                                 });
+                                SpUtils.putBoolean(MainActivity.this,"homewindow",true);
                             }
                         } else {
 
@@ -462,6 +476,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         } else {
             EventBean eventBean = new EventBean("home_pause");//发一个保证正在播放音频的学习时长的终止
             EventBus.getDefault().postSticky(eventBean);
+            SpUtils.putBoolean(this,"homewindow",false);
             super.onBackPressed();//相当于finish()
             realBack();//删除所有引用
         }

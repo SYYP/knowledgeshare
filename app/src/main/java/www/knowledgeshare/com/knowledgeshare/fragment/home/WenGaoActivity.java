@@ -14,7 +14,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -515,6 +514,9 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
     }
 
     private void showTanchuangDialog() {
+        if (SpUtils.getBoolean(this,"wengaowindow",false)){
+            return;
+        }
         mDialog = mBuilder.setViewId(R.layout.dialog_biji)
                 //设置dialogpadding
                 .setPaddingdp(10, 0, 10, 0)
@@ -535,6 +537,7 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
                 mDialog.dismiss();
             }
         });
+        SpUtils.putBoolean(this,"wengaowindow",true);
     }
 
     @Override

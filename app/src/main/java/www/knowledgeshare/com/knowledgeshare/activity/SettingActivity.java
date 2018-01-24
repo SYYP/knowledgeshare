@@ -141,6 +141,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                                 TUtils.showShort(SettingActivity.this,"退出");
                                 SpUtils.putBoolean(SettingActivity.this, "abool", false);
                                 SpUtils.putString(SettingActivity.this,"id","");
+                                SpUtils.putBoolean(SettingActivity.this, "wengaowindow", false);
                                 removeAllActivitys();
                                 startActivity(new Intent(SettingActivity.this,MainActivity.class));
                                 break;
