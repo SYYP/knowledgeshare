@@ -363,6 +363,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 mNetDialog.dismiss();
                 ClickPopShow();
                 SpUtils.putBoolean(this, "nowifiallowlisten", true);
+                isBofang=true;
             } else {
                 mNetDialog.show();
                 mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
@@ -375,18 +376,23 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                         mNetDialog.dismiss();
                         ClickPopShow();
                         SpUtils.putBoolean(ZhuanLanDetail2Activity.this, "nowifiallowlisten", true);
+                        isBofang=true;
                     }
                 });
                 mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mNetDialog.dismiss();
+                        iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
+                        isBofang=false;
                     }
                 });
             }
         } else if (NetWorkUtils.isMobileConnected(ZhuanLanDetail2Activity.this)) {
             Toast.makeText(this, "wifi不可用呢~", Toast.LENGTH_SHORT).show();
+            isBofang=false;
         } else {
+            isBofang=true;
             playerBean.setMsg("refreshplayer");
             EventBus.getDefault().postSticky(playerBean);
             mMyBinder.setMusicUrl(playerBean.getVideo_url());
@@ -860,8 +866,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
             case R.id.iv_bofang:
                 if (!isBofang) {
                     //                    Toast.makeText(this, "播放", Toast.LENGTH_SHORT).show();
-                    iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
-                    setISshow(true);
                     if (mMyBinder.isClosed()) {
                         PlayerBean playerBean = new PlayerBean(mFreeTryReadDetailBean.getT_header(),
                                 mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getT_tag(),
@@ -891,7 +895,10 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                         histroyBeanList.add(bofangHistroyBean);
                         MediaService.insertBoFangHistroyList(histroyBeanList);
                     } else {
+                        iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
+                        setISshow(true);
                         mMyBinder.playMusic();
+                        isBofang=true;
                     }
                 } else {
                     //                    Toast.makeText(this, "暂停", Toast.LENGTH_SHORT).show();
@@ -901,8 +908,8 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                     EventBus.getDefault().postSticky(eventBean);
                     EventBean eventBean2 = new EventBean("home_pause");
                     EventBus.getDefault().postSticky(eventBean2);
+                    isBofang=false;
                 }
-                isBofang = !isBofang;
                 break;
             case R.id.iv_download:
                 String userid = SpUtils.getString(MyApplication.getGloableContext(), "id", "");
