@@ -247,6 +247,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         Logger.e(uniqueId);
         params.put("wx_name",name);
         params.put("wx_unionid",openid);
+        params.put("from_type","2");
 
         OkGo.<LoginBean>post(MyContants.login)
                 .tag(this)
@@ -333,6 +334,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         String device_token = SpUtils.getString(this, "device_token", "");
         params.put("device_token",device_token);
 //        params.put("device_token",uniqueId);
+        params.put("from_type","2");
         Logger.e(uniqueId);
 
         OkGo.<LoginBean>post(MyContants.login)

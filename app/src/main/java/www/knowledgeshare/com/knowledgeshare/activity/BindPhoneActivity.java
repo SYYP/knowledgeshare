@@ -129,6 +129,7 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
         params.put("device_token",uniqueId);
         params.put("wx_name",name);
         params.put("wx_unionid",openid);
+        params.put("from_type","2");
 
         OkGo.<LoginBean>post(MyContants.login)
                 .tag(this)
@@ -220,6 +221,7 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
         params.put("wx_unionid",wxId);
         params.put("wx_name",name);
         params.put("device_token",device_token);
+        params.put("from_type","2");
 
         OkGo.<LoginBean>post(MyContants.bindMobile)
                 .tag(this)
