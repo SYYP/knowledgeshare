@@ -122,12 +122,13 @@ public class TaskDetailActivity extends BaseActivity implements View.OnClickList
                                         list.add(bean);
                                     }
                                     adapter = new TaskDetailAdapter(R.layout.item_task_detail,list);
-                                    recyclerTask.addItemDecoration(new SpaceItemDecoration(20));
-                                    recyclerTask.setAdapter(adapter);
                                     View header = LayoutInflater.from(TaskDetailActivity.this).inflate(R.layout.header_taskdetail,recyclerTask,false);
                                     TextView totalJifen = header.findViewById(R.id.total_jf_tv);
                                     totalJifen.setText(jifen);
+                                    recyclerTask.addItemDecoration(new SpaceItemDecoration(20));
                                     adapter.addHeaderView(header);
+                                    recyclerTask.setAdapter(adapter);
+
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
