@@ -122,9 +122,28 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                                 recyclerGwc.setVisibility(View.GONE);
                                 nullRl.setVisibility(View.VISIBLE);
                             }else {
+
                                 adapter = new ShoppingCartAdapter(R.layout.item_shopping_cart, list);
                                 recyclerGwc.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
+                                if (list.size() > 0){
+                                    jiesuanRl.setVisibility(View.VISIBLE);
+                                    for (int i = 0; i < list.size(); i++) {
+                                        if (list.get(i).isChecked()){
+                                            String money = list.get(i).getXk_price();
+                                            double parseInt = Double.parseDouble(money);
+                                            totalMoney += parseInt;
+                                            num += 1;
+                                            Logger.e("打印："+totalMoney+"\n"+num);
+                                        }
+                                    }
+                                    hejiTv.setText("合计：￥"+totalMoney);
+                                    jiesuanTv.setText("结算（"+num+"）");
+                                }else {
+                                    totalMoney = 0;
+                                    num = 0;
+                                    jiesuanRl.setVisibility(View.GONE);
+                                }
                             }
                         }
                     }
@@ -241,25 +260,9 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
     protected void onRestart() {
         super.onRestart();
         list.clear();
+        totalMoney = 0;
+        num = 0;
         requestCartList();
-        if (list.size() > 0){
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).isChecked()){
-                    String money = list.get(i).getXk_price();
-                    double parseInt = Double.parseDouble(money);
-                    totalMoney += parseInt;
-                    num += 1;
-                    Logger.e("打印："+totalMoney+"\n"+num);
-                }
-            }
-            hejiTv.setText("合计：￥"+totalMoney);
-            jiesuanTv.setText("结算（"+num+"）");
-        }else {
-            totalMoney = 0;
-            num = 0;
-            jiesuanRl.setVisibility(View.GONE);
-        }
-
     }
 
     private void requestDelCart(String ids) {

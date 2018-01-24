@@ -119,7 +119,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                     public void onSuccess(Response<UserInfoBean> response) {
                         int code = response.code();
                         if (code >= 200 && code <= 204){
-                            Logger.e("切换-------------11111111111111");
                             userInfoBean = response.body();
                             user_level = userInfoBean.getUser_level();
                             user_integral = userInfoBean.getUser_integral();
