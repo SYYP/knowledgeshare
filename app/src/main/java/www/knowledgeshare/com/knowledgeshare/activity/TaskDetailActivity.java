@@ -165,7 +165,9 @@ public class TaskDetailActivity extends BaseActivity implements View.OnClickList
             TextView monthTv = helper.getView(R.id.month_tv);
             TextView jifenTv = helper.getView(R.id.jifen_tv);
             RecyclerView recyclerTaskDetail = helper.getView(R.id.recycler_task_detail);
-            monthTv.setText(item.getDate());
+            String date = item.getDate();
+            String substring = date.substring(date.length() - 2);
+            monthTv.setText(substring+"月份");
             jifenTv.setText("+" + item.getCount() + "积分");
 
             List<TaskListBean> beanList = JSON.parseArray(item.getContent(), TaskListBean.class);

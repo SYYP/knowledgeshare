@@ -29,11 +29,20 @@ public class ShoppingCartBean implements Serializable {
          */
 
         private String id;
+        private String xk_id;
         private String xk_name;
         private String xk_price;
         private String xk_teacher_tags;
         private String url;
         private boolean isChecked = false;
+
+        public String getXk_id() {
+            return xk_id;
+        }
+
+        public void setXk_id(String xk_id) {
+            this.xk_id = xk_id;
+        }
 
         public boolean isChecked() {
             return isChecked;

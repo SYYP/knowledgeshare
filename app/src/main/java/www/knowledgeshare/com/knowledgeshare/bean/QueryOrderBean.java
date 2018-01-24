@@ -19,8 +19,8 @@ public class QueryOrderBean extends BaseBean implements Serializable {
 
     private String order_sn;
     private int level_discount;
-    private int discounts;
-    private int order_amount;
+    private String discounts;
+    private String order_amount;
     private List<DataBean> data;
 
     public String getOrder_sn() {
@@ -39,19 +39,19 @@ public class QueryOrderBean extends BaseBean implements Serializable {
         this.level_discount = level_discount;
     }
 
-    public int getDiscounts() {
+    public String getDiscounts() {
         return discounts;
     }
 
-    public void setDiscounts(int discounts) {
+    public void setDiscounts(String discounts) {
         this.discounts = discounts;
     }
 
-    public int getOrder_amount() {
+    public String getOrder_amount() {
         return order_amount;
     }
 
-    public void setOrder_amount(int order_amount) {
+    public void setOrder_amount(String order_amount) {
         this.order_amount = order_amount;
     }
 

@@ -229,10 +229,17 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                         Intent intent = new Intent(this,QueryOrderActivity.class);
                         intent.putExtra("ids",ids);
                         startActivity(intent);
+                        finish();
                     }
                 }
                 break;
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        requestCartList();
     }
 
     private void requestDelCart(String ids) {
@@ -264,7 +271,7 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, final ShoppingCartBean.DataBean item) {
+        protected void convert(final BaseViewHolder helper, final ShoppingCartBean.DataBean item) {
             TextView title = helper.getView(R.id.item_title_tv);
             TextView content = helper.getView(R.id.item_content_tv);
             TextView money = helper.getView(R.id.item_money_tv);
@@ -281,7 +288,9 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
             itemRl.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(mContext,SoftMusicDetailActivity.class));
+                    Intent intent = new Intent(mContext,SoftMusicDetailActivity.class);
+                    intent.putExtra("id",list.get(helper.getAdapterPosition()).getXk_id());
+                    startActivity(intent);
                 }
             });
 
