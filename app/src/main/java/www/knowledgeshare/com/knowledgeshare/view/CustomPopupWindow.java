@@ -108,7 +108,6 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
                                  @Override
                                  public void onSuccess(Response<DianZanbean> response) {
                                      int code = response.code();
-
                                  }
 
                                  @Override

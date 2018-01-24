@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +30,10 @@ import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,20 +42,16 @@ import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.QueryOrderBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
-import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.ShoppingCartBean;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.SoftMusicDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.AliPayBean;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.OrderBean;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.OrdershopBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.PayResult;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.WXPayBean;
 import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
-import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 public class QueryOrderActivity extends BaseActivity implements View.OnClickListener {
 
@@ -89,6 +88,7 @@ public class QueryOrderActivity extends BaseActivity implements View.OnClickList
                     if (TextUtils.equals(resultStatus, "9000")) {
                         Toast.makeText(QueryOrderActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
                         //                        finish();
+                        showPaySuccessDialog();
                     } else {
                         // 判断resultStatus 为非"9000"则代表可能支付失败
                         /*
@@ -96,7 +96,7 @@ public class QueryOrderActivity extends BaseActivity implements View.OnClickList
                         最终交易是否成功以服务端异步通知为准（小概率状态）
                          */
                         if (TextUtils.equals(resultStatus, "8000")) {
-                                Toast.makeText(QueryOrderActivity.this, "支付结果确认中", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(QueryOrderActivity.this, "支付结果确认中", Toast.LENGTH_SHORT).show();
                         } else {
                             // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
                             Toast.makeText(QueryOrderActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
@@ -118,6 +118,31 @@ public class QueryOrderActivity extends BaseActivity implements View.OnClickList
         setContentView(R.layout.activity_query_order);
         ButterKnife.bind(this);
         initView();
+        EventBus.getDefault().register(this);
+    }
+
+    private boolean weixinpaysuccess;
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        //当在该页面下拉通知栏点击暂停的时候这边按钮也要变化
+        if (eventBean.getMsg().equals("weixinpaysuccess")) {
+            weixinpaysuccess = true;
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (weixinpaysuccess) {
+            showPaySuccessDialog();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     private void initView() {
@@ -158,28 +183,28 @@ public class QueryOrderActivity extends BaseActivity implements View.OnClickList
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         Logger.e(SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("ids",ids);
+        params.put("ids", ids);
         Logger.e(ids);
-        params.put("from","android");
+        params.put("from", "android");
 
         OkGo.<QueryOrderBean>post(MyContants.submitOrder)
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<QueryOrderBean>(QueryOrderActivity.this,QueryOrderBean.class) {
+                .execute(new DialogCallback<QueryOrderBean>(QueryOrderActivity.this, QueryOrderBean.class) {
                     @Override
                     public void onSuccess(Response<QueryOrderBean> response) {
                         int code = response.code();
                         QueryOrderBean queryOrderBean = response.body();
-                        if (code >= 200 && code <= 204){
+                        if (code >= 200 && code <= 204) {
                             order_sn = queryOrderBean.getOrder_sn();
                             list.add(queryOrderBean);
                             QueryOrderAdapter adapter = new QueryOrderAdapter(R.layout.item_query_order, list);
-                            View footer = LayoutInflater.from(QueryOrderActivity.this).inflate(R.layout.footer_query_order,recyclerOrder,false);
+                            View footer = LayoutInflater.from(QueryOrderActivity.this).inflate(R.layout.footer_query_order, recyclerOrder, false);
                             adapter.addFooterView(footer);
                             recyclerOrder.setAdapter(adapter);
 
-                        }else {
+                        } else {
                             String message = response.body().getMessage();
                             Logger.e(message);
                         }
@@ -189,7 +214,7 @@ public class QueryOrderActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.title_back_iv:
                 finish();
                 break;
@@ -229,14 +254,14 @@ public class QueryOrderActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                goPay(order_sn,"1");
+                goPay(order_sn, "1");
             }
         });
         mDialog.getView(R.id.rl_weixin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                goPay(order_sn,"2");
+                goPay(order_sn, "2");
 
             }
         });
@@ -244,7 +269,7 @@ public class QueryOrderActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                goPay(order_sn,"3");
+                goPay(order_sn, "3");
             }
         });
     }
@@ -293,7 +318,7 @@ public class QueryOrderActivity extends BaseActivity implements View.OnClickList
                                      req.partnerId = wxPayBean.getPartnerid();// 微信支付分配的商户号
                                      req.prepayId = wxPayBean.getPrepayid();// 预支付订单号，app服务器调用“统一下单”接口获取
                                      req.nonceStr = wxPayBean.getNoncestr();// 随机字符串，不长于32位，服务器小哥会给咱生成
-                                     req.timeStamp = wxPayBean.getTimestamp()+"";// 时间戳，app服务器小哥给出
+                                     req.timeStamp = wxPayBean.getTimestamp() + "";// 时间戳，app服务器小哥给出
                                      req.packageValue = wxPayBean.getPackage1();// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
                                      req.sign = wxPayBean.getSign();// 签名，服务器小哥给出
                                      //                        req.extData = "app data"; // optional
@@ -393,11 +418,15 @@ public class QueryOrderActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
+                removeAllActivitys();
+                Intent intent = new Intent(QueryOrderActivity.this, MainActivity.class);
+                intent.putExtra("gobuy", "gobuy");
+                startActivity(intent);
             }
         });
     }
 
-    private class QueryOrderAdapter extends BaseQuickAdapter<QueryOrderBean,BaseViewHolder>{
+    private class QueryOrderAdapter extends BaseQuickAdapter<QueryOrderBean, BaseViewHolder> {
 
         private TextView zhekou;
         private TextView zhekouMoney;
@@ -429,9 +458,9 @@ public class QueryOrderActivity extends BaseActivity implements View.OnClickList
             title.setText(item.getData().get(position).getXk_name());
             content.setText(item.getData().get(position).getXk_teacher_tags());
             money.setText(item.getData().get(position).getXk_price());
-            zhekou.setText("折扣优惠"+item.getLevel_discount()+"折");
-            zhekouMoney.setText(item.getDiscounts()+"元");
-            hejiTv.setText(item.getOrder_amount()+"元");
+            zhekou.setText("折扣优惠" + item.getLevel_discount() + "折");
+            zhekouMoney.setText(item.getDiscounts() + "元");
+            hejiTv.setText(item.getOrder_amount() + "元");
         }
     }
 }

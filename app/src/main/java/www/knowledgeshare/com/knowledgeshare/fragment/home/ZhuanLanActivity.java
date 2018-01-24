@@ -32,13 +32,19 @@ import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.MainActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.MyAccountActivity;
 import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.LookBean;
@@ -104,6 +110,7 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                     if (TextUtils.equals(resultStatus, "9000")) {
                         Toast.makeText(ZhuanLanActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
 //                        finish();
+                        showPaySuccessDialog();
                     } else {
                         // 判断resultStatus 为非"9000"则代表可能支付失败
                         /*
@@ -137,6 +144,31 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
         api = WXAPIFactory.createWXAPI(this, WX_APPID, false);
         // 将该app注册到微信
         api.registerApp(WX_APPID);
+        EventBus.getDefault().register(this);
+    }
+    private boolean weixinpaysuccess;
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        //当在该页面下拉通知栏点击暂停的时候这边按钮也要变化
+        if (eventBean.getMsg().equals("weixinpaysuccess")) {
+            weixinpaysuccess = true;
+        }
+    }
+
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (weixinpaysuccess) {
+            showPaySuccessDialog();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     private void initListener() {
@@ -500,6 +532,10 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
+                removeAllActivitys();
+                Intent intent = new Intent(ZhuanLanActivity.this, MainActivity.class);
+                intent.putExtra("gobuy","gobuy");
+                startActivity(intent);
             }
         });
     }

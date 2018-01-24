@@ -48,6 +48,7 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.MainActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.MyAccountActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
@@ -133,6 +134,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                     if (TextUtils.equals(resultStatus, "9000")) {
                         Toast.makeText(ZhuanLanDetail2Activity.this, "支付成功", Toast.LENGTH_SHORT).show();
 //                        finish();
+                        showPaySuccessDialog();
                     } else {
                         // 判断resultStatus 为非"9000"则代表可能支付失败
                         /*
@@ -170,6 +172,15 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         api = WXAPIFactory.createWXAPI(this, WX_APPID, false);
         // 将该app注册到微信
         api.registerApp(WX_APPID);
+    }
+    private boolean weixinpaysuccess;
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (weixinpaysuccess) {
+            showPaySuccessDialog();
+        }
     }
 
     private void setStudyTime() {
@@ -302,6 +313,10 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         if (eventBean.getMsg().equals("norotate")) {
             isBofang = false;
             iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
+        }
+        //当在该页面下拉通知栏点击暂停的时候这边按钮也要变化
+        if (eventBean.getMsg().equals("weixinpaysuccess")) {
+            weixinpaysuccess = true;
         }
     }
 
@@ -791,6 +806,10 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
+                removeAllActivitys();
+                Intent intent = new Intent(ZhuanLanDetail2Activity.this, MainActivity.class);
+                intent.putExtra("gobuy","gobuy");
+                startActivity(intent);
             }
         });
     }

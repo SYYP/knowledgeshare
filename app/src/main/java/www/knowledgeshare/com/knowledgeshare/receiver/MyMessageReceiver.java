@@ -76,6 +76,7 @@ public class MyMessageReceiver extends MessageReceiver {
                 Intent intent = new Intent(context, ZhuanLanDetail2Activity.class);
                 intent.putExtra("id", id);
                 intent.putExtra("title", summary);
+                intent.putExtra("type","alreadyBuy");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             } else {

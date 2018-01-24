@@ -97,8 +97,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
         initView();
-        homeFragment = new HomeFragment();
-        addFragments(homeFragment);
         // initData();
         initListener();
         initAnim();
@@ -106,6 +104,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         abool = SpUtils.getBoolean(this, "abool", false);
         pop();
         setStudyTime();
+        String gobuy = getIntent().getStringExtra("gobuy");
+        if (gobuy!=null && gobuy.equals("gobuy")){
+            buyFragment = new BuyFragment();
+            addFragments(buyFragment);
+        }else {
+            homeFragment = new HomeFragment();
+            addFragments(homeFragment);
+        }
     }
 
 
