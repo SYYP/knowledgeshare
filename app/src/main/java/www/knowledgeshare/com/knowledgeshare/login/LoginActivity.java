@@ -102,17 +102,25 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         colse_back.setOnClickListener(this);
         img_weixin.setOnClickListener(this);
 
-        if (!TextUtils.isEmpty(SpUtils.getString(LoginActivity.this,"zhanghao",""))){
-            login_phone.setText(SpUtils.getString(LoginActivity.this,"zhanghao",""));
-            login_pwd.setText(SpUtils.getString(LoginActivity.this,"mima",""));
+
+
+        if (SpUtils.getBoolean(LoginActivity.this,"rember_pwd",false)){
+            rember_pwd.setChecked(true);
+            if (!TextUtils.isEmpty(SpUtils.getString(LoginActivity.this,"zhanghao",""))){
+                login_phone.setText(SpUtils.getString(LoginActivity.this,"zhanghao",""));
+                login_pwd.setText(SpUtils.getString(LoginActivity.this,"mima",""));
+            }
         }
 
         rember_pwd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked){
+                    SpUtils.putBoolean(LoginActivity.this,"rember_pwd",true);
                     SpUtils.putString(LoginActivity.this,"zhanghao",login_phone.getText().toString());
                     SpUtils.putString(LoginActivity.this,"mima",login_pwd.getText().toString());
+                }else {
+                    SpUtils.putBoolean(LoginActivity.this,"rember_pwd",false);
                 }
             }
         });

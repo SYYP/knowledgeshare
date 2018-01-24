@@ -49,6 +49,7 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
     @BindView(R.id.heji_tv) TextView hejiTv;
     @BindView(R.id.jiesuan_tv) TextView jiesuanTv;
     @BindView(R.id.null_rl) RelativeLayout nullRl;
+    @BindView(R.id.jiesuan_rl) RelativeLayout jiesuanRl;
     private List<ShoppingCartBean.DataBean> list = new ArrayList<>();
     private ShoppingCartAdapter adapter;
     private double totalMoney;
@@ -65,6 +66,7 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
         titleContentRightTv.setVisibility(View.VISIBLE);
+        jiesuanRl.setVisibility(View.VISIBLE);
         titleContentTv.setText("购物车");
         titleContentRightTv.setText("编辑");
         titleBackIv.setOnClickListener(this);
@@ -229,7 +231,6 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                         Intent intent = new Intent(this,QueryOrderActivity.class);
                         intent.putExtra("ids",ids);
                         startActivity(intent);
-                        finish();
                     }
                 }
                 break;
@@ -239,7 +240,26 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onRestart() {
         super.onRestart();
+        list.clear();
         requestCartList();
+        if (list.size() > 0){
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).isChecked()){
+                    String money = list.get(i).getXk_price();
+                    double parseInt = Double.parseDouble(money);
+                    totalMoney += parseInt;
+                    num += 1;
+                    Logger.e("打印："+totalMoney+"\n"+num);
+                }
+            }
+            hejiTv.setText("合计：￥"+totalMoney);
+            jiesuanTv.setText("结算（"+num+"）");
+        }else {
+            totalMoney = 0;
+            num = 0;
+            jiesuanRl.setVisibility(View.GONE);
+        }
+
     }
 
     private void requestDelCart(String ids) {

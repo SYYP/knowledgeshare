@@ -102,6 +102,35 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         requestUserInfo();
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        requestUserInfo1();
+    }
+
+    private void requestUserInfo1() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        OkGo.<UserInfoBean>get(MyContants.userInfo)
+                .tag(this)
+                .headers(headers)
+                .execute(new JsonCallback<UserInfoBean>(UserInfoBean.class) {
+                    @Override
+                    public void onSuccess(Response<UserInfoBean> response) {
+                        int code = response.code();
+                        if (code >= 200 && code <= 204){
+                            Logger.e("切换-------------11111111111111");
+                            userInfoBean = response.body();
+                            user_level = userInfoBean.getUser_level();
+                            user_integral = userInfoBean.getUser_integral();
+                            getLevel(user_level, user_integral);
+                            zhyeTv.setText(userInfoBean.getUser_android_balance()+"元");
+                        }
+                    }
+                });
+    }
+
+
     private void requestUserInfo() {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));

@@ -45,6 +45,7 @@
         android:background="@drawable/bg_wanjiao2">
     </android.support.v7.widget.RecyclerView>
     <RelativeLayout
+        android:id="@+id/jiesuan_rl"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"

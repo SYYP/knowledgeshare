@@ -59,8 +59,8 @@ public class MyMedalActivity extends BaseActivity implements View.OnClickListene
         titleContentRightTv.setText("勋章优惠说明");
         titleContentRightTv.setOnClickListener(this);
         String level = getIntent().getStringExtra("level");
-        boolean isShow = SpUtils.getBoolean(MyMedalActivity.this, "isShow", false);
-        if (!level.equals("0") && !isShow){
+        String level1 = SpUtils.getString(this, "level", "");
+        if (!level.equals("0")&& !level.equals(level1)){
             showShareDialog(level);
         }else {
             Show(level);
@@ -105,30 +105,38 @@ public class MyMedalActivity extends BaseActivity implements View.OnClickListene
                 dengjiIv.setImageDrawable(getResources().getDrawable(drawable.power_tong));
                 titleTv.setText("恭喜您获得铜勋章");
                 contentTv.setText("并获得3元代金券，已放入账户余额");
+                mDialog.show();
+                SpUtils.putString(this,"level",level);
                 break;
             case "2":
                 dengjiIv.setImageDrawable(getResources().getDrawable(drawable.power_yin));
                 titleTv.setText("恭喜您获得银勋章");
                 contentTv.setText("并获得8元代金券，已放入账户余额");
+                mDialog.show();
+                SpUtils.putString(this,"level",level);
                 break;
             case "3":
                 dengjiIv.setImageDrawable(getResources().getDrawable(drawable.power_jin));
                 titleTv.setText("恭喜您获得金勋章");
                 contentTv.setText("并获取9.8折优惠，永久有效");
+                mDialog.show();
+                SpUtils.putString(this,"level",level);
                 break;
             case "4":
                 dengjiIv.setImageDrawable(getResources().getDrawable(drawable.power_baijin));
                 titleTv.setText("恭喜您获得白金勋章");
                 contentTv.setText("并获取9.5折优惠，永久有效");
+                mDialog.show();
+                SpUtils.putString(this,"level",level);
                 break;
             case "5":
                 dengjiIv.setImageDrawable(getResources().getDrawable(drawable.power_zuanshi));
                 titleTv.setText("恭喜您获得钻石勋章");
                 contentTv.setText("并获取9.0折优惠，永久有效");
+                mDialog.show();
+                SpUtils.putString(this,"level",level);
                 break;
         }
-        mDialog.show();
-        SpUtils.putBoolean(MyMedalActivity.this,"isShow",true);
         mDialog.getView(id.tv_cancel).setOnClickListener(new View.OnClickListener() {
 
 

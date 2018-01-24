@@ -76,7 +76,7 @@ public class MessageActivity extends BaseActivity {
                             messageadapter.setOnItemClickListener(new Messageadapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(View view, int position) {
-                                    int id = response.body().getData().get(position).getId();
+                                    int id = response.body().getData().get(position).getZl_id();
                                     Intent intent = new Intent(MessageActivity.this, ZhuanLanActivity.class);
                                     intent.putExtra("id",id+"");
                                     startActivity(intent);
