@@ -27,29 +27,36 @@
                         android:layout_height="match_parent"
                         android:background="@drawable/mine_bg"
                         android:paddingBottom="25dp">
-                        <www.knowledgeshare.com.knowledgeshare.view.CircleImageView
-                            android:id="@+id/mine_face_iv"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginTop="20dp"
-                            android:src="@drawable/power_moren_touxiang" />
-                        <TextView
-                            android:id="@+id/mine_name_tv"
+                        <LinearLayout
+                            android:id="@+id/mine_face_ll"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/mine_face_iv"
+                            android:orientation="vertical"
+                            android:gravity="center"
                             android:layout_marginLeft="20dp"
-                            android:layout_marginTop="15dp"
-                            android:textColor="@color/white"
-                            android:textSize="14dp" />
+                            android:layout_marginTop="20dp">
+                            <www.knowledgeshare.com.knowledgeshare.view.CircleImageView
+                                android:id="@+id/mine_face_iv"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:src="@drawable/power_moren_touxiang" />
+                            <TextView
+                                android:id="@+id/mine_name_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/mine_face_iv"
+                                android:layout_marginTop="15dp"
+                                android:textColor="@color/white"
+                                android:textSize="14dp" />
+                        </LinearLayout>
+
                         <LinearLayout
                             android:id="@+id/rwxq_ll"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
                             android:paddingBottom="40dp"
-                            android:layout_toRightOf="@+id/mine_face_iv">
+                            android:layout_toRightOf="@+id/mine_face_ll">
                             <LinearLayout
                                 android:id="@+id/view_08"
                                 android:layout_width="wrap_content"
