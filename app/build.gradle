@@ -13,7 +13,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //选择要添加的对应cpu类型的.so库。
-            abiFilters 'armeabi', 'x86','arm64-v8a','armeabi-v7a','mips','mips64','x86_64'
+            abiFilters 'armeabi', 'x86', 'arm64-v8a', 'armeabi-v7a', 'mips', 'mips64', 'x86_64'
         }
     }
     signingConfigs {
@@ -100,4 +100,10 @@ dependencies {
     compile 'com.aliyun.ams:alicloud-android-push:3.1.0'
     //阿里云推送
     compile files('libs/alipaySdk-20170922.jar')
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    //3D地图so及jar
+    compile 'com.amap.api:3dmap:latest.integration'
+    //搜索功能
+    compile 'com.amap.api:search:latest.integration'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
