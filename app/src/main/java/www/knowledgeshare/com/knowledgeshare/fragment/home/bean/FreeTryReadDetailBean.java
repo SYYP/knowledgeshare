@@ -8,12 +8,14 @@ import java.util.List;
 
 public class FreeTryReadDetailBean {
 
+
     /**
      * video_time : 02:20
      * t_tag : 中国好声音
+     * parent_name : 崔宗顺的男低音歌唱家的秘密1
      * teacher_id : 1
      * is_view : 0
-     * is_try : 1
+     * is_try : 0
      * created_at : 2017-12-08
      * isfav : false
      * content :
@@ -29,16 +31,17 @@ public class FreeTryReadDetailBean {
      * zl_id : 1
      * collect_count : 0
      * video_type : zl
-     * zl_h5_url : http://thinks.iask.in/zl.html?id=1
-     * collect_count_true : -1
-     * h5_url : http://thinks.iask.in/player.html?id=1&type=zl
+     * zl_h5_url : zl.html?id=1
+     * collect_count_true : 1
+     * h5_url : player.html?id=1&type=zl
      * rss_count : 0
      * name : 专栏小节，如何成为男高音1
-     * comment : [{"user_avatar":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171221/H3rbqjNrENreO2du88Je.jpg","islive":false,"user_id":1,"teacher_id":1,"user_name":"王兵","created_at":"2017-12-15 06:57:39","comment":[],"id":18,"state":1,"content":"试读测试留言","live":0}]
+     * comment : [{"user_avatar":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171221/H3rbqjNrENreO2du88Je.jpg","islive":false,"teacher_id":1,"user_name":"王兵","comment_user":[],"created_at":"2017-12-15 14:57:39","content":"试读测试留言","top":0,"user_id":1,"comment":[],"id":18,"state":1,"live":1,"is_display":1}]
      * view_count : 0
      */
     private String video_time;
     private String t_tag;
+    private String parent_name;
     private int teacher_id;
     private int is_view;
     private int is_try;
@@ -64,15 +67,6 @@ public class FreeTryReadDetailBean {
     private String name;
     private List<CommentEntity> comment;
     private int view_count;
-    private String parent_name;
-
-    public String getParent_name() {
-        return parent_name;
-    }
-
-    public void setParent_name(String parent_name) {
-        this.parent_name = parent_name;
-    }
 
     public void setVideo_time(String video_time) {
         this.video_time = video_time;
@@ -80,6 +74,10 @@ public class FreeTryReadDetailBean {
 
     public void setT_tag(String t_tag) {
         this.t_tag = t_tag;
+    }
+
+    public void setParent_name(String parent_name) {
+        this.parent_name = parent_name;
     }
 
     public void setTeacher_id(int teacher_id) {
@@ -190,6 +188,10 @@ public class FreeTryReadDetailBean {
         return t_tag;
     }
 
+    public String getParent_name() {
+        return parent_name;
+    }
+
     public int getTeacher_id() {
         return teacher_id;
     }
@@ -294,27 +296,33 @@ public class FreeTryReadDetailBean {
         /**
          * user_avatar : http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171221/H3rbqjNrENreO2du88Je.jpg
          * islive : false
-         * user_id : 1
          * teacher_id : 1
          * user_name : 王兵
-         * created_at : 2017-12-15 06:57:39
+         * comment_user : []
+         * created_at : 2017-12-15 14:57:39
+         * content : 试读测试留言
+         * top : 0
+         * user_id : 1
          * comment : []
          * id : 18
          * state : 1
-         * content : 试读测试留言
-         * live : 0
+         * live : 1
+         * is_display : 1
          */
         private String user_avatar;
         private boolean islive;
-        private int user_id;
         private int teacher_id;
         private String user_name;
+        private List<?> comment_user;
         private String created_at;
+        private String content;
+        private int top;
+        private int user_id;
         private List<?> comment;
         private int id;
         private int state;
-        private String content;
         private int live;
+        private int is_display;
 
         public void setUser_avatar(String user_avatar) {
             this.user_avatar = user_avatar;
@@ -322,10 +330,6 @@ public class FreeTryReadDetailBean {
 
         public void setIslive(boolean islive) {
             this.islive = islive;
-        }
-
-        public void setUser_id(int user_id) {
-            this.user_id = user_id;
         }
 
         public void setTeacher_id(int teacher_id) {
@@ -336,8 +340,24 @@ public class FreeTryReadDetailBean {
             this.user_name = user_name;
         }
 
+        public void setComment_user(List<?> comment_user) {
+            this.comment_user = comment_user;
+        }
+
         public void setCreated_at(String created_at) {
             this.created_at = created_at;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+        public void setTop(int top) {
+            this.top = top;
+        }
+
+        public void setUser_id(int user_id) {
+            this.user_id = user_id;
         }
 
         public void setComment(List<?> comment) {
@@ -352,12 +372,12 @@ public class FreeTryReadDetailBean {
             this.state = state;
         }
 
-        public void setContent(String content) {
-            this.content = content;
-        }
-
         public void setLive(int live) {
             this.live = live;
+        }
+
+        public void setIs_display(int is_display) {
+            this.is_display = is_display;
         }
 
         public String getUser_avatar() {
@@ -368,10 +388,6 @@ public class FreeTryReadDetailBean {
             return islive;
         }
 
-        public int getUser_id() {
-            return user_id;
-        }
-
         public int getTeacher_id() {
             return teacher_id;
         }
@@ -380,8 +396,24 @@ public class FreeTryReadDetailBean {
             return user_name;
         }
 
+        public List<?> getComment_user() {
+            return comment_user;
+        }
+
         public String getCreated_at() {
             return created_at;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public int getTop() {
+            return top;
+        }
+
+        public int getUser_id() {
+            return user_id;
         }
 
         public List<?> getComment() {
@@ -396,12 +428,12 @@ public class FreeTryReadDetailBean {
             return state;
         }
 
-        public String getContent() {
-            return content;
-        }
-
         public int getLive() {
             return live;
+        }
+
+        public int getIs_display() {
+            return is_display;
         }
     }
 }

@@ -167,7 +167,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         initListener();
         initNETDialog();
         setTimeRecord();
-        setStudyTime();
         // 通过WXAPIFactory工厂，获取IWXAPI的实例
         api = WXAPIFactory.createWXAPI(this, WX_APPID, false);
         // 将该app注册到微信
@@ -183,14 +182,18 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         }
     }
 
-    private void setStudyTime() {
-        pretime = SystemClock.currentThreadTimeMillis();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pretime = System.currentTimeMillis();
+//        Toast.makeText(this, " "+pretime, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        long lasttime = SystemClock.currentThreadTimeMillis() - pretime;
+//        Toast.makeText(this, " "+System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
+        long lasttime = System.currentTimeMillis() - pretime;
         if (!StudyTimeUtils.isHave("zhuanlandetail", mId)) {
             StudyTimeBean studyTimeBean = new StudyTimeBean(Integer.parseInt(mId), "zhuanlandetail",
                     MyUtils.getCurrentDate(), lasttime);

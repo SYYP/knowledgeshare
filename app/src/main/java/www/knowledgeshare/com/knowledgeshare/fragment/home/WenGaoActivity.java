@@ -86,17 +86,18 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
         showTanchuangDialog();
         initData();
         setTimeRecord();
-        setStudyTime();
     }
 
-    private void setStudyTime() {
-        pretime = SystemClock.currentThreadTimeMillis();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pretime=System.currentTimeMillis();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        long lasttime = SystemClock.currentThreadTimeMillis() - pretime;
+        long lasttime = System.currentTimeMillis() - pretime;
         if (!StudyTimeUtils.isHave(mType, mId)) {
             StudyTimeBean studyTimeBean = new StudyTimeBean(Integer.parseInt(mId), mType,
                     MyUtils.getCurrentDate(), lasttime);

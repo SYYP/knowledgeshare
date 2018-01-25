@@ -39,7 +39,9 @@ public class StudyTimeUtils {
     public static void add(StudyTimeBean studyTimeBean) {
         boolean save = studyTimeBean.save();
         if (save) {//注意bean类的id必须是int类型的，否则会保存失败
+//            Toast.makeText(MyApplication.getGloableContext(), "成功", Toast.LENGTH_SHORT).show();
         } else {
+//            Toast.makeText(MyApplication.getGloableContext(), "失败", Toast.LENGTH_SHORT).show();
         }
     }
 

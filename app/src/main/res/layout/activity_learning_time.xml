@@ -4,131 +4,141 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/bg_mine"
+    android:orientation="vertical"
     tools:context="www.knowledgeshare.com.knowledgeshare.activity.LearningTimeActivity">
     <include layout="@layout/item_title_layout"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_wanjiao2"
-        android:orientation="horizontal"
-        android:layout_marginTop="40px"
-        android:layout_marginRight="25px"
-        android:layout_marginLeft="25px">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_marginBottom="25px"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
+            android:layout_marginLeft="25px"
+            android:layout_marginRight="25px"
+            android:layout_marginTop="40px"
+            android:background="@drawable/bg_wanjiao2"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
+                android:layout_marginBottom="25px"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/yxxsc"
+                    android:textColor="@color/black"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24px"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/learn_time_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/yellow"
+                        android:textSize="20sp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="小时"/>
+                </LinearLayout>
+            </LinearLayout>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:background="@color/bg_mine"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25px"
                 android:layout_marginTop="15dp"
-                android:text="@string/yxxsc"/>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24px"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/learn_time_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textSize="20sp"
-                    android:textColor="@color/yellow"/>
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="小时"/>
+                    android:text="@string/lxxxts"
+                    android:textColor="@color/black"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24px"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/learn_date_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/yellow"
+                        android:textSize="20dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="天"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-        <View
-            android:layout_width="1dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:background="@color/bg_mine"/>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_marginBottom="25px"
-            android:layout_marginTop="15dp"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="@string/lxxxts"/>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24px"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/learn_date_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textSize="20dp"
-                    android:textColor="@color/yellow"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="天"/>
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/bg_wanjiao2"
-        android:layout_marginTop="40px">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="24px"
-            android:layout_marginBottom="24px">
-            <TextView
-                android:layout_width="3dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical"
-                android:background="@color/red"
-                android:layout_marginLeft="24px"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="学习记录"
-                android:layout_marginLeft="10dp"
-                android:textColor="@color/black"
-                android:layout_gravity="center_vertical"/>
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/bg_mine"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp"/>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_learntime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp">
+            android:layout_marginTop="40px"
+            android:background="@drawable/bg_wanjiao2"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24px"
+                android:layout_marginTop="24px"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="3dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="24px"
+                    android:background="@color/red"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:text="学习记录"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:background="@color/bg_mine"/>
+            <com.liaoinstan.springview.widget.SpringView
+                android:id="@+id/springview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_learntime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp">
+                </android.support.v7.widget.RecyclerView>
+            </com.liaoinstan.springview.widget.SpringView>
+        </LinearLayout>
 
-        </android.support.v7.widget.RecyclerView>
     </LinearLayout>
 </LinearLayout>

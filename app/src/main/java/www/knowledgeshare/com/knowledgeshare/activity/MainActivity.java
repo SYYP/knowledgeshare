@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
@@ -44,7 +45,6 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.HomeFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.SoftMusicDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.WebActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.DianZanbean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeBannerBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.MineFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.study.StudyFragment;
@@ -105,7 +105,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         pop();
         setStudyTime();
         String gobuy = getIntent().getStringExtra("gobuy");
-        if (gobuy!=null && gobuy.equals("gobuy")){
+        if (gobuy != null && gobuy.equals("gobuy")) {
             if (buyFragment == null) {
                 buyFragment = new BuyFragment();
             }
@@ -118,7 +118,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             tv_buy.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
             tv_study.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
             tv_mine.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-        }else {
+        } else {
             homeFragment = new HomeFragment();
             addFragments(homeFragment);
         }
@@ -136,17 +136,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 HttpParams params = new HttpParams();
                 params.put("date", StudyTimeUtils.getDate());
                 params.put("time", StudyTimeUtils.getTotalTime());
-                OkGo.<DianZanbean>post(MyContants.LXKURL + "user/add-time")
+                OkGo.<String>post(MyContants.LXKURL + "user/add-time")
                         .tag(this)
                         .headers(headers)
                         .params(params)
-                        .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                        .execute(new StringCallback() {
                                      @Override
-                                     public void onSuccess(Response<DianZanbean> response) {
+                                     public void onSuccess(Response<String> response) {
                                          int code = response.code();
                                          if (response.code() >= 200 && response.code() <= 204) {
                                              StudyTimeUtils.deleteAll();//成功的话就删除掉上次启动保存的学习时间数据表
                                          }
+                                     }
+
+                                     @Override
+                                     public void onError(Response<String> response) {
+                                         super.onError(response);
                                      }
                                  }
                         );
@@ -161,7 +166,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void pop() {
-        if (SpUtils.getBoolean(this,"homewindow",false)){
+        if (SpUtils.getBoolean(this, "homewindow", false)) {
             return;
         }
         HttpParams params2 = new HttpParams();
@@ -227,7 +232,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                         }
                                     }
                                 });
-                                SpUtils.putBoolean(MainActivity.this,"homewindow",true);
+                                SpUtils.putBoolean(MainActivity.this, "homewindow", true);
                             }
                         } else {
 
@@ -476,7 +481,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         } else {
             EventBean eventBean = new EventBean("home_pause");//发一个保证正在播放音频的学习时长的终止
             EventBus.getDefault().postSticky(eventBean);
-            SpUtils.putBoolean(this,"homewindow",false);
+            SpUtils.putBoolean(this, "homewindow", false);
             super.onBackPressed();//相当于finish()
             realBack();//删除所有引用
         }
