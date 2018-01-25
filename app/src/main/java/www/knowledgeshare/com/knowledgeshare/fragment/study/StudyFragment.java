@@ -113,6 +113,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         requestNoteList("");
+        study_name.setText("Hi  "+SpUtils.getString(mContext,"name",""));
     }
 
     @Override
