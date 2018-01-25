@@ -147,6 +147,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                         if (code >= 200 && code <= 204){
                             userInfoBean = response.body();
                             mineNameTv.setText(userInfoBean.getUser_name());
+                            SpUtils.putString(mContext,"name",userInfoBean.getUser_name());
                             if (SpUtils.getString(mContext,"userFace","") != null){
                                 if (!TextUtils.equals(SpUtils.getString(mContext,"userFace",""),userInfoBean.getUser_avatar())){
                                     Glide.with(mActivity).load(userInfoBean.getUser_avatar()).into(mineFaceIv);
