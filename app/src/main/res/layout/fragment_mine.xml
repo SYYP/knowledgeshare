@@ -59,8 +59,8 @@
                                 android:orientation="vertical">
                                 <ImageView
                                     android:id="@+id/xz_start_iv"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp" />
                                 <TextView
                                     android:id="@+id/xz_start_tv"
                                     android:layout_width="wrap_content"
@@ -92,8 +92,8 @@
 
                                 <ImageView
                                     android:id="@+id/xz_end_iv"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp" />
 
                                 <TextView
                                     android:id="@+id/xz_end_tv"

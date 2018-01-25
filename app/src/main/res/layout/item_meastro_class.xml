@@ -75,6 +75,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="最新更新的专栏名称"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:textSize="12dp" />
             </LinearLayout>
         </LinearLayout>

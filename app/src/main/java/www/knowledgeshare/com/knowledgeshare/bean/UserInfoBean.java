@@ -223,7 +223,7 @@ public class UserInfoBean extends BaseBean implements Serializable {
         this.config = config;
     }
 
-    public static class LevelBean {
+    public static class LevelBean implements Serializable{
         /**
          * level_id : 1
          * level_name : 铜勋章
@@ -299,7 +299,7 @@ public class UserInfoBean extends BaseBean implements Serializable {
         }
     }
 
-    public static class ConfigBean {
+    public static class ConfigBean implements Serializable{
         /**
          * id : 4
          * name : tel

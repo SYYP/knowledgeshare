@@ -15,10 +15,12 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanDetail2Activity;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.MyMessageActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
  * Created by Administrator on 2018/1/4.
@@ -36,10 +38,17 @@ public class MyMessageReceiver extends MessageReceiver {
         //积分 type notice
         //type zl
         //type
-        String type = extraMap.get("type");
-        String content = extraMap.get("content");
-        if (type.equals("notice")) {
-            BaseDialog.Builder builder = new BaseDialog.Builder(context);
+    }
+
+
+    @Override
+    public void onMessage(Context context, CPushMessage cPushMessage) {
+        Log.e("MyMessageReceiver", "onMessage, messageId: " + cPushMessage.getMessageId() + ", title: " + cPushMessage.getTitle() + ", content:" + cPushMessage.getContent());
+        String type = cPushMessage.getTitle();
+        String content = cPushMessage.getContent();
+        TUtils.showShort(MyApplication.getGloableContext(),type+":"+content);
+//        if (type.equals("获得奖励")) {
+            /*BaseDialog.Builder builder = new BaseDialog.Builder(context);
             mDialog = builder.setViewId(R.layout.dialog_notice)
                     //设置dialogpadding
                     .setPaddingdp(10, 0, 10, 0)
@@ -55,14 +64,7 @@ public class MyMessageReceiver extends MessageReceiver {
                     .builder();
             TextView tv_content = mDialog.getView(R.id.tv_content);
             tv_content.setText(content);
-            mDialog.show();
-        }
-    }
-
-
-    @Override
-    public void onMessage(Context context, CPushMessage cPushMessage) {
-        Log.e("MyMessageReceiver", "onMessage, messageId: " + cPushMessage.getMessageId() + ", title: " + cPushMessage.getTitle() + ", content:" + cPushMessage.getContent());
+            mDialog.show();*/
     }
 
     @Override

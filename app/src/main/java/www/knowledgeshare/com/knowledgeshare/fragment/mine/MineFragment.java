@@ -21,6 +21,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.Serializable;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -65,6 +68,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private int user_level;
     private int user_integral;
     private int user_education;
+    private List<UserInfoBean.LevelBean> level;
 
 
     @Override
@@ -149,6 +153,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                                     SpUtils.putString(mContext,"userFace",userInfoBean.getUser_avatar());
                                 }
                             }
+                            level = response.body().getLevel();
                             if (userInfoBean.isIs_sign()){
                                 qiandaoBtn.setBackground(mActivity.getResources().getDrawable(R.drawable.bg_qiandao_hui));
                                 qiandaoBtn.setText("已签到");
@@ -182,45 +187,55 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 progressBar.setProgress(integral);
                 xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v0));
                 xzStartTv.setText("默认");
-                xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v1));
+                Glide.with(mContext).load(level.get(0).getLevel_get_img()).into(xzStartIv);
+//                xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v1));
                 xzEndTv.setText("铜勋章");
                 break;
             case 1:
                 progressBar.setMax(600-200);
                 progressBar.setProgress(integral-200);
-                xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v1));
+                Glide.with(mContext).load(level.get(0).getLevel_get_img()).into(xzStartIv);
+//                xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v1));
                 xzStartTv.setText("铜勋章");
-                xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v2));
+                Glide.with(mContext).load(level.get(1).getLevel_get_img()).into(xzStartIv);
+//                xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v2));
                 xzEndTv.setText("银勋章");
                 break;
             case 2:
                 progressBar.setMax(1500-600);
                 progressBar.setProgress(integral-600);
-                xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v2));
+                Glide.with(mContext).load(level.get(1).getLevel_get_img()).into(xzStartIv);
+//                xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v2));
                 xzStartTv.setText("银勋章");
-                xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v3));
+                Glide.with(mContext).load(level.get(2).getLevel_get_img()).into(xzStartIv);
+//                xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v3));
                 xzEndTv.setText("金勋章");
                 break;
             case 3:
                 progressBar.setMax(3000-1500);
                 progressBar.setProgress(integral-1500);
-                xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v3));
+                Glide.with(mContext).load(level.get(2).getLevel_get_img()).into(xzStartIv);
+//                xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v3));
                 xzStartTv.setText("金勋章");
-                xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v4));
+                Glide.with(mContext).load(level.get(3).getLevel_get_img()).into(xzStartIv);
+//                xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v4));
                 xzEndTv.setText("白金勋章");
                 break;
             case 4:
                 progressBar.setMax(5000-3000);
                 progressBar.setProgress(integral-3000);
-                xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v4));
+                Glide.with(mContext).load(level.get(3).getLevel_get_img()).into(xzStartIv);
+//                xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v4));
                 xzStartTv.setText("白金勋章");
-                xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v5));
+                Glide.with(mContext).load(level.get(4).getLevel_get_img()).into(xzStartIv);
+//                xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v5));
                 xzEndTv.setText("钻石勋章");
                 break;
             case 5:
                 progressBar.setVisibility(View.GONE);
                 endLl.setVisibility(View.GONE);
-                xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v5));
+                Glide.with(mContext).load(level.get(4).getLevel_get_img()).into(xzStartIv);
+//                xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v5));
                 xzStartTv.setText("钻石勋章");
                 break;
         }
@@ -266,6 +281,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.wdxz_rl://我的勋章
                 Intent intent = new Intent(getActivity(),MyMedalActivity.class);
                 intent.putExtra("level",user_level+"");
+                intent.putExtra("xunzhang", (Serializable) level);
                 startActivity(intent);
                 break;
             case R.id.zhaq_rl://帐号安全
