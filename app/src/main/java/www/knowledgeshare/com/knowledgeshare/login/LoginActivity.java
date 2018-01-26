@@ -41,6 +41,7 @@ import www.knowledgeshare.com.knowledgeshare.activity.BindPhoneActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.MainActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.RegisterActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.base.UMLoginActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.bean.LoginBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
@@ -54,7 +55,7 @@ import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
  * author:衣鹏宇(ypu)
  */
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener {
+public class LoginActivity extends UMLoginActivity implements View.OnClickListener {
 
     private ImageView login_headimg;
     private EditText login_phone;
@@ -125,7 +126,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             }
         });
 
-        initUM();
+//        initUM();
     }
 
     @Override
@@ -154,23 +155,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 finish();
                 break;
             case R.id.weixin:
-                config.setSinaAuthType(UMShareConfig.AUTH_TYPE_SSO);
-                umShareAPI.setShareConfig(config);
-                umShareAPI.doOauthVerify(this,SHARE_MEDIA.WEIXIN,umAuthListener);
+                loginByWeiXin(this);
                 break;
         }
     }
 
-    private void initUM() {
-        Config.DEBUG = true;
-        umShareAPI = UMShareAPI.get(this);
-        PlatformConfig.setWeixin("wxf33afce9142929dc","1ec3dd295f384088757e5fd5500ef897");
-        config = new UMShareConfig();
-        config.isNeedAuthOnGetUserInfo(true);
 
-    }
-
-    private UMAuthListener umAuthListener = new UMAuthListener() {
+    /*private UMAuthListener umAuthListener = new UMAuthListener() {
         @Override
         public void onStart(SHARE_MEDIA platform) {
             //授权开始的回调
@@ -180,9 +171,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
             openid = data.get("openid");
             userFace = data.get("iconurl");
-            name = data.get("screen_name");
+            name = data.get("name");
+            Logger.e(data.toString());
             Logger.e("openid:"+ openid +"\n"+"userFace:"+ userFace +"\n"+"name:"+ name);
-            requestIsBind(openid);
+//            requestIsBind(openid);
             TUtils.showShort(LoginActivity.this,"微信登录成功");
         }
 
@@ -195,9 +187,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         public void onCancel(SHARE_MEDIA platform, int action) {
             Toast.makeText( getApplicationContext(), "Authorize cancel", Toast.LENGTH_SHORT).show();
         }
-    };
+    };*/
 
-    private void requestIsBind(final String openid) {
+    /*private void requestIsBind(final String openid) {
         HttpParams params = new HttpParams();
         params.put("wx_unionid",openid);
 
@@ -224,9 +216,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         }
                     }
                 });
-    }
+    }*/
 
-    private void requestLoginWeChat() {
+    /*private void requestLoginWeChat() {
         TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         String tmDevice, tmSerial, tmPhone, androidId;
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
@@ -282,7 +274,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         }
                     }
                 });
-    }
+    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -347,6 +339,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if ( response.code() >= 200 && response.code() <= 204){
                             SpUtils.putString(LoginActivity.this,"id",loginBean.getUser().getId());
                             SpUtils.putString(LoginActivity.this,"name",loginBean.getUser().getUser_name());
+                            SpUtils.putString(LoginActivity.this,"userFace",loginBean.getUser().getUser_avatar());
                             SpUtils.putString(LoginActivity.this,"wx_id",loginBean.getUser().getWx_unionid());
                             String token = loginBean.getToken();
                             SpUtils.putString(LoginActivity.this,"token",token);

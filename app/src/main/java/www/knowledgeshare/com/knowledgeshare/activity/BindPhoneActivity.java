@@ -141,6 +141,7 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
                         if ( response.code() >= 200 && response.code() <= 204){
                             SpUtils.putString(BindPhoneActivity.this,"id",loginBean.getUser().getId());
                             SpUtils.putString(BindPhoneActivity.this,"name",loginBean.getUser().getUser_name());
+                            SpUtils.putString(BindPhoneActivity.this,"userFace",loginBean.getUser().getUser_avatar());
                             SpUtils.putString(BindPhoneActivity.this,"wx_id",loginBean.getUser().getWx_unionid());
                             String token = loginBean.getToken();
                             SpUtils.putString(BindPhoneActivity.this,"token",token);
@@ -233,6 +234,7 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
                         if ( response.code() >= 200 && response.code() <= 204){
                             SpUtils.putString(BindPhoneActivity.this,"id",loginBean.getUser().getId());
                             SpUtils.putString(BindPhoneActivity.this,"name",loginBean.getUser().getUser_name());
+                            SpUtils.putString(BindPhoneActivity.this,"userFace",loginBean.getUser().getUser_avatar());
                             SpUtils.putString(BindPhoneActivity.this,"wx_id",loginBean.getUser().getWx_unionid());
                             String token = loginBean.getToken();
                             SpUtils.putString(BindPhoneActivity.this,"token",token);

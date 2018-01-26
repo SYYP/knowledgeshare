@@ -31,37 +31,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>
+
     <RelativeLayout
-        android:layout_marginTop="40dp"
-        android:background="@drawable/shape_radius"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_marginLeft="35dp"
         android:layout_marginRight="35dp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_marginTop="40dp"
+        android:background="@drawable/shape_radius">
+
         <ImageView
             android:id="@+id/img_phone"
-            android:padding="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/login_phone"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:padding="10dp"
+            android:src="@drawable/login_phone" />
+
         <EditText
-            android:layout_toRightOf="@id/img_phone"
-            android:cursorVisible="false"
-            android:textCursorDrawable="@null"
-            android:inputType="number"
-            android:background="@null"
-            android:layout_gravity="center"
-            android:gravity="left|center_vertical"
-            android:textColor="@color/textcolor"
-            android:textSize="14sp"
             android:id="@+id/register_phone"
-            android:layout_centerHorizontal="true"
-            android:hint="请输入手机号"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_toRightOf="@id/img_phone"
+            android:background="@null"
+            android:gravity="left|center_vertical"
+            android:hint="请输入手机号"
+            android:inputType="number"
+            android:maxLength="11"
+            android:textColor="@color/textcolor"
+            android:textSize="14sp" />
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_marginTop="25dp"
         android:background="@drawable/shape_radius"
@@ -79,11 +82,11 @@
             android:layout_height="wrap_content" />
         <EditText
             android:layout_toRightOf="@id/img_message"
-            android:textCursorDrawable="@null"
             android:inputType="number"
             android:background="@null"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
+            android:maxLength="6"
             android:gravity="left|center_vertical"
             android:textColor="@color/textcolor"
             android:textSize="14sp"

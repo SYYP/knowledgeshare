@@ -84,7 +84,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         titleMessageIv.setVisibility(View.VISIBLE);
         titleSettingIv.setVisibility(View.VISIBLE);
         titleContentTv.setText("我的");
-        if (SpUtils.getString(mContext,"userFace","") != null){
+        if (SpUtils.getString(mContext,"userFace","") != null && !SpUtils.getString(mContext,"userFace","").equals("")){
             Glide.with(mActivity).load(SpUtils.getString(mContext,"userFace","")).into(mineFaceIv);
         }
         titleMessageIv.setOnClickListener(this);
@@ -146,13 +146,16 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                         int code = response.code();
                         if (code >= 200 && code <= 204){
                             userInfoBean = response.body();
-                            mineNameTv.setText(userInfoBean.getUser_name());
-                            SpUtils.putString(mContext,"name",userInfoBean.getUser_name());
-                            if (SpUtils.getString(mContext,"userFace","") != null){
-                                if (!TextUtils.equals(SpUtils.getString(mContext,"userFace",""),userInfoBean.getUser_avatar())){
-                                    Glide.with(mActivity).load(userInfoBean.getUser_avatar()).into(mineFaceIv);
-                                    SpUtils.putString(mContext,"userFace",userInfoBean.getUser_avatar());
-                                }
+                            if (userInfoBean.getUser_name() != null && !userInfoBean.getUser_name().equals("")){
+                                mineNameTv.setText(userInfoBean.getUser_name());
+                                SpUtils.putString(mContext,"name",userInfoBean.getUser_name());
+                            }else {
+                                mineNameTv.setText(userInfoBean.getWx_name());
+                                SpUtils.putString(mContext,"name",userInfoBean.getWx_name());
+                            }
+                            if ( !TextUtils.isEmpty(userInfoBean.getUser_avatar()) && !userInfoBean.getUser_avatar().equals("") ){
+                                Glide.with(mActivity).load(userInfoBean.getUser_avatar()).into(mineFaceIv);
+                                SpUtils.putString(mContext,"userFace",userInfoBean.getUser_avatar());
                             }
                             level = response.body().getLevel();
                             if (userInfoBean.isIs_sign()){
