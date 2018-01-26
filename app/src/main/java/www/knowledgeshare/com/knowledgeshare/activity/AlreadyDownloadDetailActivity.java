@@ -292,9 +292,32 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
             case R.id.delete_tv:
                 for (int i = list.size() - 1; i >= 0; i--) {
                     if (list.get(i).isChecked()) {
+                        File file = null;
+                        switch (type) {
+                            case "free":
+                                file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download/"+
+                                        list.get(i).getName() + list.get(i).getTypeId() + "_" + list.get(i).getChildId() + ".mp3");
+                                file.delete();
+                                break;
+                            case "comment":
+                                file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download/"+
+                                        list.get(i).getName() + list.get(i).getTypeId() + "_" + list.get(i).getChildId() + ".mp3");
+                                file.delete();
+                                break;
+                            case "xiaoke":
+                                file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download/"+
+                                        list.get(i).getName() + list.get(i).getTypeId() + "_" + list.get(i).getChildId() + ".mp3");
+                                file.delete();
+                                break;
+                            case "zhuanlan":
+                                file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download/"+
+                                        list.get(i).getName() + list.get(i).getTypeId() + "_" + list.get(i).getChildId() + ".mp3");
+                                file.delete();
+                                break;
+                        }
                         GetRequest<File> request = OkGo.<File>get(list.get(i).getVideoUrl());
                         DownloadTask task = new DownloadTask(list.get(i).getTypeId() + "_" + list.get(i).getChildId(), request);
-                        Logger.e("TAG:" + list.get(i).getTypeId() + "_" + list.get(i).getChildId());
+                        Logger.e("删除TAG:" + list.get(i).getTypeId() + "_" + list.get(i).getChildId());
                         task.remove(true);
                         list.remove(i);
                     }

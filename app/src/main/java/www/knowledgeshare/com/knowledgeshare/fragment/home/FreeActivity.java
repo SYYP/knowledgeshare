@@ -785,7 +785,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听
                         .start();
-
+                Logger.e("下载TAG："+listBean.getTypeId() + "_" + childEntity.getId());
                 OkGo.<File>get(childEntity.getTxt_url())
                         .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download"
                                 , listBean.getTypeId() + "-" + childEntity.getId() + childEntity.getVideo_name() + ".txt") {

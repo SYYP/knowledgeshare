@@ -350,12 +350,26 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                 Progress progress = task.progress;
                 switch (progress.status) {
                     case Progress.PAUSE:
+                        kaishiTv.setText("全部暂停");
                     case Progress.NONE:
                     case Progress.ERROR:
                         task.start();
-                        break;
+                        for (int i = 0; i < values.size(); i++) {
+                            if (progress.status  == Progress.LOADING){
+                                kaishiTv.setText("全部暂停");
+                            }else {
+                                kaishiTv.setText("全部开始");
+                            }
+                        }
                     case Progress.LOADING:
                         task.pause();
+                        for (int i = 0; i < values.size(); i++) {
+                            if (progress.status  == Progress.LOADING){
+                                kaishiTv.setText("全部暂停");
+                            }else {
+                                kaishiTv.setText("全部开始");
+                            }
+                        }
                         break;
                     case Progress.FINISH:
 

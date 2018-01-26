@@ -25,6 +25,7 @@ import www.knowledgeshare.com.knowledgeshare.bean.FavoriteBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.SoftMusicDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanDetail2Activity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
@@ -86,7 +87,7 @@ public class MyClassfragment extends BaseFragment {
                                         startActivity(intent);
                                     }
                                     else if(type==2){
-                                        Intent intent = new Intent(getActivity(), ZhuanLanActivity.class);
+                                        Intent intent = new Intent(getActivity(), ZhuanLanDetail2Activity.class);
                                         intent.putExtra("id",id+"");
                                         startActivity(intent);
                                     }
