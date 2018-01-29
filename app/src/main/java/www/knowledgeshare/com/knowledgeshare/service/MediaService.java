@@ -56,7 +56,6 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
     private static List<MusicTypeBean> musicTypeBeanList = new ArrayList<>();//传进来的主界面播放数据的list
     private static List<BofangHistroyBean> bofangHistroyBeanList = new ArrayList<>();//传进来的播放列表的历史封装list
     private static int currPosition = 0;
-    private static boolean isSuishenting;
 
     @Override
     public void onCreate() {
@@ -523,9 +522,6 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                         playerBean.setMsg("refreshplayer");
                         EventBus.getDefault().postSticky(playerBean);
                     }
-                }
-                if (isSuishenting && currPosition == musicList.size() - 1) {
-                    EventBus.getDefault().postSticky("suishentingcontinue");
                 }
             }
         }
