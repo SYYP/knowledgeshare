@@ -640,4 +640,5 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                 break;
         }
     }
+
 }

@@ -180,7 +180,7 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
                                  mDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                         Intent intent = new Intent(GuDianActivity.this, ZhuanLanDetail1Activity.class);
+                                         Intent intent = new Intent(GuDianActivity.this, ZhuanLanActivity.class);
                                          intent.putExtra("title", mDaShiBanAdapter.getData().get(position).getZl_name());
                                          intent.putExtra("id", mDaShiBanAdapter.getData().get(position).getId() + "");
                                          startActivity(intent);

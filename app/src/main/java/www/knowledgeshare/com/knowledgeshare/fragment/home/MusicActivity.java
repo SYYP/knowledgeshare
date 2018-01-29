@@ -58,6 +58,7 @@ import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class MusicActivity extends BaseActivity implements View.OnClickListener {
@@ -100,6 +101,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
         initDialog();
         initMusic();
         initCollect();
+        initNETDialog();
     }
 
     private void initCollect() {
@@ -482,12 +484,67 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
+    private BaseDialog mNetDialog;
+    private TextView mTv_content;
+    private boolean nowifiallowdown;
+    private void initNETDialog() {
+        BaseDialog.Builder builder = new BaseDialog.Builder(this);
+        mNetDialog = builder.setViewId(R.layout.dialog_iswifi)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mTv_content = mNetDialog.getView(R.id.tv_content);
+    }
+
     private void goDownload() {
         String userid = SpUtils.getString(MyApplication.getGloableContext(), "id", "");
         if (TextUtils.isEmpty(userid)) {
             startActivity(new Intent(this, LoginActivity.class));
             return;
         }
+        int apnType = NetWorkUtils.getAPNType(this);
+        if (apnType == 0) {
+            Toast.makeText(this, "没有网络呢~", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (apnType == 2 || apnType == 3 || apnType == 4) {
+            nowifiallowdown = SpUtils.getBoolean(this, "nowifiallowdown", false);
+            if (!nowifiallowdown) {
+                mTv_content.setText("当前无WiFi，是否允许用流量下载");
+                mNetDialog.show();
+                mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mNetDialog.dismiss();
+                        return;
+                    }
+                });
+                mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {//记住用户允许流量下载
+                        SpUtils.putBoolean(MusicActivity.this, "nowifiallowdown", true);
+                        download();
+                    }
+                });
+            }else {
+                download();
+            }
+        } else {
+            download();
+        }
+
+    }
+
+    private void download(){
+        mNetDialog.dismiss();
         HttpParams params = new HttpParams();
         params.put("id", mMusicTypeBean.getId());
         String type = mMusicTypeBean.getType();

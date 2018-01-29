@@ -1,18 +1,15 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.buy;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -30,14 +27,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.activity.BuyZhuanLanActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
-import www.knowledgeshare.com.knowledgeshare.bean.BuyXkBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.BuyZlBean;
-import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.EasyLessonBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
@@ -76,6 +71,10 @@ public class MaestroClassFragment extends BaseFragment {
         springView.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
+                if (!NetWorkUtils.isNetworkConnected(mContext)){
+                    Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -87,6 +86,10 @@ public class MaestroClassFragment extends BaseFragment {
 
             @Override
             public void onLoadmore() {
+                if (!NetWorkUtils.isNetworkConnected(mContext)){
+                    Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

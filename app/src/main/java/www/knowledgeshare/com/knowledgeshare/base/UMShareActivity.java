@@ -72,7 +72,8 @@ public class UMShareActivity extends BaseActivity {
         shareAction.setCallback(umShareListener);
     }
 
-    public static void shareWebUrl(String url, String title, String imgUrl, String des, Activity context, SHARE_MEDIA pingtai) {
+    public static void shareWebUrl(String url, String title, String imgUrl, String des,
+                                   Activity context, SHARE_MEDIA pingtai) {
         UMWeb web = new UMWeb(url);
         web.setTitle(title);//标题
         UMImage thumb = new UMImage(context, imgUrl);
@@ -81,8 +82,8 @@ public class UMShareActivity extends BaseActivity {
         //注意在新浪平台，缩略图属于必传参数，否则会报错
         ShareAction shareAction = new ShareAction(context).withMedia(web);
         shareAction.setPlatform(pingtai);//传入平台
-        shareAction.share();
         shareAction.setCallback(umShareListener);
+        shareAction.share();
     }
 
     public static UMShareListener umShareListener = new UMShareListener() {
@@ -95,12 +96,12 @@ public class UMShareActivity extends BaseActivity {
         public void onResult(SHARE_MEDIA platform) {
             //            Log.d("plat", "platform" + platform);
 
-            Toast.makeText(MyApplication.getGloableContext(), platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MyApplication.getGloableContext(), "分享成功啦", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            Toast.makeText(MyApplication.getGloableContext(), platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MyApplication.getGloableContext(), "分享失败啦", Toast.LENGTH_SHORT).show();
             if (t != null) {
                 //                Log.d("throw", "throw:" + t.getMessage());
             }
@@ -108,7 +109,7 @@ public class UMShareActivity extends BaseActivity {
 
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            Toast.makeText(MyApplication.getGloableContext(), platform + " 分享取消了", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MyApplication.getGloableContext(), "分享取消了", Toast.LENGTH_SHORT).show();
         }
     };
 

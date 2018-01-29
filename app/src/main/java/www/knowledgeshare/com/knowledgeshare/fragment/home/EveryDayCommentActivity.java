@@ -91,6 +91,8 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
     private boolean isLoadMore;
     private EveryDayBean everyDayBean;
     private boolean backRefresh;
+    private boolean nowifiallowdown;
+    private TextView mTv_content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +131,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                 .isOnTouchCanceled(true)
                 //设置监听事件
                 .builder();
+        mTv_content = mNetDialog.getView(R.id.tv_content);
     }
 
     private void gobofang(final PlayerBean playerBean) {
@@ -474,64 +477,210 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                     startActivity(new Intent(EveryDayCommentActivity.this, LoginActivity.class));
                     return;
                 }
-                EveryDayBean.DailysBean childEntity = mDailys.get(adapterPosition);
-                String created_at = childEntity.getCreated_at();
-                String[] split = created_at.split(" ");
-
-                List<DownLoadListsBean.ListBean> list = new ArrayList<>();
-                DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
-                listBean.setTypeId("commentId");
-                listBean.setChildId(childEntity.getId() + "");
-                listBean.setName(childEntity.getVideo_name());
-                listBean.setVideoTime(childEntity.getVideo_time());
-                listBean.setDate(split[0]);
-                listBean.setTime(split[1]);
-                listBean.setVideoUrl(childEntity.getVideo_url());
-                listBean.setTxtUrl(childEntity.getTxt_url());
-                listBean.setIconUrl(childEntity.getT_header());
-                listBean.settName(childEntity.getT_name());
-                listBean.setParentName("");
-                listBean.setH5_url(childEntity.getShare_h5_url());
-                listBean.setGood_count(childEntity.getGood_count());
-                listBean.setCollect_count(childEntity.getCollect_count());
-                listBean.setView_count(childEntity.getView_count());
-                listBean.setDianzan(childEntity.isIslive());
-                listBean.setCollected(childEntity.isIsfav());
-                list.add(listBean);
-                if (MyUtils.isHaveFile("comment",childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")){
-                    Toast.makeText(EveryDayCommentActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+                int apnType = NetWorkUtils.getAPNType(EveryDayCommentActivity.this);
+                if (apnType == 0) {
+                    Toast.makeText(EveryDayCommentActivity.this, "没有网络呢~", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
-                        "comment", "commentId", "", childEntity.getT_header(), "", "", list.size() + "", list);
-                DownUtil.add(downLoadListsBean);
+                } else if (apnType == 2 || apnType == 3 || apnType == 4) {
+                    nowifiallowdown = SpUtils.getBoolean(EveryDayCommentActivity.this, "nowifiallowdown", false);
+                    if (!nowifiallowdown) {
+                        mTv_content.setText("当前无WiFi，是否允许用流量下载");
+                        mNetDialog.show();
+                        mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mNetDialog.dismiss();
+                                return;
+                            }
+                        });
+                        mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {//记住用户允许流量下载
+                                SpUtils.putBoolean(EveryDayCommentActivity.this, "nowifiallowdown", true);
+                                EveryDayBean.DailysBean childEntity = mDailys.get(adapterPosition);
+                                String created_at = childEntity.getCreated_at();
+                                String[] split = created_at.split(" ");
+
+                                List<DownLoadListsBean.ListBean> list = new ArrayList<>();
+                                DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
+                                listBean.setTypeId("commentId");
+                                listBean.setChildId(childEntity.getId() + "");
+                                listBean.setName(childEntity.getVideo_name());
+                                listBean.setVideoTime(childEntity.getVideo_time());
+                                listBean.setDate(split[0]);
+                                listBean.setTime(split[1]);
+                                listBean.setVideoUrl(childEntity.getVideo_url());
+                                listBean.setTxtUrl(childEntity.getTxt_url());
+                                listBean.setIconUrl(childEntity.getT_header());
+                                listBean.settName(childEntity.getT_name());
+                                listBean.setParentName("");
+                                listBean.setH5_url(childEntity.getShare_h5_url());
+                                listBean.setGood_count(childEntity.getGood_count());
+                                listBean.setCollect_count(childEntity.getCollect_count());
+                                listBean.setView_count(childEntity.getView_count());
+                                listBean.setDianzan(childEntity.isIslive());
+                                listBean.setCollected(childEntity.isIsfav());
+                                list.add(listBean);
+                                if (MyUtils.isHaveFile("comment",childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")){
+                                    Toast.makeText(EveryDayCommentActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
+                                        "comment", "commentId", "", childEntity.getT_header(), "", "", list.size() + "", list);
+                                DownUtil.add(downLoadListsBean);
 
                 /*DownLoadListBean DownLoadListBean = new DownLoadListBean(-2,childEntity.getChildId(),-4,-3,-1,
                         childEntity.getVideo_name(),childEntity.getVideo_time(), split[0], split[1],
                         childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
                 DownUtils.add(DownLoadListBean);*/
-                GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
-                OkDownload.request(downLoadListsBean.getTypeId() + "_" + childEntity.getId(), request)
-                        .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download")
-                        .fileName(childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")
-                        .extra3(downLoadListsBean)//额外数据
-                        .save()
-                        .register(new LogDownloadListener())//当前任务的回调监听
-                        .start();
-                OkGo.<File>get(childEntity.getTxt_url())
-                        .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download"
-                                , downLoadListsBean.getTypeId() + "-" + childEntity.getId() + childEntity.getVideo_name() + ".txt") {
-                            @Override
-                            public void onSuccess(Response<File> response) {
-                                int code = response.code();
-                                if (code >= 200 && code <= 204) {
-                                    Logger.e("文稿下载完成");
-                                }
+                                GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
+                                OkDownload.request(downLoadListsBean.getTypeId() + "_" + childEntity.getId(), request)
+                                        .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download")
+                                        .fileName(childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")
+                                        .extra3(downLoadListsBean)//额外数据
+                                        .save()
+                                        .register(new LogDownloadListener())//当前任务的回调监听
+                                        .start();
+                                OkGo.<File>get(childEntity.getTxt_url())
+                                        .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download"
+                                                , downLoadListsBean.getTypeId() + "-" + childEntity.getId() + childEntity.getVideo_name() + ".txt") {
+                                            @Override
+                                            public void onSuccess(Response<File> response) {
+                                                int code = response.code();
+                                                if (code >= 200 && code <= 204) {
+                                                    Logger.e("文稿下载完成");
+                                                }
+                                            }
+                                        });
+                                EventBean eventBean = new EventBean("number");
+                                EventBus.getDefault().postSticky(eventBean);
+                                mDialog.dismiss();
+                                mNetDialog.dismiss();
                             }
                         });
-                EventBean eventBean = new EventBean("number");
-                EventBus.getDefault().postSticky(eventBean);
-                mDialog.dismiss();
+                    }else {
+                        EveryDayBean.DailysBean childEntity = mDailys.get(adapterPosition);
+                        String created_at = childEntity.getCreated_at();
+                        String[] split = created_at.split(" ");
+
+                        List<DownLoadListsBean.ListBean> list = new ArrayList<>();
+                        DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
+                        listBean.setTypeId("commentId");
+                        listBean.setChildId(childEntity.getId() + "");
+                        listBean.setName(childEntity.getVideo_name());
+                        listBean.setVideoTime(childEntity.getVideo_time());
+                        listBean.setDate(split[0]);
+                        listBean.setTime(split[1]);
+                        listBean.setVideoUrl(childEntity.getVideo_url());
+                        listBean.setTxtUrl(childEntity.getTxt_url());
+                        listBean.setIconUrl(childEntity.getT_header());
+                        listBean.settName(childEntity.getT_name());
+                        listBean.setParentName("");
+                        listBean.setH5_url(childEntity.getShare_h5_url());
+                        listBean.setGood_count(childEntity.getGood_count());
+                        listBean.setCollect_count(childEntity.getCollect_count());
+                        listBean.setView_count(childEntity.getView_count());
+                        listBean.setDianzan(childEntity.isIslive());
+                        listBean.setCollected(childEntity.isIsfav());
+                        list.add(listBean);
+                        if (MyUtils.isHaveFile("comment",childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")){
+                            Toast.makeText(EveryDayCommentActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
+                                "comment", "commentId", "", childEntity.getT_header(), "", "", list.size() + "", list);
+                        DownUtil.add(downLoadListsBean);
+
+                /*DownLoadListBean DownLoadListBean = new DownLoadListBean(-2,childEntity.getChildId(),-4,-3,-1,
+                        childEntity.getVideo_name(),childEntity.getVideo_time(), split[0], split[1],
+                        childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
+                DownUtils.add(DownLoadListBean);*/
+                        GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
+                        OkDownload.request(downLoadListsBean.getTypeId() + "_" + childEntity.getId(), request)
+                                .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download")
+                                .fileName(childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")
+                                .extra3(downLoadListsBean)//额外数据
+                                .save()
+                                .register(new LogDownloadListener())//当前任务的回调监听
+                                .start();
+                        OkGo.<File>get(childEntity.getTxt_url())
+                                .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download"
+                                        , downLoadListsBean.getTypeId() + "-" + childEntity.getId() + childEntity.getVideo_name() + ".txt") {
+                                    @Override
+                                    public void onSuccess(Response<File> response) {
+                                        int code = response.code();
+                                        if (code >= 200 && code <= 204) {
+                                            Logger.e("文稿下载完成");
+                                        }
+                                    }
+                                });
+                        EventBean eventBean = new EventBean("number");
+                        EventBus.getDefault().postSticky(eventBean);
+                        mDialog.dismiss();
+                        mNetDialog.dismiss();
+                    }
+                } else {
+                    EveryDayBean.DailysBean childEntity = mDailys.get(adapterPosition);
+                    String created_at = childEntity.getCreated_at();
+                    String[] split = created_at.split(" ");
+
+                    List<DownLoadListsBean.ListBean> list = new ArrayList<>();
+                    DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
+                    listBean.setTypeId("commentId");
+                    listBean.setChildId(childEntity.getId() + "");
+                    listBean.setName(childEntity.getVideo_name());
+                    listBean.setVideoTime(childEntity.getVideo_time());
+                    listBean.setDate(split[0]);
+                    listBean.setTime(split[1]);
+                    listBean.setVideoUrl(childEntity.getVideo_url());
+                    listBean.setTxtUrl(childEntity.getTxt_url());
+                    listBean.setIconUrl(childEntity.getT_header());
+                    listBean.settName(childEntity.getT_name());
+                    listBean.setParentName("");
+                    listBean.setH5_url(childEntity.getShare_h5_url());
+                    listBean.setGood_count(childEntity.getGood_count());
+                    listBean.setCollect_count(childEntity.getCollect_count());
+                    listBean.setView_count(childEntity.getView_count());
+                    listBean.setDianzan(childEntity.isIslive());
+                    listBean.setCollected(childEntity.isIsfav());
+                    list.add(listBean);
+                    if (MyUtils.isHaveFile("comment",childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")){
+                        Toast.makeText(EveryDayCommentActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
+                            "comment", "commentId", "", childEntity.getT_header(), "", "", list.size() + "", list);
+                    DownUtil.add(downLoadListsBean);
+
+                /*DownLoadListBean DownLoadListBean = new DownLoadListBean(-2,childEntity.getChildId(),-4,-3,-1,
+                        childEntity.getVideo_name(),childEntity.getVideo_time(), split[0], split[1],
+                        childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
+                DownUtils.add(DownLoadListBean);*/
+                    GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
+                    OkDownload.request(downLoadListsBean.getTypeId() + "_" + childEntity.getId(), request)
+                            .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download")
+                            .fileName(childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")
+                            .extra3(downLoadListsBean)//额外数据
+                            .save()
+                            .register(new LogDownloadListener())//当前任务的回调监听
+                            .start();
+                    OkGo.<File>get(childEntity.getTxt_url())
+                            .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download"
+                                    , downLoadListsBean.getTypeId() + "-" + childEntity.getId() + childEntity.getVideo_name() + ".txt") {
+                                @Override
+                                public void onSuccess(Response<File> response) {
+                                    int code = response.code();
+                                    if (code >= 200 && code <= 204) {
+                                        Logger.e("文稿下载完成");
+                                    }
+                                }
+                            });
+                    EventBean eventBean = new EventBean("number");
+                    EventBus.getDefault().postSticky(eventBean);
+                    mDialog.dismiss();
+                    mNetDialog.dismiss();
+                }
+
             }
         });
     }

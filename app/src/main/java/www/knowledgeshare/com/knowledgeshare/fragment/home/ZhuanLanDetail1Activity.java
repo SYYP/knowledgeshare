@@ -34,6 +34,7 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
     private List<FreeTryReadListBean.DataEntity> mData;
     private MyAdapter mMyAdapter;
     private TextView tv_title;
+    private String mId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +46,9 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
 
     private void initData() {
         tv_title.setText(getIntent().getStringExtra("title"));
-        String id = getIntent().getStringExtra("id");
+        mId = getIntent().getStringExtra("id");
         HttpParams params = new HttpParams();
-        params.put("id", id);
+        params.put("id", mId);
         if (getIntent().getStringExtra("type") != null) {
             params.put("type", "2");
         }else {
@@ -68,7 +69,7 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                          Intent intent = new Intent(ZhuanLanDetail1Activity.this, ZhuanLanDetail2Activity.class);
-                                         intent.putExtra("id", mData.get(position).getId() + "");
+                                         intent.putExtra("id", mData.get(position).getId()+"");
                                          intent.putExtra("title", getIntent().getStringExtra("title"));
                                          if (getIntent().getStringExtra("type") != null) {
                                              intent.putExtra("type", "alreadyBuy");

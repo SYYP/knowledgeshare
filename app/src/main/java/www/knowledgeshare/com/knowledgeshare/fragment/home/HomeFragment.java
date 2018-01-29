@@ -706,6 +706,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         springview.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
+                if (!NetWorkUtils.isNetworkConnected(mContext)){
+                    Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -717,12 +721,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
             @Override
             public void onLoadmore() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        springview.onFinishFreshAndLoad();
-                    }
-                }, 2000);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        springview.onFinishFreshAndLoad();
+//                    }
+//                }, 2000);
             }
         });
         springview.setHeader(new MyHeader(mContext));

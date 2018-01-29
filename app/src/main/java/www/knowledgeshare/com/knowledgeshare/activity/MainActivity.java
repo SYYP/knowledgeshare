@@ -52,6 +52,7 @@ import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
@@ -368,6 +369,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 }
                 break;
             case R.id.ll_listen:
+                if (!NetWorkUtils.isNetworkConnected(this)){
+                    Toast.makeText(this, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (isPause) {
                     iv_listen.setImageResource(R.drawable.tab_listen_bo);
                     if (mMyBinder.isClosed()) {
@@ -482,6 +487,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             EventBean eventBean = new EventBean("home_pause");//发一个保证正在播放音频的学习时长的终止
             EventBus.getDefault().postSticky(eventBean);
             SpUtils.putBoolean(this, "homewindow", false);
+            SpUtils.putBoolean(this, "nowifiallowdown", false);
+            SpUtils.putBoolean(this, "nowifiallowlisten", false);
             super.onBackPressed();//相当于finish()
             realBack();//删除所有引用
         }

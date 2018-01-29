@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -39,6 +40,7 @@ import www.knowledgeshare.com.knowledgeshare.db.BofangjinduBean;
 import www.knowledgeshare.com.knowledgeshare.db.JinduUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.SoftMusicDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
@@ -79,6 +81,10 @@ public class EasyMusicLessonFragment extends BaseFragment {
         springView.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
+                if (!NetWorkUtils.isNetworkConnected(mContext)){
+                    Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -90,6 +96,10 @@ public class EasyMusicLessonFragment extends BaseFragment {
 
             @Override
             public void onLoadmore() {
+                if (!NetWorkUtils.isNetworkConnected(mContext)){
+                    Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -55,6 +56,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.SearchActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.CollectActivity;
 import www.knowledgeshare.com.knowledgeshare.login.MessageActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TimeUtils;
@@ -234,6 +236,10 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         springView.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
+                if (!NetWorkUtils.isNetworkConnected(mContext)){
+                    Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -244,6 +250,10 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
 
             @Override
             public void onLoadmore() {
+                if (!NetWorkUtils.isNetworkConnected(mContext)){
+                    Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

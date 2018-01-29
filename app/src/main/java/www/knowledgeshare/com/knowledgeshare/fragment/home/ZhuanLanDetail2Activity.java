@@ -110,6 +110,8 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     private FreeTryReadDetailBean mFreeTryReadDetailBean;
     private String mTime;
     private String mId;
+    private TextView mTv_content;
+    private boolean nowifiallowdown;
     private BaseDialog mNetDialog;
     private long pretime;
     // IWXAPI 是第三方app和微信通信的openapi接口
@@ -351,6 +353,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 .isOnTouchCanceled(true)
                 //设置监听事件
                 .builder();
+        mTv_content = mNetDialog.getView(R.id.tv_content);
     }
 
     private void gobofang(final PlayerBean playerBean) {
@@ -679,7 +682,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("id", mId);
+        params.put("id", mFreeTryReadDetailBean.getZl_id()+"");
         params.put("type", "zhuanlan");
         params.put("from", "android");
         OkGo.<OrderBean>post(MyContants.LXKURL + "order/buy")
@@ -696,6 +699,11 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                  } else {
                                      Toast.makeText(ZhuanLanDetail2Activity.this, orderBean.getMessage(), Toast.LENGTH_SHORT).show();
                                  }
+                             }
+
+                             @Override
+                             public void onError(Response<OrderBean> response) {
+                                 super.onError(response);
                              }
                          }
                 );
@@ -920,54 +928,36 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                     startActivity(new Intent(this, LoginActivity.class));
                     return;
                 }
-                String created_at = mFreeTryReadDetailBean.getCreated_at();
-                String[] split = created_at.split(" ");
-
-                List<DownLoadListsBean.ListBean> list = new ArrayList<>();
-                DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
-                listBean.setTypeId(mFreeTryReadDetailBean.getZl_id() + "");
-                listBean.setChildId(mFreeTryReadDetailBean.getId() + "");
-                listBean.setName(mFreeTryReadDetailBean.getName());
-                listBean.setVideoTime(mFreeTryReadDetailBean.getVideo_time());
-                listBean.setDate(split[0]);
-                listBean.setTime(split[0]);
-                listBean.setVideoUrl(mFreeTryReadDetailBean.getVideo_url());
-                listBean.setTxtUrl("");
-                //                listBean.setTxtUrl(mFreeTryReadDetailBean.getTxt_url());
-                listBean.setIconUrl(mFreeTryReadDetailBean.getT_header());
-                listBean.settName(mFreeTryReadDetailBean.getT_name());
-                listBean.setParentName(mFreeTryReadDetailBean.getParent_name());
-                listBean.setH5_url(mFreeTryReadDetailBean.getH5_url());
-                listBean.setGood_count(mFreeTryReadDetailBean.getRss_count());
-                listBean.setCollect_count(mFreeTryReadDetailBean.getCollect_count());
-                listBean.setView_count(mFreeTryReadDetailBean.getView_count());
-                listBean.setDianzan(mFreeTryReadDetailBean.isIsfav());
-                listBean.setCollected(mFreeTryReadDetailBean.isIsfav());
-                list.add(listBean);
-                if (MyUtils.isHaveFile("zhuanlan",mFreeTryReadDetailBean.getName() + mFreeTryReadDetailBean.getZl_id() + "_" + mFreeTryReadDetailBean.getId() + ".mp3")){
-                    Toast.makeText(ZhuanLanDetail2Activity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+                int apnType = NetWorkUtils.getAPNType(this);
+                if (apnType == 0) {
+                    Toast.makeText(this, "没有网络呢~", Toast.LENGTH_SHORT).show();
                     return;
+                } else if (apnType == 2 || apnType == 3 || apnType == 4) {
+                    nowifiallowdown = SpUtils.getBoolean(this, "nowifiallowdown", false);
+                    if (!nowifiallowdown) {
+                        mTv_content.setText("当前无WiFi，是否允许用流量下载");
+                        mNetDialog.show();
+                        mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mNetDialog.dismiss();
+                                return;
+                            }
+                        });
+                        mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {//记住用户允许流量下载
+                                SpUtils.putBoolean(ZhuanLanDetail2Activity.this, "nowifiallowdown", true);
+                                download();
+                            }
+                        });
+                    }else {
+                        download();
+                    }
+                } else {
+                    download();
                 }
-                DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
-                        "zhuanlan", mFreeTryReadDetailBean.getZl_id() + "", getIntent().getStringExtra("title"), mFreeTryReadDetailBean.getT_header(),
-                        mFreeTryReadDetailBean.getT_name(), mFreeTryReadDetailBean.getT_tag(), "1", list);
-                DownUtil.add(downLoadListsBean);
 
-                /*DownLoadListBean DownLoadListBean = new DownLoadListBean(mFreeTryReadDetailBean.getChildId(), mFreeTryReadDetailBean.getZl_id(), -3,
-                        mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getVideo_time(), split[0], split[0],
-                        mFreeTryReadDetailBean.getVideo_url(), mFreeTryReadDetailBean.getTxt_url(), mFreeTryReadDetailBean.getT_header());
-                DownUtils.add(DownLoadListBean);*/
-
-                GetRequest<File> request = OkGo.<File>get(mFreeTryReadDetailBean.getVideo_url());
-                OkDownload.request(mFreeTryReadDetailBean.getZl_id() + "_" + mFreeTryReadDetailBean.getId(), request)
-                        .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download")
-                        .fileName(mFreeTryReadDetailBean.getName() + mFreeTryReadDetailBean.getZl_id() + "_" + mFreeTryReadDetailBean.getId() + ".mp3")
-                        .extra3(downLoadListsBean)
-                        .save()
-                        .register(new LogDownloadListener())//当前任务的回调监听
-                        .start();
-                EventBean eventBean = new EventBean("number");
-                EventBus.getDefault().postSticky(eventBean);
                 break;
             case R.id.tv_writeliuyan:
                 Intent intent = new Intent(this, LiuYanActivity.class);
@@ -980,6 +970,58 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 showBuyDialog();
                 break;
         }
+    }
+
+    private void download(){
+        String created_at = mFreeTryReadDetailBean.getCreated_at();
+        String[] split = created_at.split(" ");
+
+        List<DownLoadListsBean.ListBean> list = new ArrayList<>();
+        DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
+        listBean.setTypeId(mFreeTryReadDetailBean.getZl_id() + "");
+        listBean.setChildId(mFreeTryReadDetailBean.getId() + "");
+        listBean.setName(mFreeTryReadDetailBean.getName());
+        listBean.setVideoTime(mFreeTryReadDetailBean.getVideo_time());
+        listBean.setDate(split[0]);
+        listBean.setTime(split[0]);
+        listBean.setVideoUrl(mFreeTryReadDetailBean.getVideo_url());
+        listBean.setTxtUrl("");
+        //                listBean.setTxtUrl(mFreeTryReadDetailBean.getTxt_url());
+        listBean.setIconUrl(mFreeTryReadDetailBean.getT_header());
+        listBean.settName(mFreeTryReadDetailBean.getT_name());
+        listBean.setParentName(mFreeTryReadDetailBean.getParent_name());
+        listBean.setH5_url(mFreeTryReadDetailBean.getH5_url());
+        listBean.setGood_count(mFreeTryReadDetailBean.getRss_count());
+        listBean.setCollect_count(mFreeTryReadDetailBean.getCollect_count());
+        listBean.setView_count(mFreeTryReadDetailBean.getView_count());
+        listBean.setDianzan(mFreeTryReadDetailBean.isIsfav());
+        listBean.setCollected(mFreeTryReadDetailBean.isIsfav());
+        list.add(listBean);
+        if (MyUtils.isHaveFile("zhuanlan",mFreeTryReadDetailBean.getName() + mFreeTryReadDetailBean.getZl_id() + "_" + mFreeTryReadDetailBean.getId() + ".mp3")){
+            Toast.makeText(ZhuanLanDetail2Activity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
+                "zhuanlan", mFreeTryReadDetailBean.getZl_id() + "", getIntent().getStringExtra("title"), mFreeTryReadDetailBean.getT_header(),
+                mFreeTryReadDetailBean.getT_name(), mFreeTryReadDetailBean.getT_tag(), "1", list);
+        DownUtil.add(downLoadListsBean);
+
+                /*DownLoadListBean DownLoadListBean = new DownLoadListBean(mFreeTryReadDetailBean.getChildId(), mFreeTryReadDetailBean.getZl_id(), -3,
+                        mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getVideo_time(), split[0], split[0],
+                        mFreeTryReadDetailBean.getVideo_url(), mFreeTryReadDetailBean.getTxt_url(), mFreeTryReadDetailBean.getT_header());
+                DownUtils.add(DownLoadListBean);*/
+
+        GetRequest<File> request = OkGo.<File>get(mFreeTryReadDetailBean.getVideo_url());
+        OkDownload.request(mFreeTryReadDetailBean.getZl_id() + "_" + mFreeTryReadDetailBean.getId(), request)
+                .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download")
+                .fileName(mFreeTryReadDetailBean.getName() + mFreeTryReadDetailBean.getZl_id() + "_" + mFreeTryReadDetailBean.getId() + ".mp3")
+                .extra3(downLoadListsBean)
+                .save()
+                .register(new LogDownloadListener())//当前任务的回调监听
+                .start();
+        EventBean eventBean = new EventBean("number");
+        EventBus.getDefault().postSticky(eventBean);
+        mNetDialog.dismiss();
     }
 
     private void addListenCount(String id) {

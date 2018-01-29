@@ -12,7 +12,7 @@
         <!--注意这里一定还要设置singLine=“true”，不然回车还是换行的功能。-->
         <EditText
             android:id="@+id/et_search"
-            android:layout_width="wrap_content"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:background="@drawable/bg_search"
@@ -21,8 +21,6 @@
             android:hint="请输入关键字搜索"
             android:imeOptions="actionSearch"
             android:inputType="text"
-            android:singleLine="true"
-            android:minWidth="280dp"
             android:textSize="14sp"/>
         <ImageView
             android:id="@+id/iv_delete_text"

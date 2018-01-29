@@ -22,7 +22,7 @@ public class FreeTryReadDetailBean {
      * zl_price : 订阅160/年
      * is_collect : 1
      * video_url : http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/music1.mp3
-     * rss_count_true : 0
+     * rss_count_true : 8
      * view_count_true : 0
      * is_rss : 1
      * t_header : http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/1x1.png
@@ -31,12 +31,12 @@ public class FreeTryReadDetailBean {
      * zl_id : 1
      * collect_count : 0
      * video_type : zl
-     * zl_h5_url : zl.html?id=1
+     * zl_h5_url : http://mop.xfkeji.cn/zl.html?id=1
      * collect_count_true : 1
-     * h5_url : player.html?id=1&type=zl
+     * h5_url : http://mop.xfkeji.cn/player.html?id=1&type=zl
      * rss_count : 0
      * name : 专栏小节，如何成为男高音1
-     * comment : [{"user_avatar":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171221/H3rbqjNrENreO2du88Je.jpg","islive":false,"teacher_id":1,"user_name":"王兵","comment_user":[],"created_at":"2017-12-15 14:57:39","content":"试读测试留言","top":0,"user_id":1,"comment":[],"id":18,"state":1,"live":1,"is_display":1}]
+     * comment : [{"user_avatar":"http://knowledges.oss-cn-qingdao.aliyuncs.com/user/20171221/H3rbqjNrENreO2du88Je.jpg","islive":false,"teacher_id":1,"user_name":"王兵","created_at":"2017-12-15 14:57:39","content":"试读测试留言","top":0,"user_id":1,"comment":[{"teacher_id":1,"id":4,"comment_id":18,"content":"13456","is_display":1}],"id":18,"state":1,"live":1,"is_display":1}]
      * view_count : 0
      */
     private String video_time;
@@ -298,12 +298,11 @@ public class FreeTryReadDetailBean {
          * islive : false
          * teacher_id : 1
          * user_name : 王兵
-         * comment_user : []
          * created_at : 2017-12-15 14:57:39
          * content : 试读测试留言
          * top : 0
          * user_id : 1
-         * comment : []
+         * comment : [{"teacher_id":1,"id":4,"comment_id":18,"content":"13456","is_display":1}]
          * id : 18
          * state : 1
          * live : 1
@@ -313,12 +312,11 @@ public class FreeTryReadDetailBean {
         private boolean islive;
         private int teacher_id;
         private String user_name;
-        private List<?> comment_user;
         private String created_at;
         private String content;
         private int top;
         private int user_id;
-        private List<?> comment;
+        private List<ChildCommentEntity> comment;
         private int id;
         private int state;
         private int live;
@@ -340,10 +338,6 @@ public class FreeTryReadDetailBean {
             this.user_name = user_name;
         }
 
-        public void setComment_user(List<?> comment_user) {
-            this.comment_user = comment_user;
-        }
-
         public void setCreated_at(String created_at) {
             this.created_at = created_at;
         }
@@ -360,7 +354,7 @@ public class FreeTryReadDetailBean {
             this.user_id = user_id;
         }
 
-        public void setComment(List<?> comment) {
+        public void setComment(List<ChildCommentEntity> comment) {
             this.comment = comment;
         }
 
@@ -396,10 +390,6 @@ public class FreeTryReadDetailBean {
             return user_name;
         }
 
-        public List<?> getComment_user() {
-            return comment_user;
-        }
-
         public String getCreated_at() {
             return created_at;
         }
@@ -416,7 +406,7 @@ public class FreeTryReadDetailBean {
             return user_id;
         }
 
-        public List<?> getComment() {
+        public List<ChildCommentEntity> getComment() {
             return comment;
         }
 
@@ -434,6 +424,61 @@ public class FreeTryReadDetailBean {
 
         public int getIs_display() {
             return is_display;
+        }
+
+        public static class ChildCommentEntity {
+            /**
+             * teacher_id : 1
+             * id : 4
+             * comment_id : 18
+             * content : 13456
+             * is_display : 1
+             */
+            private int teacher_id;
+            private int id;
+            private int comment_id;
+            private String content;
+            private int is_display;
+
+            public void setTeacher_id(int teacher_id) {
+                this.teacher_id = teacher_id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public void setComment_id(int comment_id) {
+                this.comment_id = comment_id;
+            }
+
+            public void setContent(String content) {
+                this.content = content;
+            }
+
+            public void setIs_display(int is_display) {
+                this.is_display = is_display;
+            }
+
+            public int getTeacher_id() {
+                return teacher_id;
+            }
+
+            public int getId() {
+                return id;
+            }
+
+            public int getComment_id() {
+                return comment_id;
+            }
+
+            public String getContent() {
+                return content;
+            }
+
+            public int getIs_display() {
+                return is_display;
+            }
         }
     }
 }

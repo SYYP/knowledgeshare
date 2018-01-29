@@ -77,6 +77,8 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
     private TextView mTv_collect;
     private TextView mTv_dianzan;
     private String mType;
+    private TextView mTv_content;
+    private boolean nowifiallowdown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -230,6 +232,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                 .isOnTouchCanceled(true)
                 //设置监听事件
                 .builder();
+        mTv_content = mNetDialog.getView(R.id.tv_content);
     }
 
     private void gobofang(final PlayerBean playerBean) {
@@ -384,12 +387,44 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
         });
     }
 
-    private void goDownload(int id) {
+    private void goDownload(final int id) {
         String userid = SpUtils.getString(MyApplication.getGloableContext(), "id", "");
         if (TextUtils.isEmpty(userid)) {
             startActivity(new Intent(this, LoginActivity.class));
             return;
         }
+        int apnType = NetWorkUtils.getAPNType(this);
+        if (apnType == 0) {
+            Toast.makeText(this, "没有网络呢~", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (apnType == 2 || apnType == 3 || apnType == 4) {
+            nowifiallowdown = SpUtils.getBoolean(this, "nowifiallowdown", false);
+            if (!nowifiallowdown) {
+                mTv_content.setText("当前无WiFi，是否允许用流量下载");
+                mNetDialog.show();
+                mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mNetDialog.dismiss();
+                        return;
+                    }
+                });
+                mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {//记住用户允许流量下载
+                        SpUtils.putBoolean(BoFangListActivity.this, "nowifiallowdown", true);
+                        download(id);
+                    }
+                });
+            }else {
+                download(id);
+            }
+        } else {
+            download(id);
+        }
+    }
+
+    private void download(int id) {
         HttpParams params = new HttpParams();
         params.put("id", id + "");
         String type = mType;

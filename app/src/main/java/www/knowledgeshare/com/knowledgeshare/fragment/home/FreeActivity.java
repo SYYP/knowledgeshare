@@ -110,6 +110,8 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
     private Intent intent;
     private String after;
     private boolean backRefresh;
+    private TextView mTv_content;
+    private boolean nowifiallowdown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,9 +128,9 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("refresh_free")) {
-            after= eventBean.getMsg2();
-            backRefresh=true;
-            isLoadMore=false;
+            after = eventBean.getMsg2();
+            backRefresh = true;
+            isLoadMore = false;
             initData();
         }
     }
@@ -148,6 +150,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 .isOnTouchCanceled(true)
                 //设置监听事件
                 .builder();
+        mTv_content = mNetDialog.getView(R.id.tv_content);
     }
 
     private void initListener() {
@@ -185,7 +188,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                         springview.onFinishFreshAndLoad();
                     }
                 }, 2000);
-//                loadMoreComment(lastID + "");
+                //                loadMoreComment(lastID + "");
             }
         });
         springview.setHeader(new MyHeader(this));
@@ -234,7 +237,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
         if (isLoadMore || backRefresh) {
             params.put("after", after);
         }
-        if (backRefresh){
+        if (backRefresh) {
             params.put("is_search", "1");
         }
         OkGo.<FreeBean>post(MyContants.LXKURL + "free")
@@ -288,11 +291,11 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                     FreeBean.ChildEntity item = mChild.get(position);
                                     //刷新小型播放器
                                     PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getParent_name(),
-                                            item.getVideo_url(),position);
+                                            item.getVideo_url(), position);
                                     gobofang(playerBean);
                                     addListenCount(mFreeAdapter.getData().get(position).getId() + "");
                                     //设置进入播放主界面的数据
-                                    List<MusicTypeBean> musicTypeBeanList=new ArrayList<MusicTypeBean>();
+                                    List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
                                     for (int i = 0; i < mChild.size(); i++) {
                                         FreeBean.ChildEntity childEntity = mChild.get(i);
                                         MusicTypeBean musicTypeBean = new MusicTypeBean("free",
@@ -311,7 +314,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                     }
                                     MediaService.insertMusicList(list);
                                     //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
-                                    List<BofangHistroyBean> histroyBeanList=new ArrayList<BofangHistroyBean>();
+                                    List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
                                     for (int i = 0; i < mChild.size(); i++) {
                                         FreeBean.ChildEntity childEntity = mChild.get(i);
                                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", childEntity.getId(), childEntity.getVideo_name(),
@@ -319,7 +322,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                                 childEntity.getCollect_count(), childEntity.getView_count(), childEntity.isIslive(), childEntity.isIsfav(),
                                                 childEntity.getT_header(), childEntity.getParent_name(),
                                                 childEntity.getShare_h5_url(), SystemClock.currentThreadTimeMillis()
-                                                ,"freeId",childEntity.getParent_name(),childEntity.getTxt_url());
+                                                , "freeId", childEntity.getParent_name(), childEntity.getTxt_url());
                                         histroyBeanList.add(bofangHistroyBean);
                                     }
                                     MediaService.insertBoFangHistroyList(histroyBeanList);
@@ -444,7 +447,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
 
         @Override
         protected void convert(final BaseViewHolder helper, final FreeBean.ChildEntity item) {
-            after=item.getId()+"";
+            after = item.getId() + "";
             String created_at = item.getCreated_at();
             String[] split = created_at.split(" ");
             helper.setText(R.id.tv_name, item.getVideo_name())
@@ -743,63 +746,206 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                     startActivity(new Intent(FreeActivity.this, LoginActivity.class));
                     return;
                 }
-                FreeBean.ChildEntity childEntity = mChild.get(adapterPosition);
-                String created_at = childEntity.getCreated_at();
-                String[] split = created_at.split(" ");
-                List<DownLoadListsBean.ListBean> list = new ArrayList<>();
-                DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
-                listBean.setTypeId("freeId");
-                listBean.setChildId(childEntity.getId() + "");
-                listBean.setName(childEntity.getVideo_name());
-                listBean.setVideoTime(childEntity.getVideo_time());
-                listBean.setDate(split[0]);
-                listBean.setTime(split[1]);
-                listBean.setVideoUrl(childEntity.getVideo_url());
-                listBean.setTxtUrl(childEntity.getTxt_url());
-                listBean.setIconUrl(childEntity.getT_header());
-                listBean.settName(childEntity.getT_name());
-                listBean.setParentName("");
-                listBean.setH5_url(childEntity.getShare_h5_url());
-                listBean.setGood_count(childEntity.getGood_count());
-                listBean.setCollect_count(childEntity.getCollect_count());
-                listBean.setView_count(childEntity.getView_count());
-                listBean.setDianzan(childEntity.isIslive());
-                listBean.setCollected(childEntity.isIsfav());
-                list.add(listBean);
-                if (MyUtils.isHaveFile("free",childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")){
-                    Toast.makeText(FreeActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+                int apnType = NetWorkUtils.getAPNType(FreeActivity.this);
+                if (apnType == 0) {
+                    Toast.makeText(FreeActivity.this, "没有网络呢~", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
-                        "free", listBean.getTypeId(), "", childEntity.getT_header(), "", "", list.size() + "", list);
-                DownUtil.add(downLoadListsBean);
+                } else if (apnType == 2 || apnType == 3 || apnType == 4) {
+                    nowifiallowdown = SpUtils.getBoolean(FreeActivity.this, "nowifiallowdown", false);
+                    if (!nowifiallowdown) {
+                        mTv_content.setText("当前无WiFi，是否允许用流量下载");
+                        mNetDialog.show();
+                        mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mNetDialog.dismiss();
+                                return;
+                            }
+                        });
+                        mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {//记住用户允许流量下载
+                                SpUtils.putBoolean(FreeActivity.this, "nowifiallowdown", true);
+                                FreeBean.ChildEntity childEntity = mChild.get(adapterPosition);
+                                String created_at = childEntity.getCreated_at();
+                                String[] split = created_at.split(" ");
+                                List<DownLoadListsBean.ListBean> list = new ArrayList<>();
+                                DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
+                                listBean.setTypeId("freeId");
+                                listBean.setChildId(childEntity.getId() + "");
+                                listBean.setName(childEntity.getVideo_name());
+                                listBean.setVideoTime(childEntity.getVideo_time());
+                                listBean.setDate(split[0]);
+                                listBean.setTime(split[1]);
+                                listBean.setVideoUrl(childEntity.getVideo_url());
+                                listBean.setTxtUrl(childEntity.getTxt_url());
+                                listBean.setIconUrl(childEntity.getT_header());
+                                listBean.settName(childEntity.getT_name());
+                                listBean.setParentName("");
+                                listBean.setH5_url(childEntity.getShare_h5_url());
+                                listBean.setGood_count(childEntity.getGood_count());
+                                listBean.setCollect_count(childEntity.getCollect_count());
+                                listBean.setView_count(childEntity.getView_count());
+                                listBean.setDianzan(childEntity.isIslive());
+                                listBean.setCollected(childEntity.isIsfav());
+                                list.add(listBean);
+                                if (MyUtils.isHaveFile("free", childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")) {
+                                    Toast.makeText(FreeActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
+                                        "free", listBean.getTypeId(), "", childEntity.getT_header(), "", "", list.size() + "", list);
+                                DownUtil.add(downLoadListsBean);
                 /*DownLoadListBean DownLoadListBean = new DownLoadListBean(-1,childEntity.getChildId(),-4,-3,
                         childEntity.getVideo_name(),childEntity.getVideo_time(), split[0], split[1],
                         childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
                 DownUtils.add(DownLoadListBean);*/
-                GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
-                OkDownload.request(listBean.getTypeId() + "_" + childEntity.getId(), request)
-                        .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download")
-                        .fileName(childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")
-                        .extra3(downLoadListsBean)//额外数据
-                        .save()
-                        .register(new LogDownloadListener())//当前任务的回调监听
-                        .start();
-                Logger.e("下载TAG："+listBean.getTypeId() + "_" + childEntity.getId());
-                OkGo.<File>get(childEntity.getTxt_url())
-                        .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download"
-                                , listBean.getTypeId() + "-" + childEntity.getId() + childEntity.getVideo_name() + ".txt") {
-                            @Override
-                            public void onSuccess(Response<File> response) {
-                                int code = response.code();
-                                if (code >= 200 && code <= 204) {
-                                    Logger.e("文稿下载完成");
-                                }
+                                GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
+                                OkDownload.request(listBean.getTypeId() + "_" + childEntity.getId(), request)
+                                        .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download")
+                                        .fileName(childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")
+                                        .extra3(downLoadListsBean)//额外数据
+                                        .save()
+                                        .register(new LogDownloadListener())//当前任务的回调监听
+                                        .start();
+                                Logger.e("下载TAG：" + listBean.getTypeId() + "_" + childEntity.getId());
+                                OkGo.<File>get(childEntity.getTxt_url())
+                                        .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download"
+                                                , listBean.getTypeId() + "-" + childEntity.getId() + childEntity.getVideo_name() + ".txt") {
+                                            @Override
+                                            public void onSuccess(Response<File> response) {
+                                                int code = response.code();
+                                                if (code >= 200 && code <= 204) {
+                                                    Logger.e("文稿下载完成");
+                                                }
+                                            }
+                                        });
+                                EventBean eventBean = new EventBean("number");
+                                EventBus.getDefault().postSticky(eventBean);
+                                mDialog.dismiss();
+                                mNetDialog.dismiss();
                             }
                         });
-                EventBean eventBean = new EventBean("number");
-                EventBus.getDefault().postSticky(eventBean);
-                mDialog.dismiss();
+                    }else {
+                        FreeBean.ChildEntity childEntity = mChild.get(adapterPosition);
+                        String created_at = childEntity.getCreated_at();
+                        String[] split = created_at.split(" ");
+                        List<DownLoadListsBean.ListBean> list = new ArrayList<>();
+                        DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
+                        listBean.setTypeId("freeId");
+                        listBean.setChildId(childEntity.getId() + "");
+                        listBean.setName(childEntity.getVideo_name());
+                        listBean.setVideoTime(childEntity.getVideo_time());
+                        listBean.setDate(split[0]);
+                        listBean.setTime(split[1]);
+                        listBean.setVideoUrl(childEntity.getVideo_url());
+                        listBean.setTxtUrl(childEntity.getTxt_url());
+                        listBean.setIconUrl(childEntity.getT_header());
+                        listBean.settName(childEntity.getT_name());
+                        listBean.setParentName("");
+                        listBean.setH5_url(childEntity.getShare_h5_url());
+                        listBean.setGood_count(childEntity.getGood_count());
+                        listBean.setCollect_count(childEntity.getCollect_count());
+                        listBean.setView_count(childEntity.getView_count());
+                        listBean.setDianzan(childEntity.isIslive());
+                        listBean.setCollected(childEntity.isIsfav());
+                        list.add(listBean);
+                        if (MyUtils.isHaveFile("free", childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")) {
+                            Toast.makeText(FreeActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
+                                "free", listBean.getTypeId(), "", childEntity.getT_header(), "", "", list.size() + "", list);
+                        DownUtil.add(downLoadListsBean);
+                /*DownLoadListBean DownLoadListBean = new DownLoadListBean(-1,childEntity.getChildId(),-4,-3,
+                        childEntity.getVideo_name(),childEntity.getVideo_time(), split[0], split[1],
+                        childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
+                DownUtils.add(DownLoadListBean);*/
+                        GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
+                        OkDownload.request(listBean.getTypeId() + "_" + childEntity.getId(), request)
+                                .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download")
+                                .fileName(childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")
+                                .extra3(downLoadListsBean)//额外数据
+                                .save()
+                                .register(new LogDownloadListener())//当前任务的回调监听
+                                .start();
+                        Logger.e("下载TAG：" + listBean.getTypeId() + "_" + childEntity.getId());
+                        OkGo.<File>get(childEntity.getTxt_url())
+                                .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download"
+                                        , listBean.getTypeId() + "-" + childEntity.getId() + childEntity.getVideo_name() + ".txt") {
+                                    @Override
+                                    public void onSuccess(Response<File> response) {
+                                        int code = response.code();
+                                        if (code >= 200 && code <= 204) {
+                                            Logger.e("文稿下载完成");
+                                        }
+                                    }
+                                });
+                        EventBean eventBean = new EventBean("number");
+                        EventBus.getDefault().postSticky(eventBean);
+                        mDialog.dismiss();
+                        mNetDialog.dismiss();
+                    }
+                } else {
+                    FreeBean.ChildEntity childEntity = mChild.get(adapterPosition);
+                    String created_at = childEntity.getCreated_at();
+                    String[] split = created_at.split(" ");
+                    List<DownLoadListsBean.ListBean> list = new ArrayList<>();
+                    DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
+                    listBean.setTypeId("freeId");
+                    listBean.setChildId(childEntity.getId() + "");
+                    listBean.setName(childEntity.getVideo_name());
+                    listBean.setVideoTime(childEntity.getVideo_time());
+                    listBean.setDate(split[0]);
+                    listBean.setTime(split[1]);
+                    listBean.setVideoUrl(childEntity.getVideo_url());
+                    listBean.setTxtUrl(childEntity.getTxt_url());
+                    listBean.setIconUrl(childEntity.getT_header());
+                    listBean.settName(childEntity.getT_name());
+                    listBean.setParentName("");
+                    listBean.setH5_url(childEntity.getShare_h5_url());
+                    listBean.setGood_count(childEntity.getGood_count());
+                    listBean.setCollect_count(childEntity.getCollect_count());
+                    listBean.setView_count(childEntity.getView_count());
+                    listBean.setDianzan(childEntity.isIslive());
+                    listBean.setCollected(childEntity.isIsfav());
+                    list.add(listBean);
+                    if (MyUtils.isHaveFile("free", childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")) {
+                        Toast.makeText(FreeActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
+                            "free", listBean.getTypeId(), "", childEntity.getT_header(), "", "", list.size() + "", list);
+                    DownUtil.add(downLoadListsBean);
+                /*DownLoadListBean DownLoadListBean = new DownLoadListBean(-1,childEntity.getChildId(),-4,-3,
+                        childEntity.getVideo_name(),childEntity.getVideo_time(), split[0], split[1],
+                        childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
+                DownUtils.add(DownLoadListBean);*/
+                    GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
+                    OkDownload.request(listBean.getTypeId() + "_" + childEntity.getId(), request)
+                            .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download")
+                            .fileName(childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")
+                            .extra3(downLoadListsBean)//额外数据
+                            .save()
+                            .register(new LogDownloadListener())//当前任务的回调监听
+                            .start();
+                    Logger.e("下载TAG：" + listBean.getTypeId() + "_" + childEntity.getId());
+                    OkGo.<File>get(childEntity.getTxt_url())
+                            .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download"
+                                    , listBean.getTypeId() + "-" + childEntity.getId() + childEntity.getVideo_name() + ".txt") {
+                                @Override
+                                public void onSuccess(Response<File> response) {
+                                    int code = response.code();
+                                    if (code >= 200 && code <= 204) {
+                                        Logger.e("文稿下载完成");
+                                    }
+                                }
+                            });
+                    EventBean eventBean = new EventBean("number");
+                    EventBus.getDefault().postSticky(eventBean);
+                    mDialog.dismiss();
+                    mNetDialog.dismiss();
+                }
             }
         });
     }
@@ -918,7 +1064,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 break;
             case R.id.tv_search:
                 Intent intent1 = new Intent(this, SearchMusicActivity.class);
-                intent1.putExtra("type","free");
+                intent1.putExtra("type", "free");
                 startActivity(intent1);
                 break;
             case R.id.tv_share:
