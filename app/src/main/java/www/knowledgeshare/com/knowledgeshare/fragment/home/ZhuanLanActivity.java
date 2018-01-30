@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
@@ -200,7 +201,10 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                              public void onSuccess(Response<ZhuanLanBean> response) {
                                  int code = response.code();
                                  mZhuanLanBean = response.body();
-                                 Glide.with(MyApplication.getGloableContext()).load(mZhuanLanBean.getZl_img()).into(iv_beijing);
+                                 RequestOptions options=new RequestOptions();
+                                 options.error(R.drawable.default_banner);
+                                 options.placeholder(R.drawable.default_banner);
+                                 Glide.with(MyApplication.getGloableContext()).load(mZhuanLanBean.getZl_img()).apply(options).into(iv_beijing);
                                  tv_shiyirenqun.setText(mZhuanLanBean.getZl_suitable());
                                  tv_zhuanlanjianjie.setText(mZhuanLanBean.getZl_introduce());
                                  tv_readxuzhi.setText(mZhuanLanBean.getZl_look());

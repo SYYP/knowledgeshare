@@ -15,6 +15,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.liaoinstan.springview.widget.SpringView;
@@ -200,7 +201,10 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
         protected void convert(BaseViewHolder helper, MusicMasterMoreBean.DataEntity item) {
             after = item.getId() + "";
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-            Glide.with(MyApplication.getGloableContext()).load(item.getZl_img()).into(imageView);
+            RequestOptions options=new RequestOptions();
+            options.error(R.drawable.home_default_like);
+            options.placeholder(R.drawable.home_default_like);
+            Glide.with(MyApplication.getGloableContext()).load(item.getZl_img()).apply(options).into(imageView);
             helper.setVisible(R.id.iv_bofang, false);
             helper.setText(R.id.tv_name, item.getZl_name())
                     .setText(R.id.tv_introduce, item.getZl_introduce())

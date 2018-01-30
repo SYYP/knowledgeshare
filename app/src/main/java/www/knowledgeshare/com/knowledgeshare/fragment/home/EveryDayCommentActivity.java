@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.liaoinstan.springview.widget.SpringView;
@@ -207,7 +208,10 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                             } else {
                                 mDailys = everyDayBean.getDailys();
                             }
-                            Glide.with(EveryDayCommentActivity.this).load(everyDayBean.getImgurl()).into(iv_beijing);
+                            RequestOptions options=new RequestOptions();
+                            options.error(R.drawable.default_banner);
+                            options.placeholder(R.drawable.default_banner);
+                            Glide.with(EveryDayCommentActivity.this).load(everyDayBean.getImgurl()).apply(options).into(iv_beijing);
                             tv_jie_count.setText("已更新：" + everyDayBean.getUpdate_count() + "节");
                             tv_look_count.setText("浏览次数：" + everyDayBean.getView_count() + "");
                             tv_collect_count.setText("收藏次数：" + everyDayBean.getCollect_count() + "");

@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.liaoinstan.springview.widget.SpringView;
@@ -370,7 +371,10 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                              public void onSuccess(Response<SoftMusicDetailBean> response) {
                                  int code = response.code();
                                  mMusicDetailBean = response.body();
-                                 Glide.with(MyApplication.getGloableContext()).load(mMusicDetailBean.getImgurl()).into(iv_beijing);
+                                 RequestOptions options=new RequestOptions();
+                                 options.error(R.drawable.default_banner);
+                                 options.placeholder(R.drawable.default_banner);
+                                 Glide.with(MyApplication.getGloableContext()).load(mMusicDetailBean.getImgurl()).apply(options).into(iv_beijing);
                                  mTeacher = mMusicDetailBean.getTeacher();
                                  tv_teacher_intro.setText(mTeacher.getT_introduce());
                                  isGuanzhu = mTeacher.isIsfollow();
