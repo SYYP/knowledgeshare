@@ -60,6 +60,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:text="最新更新的专栏课程"/>
             <RelativeLayout
                 android:layout_width="match_parent"

@@ -318,6 +318,67 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 });
     }
 
+
+    private void doSearchHot(final String content) {
+        HttpParams params = new HttpParams();
+        params.put("keyword", content);
+        OkGo.<SearchBean>get(MyContants.LXKURL + "search")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<SearchBean>(SearchBean.class) {
+                    @Override
+                    public void onSuccess(Response<SearchBean> response) {
+                        int code = response.code();
+                        if (response.code() >= 200 && response.code() <= 204) {
+                            Logger.e(code + "");
+                            SearchBean searchBean = response.body();
+                            mXiaoke = searchBean.getXiaoke();
+                            mZhuanlan = searchBean.getZhuanlan();
+                            if (mZhuanlan.size() > 0 || mXiaoke.size() > 0) {
+                                recycler_search.setVisibility(View.GONE);
+                                ll_lishi.setVisibility(View.GONE);
+                                ll_hot.setVisibility(View.GONE);
+                                String content = et_search.getText().toString();
+                                if (!TextUtils.isEmpty(content)){
+                                    doSavehistory(content);
+                                    doSearch(content);
+                                }
+                                ll_result.setVisibility(View.VISIBLE);
+                                mMDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban1, mZhuanlan);
+                                recycler_dashiban.setAdapter(mMDaShiBanAdapter);
+                                mMDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                        Intent intent = new Intent(SearchActivity.this, ZhuanLanActivity.class);
+                                        intent.putExtra("id", mMDaShiBanAdapter.getData().get(position).getId() + "");
+                                        startActivity(intent);
+                                    }
+                                });
+                                mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, mXiaoke);
+                                recycler_yinyueke.setAdapter(mYinYueKeAdapter);
+                                mYinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                        Intent intent = new Intent(SearchActivity.this, SoftMusicDetailActivity.class);
+                                        intent.putExtra("id", mYinYueKeAdapter.getData().get(position).getXk_id() + "");
+                                        startActivity(intent);
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(SearchActivity.this, "抱歉，没有该课程~", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(SearchActivity.this, "抱歉，没有该课程~", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<SearchBean> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
     private void initData() {
         recycler_lishi.setLayoutManager(new LinearLayoutManager(this));
         recycler_lishi.setNestedScrollingEnabled(false);
@@ -422,34 +483,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    doSearch(tv.getText().toString());
-                    recycler_search.setVisibility(View.GONE);
-                    ll_lishi.setVisibility(View.GONE);
-                    ll_hot.setVisibility(View.GONE);
-                    String content = et_search.getText().toString();
-                    if (!TextUtils.isEmpty(content))
-                        doSavehistory(content);
-                    ll_result.setVisibility(View.VISIBLE);
-                    mMDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban1, mZhuanlan);
-                    recycler_dashiban.setAdapter(mMDaShiBanAdapter);
-                    mMDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                            Intent intent = new Intent(SearchActivity.this, ZhuanLanActivity.class);
-                            intent.putExtra("id", mMDaShiBanAdapter.getData().get(position).getId() + "");
-                            startActivity(intent);
-                        }
-                    });
-                    mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, mXiaoke);
-                    recycler_yinyueke.setAdapter(mYinYueKeAdapter);
-                    mYinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                            Intent intent = new Intent(SearchActivity.this, SoftMusicDetailActivity.class);
-                            intent.putExtra("id", mYinYueKeAdapter.getData().get(position).getXk_id() + "");
-                            startActivity(intent);
-                        }
-                    });
+                    doSearchHot(tv.getText().toString());
                 }
             });
         }

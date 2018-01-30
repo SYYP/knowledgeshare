@@ -648,7 +648,11 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                     startActivity(intent);
                 }
             });
-            helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
+            if (helper.getAdapterPosition() <= 8) {
+                helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
+            }else {
+                helper.setText(R.id.tv_order, "" + (helper.getAdapterPosition() + 1));
+            }
         }
     }
 

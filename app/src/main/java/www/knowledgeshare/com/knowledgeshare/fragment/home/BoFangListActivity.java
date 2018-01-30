@@ -416,7 +416,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                         download(id);
                     }
                 });
-            }else {
+            } else {
                 download(id);
             }
         } else {
@@ -461,7 +461,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                                      listBean.setTxtUrl(dataEntity.getTxt_url());
                                      listBean.setIconUrl(dataEntity.getImage());
                                      list.add(listBean);
-                                     if (MyUtils.isHaveFile("free",dataEntity.getVideo_name() + listBean.getTypeId() + "_" + dataEntity.getId() + ".mp3")){
+                                     if (MyUtils.isHaveFile("free", dataEntity.getVideo_name() + listBean.getTypeId() + "_" + dataEntity.getId() + ".mp3")) {
                                          Toast.makeText(BoFangListActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                                          return;
                                      }
@@ -516,7 +516,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                                      listBean.setTxtUrl(dataEntity.getTxt_url());
                                      listBean.setIconUrl(dataEntity.getImage());
                                      list.add(listBean);
-                                     if (MyUtils.isHaveFile("comment",dataEntity.getVideo_name() + listBean.getTypeId() + "_" + dataEntity.getId() + ".mp3")){
+                                     if (MyUtils.isHaveFile("comment", dataEntity.getVideo_name() + listBean.getTypeId() + "_" + dataEntity.getId() + ".mp3")) {
                                          Toast.makeText(BoFangListActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                                          return;
                                      }
@@ -572,7 +572,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                                      listBean.setIconUrl(dataEntity.getXk_image());
                                      listBean.settName(xk_data.getT_name());
                                      list.add(listBean);
-                                     if (MyUtils.isHaveFile("xiaoke",xk_data.getName() + dataEntity.getId() + "_" + xk_data.getId() + ".mp3")){
+                                     if (MyUtils.isHaveFile("xiaoke", xk_data.getName() + dataEntity.getId() + "_" + xk_data.getId() + ".mp3")) {
                                          Toast.makeText(BoFangListActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                                          return;
                                      }
@@ -628,7 +628,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                                      listBean.setIconUrl(dataEntity.getZl_image());
                                      listBean.settName(zl_data.getT_name());
                                      list.add(listBean);
-                                     if (MyUtils.isHaveFile("zhuanlan",zl_data.getName() + dataEntity.getId() + "_" + zl_data.getId() + ".mp3")){
+                                     if (MyUtils.isHaveFile("zhuanlan", zl_data.getName() + dataEntity.getId() + "_" + zl_data.getId() + ".mp3")) {
                                          Toast.makeText(BoFangListActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                                          return;
                                      }
@@ -854,7 +854,15 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                     startActivity(intent);
                 }
             });
-            helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
+            if (helper.getAdapterPosition() <= 8) {
+                helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
+            }else {
+                helper.setText(R.id.tv_order, "" + (helper.getAdapterPosition() + 1));
+            }
+            if (item.getType().equals("zhuanlandetail")) {
+                helper.setVisible(R.id.iv_dian, false)
+                        .setVisible(R.id.iv_wengao, false);
+            }
         }
     }
 
