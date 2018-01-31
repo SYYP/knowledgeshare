@@ -234,6 +234,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         startActivity(intent);
                     }
                 });
+                SoftKeyboardTool.closeKeyboard(SearchActivity.this);
                 return true;
             }
             return false;

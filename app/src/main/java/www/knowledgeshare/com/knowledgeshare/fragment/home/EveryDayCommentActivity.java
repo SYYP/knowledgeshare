@@ -110,6 +110,14 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("refresh_daily")) {
+            String id=eventBean.getMsg2();
+            for (int i = 0; i < mDailys.size(); i++) {
+                String id1 = mDailys.get(i).getId() + "";
+                if (id.equals(id1)){
+                    recycler_liebiao.smoothScrollToPosition(i);
+                    return;
+                }
+            }
             after= eventBean.getMsg2();
             isLoadMore=false;
             backRefresh=true;

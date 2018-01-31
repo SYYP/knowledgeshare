@@ -2,6 +2,7 @@ package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,21 +29,29 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.orhanobut.logger.Logger;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.SearchHistoryEntity;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SearchMusicBean2;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
+import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SoftKeyboardTool;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 
-public class SearchMusicActivity2 extends BaseActivity implements View.OnClickListener {
+public class SearchMusicActivity2 extends BaseActivity implements View.OnClickListener {//小课进来的，因为bean类不一样，所以用2个类
     private EditText et_search;
     private TextView tv_back;
     private ImageView iv_delete, iv_delete_text;
@@ -56,6 +65,7 @@ public class SearchMusicActivity2 extends BaseActivity implements View.OnClickLi
     private SearchAdapter mSearchAdapter;
     private List<SearchMusicBean2.DataEntity> mData;
     private ResultAdapter mResultAdapter;
+    private BaseDialog mNetDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +91,24 @@ public class SearchMusicActivity2 extends BaseActivity implements View.OnClickLi
         recycler_result.setNestedScrollingEnabled(false);
         initData();
         initListener();
+        initNETDialog();
+    }
+
+    private void initNETDialog() {
+        BaseDialog.Builder builder = new BaseDialog.Builder(this);
+        mNetDialog = builder.setViewId(R.layout.dialog_iswifi)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
     }
 
     //判断本地数据中有没有存在搜索过的数据，查重
@@ -150,11 +178,100 @@ public class SearchMusicActivity2 extends BaseActivity implements View.OnClickLi
                 recycler_result.setVisibility(View.VISIBLE);
                 mResultAdapter = new ResultAdapter(R.layout.item_search_music, mData);
                 recycler_result.setAdapter(mResultAdapter);
+                SoftKeyboardTool.closeKeyboard(SearchMusicActivity2.this);
+                mResultAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                        setISshow(true);
+                        SearchMusicBean2.DataEntity item = mData.get(position);
+                        //刷新小型播放器
+                        PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getName(), item.getParent_name(),
+                                item.getVideo_url(), position);
+                        gobofang(playerBean);
+                        //设置进入播放主界面的数据
+                        List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
+                        for (int i = 0; i < mData.size(); i++) {
+                            SearchMusicBean2.DataEntity childEntity = mData.get(i);
+                            MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
+                                    childEntity.getT_header(), childEntity.getName(), childEntity.getId() + "",
+                                    false);
+                            musicTypeBean.setMsg("musicplayertype");
+                            musicTypeBeanList.add(musicTypeBean);
+                        }
+                        MediaService.insertMusicTypeList(musicTypeBeanList);
+                        //加入默认的播放列表
+                        List<PlayerBean> list = new ArrayList<PlayerBean>();
+                        for (int i = 0; i < mData.size(); i++) {
+                            SearchMusicBean2.DataEntity entity = mData.get(i);
+                            PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getName(), entity.getParent_name(), entity.getVideo_url());
+                            list.add(playerBean1);
+                        }
+                        MediaService.insertMusicList(list);
+                        //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
+                        List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
+                        for (int i = 0; i < mData.size(); i++) {
+                            SearchMusicBean2.DataEntity childEntity = mData.get(i);
+                            BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", childEntity.getId(), childEntity.getName(),
+                                    childEntity.getCreated_at(), childEntity.getVideo_url(), childEntity.getGood_count(),
+                                    childEntity.getCollect_count(), childEntity.getView_count(), false, false,
+                                    childEntity.getT_header(), childEntity.getParent_name(),
+                                    childEntity.getShare_h5_url(), SystemClock.currentThreadTimeMillis()
+                                    , childEntity.getXk_id()+"", childEntity.getParent_name(), childEntity.getTxt_url());
+                            histroyBeanList.add(bofangHistroyBean);
+                        }
+                        MediaService.insertBoFangHistroyList(histroyBeanList);
+                    }
+                });
                 return true;
             }
             return false;
         }
     };
+
+    private void gobofang(final PlayerBean playerBean) {
+        int apnType = NetWorkUtils.getAPNType(this);
+        if (apnType == 0) {
+            Toast.makeText(this, "没有网络呢~", Toast.LENGTH_SHORT).show();
+        } else if (apnType == 2 || apnType == 3 || apnType == 4) {
+            if (SpUtils.getBoolean(this, "nowifiallowlisten", false)) {//记住用户允许流量播放
+                playerBean.setMsg("refreshplayer");
+                EventBus.getDefault().postSticky(playerBean);
+                mMyBinder.setMusicUrl(playerBean.getVideo_url());
+                mMyBinder.playMusic(playerBean);
+                mNetDialog.dismiss();
+                ClickPopShow();
+                SpUtils.putBoolean(this, "nowifiallowlisten", true);
+            } else {
+                mNetDialog.show();
+                mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        playerBean.setMsg("refreshplayer");
+                        EventBus.getDefault().postSticky(playerBean);
+                        mMyBinder.setMusicUrl(playerBean.getVideo_url());
+                        mMyBinder.playMusic(playerBean);
+                        mNetDialog.dismiss();
+                        ClickPopShow();
+                        SpUtils.putBoolean(SearchMusicActivity2.this, "nowifiallowlisten", true);
+                    }
+                });
+                mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mNetDialog.dismiss();
+                    }
+                });
+            }
+        } else if (NetWorkUtils.isMobileConnected(SearchMusicActivity2.this)) {
+            Toast.makeText(this, "wifi不可用呢~", Toast.LENGTH_SHORT).show();
+        } else {
+            playerBean.setMsg("refreshplayer");
+            EventBus.getDefault().postSticky(playerBean);
+            mMyBinder.setMusicUrl(playerBean.getVideo_url());
+            mMyBinder.playMusic(playerBean);
+            ClickPopShow();
+        }
+    }
 
     private void initListener() {
         et_search.setOnEditorActionListener(editorActionListener);
@@ -218,7 +335,11 @@ public class SearchMusicActivity2 extends BaseActivity implements View.OnClickLi
                     startActivity(intent);
                 }
             });
-            helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
+            if (helper.getAdapterPosition() <= 8) {
+                helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
+            } else {
+                helper.setText(R.id.tv_order, "" + (helper.getAdapterPosition() + 1));
+            }
         }
     }
 
@@ -259,6 +380,7 @@ public class SearchMusicActivity2 extends BaseActivity implements View.OnClickLi
                                     @Override
                                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                         int id = mData.get(position).getId();
+                                        EventBus.getDefault().postSticky(new EventBean("refresh_xk", id + ""));
                                         finish();
                                     }
                                 });

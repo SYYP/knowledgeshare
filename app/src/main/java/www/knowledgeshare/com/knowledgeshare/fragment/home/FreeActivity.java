@@ -129,7 +129,15 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("refresh_free")) {
-            after = eventBean.getMsg2();
+            String id=eventBean.getMsg2();
+            for (int i = 0; i < mChild.size(); i++) {
+                String id1 = mChild.get(i).getId() + "";
+                if (id.equals(id1)){
+                    recycler_free.scrollToPosition(i);
+                    return;
+                }
+            }
+            after = id;
             backRefresh = true;
             isLoadMore = false;
             initData();
@@ -269,7 +277,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                             options.error(R.drawable.default_banner);
                             options.placeholder(R.drawable.default_banner);
                             Glide.with(MyApplication.getGloableContext()).load(mFreeBean.getImgurl()).apply(options).into(iv_beijing);
-                            tv_teacher_intro.setText(mTeacher_has.getT_introduce());
+                            tv_teacher_intro.setText(mFreeBean.getLook());
                             isGuanzhu = mTeacher_has.isIsfollow();
                             if (isGuanzhu) {
                                 iv_guanzhu.setImageResource(R.drawable.free_guanzhu);
