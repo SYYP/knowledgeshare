@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
@@ -115,7 +116,10 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
         @Override
         protected void convert(BaseViewHolder helper, FreeTryReadListBean.DataEntity item) {
             ImageView iv_tupian = helper.getView(R.id.iv_tupian);
-            Glide.with(MyApplication.getGloableContext()).load(item.getImgurl()).into(iv_tupian);
+            RequestOptions options=new RequestOptions();
+            options.error(R.drawable.default_banner);
+            options.placeholder(R.drawable.default_banner);
+            Glide.with(MyApplication.getGloableContext()).load(item.getImgurl()).apply(options).into(iv_tupian);
             helper.setText(R.id.tv_name, item.getName())
                     .setText(R.id.tv_introduce, item.getDescription())
                     .setText(R.id.tv_look_count, item.getIs_view() == 0 ? item.getView_count() + "" : item.getView_count_true() + "")

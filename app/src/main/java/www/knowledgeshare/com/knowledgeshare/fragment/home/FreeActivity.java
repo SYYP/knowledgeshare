@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.liaoinstan.springview.widget.SpringView;
@@ -264,7 +265,10 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                 recycler_free.setAdapter(mFreeAdapter);
                             }
                             mTeacher_has = mFreeBean.getTeacher_has();
-                            Glide.with(MyApplication.getGloableContext()).load(mFreeBean.getImgurl()).into(iv_beijing);
+                            RequestOptions options=new RequestOptions();
+                            options.error(R.drawable.default_banner);
+                            options.placeholder(R.drawable.default_banner);
+                            Glide.with(MyApplication.getGloableContext()).load(mFreeBean.getImgurl()).apply(options).into(iv_beijing);
                             tv_teacher_intro.setText(mTeacher_has.getT_introduce());
                             isGuanzhu = mTeacher_has.isIsfollow();
                             if (isGuanzhu) {
@@ -474,7 +478,11 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                     startActivity(intent);
                 }
             });
-            helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
+            if (helper.getAdapterPosition() <= 8) {
+                helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
+            }else {
+                helper.setText(R.id.tv_order, "" + (helper.getAdapterPosition() + 1));
+            }
         }
     }
 
