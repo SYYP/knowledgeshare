@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
@@ -55,6 +56,7 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
     private String openid;
     private String name;
     private int flag = -1; // 0微信登录  1这是界面绑定手机号
+    private String userFace;
 
 
     @Override
@@ -71,7 +73,8 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
                 flag = 0;
                 tv_tiaoguo.setVisibility(View.VISIBLE);
                 openid = getIntent().getStringExtra("openid");
-                String userFace = getIntent().getStringExtra("userFace");
+                userFace = getIntent().getStringExtra("userFace");
+                Glide.with(this).load(userFace).into(registerHeadimg);
                 name = getIntent().getStringExtra("name");
                 nameTv.setText("Hi! "+ name);
 
@@ -110,25 +113,14 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void requestLogin1() {
-        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String tmDevice, tmSerial, tmPhone, androidId;
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 101);
-        } else {
-            tmDevice = "" + tm.getDeviceId();
-            tmSerial = "" + tm.getSimSerialNumber();
-            androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-
-            UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-            uniqueId = deviceUuid.toString();
-        }
         HttpParams params = new HttpParams();
         //0--手机号登录  1--微信登录
         params.put("type","1");
-        params.put("device_token",uniqueId);
+        String device_token = SpUtils.getString(this, "device_token", "");
+        params.put("device_token",device_token);
         params.put("wx_name",name);
         params.put("wx_unionid",openid);
+        params.put("wx_avatar",userFace);
         params.put("from_type","2");
 
         OkGo.<LoginBean>post(MyContants.login)

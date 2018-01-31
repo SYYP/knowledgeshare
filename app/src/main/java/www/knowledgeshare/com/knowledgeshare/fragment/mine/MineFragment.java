@@ -133,7 +133,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 });
     }
 
-
     private void requestUserInfo() {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
@@ -149,9 +148,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                             if (userInfoBean.getUser_name() != null && !userInfoBean.getUser_name().equals("")){
                                 mineNameTv.setText(userInfoBean.getUser_name());
                                 SpUtils.putString(mContext,"name",userInfoBean.getUser_name());
-                            }else {
+                            }else if (userInfoBean.getWx_name() != null && !userInfoBean.getWx_name().equals("")){
                                 mineNameTv.setText(userInfoBean.getWx_name());
                                 SpUtils.putString(mContext,"name",userInfoBean.getWx_name());
+                            }else {
+                                String user_mobile = userInfoBean.getUser_mobile();
+                                String ss = user_mobile.substring(0,3)+"****"+user_mobile.substring(7,11);
+                                mineNameTv.setText(ss);
+                                SpUtils.putString(mContext,"name",ss);
                             }
                             if ( !TextUtils.isEmpty(userInfoBean.getUser_avatar()) && !userInfoBean.getUser_avatar().equals("") ){
                                 Glide.with(mActivity).load(userInfoBean.getUser_avatar()).into(mineFaceIv);

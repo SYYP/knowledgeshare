@@ -165,26 +165,14 @@ public class UMLoginActivity extends BaseActivity {
     }
 
     private static void requestLoginWeChat() {
-        TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
-        String tmDevice, tmSerial, tmPhone, androidId;
-        int permissionCheck = ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE);
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.READ_PHONE_STATE}, 101);
-        } else {
-            tmDevice = "" + tm.getDeviceId();
-            tmSerial = "" + tm.getSimSerialNumber();
-            androidId = "" + android.provider.Settings.Secure.getString(mContext.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-
-            UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-            uniqueId = deviceUuid.toString();
-        }
         HttpParams params = new HttpParams();
         //0--手机号登录  1--微信登录
         params.put("type","1");
-        params.put("device_token",uniqueId);
-        Logger.e(uniqueId);
+        String device_token = SpUtils.getString(mContext, "device_token", "");
+        params.put("device_token",device_token);
         params.put("wx_name",username);
         params.put("wx_unionid",uid);
+        params.put("wx_avatar",userhead);
         params.put("from_type","2");
 
         OkGo.<LoginBean>post(MyContants.login)

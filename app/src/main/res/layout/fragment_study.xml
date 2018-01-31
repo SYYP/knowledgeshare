@@ -57,7 +57,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                 <RelativeLayout
                     android:background="@drawable/power_study_bg"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp">
+                    android:layout_height="wrap_content">
                     <LinearLayout
                         android:id="@+id/liner"
                         android:layout_marginTop="10dp"
@@ -99,7 +99,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <LinearLayout
-                        android:layout_marginBottom="20dp"
+                        android:paddingBottom="10dp"
                         android:layout_marginRight="15dp"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentBottom="true"

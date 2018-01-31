@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="购买课程"
-            android:textColor="@color/text_black"/>
+            android:textColor="@color/black"/>
         <TextView
             android:id="@+id/date_tv"
             android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
             android:layout_centerInParent="true"
             android:layout_alignParentRight="true"
             android:text="+5积分"
-            android:textColor="@color/red2"/>
+            android:textColor="#b00505"/>
     </RelativeLayout>
     <View
         android:layout_width="match_parent"

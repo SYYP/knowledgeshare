@@ -1,6 +1,7 @@
 package www.knowledgeshare.com.knowledgeshare.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -104,6 +105,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 startActivity(new Intent(this,AboutUsActivity.class));
                 break;
             case R.id.kfzx_call_tv://客服电话
+                showTips(4,"提示","是否拨打客服电话？","是","否",false);
                 break;
             case R.id.exit_btn://退出
                 showTips(3,"提示","是否退出？","是","否",false);
@@ -146,6 +148,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                                 removeAllActivitys();
                                 startActivity(new Intent(SettingActivity.this,MainActivity.class));
                                 break;
+                            case 4:
+                                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+kfzxCallTv.getText().toString()));
+//                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
                         }
                         dialog.dismiss();
                     }

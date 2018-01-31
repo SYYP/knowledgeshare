@@ -131,7 +131,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
 
     @Override
     public void onAllTaskEnd() {
-        TUtils.showShort(mContext,"所有下载任务已结束");
+//        TUtils.showShort(mContext,"所有下载任务已结束");
         kaishiTv.setText("全部开始");
     }
 
@@ -142,8 +142,10 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                 if (TextUtils.equals("全部开始",kaishiTv.getText().toString())){
                     kaishiTv.setText("全部暂停");
                     okDownload.startAll();
+                    TUtils.showShort(mContext,"全部开始");
                 }else {
                     okDownload.pauseAll();
+                    TUtils.showShort(mContext,"全部暂停");
                     kaishiTv.setText("全部开始");
                 }
                 break;
@@ -170,6 +172,8 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
 //                        okDownload.removeAll();
                         adapter.updateData(DownloadAdapter.TYPE_REMOVE);
                         adapter.notifyDataSetChanged();
+                        EventBean eventBean = new EventBean("number");
+                        EventBus.getDefault().postSticky(eventBean);
                         /*for (int i = taskList.size()-1; i >= 0; i--) {
                             task = taskList.get(i);
                             taskList.remove(i);
@@ -250,6 +254,8 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                     values.remove(adapterPosition);
                     task.remove(true);
                     notifyItemRemoved(adapterPosition);
+                    EventBean eventBean = new EventBean("number");
+                    EventBus.getDefault().postSticky(eventBean);
                 }
             });
         }

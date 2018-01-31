@@ -94,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="请选择"
+                android:text="女"
                 android:layout_toLeftOf="@+id/view_01"
                 android:layout_marginRight="10dp"/>
             <ImageView

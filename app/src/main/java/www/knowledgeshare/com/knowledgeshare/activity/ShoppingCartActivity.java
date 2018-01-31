@@ -121,8 +121,10 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
 //                                adapter.notifyDataSetChanged();
                                 recyclerGwc.setVisibility(View.GONE);
                                 nullRl.setVisibility(View.VISIBLE);
+                                hejiTv.setText("￥0.0/年");
+                                jiesuanTv.setText("结算（0）");
+                                allCheckBox.setChecked(false);
                             }else {
-
                                 adapter = new ShoppingCartAdapter(R.layout.item_shopping_cart, list);
                                 recyclerGwc.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();

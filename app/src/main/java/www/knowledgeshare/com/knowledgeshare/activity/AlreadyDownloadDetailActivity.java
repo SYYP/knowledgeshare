@@ -3,6 +3,7 @@ package www.knowledgeshare.com.knowledgeshare.activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
@@ -25,6 +26,8 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.download.DownloadTask;
 import com.orhanobut.logger.Logger;
+import com.wevey.selector.dialog.DialogInterface;
+import com.wevey.selector.dialog.NormalAlertDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -42,7 +45,10 @@ import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
+import www.knowledgeshare.com.knowledgeshare.utils.DataCleanManager;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
  * 已下载点进来的详情
@@ -270,7 +276,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                 break;
             case R.id.title_content_right_tv:
                 if (TextUtils.equals("编辑", titleContentRightTv.getText().toString())) {
-                    if (list.size() > 0) {
+
                         titleContentRightTv.setText("取消");
                         MyUtils.setMargins(recyclerKcmc, 0, 0, 0, 100);
                         bianjiRl.setVisibility(View.VISIBLE);
@@ -278,7 +284,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                             list.get(i).setVisibility(true);
                         }
                         adapter.notifyDataSetChanged();
-                    }
+
                 } else {
                     titleContentRightTv.setText("编辑");
                     MyUtils.setMargins(recyclerKcmc, 0, 0, 0, 0);
@@ -290,45 +296,73 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                 }
                 break;
             case R.id.delete_tv:
-                for (int i = list.size() - 1; i >= 0; i--) {
-                    if (list.get(i).isChecked()) {
-                        File file = null;
-                        switch (type) {
-                            case "free":
-                                file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download/"+
-                                        list.get(i).getName() + list.get(i).getTypeId() + "_" + list.get(i).getChildId() + ".mp3");
-                                file.delete();
-                                break;
-                            case "comment":
-                                file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download/"+
-                                        list.get(i).getName() + list.get(i).getTypeId() + "_" + list.get(i).getChildId() + ".mp3");
-                                file.delete();
-                                break;
-                            case "xiaoke":
-                                file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download/"+
-                                        list.get(i).getName() + list.get(i).getTypeId() + "_" + list.get(i).getChildId() + ".mp3");
-                                file.delete();
-                                break;
-                            case "zhuanlan":
-                                file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download/"+
-                                        list.get(i).getName() + list.get(i).getTypeId() + "_" + list.get(i).getChildId() + ".mp3");
-                                file.delete();
-                                break;
-                        }
-                        GetRequest<File> request = OkGo.<File>get(list.get(i).getVideoUrl());
-                        DownloadTask task = new DownloadTask(list.get(i).getTypeId() + "_" + list.get(i).getChildId(), request);
-                        Logger.e("删除TAG:" + list.get(i).getTypeId() + "_" + list.get(i).getChildId());
-                        task.remove(true);
-                        list.remove(i);
-                    }
-                    if (list.size() == 0) {
-                        bianjiRl.setVisibility(View.GONE);
-                        titleContentRightTv.setText("编辑");
-                    }
-                    adapter.notifyDataSetChanged();
-                }
+                showTips("提示","是否删除？","是","否");
                 break;
         }
+    }
+
+    private void showTips(String title, String content, String left, String right) {
+        new NormalAlertDialog.Builder(this)
+                .setTitleVisible(true).setTitleText(title)
+                .setTitleTextColor(R.color.text_black)
+                .setContentText(content)
+                .setContentTextColor(R.color.text_black)
+                .setLeftButtonText(left)
+                .setLeftButtonTextColor(R.color.text_black)
+                .setRightButtonText(right)
+                .setRightButtonTextColor(R.color.text_black)
+                .setCanceledOnTouchOutside(false)
+                .setOnclickListener(new DialogInterface.OnLeftAndRightClickListener<NormalAlertDialog>() {
+                    @Override
+                    public void clickLeftButton(NormalAlertDialog dialog, View view) {
+                        for (int i = list.size() - 1; i >= 0; i--) {
+                            if (list.get(i).isChecked()) {
+                                File file = null;
+                                switch (type) {
+                                    case "free":
+                                        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download/"+
+                                                list.get(i).getName() + list.get(i).getTypeId() + "_" + list.get(i).getChildId() + ".mp3");
+                                        file.delete();
+                                        break;
+                                    case "comment":
+                                        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download/"+
+                                                list.get(i).getName() + list.get(i).getTypeId() + "_" + list.get(i).getChildId() + ".mp3");
+                                        file.delete();
+                                        break;
+                                    case "xiaoke":
+                                        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download/"+
+                                                list.get(i).getName() + list.get(i).getTypeId() + "_" + list.get(i).getChildId() + ".mp3");
+                                        file.delete();
+                                        break;
+                                    case "zhuanlan":
+                                        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download/"+
+                                                list.get(i).getName() + list.get(i).getTypeId() + "_" + list.get(i).getChildId() + ".mp3");
+                                        file.delete();
+                                        break;
+                                }
+                                GetRequest<File> request = OkGo.<File>get(list.get(i).getVideoUrl());
+                                DownloadTask task = new DownloadTask(list.get(i).getTypeId() + "_" + list.get(i).getChildId(), request);
+                                Logger.e("删除TAG:" + list.get(i).getTypeId() + "_" + list.get(i).getChildId());
+                                task.remove(true);
+                                list.remove(i);
+                            }
+                            if (list.size() == 0) {
+                                bianjiRl.setVisibility(View.GONE);
+                                titleContentRightTv.setText("编辑");
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void clickRightButton(NormalAlertDialog dialog, View view) {
+
+                        dialog.dismiss();
+                    }
+                })
+                .build()
+                .show();
     }
 
     private void quanxuan() {

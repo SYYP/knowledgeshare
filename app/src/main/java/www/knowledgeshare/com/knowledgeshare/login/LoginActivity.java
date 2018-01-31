@@ -35,6 +35,8 @@ import org.zackratos.ultimatebar.UltimateBar;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.BindPhoneActivity;
@@ -73,6 +75,7 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
     private String openid;
     private String userFace;
     private String name;
+    private int code;
 
 
     @Override
@@ -116,13 +119,7 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
         rember_pwd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked){
-                    SpUtils.putBoolean(LoginActivity.this,"rember_pwd",true);
-                    SpUtils.putString(LoginActivity.this,"zhanghao",login_phone.getText().toString());
-                    SpUtils.putString(LoginActivity.this,"mima",login_pwd.getText().toString());
-                }else {
-                    SpUtils.putBoolean(LoginActivity.this,"rember_pwd",false);
-                }
+
             }
         });
 
@@ -160,122 +157,6 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
         }
     }
 
-
-    /*private UMAuthListener umAuthListener = new UMAuthListener() {
-        @Override
-        public void onStart(SHARE_MEDIA platform) {
-            //授权开始的回调
-        }
-        @Override
-        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
-
-            openid = data.get("openid");
-            userFace = data.get("iconurl");
-            name = data.get("name");
-            Logger.e(data.toString());
-            Logger.e("openid:"+ openid +"\n"+"userFace:"+ userFace +"\n"+"name:"+ name);
-//            requestIsBind(openid);
-            TUtils.showShort(LoginActivity.this,"微信登录成功");
-        }
-
-        @Override
-        public void onError(SHARE_MEDIA platform, int action, Throwable t) {
-            Toast.makeText( getApplicationContext(), "Authorize fail", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onCancel(SHARE_MEDIA platform, int action) {
-            Toast.makeText( getApplicationContext(), "Authorize cancel", Toast.LENGTH_SHORT).show();
-        }
-    };*/
-
-    /*private void requestIsBind(final String openid) {
-        HttpParams params = new HttpParams();
-        params.put("wx_unionid",openid);
-
-        OkGo.<BaseBean>post(MyContants.isBindMobile)
-                .tag(this)
-                .params(params)
-                .execute(new DialogCallback<BaseBean>(LoginActivity.this,BaseBean.class) {
-                    @Override
-                    public void onSuccess(Response<BaseBean> response) {
-                        int code = response.code();
-                        if (code >= 200 && code <= 204){
-                            String message = response.body().getMessage();
-                            if (TextUtils.equals("0",message)){
-                                Intent intent2 = new Intent(LoginActivity.this, BindPhoneActivity.class);
-                                intent2.putExtra("type","wechat");
-                                intent2.putExtra("openid",openid);
-                                intent2.putExtra("userFace",userFace);
-                                intent2.putExtra("name",name);
-                                startActivity(intent2);
-                                finish();
-                            }else {
-                                requestLoginWeChat();
-                            }
-                        }
-                    }
-                });
-    }*/
-
-    /*private void requestLoginWeChat() {
-        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String tmDevice, tmSerial, tmPhone, androidId;
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 101);
-        } else {
-            tmDevice = "" + tm.getDeviceId();
-            tmSerial = "" + tm.getSimSerialNumber();
-            androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-
-            UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-            uniqueId = deviceUuid.toString();
-        }
-        HttpParams params = new HttpParams();
-        //0--手机号登录  1--微信登录
-        params.put("type","1");
-        params.put("device_token",uniqueId);
-        Logger.e(uniqueId);
-        params.put("wx_name",name);
-        params.put("wx_unionid",openid);
-        params.put("from_type","2");
-
-        OkGo.<LoginBean>post(MyContants.login)
-                .tag(this)
-                .params(params)
-                .execute(new DialogCallback<LoginBean>(LoginActivity.this,LoginBean.class) {
-                    @Override
-                    public void onSuccess(Response<LoginBean> response) {
-                        LoginBean loginBean = response.body();
-                        if ( response.code() >= 200 && response.code() <= 204){
-                            SpUtils.putString(LoginActivity.this,"id",loginBean.getUser().getId());
-                            SpUtils.putString(LoginActivity.this,"name",loginBean.getUser().getUser_name());
-                            SpUtils.putString(LoginActivity.this,"wx_id",loginBean.getUser().getWx_unionid());
-                            String token = loginBean.getToken();
-                            SpUtils.putString(LoginActivity.this,"token",token);
-                            long ttlMs = loginBean.getTtl() * 60 * 1000L;
-                            long timeMillis = System.currentTimeMillis();
-                            long totalMs = ttlMs + timeMillis;
-                            SpUtils.putString(LoginActivity.this,"totalMs",totalMs+"");
-                            String go = MyUtils.go(ttlMs);
-                            Logger.e(go);
-                            //存一个值判断登录过
-                            SpUtils.putBoolean(LoginActivity.this, "abool", true);
-                            //跳转到主页面
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.putExtra("token",token);
-                            startActivity(intent);
-                            finish();
-                        }else if (response.code() == 404){
-                            //TODO 微信登录，没有绑定帐号
-                        }else {
-                            TUtils.showShort(LoginActivity.this,loginBean.getMessage());
-                        }
-                    }
-                });
-    }*/
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -296,31 +177,37 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
             Toast.makeText(this, "请填写您的密码", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (!ispsd(login_pwd.getText().toString())){
+            Toast.makeText(this, "请输入6-20位字母+数字组合！", Toast.LENGTH_SHORT).show();
+            return;
+        }
         //存一个值判断登录过
         SpUtils.putBoolean(this, "abool", true);
         requestLogin();
 
     }
 
-    private void requestLogin() {
-        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String tmDevice, tmSerial, tmPhone, androidId;
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 101);
-        } else {
-            tmDevice = "" + tm.getDeviceId();
-            tmSerial = "" + tm.getSimSerialNumber();
-            androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+    /**
+     * 是否是纯数字或者纯英文
+     * @param psd
+     * @return
+     */
+    public static boolean ispsd(String psd) {
+        Pattern p = Pattern
+                .compile("^[a-zA-Z].*[0-9]|.*[0-9].*[a-zA-Z]");
+        Matcher m = p.matcher(psd);
 
-            UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-            uniqueId = deviceUuid.toString();
-        }
+        return m.matches();
+    }
+
+    private void requestLogin() {
 
         HttpParams params = new HttpParams();
         params.put("mobile",login_phone.getText().toString());
+        Logger.e(login_phone.getText().toString());
         //字符串倒序
         params.put("password",new StringBuffer(login_pwd.getText().toString()).reverse().toString());
+        Logger.e(new StringBuffer(login_pwd.getText().toString()).reverse().toString());
         //0--手机号登录  1--微信登录
         params.put("type","0");
         String device_token = SpUtils.getString(this, "device_token", "");
@@ -335,8 +222,16 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
                 .execute(new DialogCallback<LoginBean>(LoginActivity.this,LoginBean.class) {
                     @Override
                     public void onSuccess(Response<LoginBean> response) {
+                        code = response.code();
                         LoginBean loginBean = response.body();
                         if ( response.code() >= 200 && response.code() <= 204){
+                            if (rember_pwd.isChecked()){
+                                SpUtils.putBoolean(LoginActivity.this,"rember_pwd",true);
+                                SpUtils.putString(LoginActivity.this,"zhanghao",login_phone.getText().toString());
+                                SpUtils.putString(LoginActivity.this,"mima",login_pwd.getText().toString());
+                            }else {
+                                SpUtils.putBoolean(LoginActivity.this,"rember_pwd",false);
+                            }
                             SpUtils.putString(LoginActivity.this,"id",loginBean.getUser().getId());
                             SpUtils.putString(LoginActivity.this,"name",loginBean.getUser().getUser_name());
                             SpUtils.putString(LoginActivity.this,"userFace",loginBean.getUser().getUser_avatar());

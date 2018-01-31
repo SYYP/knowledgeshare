@@ -63,7 +63,10 @@ public class QueryOrderActivity extends BaseActivity implements View.OnClickList
     RecyclerView recyclerOrder;
     @BindView(R.id.gopay_tv)
     TextView gopayTv;
-    private List<QueryOrderBean> list = new ArrayList<>();
+    private TextView zhekou;
+    private TextView zhekouMoney;
+    private TextView hejiTv;
+    private List<QueryOrderBean.DataBean> list = new ArrayList<>();
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     // IWXAPI 是第三方app和微信通信的openapi接口
@@ -111,6 +114,7 @@ public class QueryOrderActivity extends BaseActivity implements View.OnClickList
     };
     private String ids;
     private String order_sn;
+    private QueryOrderBean queryOrderBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,15 +171,6 @@ public class QueryOrderActivity extends BaseActivity implements View.OnClickList
         recyclerOrder.setLayoutManager(new LinearLayoutManager(this));
         recyclerOrder.setNestedScrollingEnabled(false);
         requestSubmitOrder(ids);
-       /* for (int i = 0; i < 2; i++) {
-            ShoppingCartBean shoppingCartBean = new ShoppingCartBean();
-            shoppingCartBean.setTitle("崔宗顺的男低音歌唱家秘籍");
-            shoppingCartBean.setContent("男低音，一个神秘而又充满魅力的声部男低音，一个神秘而又充满魅力的声部");
-            shoppingCartBean.setMoney("19"+i);
-            shoppingCartBean.setZhekou(i+"");
-            list.add(shoppingCartBean);
-        }*/
-
     }
 
     private void requestSubmitOrder(String ids) {
@@ -195,12 +190,19 @@ public class QueryOrderActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void onSuccess(Response<QueryOrderBean> response) {
                         int code = response.code();
-                        QueryOrderBean queryOrderBean = response.body();
+                        queryOrderBean = response.body();
                         if (code >= 200 && code <= 204) {
                             order_sn = queryOrderBean.getOrder_sn();
-                            list.add(queryOrderBean);
+                            List<QueryOrderBean.DataBean> data = queryOrderBean.getData();
+                            list.addAll(data);
                             QueryOrderAdapter adapter = new QueryOrderAdapter(R.layout.item_query_order, list);
                             View footer = LayoutInflater.from(QueryOrderActivity.this).inflate(R.layout.footer_query_order, recyclerOrder, false);
+                            zhekou = footer.findViewById(R.id.item_zhekou_tv);
+                            zhekouMoney = footer.findViewById(R.id.item_chekou_money_tv);
+                            hejiTv = footer.findViewById(R.id.item_heji_tv);
+                            zhekou.setText("折扣优惠" + queryOrderBean.getLevel_discount() + "折");
+                            zhekouMoney.setText(queryOrderBean.getDiscounts() + "元");
+                            hejiTv.setText(queryOrderBean.getOrder_amount() + "元");
                             adapter.addFooterView(footer);
                             recyclerOrder.setAdapter(adapter);
 
@@ -426,41 +428,30 @@ public class QueryOrderActivity extends BaseActivity implements View.OnClickList
         });
     }
 
-    private class QueryOrderAdapter extends BaseQuickAdapter<QueryOrderBean, BaseViewHolder> {
+    private class QueryOrderAdapter extends BaseQuickAdapter<QueryOrderBean.DataBean, BaseViewHolder> {
 
-        private TextView zhekou;
-        private TextView zhekouMoney;
-        private TextView hejiTv;
-
-        public QueryOrderAdapter(@LayoutRes int layoutResId, @Nullable List<QueryOrderBean> data) {
+        public QueryOrderAdapter(@LayoutRes int layoutResId, @Nullable List<QueryOrderBean.DataBean> data) {
             super(layoutResId, data);
         }
 
         @Override
         public int addFooterView(View footer) {
-            zhekou = footer.findViewById(R.id.item_zhekou_tv);
-            zhekouMoney = footer.findViewById(R.id.item_chekou_money_tv);
-            hejiTv = footer.findViewById(R.id.item_heji_tv);
+
             return super.addFooterView(footer);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, QueryOrderBean item) {
+        protected void convert(BaseViewHolder helper, QueryOrderBean.DataBean item) {
             TextView title = helper.getView(R.id.item_title_tv);
             TextView content = helper.getView(R.id.item_content_tv);
             TextView money = helper.getView(R.id.item_money_tv);
-
             ImageView face = helper.getView(R.id.item_face_iv);
 
-            int position = helper.getPosition();
 
-            Glide.with(mContext).load(item.getData().get(position).getUrl()).into(face);
-            title.setText(item.getData().get(position).getXk_name());
-            content.setText(item.getData().get(position).getXk_teacher_tags());
-            money.setText(item.getData().get(position).getXk_price());
-            zhekou.setText("折扣优惠" + item.getLevel_discount() + "折");
-            zhekouMoney.setText(item.getDiscounts() + "元");
-            hejiTv.setText(item.getOrder_amount() + "元");
+            Glide.with(mContext).load(item.getUrl()).into(face);
+            title.setText(item.getXk_name());
+            content.setText(item.getXk_teacher_tags());
+            money.setText(item.getXk_price());
         }
     }
 }

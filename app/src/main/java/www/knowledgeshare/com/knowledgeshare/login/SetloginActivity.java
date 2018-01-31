@@ -14,6 +14,9 @@ import android.widget.Toast;
 
 import org.zackratos.ultimatebar.UltimateBar;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.login.bean.HobbyActivity;
@@ -70,7 +73,24 @@ public class SetloginActivity extends BaseActivity implements View.OnClickListen
             Toast.makeText(this, "两次输入的密码不同，请重新输入", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (!ispsd(set_loginpwd.getText().toString())){
+            Toast.makeText(this, "请输入6-20位字母+数字组合！", Toast.LENGTH_SHORT).show();
+            return;
+        }
         showDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
+    }
+
+    /**
+     * 是否是纯数字或者纯英文
+     * @param psd
+     * @return
+     */
+    public static boolean ispsd(String psd) {
+        Pattern p = Pattern
+                .compile("^[a-zA-Z].*[0-9]|.*[0-9].*[a-zA-Z]");
+        Matcher m = p.matcher(psd);
+
+        return m.matches();
     }
 
     @Override

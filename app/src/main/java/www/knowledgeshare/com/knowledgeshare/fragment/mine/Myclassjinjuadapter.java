@@ -10,15 +10,27 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.orhanobut.logger.Logger;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.GoldBean;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
  * date : ${Date}
@@ -43,14 +55,14 @@ public class Myclassjinjuadapter extends RecyclerView.Adapter<Myclassjinjuadapte
     }
 
     @Override
-    public void onBindViewHolder(final Myviewholder holder, int position) {
+    public void onBindViewHolder(final Myviewholder holder, final int position) {
       holder.jin_date.setText(list.get(position).getDisplay_at()+" "+list.get(position).getDay());
         holder.study_count.setText(list.get(position).getContent());
         holder.jin_xinxin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (bool) {
-                    showTips(holder);
+                    showTips(holder,position);
                 } else {
                     holder.jin_xinxin.setImageResource(R.drawable.xinxin);
                 }
@@ -59,7 +71,7 @@ public class Myclassjinjuadapter extends RecyclerView.Adapter<Myclassjinjuadapte
         });
     }
 
-    private void showTips(final Myviewholder holder) {
+    private void showTips(final Myviewholder holder, final int positon) {
         new NormalAlertDialog.Builder(context)
                 .setTitleVisible(true).setTitleText("提示")
                 .setTitleTextColor(R.color.text_black)
@@ -74,8 +86,7 @@ public class Myclassjinjuadapter extends RecyclerView.Adapter<Myclassjinjuadapte
                 .setOnclickListener(new DialogInterface.OnLeftAndRightClickListener<NormalAlertDialog>() {
                     @Override
                     public void clickLeftButton(NormalAlertDialog dialog, View view) {
-
-                        holder.jin_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                        requestDayNoFav(holder,positon);
                         dialog.dismiss();
                     }
 
@@ -93,6 +104,31 @@ public class Myclassjinjuadapter extends RecyclerView.Adapter<Myclassjinjuadapte
                 })
                 .build()
                 .show();
+    }
+
+    private void requestDayNoFav(final Myviewholder holder, final int positon) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(context, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("id", list.get(positon).getId());
+
+        OkGo.<BaseBean>post(MyContants.dayNoFacorite)
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        int code = response.code();
+                        if (code >= 200 && code <= 204) {
+                            holder.jin_xinxin.setImageResource(R.drawable.weiguanzhuxin);
+                            EventBean eventBean = new EventBean("jinju");
+                            EventBus.getDefault().postSticky(eventBean);
+                        } else {
+                            TUtils.showShort(context, response.body().getMessage());
+                        }
+                    }
+                });
     }
 
     @Override
