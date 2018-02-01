@@ -2,6 +2,7 @@ package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,14 +39,19 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.SearchHistoryEntity;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.SearchMusicBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
+import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SoftKeyboardTool;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 
-public class SearchMusicActivity extends BaseActivity implements View.OnClickListener {
+public class SearchMusicActivity extends BaseActivity implements View.OnClickListener {//每日推荐和免费专区进来的
     private EditText et_search;
     private TextView tv_back;
     private ImageView iv_delete, iv_delete_text;
@@ -60,6 +66,7 @@ public class SearchMusicActivity extends BaseActivity implements View.OnClickLis
     private List<SearchMusicBean.DataEntity> mData;
     private ResultAdapter mResultAdapter;
     private String mType;
+    private BaseDialog mNetDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +92,24 @@ public class SearchMusicActivity extends BaseActivity implements View.OnClickLis
         recycler_result.setNestedScrollingEnabled(false);
         initData();
         initListener();
+        initNETDialog();
+    }
+
+    private void initNETDialog() {
+        BaseDialog.Builder builder = new BaseDialog.Builder(this);
+        mNetDialog = builder.setViewId(R.layout.dialog_iswifi)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
     }
 
     //判断本地数据中有没有存在搜索过的数据，查重
@@ -120,7 +145,7 @@ public class SearchMusicActivity extends BaseActivity implements View.OnClickLis
      * 保存历史查询记录
      */
     private void saveHistory() {
-        SpUtils.putString(this, "history_music"+mType,
+        SpUtils.putString(this, "history_music" + mType,
                 new Gson().toJson(mHistoryList));//将java对象转换成json字符串进行保存
     }
 
@@ -130,7 +155,7 @@ public class SearchMusicActivity extends BaseActivity implements View.OnClickLis
      * @return
      */
     private List<SearchHistoryEntity> getHistory() {
-        String historyJson = SpUtils.getString(this, "history_music"+mType, "");
+        String historyJson = SpUtils.getString(this, "history_music" + mType, "");
         if (historyJson != null && !historyJson.equals("")) {//必须要加上后面的判断，因为获取的字符串默认值就是空字符串
             //将json字符串转换成list集合
             return new Gson().fromJson(historyJson, new TypeToken<List<SearchHistoryEntity>>() {
@@ -154,11 +179,112 @@ public class SearchMusicActivity extends BaseActivity implements View.OnClickLis
                 recycler_result.setVisibility(View.VISIBLE);
                 mResultAdapter = new ResultAdapter(R.layout.item_search_music, mData);
                 recycler_result.setAdapter(mResultAdapter);
+                SoftKeyboardTool.closeKeyboard(SearchMusicActivity.this);
+                mResultAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                        setISshow(true);
+                        SearchMusicBean.DataEntity item = mData.get(position);
+                        //刷新小型播放器
+                        PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_name(), item.getParent_name(),
+                                item.getVideo_url(), position);
+                        gobofang(playerBean);
+                        //设置进入播放主界面的数据
+                        List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
+                        String type = "";
+                        if (mType.equals("free")) {
+                            type = "free";
+                        } else if (mType.equals("daily")) {
+                            type = "everydaycomment";
+                        }
+                        for (int i = 0; i < mData.size(); i++) {
+                            SearchMusicBean.DataEntity childEntity = mData.get(i);
+                            MusicTypeBean musicTypeBean = new MusicTypeBean(type,
+                                    childEntity.getT_header(), childEntity.getVideo_name(), childEntity.getId() + "",
+                                    false);
+                            musicTypeBean.setMsg("musicplayertype");
+                            musicTypeBeanList.add(musicTypeBean);
+                        }
+                        MediaService.insertMusicTypeList(musicTypeBeanList);
+                        //加入默认的播放列表
+                        List<PlayerBean> list = new ArrayList<PlayerBean>();
+                        for (int i = 0; i < mData.size(); i++) {
+                            SearchMusicBean.DataEntity entity = mData.get(i);
+                            PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getParent_name(), entity.getVideo_url());
+                            list.add(playerBean1);
+                        }
+                        MediaService.insertMusicList(list);
+                        //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
+                        List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
+                        String type2 = "";
+                        if (mType.equals("free")) {
+                            type2 = "free";
+                        } else if (mType.equals("daily")) {
+                            type2 = "comment";
+                        }
+                        for (int i = 0; i < mData.size(); i++) {
+                            SearchMusicBean.DataEntity childEntity = mData.get(i);
+                            BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("free", childEntity.getId(), childEntity.getVideo_name(),
+                                    childEntity.getCreated_at(), childEntity.getVideo_url(), childEntity.getGood_count(),
+                                    childEntity.getCollect_count(), childEntity.getView_count(), false, false,
+                                    childEntity.getT_header(), childEntity.getParent_name(),
+                                    childEntity.getShare_h5_url(), SystemClock.currentThreadTimeMillis()
+                                    , type2 + "Id", childEntity.getParent_name(), childEntity.getTxt_url());
+                            histroyBeanList.add(bofangHistroyBean);
+                        }
+                        MediaService.insertBoFangHistroyList(histroyBeanList);
+                    }
+                });
                 return true;
             }
             return false;
         }
     };
+
+    private void gobofang(final PlayerBean playerBean) {
+        int apnType = NetWorkUtils.getAPNType(this);
+        if (apnType == 0) {
+            Toast.makeText(this, "没有网络呢~", Toast.LENGTH_SHORT).show();
+        } else if (apnType == 2 || apnType == 3 || apnType == 4) {
+            if (SpUtils.getBoolean(this, "nowifiallowlisten", false)) {//记住用户允许流量播放
+                playerBean.setMsg("refreshplayer");
+                EventBus.getDefault().postSticky(playerBean);
+                mMyBinder.setMusicUrl(playerBean.getVideo_url());
+                mMyBinder.playMusic(playerBean);
+                mNetDialog.dismiss();
+                ClickPopShow();
+                SpUtils.putBoolean(this, "nowifiallowlisten", true);
+            } else {
+                mNetDialog.show();
+                mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        playerBean.setMsg("refreshplayer");
+                        EventBus.getDefault().postSticky(playerBean);
+                        mMyBinder.setMusicUrl(playerBean.getVideo_url());
+                        mMyBinder.playMusic(playerBean);
+                        mNetDialog.dismiss();
+                        ClickPopShow();
+                        SpUtils.putBoolean(SearchMusicActivity.this, "nowifiallowlisten", true);
+                    }
+                });
+                mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mNetDialog.dismiss();
+                    }
+                });
+            }
+        } else if (NetWorkUtils.isMobileConnected(SearchMusicActivity.this)) {
+            Toast.makeText(this, "wifi不可用呢~", Toast.LENGTH_SHORT).show();
+        } else {
+            playerBean.setMsg("refreshplayer");
+            EventBus.getDefault().postSticky(playerBean);
+            mMyBinder.setMusicUrl(playerBean.getVideo_url());
+            mMyBinder.playMusic(playerBean);
+            ClickPopShow();
+        }
+    }
 
     private void initListener() {
         et_search.setOnEditorActionListener(editorActionListener);
@@ -224,13 +350,14 @@ public class SearchMusicActivity extends BaseActivity implements View.OnClickLis
                     } else if (mType.equals("daily")) {
                         intent.putExtra("type", "everydaycomment");
                         startActivity(intent);
-                    } else {
-                        intent.putExtra("type", "softmusicdetail");
-                        startActivity(intent);
                     }
                 }
             });
-            helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
+            if (helper.getAdapterPosition() <= 8) {
+                helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
+            } else {
+                helper.setText(R.id.tv_order, "" + (helper.getAdapterPosition() + 1));
+            }
         }
     }
 
@@ -251,9 +378,6 @@ public class SearchMusicActivity extends BaseActivity implements View.OnClickLis
         params.put("keyword", content);
         params.put("userid", SpUtils.getString(this, "id", ""));
         params.put("type", mType);
-        if (mType.equals("xk")) {
-            params.put("id", getIntent().getStringExtra("id"));
-        }
         OkGo.<SearchMusicBean>post(MyContants.LXKURL + "search-video")
                 .tag(this)
                 .params(params)

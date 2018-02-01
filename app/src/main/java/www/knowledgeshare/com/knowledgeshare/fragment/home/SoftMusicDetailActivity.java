@@ -197,6 +197,16 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
         if (eventBean.getMsg().equals("weixinpaysuccess")) {
             weixinpaysuccess = true;
         }
+        if (eventBean.getMsg().equals("refresh_xk")) {
+            String id=eventBean.getMsg2();
+            for (int i = 0; i < mChild.size(); i++) {
+                String id1 = mChild.get(i).getId() + "";
+                if (id.equals(id1)){
+                    recycler_free.scrollToPosition(i);
+                    return;
+                }
+            }
+        }
     }
 
     @Override

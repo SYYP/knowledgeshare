@@ -66,6 +66,24 @@ public class SearchMusicBean {
         private String t_name;
         private int id;
         private int view_count;
+        private String share_h5_url;
+        private String txt_url;
+
+        public String getTxt_url() {
+            return txt_url;
+        }
+
+        public void setTxt_url(String txt_url) {
+            this.txt_url = txt_url;
+        }
+
+        public String getShare_h5_url() {
+            return share_h5_url;
+        }
+
+        public void setShare_h5_url(String share_h5_url) {
+            this.share_h5_url = share_h5_url;
+        }
 
         public void setVideo_time(String video_time) {
             this.video_time = video_time;

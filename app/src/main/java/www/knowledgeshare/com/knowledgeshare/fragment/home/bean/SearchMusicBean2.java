@@ -10,7 +10,7 @@ public class SearchMusicBean2 {
 
 
     /**
-     * data : [{"video_time":"00:00","good_count":0,"t_tag":"中国好声音","parent_name":"测试1-12","is_view":1,"is_try":1,"created_at":"2018-01-15 10:00:27","isfav":false,"is_collect":1,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaokelib/20180105/纯音乐 - 伴奏音乐.mp3","view_count_true":0,"updated_at":"2018-01-15 10:10:03","t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20180112/5a44a0577ca86.png","t_name":"张老师","id":27,"isbuy":false,"islive":false,"is_good":1,"xk_id":9,"collect_count":0,"relevance":10,"video_type":"xk","collect_count_true":0,"name":"精彩强Sir - 故事与她 (Remix)","view_count":0},{"video_time":"00:00","good_count":0,"t_tag":"中国好声音","parent_name":"测试1-12","is_view":1,"is_try":1,"created_at":"2018-01-13 02:27:42","isfav":false,"is_collect":1,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20180115/精彩强Sir - 故事与她 (Remix).mp3","view_count_true":0,"updated_at":"2018-01-15 10:11:22","t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20180112/5a44a0577ca86.png","t_name":"张老师","id":25,"isbuy":false,"islive":false,"is_good":1,"xk_id":9,"collect_count":0,"relevance":60,"video_type":"xk","collect_count_true":0,"name":"music1","view_count":1000}]
+     * data : [{"video_time":"00:00","good_count":0,"t_tag":"中国好声音","parent_name":"测试1-12","share_h5_url":"http://mop.xfkeji.cn/player.html?id=31&type=xk","is_view":1,"is_try":0,"created_at":"2018-01-16 10:02:03","isfav":false,"is_collect":1,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20180116/2017阳光少年圆梦上海8月7日上午场\u2014《辣妞妞》_标清1111_clip(1).mp3","view_count_true":0,"updated_at":"2018-01-16 10:02:03","t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20180112/5a44a0577ca86.png","t_name":"张老师","id":31,"isbuy":false,"islive":false,"is_good":1,"xk_id":9,"collect_count":0,"relevance":60,"video_type":"xk","collect_count_true":0,"name":"2017阳光少年圆梦上海8月7日上午场\u2014《辣妞妞》_标清1111_clip(1)","view_count":0},{"video_time":"00:00","good_count":0,"t_tag":"中国好声音","parent_name":"测试1-12","share_h5_url":"http://mop.xfkeji.cn/player.html?id=30&type=xk","is_view":1,"is_try":0,"created_at":"2018-01-16 10:00:56","isfav":false,"is_collect":1,"good_count_true":0,"video_url":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20180116/2017阳光少年圆梦上海8月7日上午场\u2014《辣妞妞》_标清1111_clip.mp3","view_count_true":0,"updated_at":"2018-01-16 10:00:56","t_header":"http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20180112/5a44a0577ca86.png","t_name":"张老师","id":30,"isbuy":false,"islive":false,"is_good":1,"xk_id":9,"collect_count":0,"relevance":60,"video_type":"xk","collect_count_true":0,"name":"2017阳光少年圆梦上海8月7日上午场\u2014《辣妞妞》_标清1111_clip","view_count":0}]
      */
     private List<DataEntity> data;
 
@@ -28,33 +28,35 @@ public class SearchMusicBean2 {
          * good_count : 0
          * t_tag : 中国好声音
          * parent_name : 测试1-12
+         * share_h5_url : http://mop.xfkeji.cn/player.html?id=31&type=xk
          * is_view : 1
-         * is_try : 1
-         * created_at : 2018-01-15 10:00:27
+         * is_try : 0
+         * created_at : 2018-01-16 10:02:03
          * isfav : false
          * is_collect : 1
          * good_count_true : 0
-         * video_url : http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaokelib/20180105/纯音乐 - 伴奏音乐.mp3
+         * video_url : http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20180116/2017阳光少年圆梦上海8月7日上午场—《辣妞妞》_标清1111_clip(1).mp3
          * view_count_true : 0
-         * updated_at : 2018-01-15 10:10:03
+         * updated_at : 2018-01-16 10:02:03
          * t_header : http://knowledges.oss-cn-qingdao.aliyuncs.com/xiaoke/20180112/5a44a0577ca86.png
          * t_name : 张老师
-         * id : 27
+         * id : 31
          * isbuy : false
          * islive : false
          * is_good : 1
          * xk_id : 9
          * collect_count : 0
-         * relevance : 10
+         * relevance : 60
          * video_type : xk
          * collect_count_true : 0
-         * name : 精彩强Sir - 故事与她 (Remix)
+         * name : 2017阳光少年圆梦上海8月7日上午场—《辣妞妞》_标清1111_clip(1)
          * view_count : 0
          */
         private String video_time;
         private int good_count;
         private String t_tag;
         private String parent_name;
+        private String share_h5_url;
         private int is_view;
         private int is_try;
         private String created_at;
@@ -77,6 +79,15 @@ public class SearchMusicBean2 {
         private int collect_count_true;
         private String name;
         private int view_count;
+        private String txt_url;
+
+        public String getTxt_url() {
+            return txt_url;
+        }
+
+        public void setTxt_url(String txt_url) {
+            this.txt_url = txt_url;
+        }
 
         public void setVideo_time(String video_time) {
             this.video_time = video_time;
@@ -92,6 +103,10 @@ public class SearchMusicBean2 {
 
         public void setParent_name(String parent_name) {
             this.parent_name = parent_name;
+        }
+
+        public void setShare_h5_url(String share_h5_url) {
+            this.share_h5_url = share_h5_url;
         }
 
         public void setIs_view(int is_view) {
@@ -196,6 +211,10 @@ public class SearchMusicBean2 {
 
         public String getParent_name() {
             return parent_name;
+        }
+
+        public String getShare_h5_url() {
+            return share_h5_url;
         }
 
         public int getIs_view() {
