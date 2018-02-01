@@ -19,7 +19,9 @@ import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanDetail2Activity;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.MyMessageActivity;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
@@ -82,9 +84,16 @@ public class MyMessageReceiver extends MessageReceiver {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             } else {
-                Intent intent = new Intent(context, MyMessageActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                if (SpUtils.getString(context,"id","") == null || SpUtils.getString(context,"id","").equals("")){
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }else {
+                    Intent intent = new Intent(context, MyMessageActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+
             }
         } catch (JSONException e) {
             e.printStackTrace();

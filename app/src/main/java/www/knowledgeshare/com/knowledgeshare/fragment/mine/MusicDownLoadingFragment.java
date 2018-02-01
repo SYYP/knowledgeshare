@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.text.format.Formatter;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,11 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.MusicDownLoadBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanDetail2Activity;
+import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
@@ -73,6 +78,9 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
 
     private List<DownloadTask> values;
 
+    private TextView mTv_content;
+    private BaseDialog mNetDialog;
+
     @Override
     protected void lazyLoad() {
 
@@ -85,6 +93,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
         qbscLl.setOnClickListener(this);
         qbksLl.setOnClickListener(this);
         okDownload = OkDownload.getInstance();
+        initNETDialog();
         return inflate;
     }
 
@@ -135,24 +144,71 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
         kaishiTv.setText("全部开始");
     }
 
+    private void initNETDialog() {
+        BaseDialog.Builder builder = new BaseDialog.Builder(mContext);
+        mNetDialog = builder.setViewId(R.layout.dialog_iswifi)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mTv_content = mNetDialog.getView(R.id.tv_content);
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.qbks_ll:
                 if (TextUtils.equals("全部开始",kaishiTv.getText().toString())){
-                    kaishiTv.setText("全部暂停");
-                    okDownload.startAll();
-                    TUtils.showShort(mContext,"全部开始");
-                }else {
-                    okDownload.pauseAll();
-                    TUtils.showShort(mContext,"全部暂停");
-                    kaishiTv.setText("全部开始");
+                    int apnType = NetWorkUtils.getAPNType(mContext);
+                    if (apnType == 0) {
+                        Toast.makeText(mContext, "没有网络呢~", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (apnType == 2 || apnType == 3 || apnType == 4) {
+                        boolean nowifiallowdown = SpUtils.getBoolean(mContext, "nowifiallowdown", false);
+                        if (!nowifiallowdown) {
+                            mTv_content.setText("当前无WiFi，是否允许用流量下载");
+                            mNetDialog.show();
+                            mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mNetDialog.dismiss();
+                                    return;
+                                }
+                            });
+                            mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {//记住用户允许流量下载
+                                    SpUtils.putBoolean(mContext, "nowifiallowdown", true);
+                                    kaishiTv.setText("全部暂停");
+                                    TUtils.showShort(mContext,"全部开始");
+                                    okDownload.startAll();
+                                }
+                            });
+                        }else {
+                            okDownload.startAll();
+                            kaishiTv.setText("全部暂停");
+                            TUtils.showShort(mContext,"全部开始");
+                        }
+                    } else {
+                        okDownload.startAll();
+                        kaishiTv.setText("全部暂停");
+                        TUtils.showShort(mContext,"全部开始");
+                    }
                 }
                 break;
             case R.id.qbsc_ll:
                 showTips();
         }
     }
+
 
     private void showTips() {
         new NormalAlertDialog.Builder(getActivity())
@@ -329,6 +385,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                         break;
                     case Progress.PAUSE:
                         startOrPause.setText("已暂停");
+                        kaishiTv.setText("全部开始");
                         download.setImageDrawable(context.getResources().getDrawable(R.drawable.power_kaishi_iv));
                         break;
                     case Progress.ERROR:
@@ -344,6 +401,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                         break;
                     case Progress.LOADING:
                         startOrPause.setText("正在下载");
+                        kaishiTv.setText("全部暂停");
                         download.setImageDrawable(context.getResources().getDrawable(R.drawable.power_zanting));
                         break;
                 }

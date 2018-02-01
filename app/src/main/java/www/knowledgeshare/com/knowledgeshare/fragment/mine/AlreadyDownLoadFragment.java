@@ -18,6 +18,7 @@ import com.lzy.okgo.db.DownloadManager;
 import com.lzy.okgo.model.Progress;
 import com.lzy.okserver.OkDownload;
 import com.lzy.okserver.download.DownloadTask;
+import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -36,6 +37,8 @@ import www.knowledgeshare.com.knowledgeshare.activity.AlreadyDownloadDetailActiv
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
+import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 /**
  * Created by Administrator on 2017/11/28.
@@ -126,12 +129,14 @@ public class AlreadyDownLoadFragment extends BaseFragment {
                 if (list.get(position).getType().equals("xiaoke")){
                     List<DownLoadListsBean.ListBean> list1 = list.get(position).getList();
                     Intent intent = new Intent(getActivity(),AlreadyDownloadDetailActivity.class);
+                    SpUtils.putBoolean(mContext,SpUtils.getString(mContext,"id","")+"xiaoke"+list.get(position).getTypeId()+list.get(position).getTypeName(),true);
                     intent.putExtra("type","xiaoke");
                     intent.putExtra("list", (Serializable) list1);
                     startActivity(intent);
                 }
                 if (list.get(position).getType().equals("zhuanlan")){
                     List<DownLoadListsBean.ListBean> list1 = list.get(position).getList();
+                    SpUtils.putBoolean(mContext,SpUtils.getString(mContext,"id","")+"zhuanlan"+list.get(position).getTypeId()+list.get(position).getTypeName(),true);
                     Intent intent = new Intent(getActivity(),AlreadyDownloadDetailActivity.class);
                     intent.putExtra("type","zhuanlan");
                     intent.putExtra("list", (Serializable) list1);
@@ -184,8 +189,20 @@ public class AlreadyDownLoadFragment extends BaseFragment {
             alreadyTitleTv.setText(item.getTypeName());
             if (item.getType().equals("xiaoke")){
                 alreadyNmaeTv.setText(item.gettName());
+                boolean isLook = SpUtils.getBoolean(mContext, SpUtils.getString(mContext, "id", "") + "xiaoke" + item.getTypeId()+item.getTypeName(), false);
+                if (isLook){
+                    alreadyTishiIv.setVisibility(View.GONE);
+                }else {
+                    alreadyTishiIv.setVisibility(View.VISIBLE);
+                }
             }else {
                 alreadyNmaeTv.setVisibility(View.GONE);
+                boolean isLook = SpUtils.getBoolean(mContext, SpUtils.getString(mContext, "id", "") + "zhuanlan" + item.getTypeId()+item.getTypeName(), false);
+                if (isLook){
+                    alreadyTishiIv.setVisibility(View.GONE);
+                }else {
+                    alreadyTishiIv.setVisibility(View.VISIBLE);
+                }
             }
             alreadyDescTv.setText(item.gettTag());
             alreadyZhangjieTv.setText("共"+item.getTypeSize()+"节");

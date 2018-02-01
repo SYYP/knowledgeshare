@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.lzy.okgo.db.DownloadManager;
 import com.suke.widget.SwitchButton;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
@@ -146,6 +147,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                                 SpUtils.putBoolean(SettingActivity.this, "wengaowindow", false);
                                 SpUtils.putString(SettingActivity.this,"token","");
                                 removeAllActivitys();
+                                DownloadManager.getInstance().getDownloading().clear();
                                 startActivity(new Intent(SettingActivity.this,MainActivity.class));
                                 break;
                             case 4:
