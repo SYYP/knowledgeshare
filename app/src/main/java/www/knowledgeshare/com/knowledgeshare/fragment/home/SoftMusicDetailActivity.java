@@ -202,7 +202,9 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
             for (int i = 0; i < mChild.size(); i++) {
                 String id1 = mChild.get(i).getId() + "";
                 if (id.equals(id1)){
-                    recycler_free.scrollToPosition(i);
+//                    recycler_free.scrollToPosition(i);
+                    int measuredHeight = tv_teacher_intro.getMeasuredHeight();
+                    nestView.scrollTo(0,MyUtils.dip2px(this,200+measuredHeight+i*70));
                     return;
                 }
             }
