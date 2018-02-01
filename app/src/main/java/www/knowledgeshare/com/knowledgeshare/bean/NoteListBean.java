@@ -11,6 +11,15 @@ public class NoteListBean extends BaseBean implements Serializable {
 
     private List<GoldBean> gold;
     private List<NoteBean> note;
+    private String note_count;
+
+    public String getNote_count() {
+        return note_count;
+    }
+
+    public void setNote_count(String note_count) {
+        this.note_count = note_count;
+    }
 
     public List<GoldBean> getGold() {
         return gold;

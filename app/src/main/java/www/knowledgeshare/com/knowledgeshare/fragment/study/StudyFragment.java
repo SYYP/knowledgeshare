@@ -106,6 +106,8 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     private WeatherSearch mweathersearch;
     private LinearLayout noteLl;
     private ImageView study_newNotice;
+    private String note_count;
+    private TextView messageTv;
 
     @Override
     protected void lazyLoad() {
@@ -124,6 +126,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         tv_search = (TextView) rootView.findViewById(R.id.tv_search);
         fram_layout = rootView.findViewById(R.id.frame_layout);
         this.iv_message = (ImageView) rootView.findViewById(R.id.iv_message);
+        messageTv = rootView.findViewById(R.id.message_tv);
         this.ll_download = (LinearLayout) rootView.findViewById(R.id.ll_download);
         this.study_name = rootView.findViewById(R.id.study_name);
         this.study_weather = (TextView) rootView.findViewById(R.id.study_weather);
@@ -331,6 +334,13 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
                     public void onSuccess(Response<NoteListBean> response) {
                         int code = response.code();
                         if (code >= 200 && code <= 204) {
+                            note_count = response.body().getNote_count();
+                            if (!note_count.equals("0")){
+                                messageTv.setVisibility(View.VISIBLE);
+                                messageTv.setText(note_count);
+                            }else {
+                                messageTv.setVisibility(View.GONE);
+                            }
                             list = response.body().getNote();
                             List<NoteListBean.GoldBean> gold = response.body().getGold();
                             if (list.size() > 0) {
