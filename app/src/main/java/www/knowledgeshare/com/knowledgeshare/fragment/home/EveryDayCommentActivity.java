@@ -114,7 +114,10 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
             for (int i = 0; i < mDailys.size(); i++) {
                 String id1 = mDailys.get(i).getId() + "";
                 if (id.equals(id1)){
-                    recycler_liebiao.smoothScrollToPosition(i);
+//                    recycler_liebiao.setFocusableInTouchMode(true);
+//                    recycler_liebiao.setNestedScrollingEnabled(true);
+//                    recycler_liebiao.smoothScrollToPosition(i);
+                    nestView.scrollTo(0,MyUtils.dip2px(this,200+i*70));
                     return;
                 }
             }
