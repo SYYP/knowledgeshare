@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
@@ -43,6 +44,7 @@ import www.knowledgeshare.com.knowledgeshare.bean.UserInfoBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
@@ -61,6 +63,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.wdxz_rl) RelativeLayout wdxzRl;@BindView(R.id.zhaq_rl) RelativeLayout zhaqRl;
     @BindView(R.id.rwxq_ll) LinearLayout rwxqLl;@BindView(R.id.xz_start_tv) TextView xzStartTv;
     @BindView(R.id.xz_end_tv) TextView xzEndTv;@BindView(R.id.end_LL) LinearLayout endLl;
+    @BindView(R.id.linearlayout) LinearLayout linearLayout;
     Unbinder unbinder;
     private UserInfoBean userInfoBean;
     private Intent intent;
@@ -68,6 +71,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private int user_integral;
     private int user_education;
     private List<UserInfoBean.LevelBean> level;
+    private int apnType;
 
 
     @Override
@@ -80,23 +84,30 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         View inflate = View.inflate(mContext, R.layout.fragment_mine, null);
         unbinder = ButterKnife.bind(this, inflate);
         EventBus.getDefault().register(this);
-        titleMessageIv.setVisibility(View.VISIBLE);
-        titleSettingIv.setVisibility(View.VISIBLE);
-        titleContentTv.setText("我的");
-        if (SpUtils.getString(mContext,"userFace","") != null && !SpUtils.getString(mContext,"userFace","").equals("")){
-            Glide.with(mActivity).load(SpUtils.getString(mContext,"userFace","")).into(mineFaceIv);
+        apnType = NetWorkUtils.getAPNType(mContext);
+        if (apnType == 0) {
+            Toast.makeText(mContext, "没有网络呢~", Toast.LENGTH_SHORT).show();
+            linearLayout.setVisibility(View.GONE);
+        } else{
+            linearLayout.setVisibility(View.VISIBLE);
+            titleMessageIv.setVisibility(View.VISIBLE);
+            titleSettingIv.setVisibility(View.VISIBLE);
+            titleContentTv.setText("我的");
+            if (SpUtils.getString(mContext,"userFace","") != null && !SpUtils.getString(mContext,"userFace","").equals("")){
+                Glide.with(mActivity).load(SpUtils.getString(mContext,"userFace","")).into(mineFaceIv);
+            }
+            titleMessageIv.setOnClickListener(this);
+            titleSettingIv.setOnClickListener(this);
+            mineFaceIv.setOnClickListener(this);
+            qiandaoBtn.setOnClickListener(this);
+            xxsjRl.setOnClickListener(this);
+            wddyRl.setOnClickListener(this);
+            xxjlRl.setOnClickListener(this);
+            wdzhRl.setOnClickListener(this);
+            wdxzRl.setOnClickListener(this);
+            zhaqRl.setOnClickListener(this);
+            rwxqLl.setOnClickListener(this);
         }
-        titleMessageIv.setOnClickListener(this);
-        titleSettingIv.setOnClickListener(this);
-        mineFaceIv.setOnClickListener(this);
-        qiandaoBtn.setOnClickListener(this);
-        xxsjRl.setOnClickListener(this);
-        wddyRl.setOnClickListener(this);
-        xxjlRl.setOnClickListener(this);
-        wdzhRl.setOnClickListener(this);
-        wdxzRl.setOnClickListener(this);
-        zhaqRl.setOnClickListener(this);
-        rwxqLl.setOnClickListener(this);
         return inflate;
     }
 
@@ -108,7 +119,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        requestUserInfo1();
+        apnType = NetWorkUtils.getAPNType(mContext);
+        if (apnType == 0) {
+            Toast.makeText(mContext, "没有网络呢~", Toast.LENGTH_SHORT).show();
+            linearLayout.setVisibility(View.GONE);
+        } else{
+            linearLayout.setVisibility(View.VISIBLE);
+            requestUserInfo1();
+        }
     }
 
     private void requestUserInfo1() {
@@ -252,54 +270,59 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.title_message_iv://消息
-                intent = new Intent(getActivity(), MyMessageActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.title_setting_iv://设置
-                startActivity(new Intent(getActivity(),SettingActivity.class));
-                break;
-            case R.id.mine_face_iv://个人信息
-                intent = new Intent(getActivity(),PersonInfomationActivity.class);
-                intent.putExtra("url",SpUtils.getString(mContext,"userFace",""));
-                intent.putExtra("name",SpUtils.getString(mContext,"name",""));
-                intent.putExtra("sex",userInfoBean.getUser_sex()+"");
-                intent.putExtra("brithday",userInfoBean.getUser_birthday());
-                intent.putExtra("education",userInfoBean.getUser_education()+"");
-                intent.putExtra("industry",userInfoBean.getUser_industry()+"");
-                startActivity(intent);
-                break;
-            case R.id.rwxq_ll://任务详情
-                Intent intent1 = new Intent(getActivity(),TaskDetailActivity.class);
-                intent1.putExtra("jifen",user_integral+"");
-                startActivity(intent1);
-                break;
-            case R.id.xxsj_rl://学习时间
-                startActivity(new Intent(getActivity(), LearningTimeActivity.class));
-                break;
-            case R.id.wddy_rl://我的订阅
-                startActivity(new Intent(getActivity(),MySubscriptionsActivity.class));
-                break;
-            case R.id.xxjl_rl://学习记录
-                startActivity(new Intent(getActivity(),LearningRecordActivity.class));
-                break;
-            case R.id.wdzh_rl://我的账户
-                startActivity(new Intent(getActivity(),MyAccountActivity.class));
-                break;
-            case R.id.wdxz_rl://我的勋章
-                Intent intent = new Intent(getActivity(),MyMedalActivity.class);
-                intent.putExtra("level",user_level+"");
-                intent.putExtra("xunzhang", (Serializable) level);
-                startActivity(intent);
-                break;
-            case R.id.zhaq_rl://帐号安全
-                startActivity(new Intent(getActivity(), AccountSafeActivity.class));
-                break;
-            case R.id.qiandao_btn://签到
-                requestSignIn();
-            default:
-                break;
+        apnType = NetWorkUtils.getAPNType(mContext);
+        if (apnType == 0) {
+            Toast.makeText(mContext, "没有网络呢~", Toast.LENGTH_SHORT).show();
+        } else{
+            switch (view.getId()) {
+                case R.id.title_message_iv://消息
+                    intent = new Intent(getActivity(), MyMessageActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.title_setting_iv://设置
+                    startActivity(new Intent(getActivity(),SettingActivity.class));
+                    break;
+                case R.id.mine_face_iv://个人信息
+                    intent = new Intent(getActivity(),PersonInfomationActivity.class);
+                    intent.putExtra("url",SpUtils.getString(mContext,"userFace",""));
+                    intent.putExtra("name",SpUtils.getString(mContext,"name",""));
+                    intent.putExtra("sex",userInfoBean.getUser_sex()+"");
+                    intent.putExtra("brithday",userInfoBean.getUser_birthday());
+                    intent.putExtra("education",userInfoBean.getUser_education()+"");
+                    intent.putExtra("industry",userInfoBean.getUser_industry()+"");
+                    startActivity(intent);
+                    break;
+                case R.id.rwxq_ll://任务详情
+                    Intent intent1 = new Intent(getActivity(),TaskDetailActivity.class);
+                    intent1.putExtra("jifen",user_integral+"");
+                    startActivity(intent1);
+                    break;
+                case R.id.xxsj_rl://学习时间
+                    startActivity(new Intent(getActivity(), LearningTimeActivity.class));
+                    break;
+                case R.id.wddy_rl://我的订阅
+                    startActivity(new Intent(getActivity(),MySubscriptionsActivity.class));
+                    break;
+                case R.id.xxjl_rl://学习记录
+                    startActivity(new Intent(getActivity(),LearningRecordActivity.class));
+                    break;
+                case R.id.wdzh_rl://我的账户
+                    startActivity(new Intent(getActivity(),MyAccountActivity.class));
+                    break;
+                case R.id.wdxz_rl://我的勋章
+                    Intent intent = new Intent(getActivity(),MyMedalActivity.class);
+                    intent.putExtra("level",user_level+"");
+                    intent.putExtra("xunzhang", (Serializable) level);
+                    startActivity(intent);
+                    break;
+                case R.id.zhaq_rl://帐号安全
+                    startActivity(new Intent(getActivity(), AccountSafeActivity.class));
+                    break;
+                case R.id.qiandao_btn://签到
+                    requestSignIn();
+                default:
+                    break;
+            }
         }
     }
 
