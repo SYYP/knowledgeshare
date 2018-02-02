@@ -33,6 +33,7 @@
                 app:sb_show_indicator="false"
                 app:sb_checked="false"
                 app:sb_uncheck_color="@color/yellow"
+                app:sb_checked_color="@color/bg_mine"
                 app:sb_background="@color/yellow"
                 android:layout_gravity="center_vertical"  />
         </RelativeLayout>
