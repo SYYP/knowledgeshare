@@ -36,6 +36,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     @BindView(R.id.youxiang_tv) TextView youxiangTv;
     @BindView(R.id.exit_btn) TextView exitBtn;
     @BindView(R.id.tv_cache_size) TextView tv_cache_size;
+    @BindView(R.id.kfzx_call_rl) RelativeLayout kfzxCallRl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         gywmRl.setOnClickListener(this);
         kfzxCallTv.setOnClickListener(this);
         exitBtn.setOnClickListener(this);
+        kfzxCallRl.setOnClickListener(this);
 
         try {
             String data = DataCleanManager.getTotalCacheSize(SettingActivity.this);
@@ -115,7 +117,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.gywm_rl://关于我们
                 startActivity(new Intent(this,AboutUsActivity.class));
                 break;
-            case R.id.kfzx_call_tv://客服电话
+            case R.id.kfzx_call_rl://客服电话
                 showTips(4,"提示","是否拨打客服电话？","是","否",false);
                 break;
             case R.id.exit_btn://退出

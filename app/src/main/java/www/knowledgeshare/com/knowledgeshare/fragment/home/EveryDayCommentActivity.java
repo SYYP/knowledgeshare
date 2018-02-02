@@ -694,6 +694,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                     }
                                 }
                             });
+                    Toast.makeText(MyApplication.getInstance(), "已加入下载列表", Toast.LENGTH_SHORT).show();
                     EventBean eventBean = new EventBean("number");
                     EventBus.getDefault().postSticky(eventBean);
                     mDialog.dismiss();

@@ -44,7 +44,7 @@ public class DownUtil {
         } else {*/
             boolean save = loadListsBean.save();//添加完数据别忘了保存，这个save()方法是实体类继承的DataSupport类中的
             if (save) {
-                Toast.makeText(MyApplication.getInstance(), "已加入下载列表", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MyApplication.getInstance(), "已加入下载列表", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(MyApplication.getInstance(), "加入下载列表失败", Toast.LENGTH_SHORT).show();
             }

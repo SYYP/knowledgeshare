@@ -166,7 +166,7 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
         }
 
         if (!MyUtils.isMobileNO(verifyPhone.getText().toString())) {
-            Toast.makeText(this, "手机号格式不正确", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "请输入正确的手机号", Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(verifyYanzheng.getText().toString())) {

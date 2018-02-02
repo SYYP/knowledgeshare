@@ -172,6 +172,7 @@
             android:layout_height="1dp"
             android:background="@color/bg_mine"/>
         <RelativeLayout
+            android:id="@+id/kfzx_call_rl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="15dp">

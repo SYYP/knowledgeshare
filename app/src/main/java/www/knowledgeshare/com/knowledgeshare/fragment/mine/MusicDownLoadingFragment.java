@@ -160,7 +160,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
 
     @Override
     public void onAllTaskEnd() {
-//        TUtils.showShort(mContext,"所有下载任务已结束");
+        TUtils.showShort(mContext,"下载任务结束");
         kaishiTv.setText("全部开始");
     }
 
@@ -451,6 +451,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                                     }
                                 });
                         }
+                        break;
                     case Progress.NONE:
                         if (apnType == 0) {
                             Toast.makeText(mContext, "没有网络呢~", Toast.LENGTH_SHORT).show();
@@ -475,6 +476,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                                 }
                             });
                         }
+                        break;
                     case Progress.ERROR:
                         task.start();
                         for (int i = 0; i < values.size(); i++) {
