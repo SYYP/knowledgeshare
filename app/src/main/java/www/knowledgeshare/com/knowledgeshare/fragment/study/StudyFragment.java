@@ -32,7 +32,6 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
-import com.lzy.okserver.OkDownload;
 import com.orhanobut.logger.Logger;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
@@ -118,12 +117,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         requestNoteList("");
-        study_name.setText("Hi  "+SpUtils.getString(mContext,"name",""));
-        int apnType = NetWorkUtils.getAPNType(mContext);
-        if (apnType == 1) {
-            OkDownload.getInstance().startAll();
-
-        }
+        study_name.setText("Hi  " + SpUtils.getString(mContext, "name", ""));
     }
 
     @Override
@@ -159,7 +153,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         study_xinxin = rootView.findViewById(R.id.study_xinxin);
         study_newNotice = rootView.findViewById(R.id.study_new_notice);
         study_recycler.setNestedScrollingEnabled(false);
-        study_name.setText("Hi  "+SpUtils.getString(mContext,"name",""));
+        study_name.setText("Hi  " + SpUtils.getString(mContext, "name", ""));
         EventBus.getDefault().register(this);
         initMap();
         initLoadMore();
@@ -203,7 +197,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         study_newNotice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(mContext,EditNoticeActivity.class));
+                startActivity(new Intent(mContext, EditNoticeActivity.class));
             }
         });
         return rootView;
@@ -245,22 +239,25 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         springView.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
-                if (!NetWorkUtils.isNetworkConnected(mContext)){
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
                     Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
+                    springView.onFinishFreshAndLoad();
                     return;
                 }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         requestNoteList("");
+                        springView.onFinishFreshAndLoad();
                     }
                 }, 2000);
             }
 
             @Override
             public void onLoadmore() {
-                if (!NetWorkUtils.isNetworkConnected(mContext)){
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
                     Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
+                    springView.onFinishFreshAndLoad();
                     return;
                 }
                 new Handler().postDelayed(new Runnable() {
@@ -329,7 +326,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("after", after);
+//        params.put("after", after);
         Logger.e(after);
         OkGo.<NoteListBean>post(MyContants.noteList)
                 .tag(this)
@@ -341,10 +338,10 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
                         int code = response.code();
                         if (code >= 200 && code <= 204) {
                             note_count = response.body().getNote_count();
-                            if (!note_count.equals("0")){
+                            if (!note_count.equals("0")) {
                                 messageTv.setVisibility(View.VISIBLE);
                                 messageTv.setText(note_count);
-                            }else {
+                            } else {
                                 messageTv.setVisibility(View.GONE);
                             }
                             list = response.body().getNote();
@@ -448,23 +445,23 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null) {
             if (aMapLocation.getErrorCode() == 0) {
-                study_city.setText(aMapLocation.getCity()+aMapLocation.getDistrict());
+                study_city.setText(aMapLocation.getCity() + aMapLocation.getDistrict());
                 //检索参数为城市和天气类型，实况天气为WEATHER_TYPE_LIVE、天气预报为WEATHER_TYPE_FORECAST
-                WeatherSearchQuery mquery = new WeatherSearchQuery(aMapLocation.getCity(),WeatherSearchQuery.WEATHER_TYPE_LIVE);
+                WeatherSearchQuery mquery = new WeatherSearchQuery(aMapLocation.getCity(), WeatherSearchQuery.WEATHER_TYPE_LIVE);
                 mweathersearch = new WeatherSearch(mContext);
                 mweathersearch.setOnWeatherSearchListener(this);
                 mweathersearch.setQuery(mquery);
                 mweathersearch.searchWeatherAsyn(); //异步搜索
 
-                Logger.e(aMapLocation.getLocationType()+"\n" +aMapLocation.getLatitude()+"\n" +aMapLocation.getLongitude()+"\n"
-                        +aMapLocation.getAccuracy()+"\n" +aMapLocation.getAddress()+"\n" +aMapLocation.getProvince()+"\n"
-                        +aMapLocation.getCity()+"\n" +aMapLocation.getDistrict()+"\n" +aMapLocation.getStreet()+"\n"
-                        +aMapLocation.getCityCode()+"\n" +aMapLocation.getAdCode()+"\n" +aMapLocation.getAoiName()+"\n"
-                        +aMapLocation.getBuildingId()+"\n" +aMapLocation.getFloor()+"\n" +aMapLocation.getGpsAccuracyStatus()+"\n");
+                Logger.e(aMapLocation.getLocationType() + "\n" + aMapLocation.getLatitude() + "\n" + aMapLocation.getLongitude() + "\n"
+                        + aMapLocation.getAccuracy() + "\n" + aMapLocation.getAddress() + "\n" + aMapLocation.getProvince() + "\n"
+                        + aMapLocation.getCity() + "\n" + aMapLocation.getDistrict() + "\n" + aMapLocation.getStreet() + "\n"
+                        + aMapLocation.getCityCode() + "\n" + aMapLocation.getAdCode() + "\n" + aMapLocation.getAoiName() + "\n"
+                        + aMapLocation.getBuildingId() + "\n" + aMapLocation.getFloor() + "\n" + aMapLocation.getGpsAccuracyStatus() + "\n");
                 mapLocationClient.stopLocation();//停止定位后，本地定位服务并不会被销毁
-            }else {
+            } else {
                 //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
-                Log.e("AmapError","location Error, ErrCode:"
+                Log.e("AmapError", "location Error, ErrCode:"
                         + aMapLocation.getErrorCode() + ", errInfo:"
                         + aMapLocation.getErrorInfo());
             }
@@ -472,19 +469,19 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     }
 
     @Override
-    public void onWeatherLiveSearched(LocalWeatherLiveResult weatherLiveResult , int rCode) {
+    public void onWeatherLiveSearched(LocalWeatherLiveResult weatherLiveResult, int rCode) {
         if (rCode == 1000) {
             if (weatherLiveResult != null && weatherLiveResult.getLiveResult() != null) {
                 LocalWeatherLive weatherlive = weatherLiveResult.getLiveResult();
                 study_weather.setText(weatherlive.getWeather());
-                study_wendu.setText(weatherlive.getTemperature()+"°");
-//                wind.setText(weatherlive.getWindDirection()+"风     "+weatherlive.getWindPower()+"级");
-//                humidity.setText("湿度         "+weatherlive.getHumidity()+"%");
-            }else {
-                TUtils.showShort(mContext,"没有天气信息");
+                study_wendu.setText(weatherlive.getTemperature() + "°");
+                //                wind.setText(weatherlive.getWindDirection()+"风     "+weatherlive.getWindPower()+"级");
+                //                humidity.setText("湿度         "+weatherlive.getHumidity()+"%");
+            } else {
+                TUtils.showShort(mContext, "没有天气信息");
             }
-        }else {
-            TUtils.showShort(mContext,"获取天气信息失败");
+        } else {
+            TUtils.showShort(mContext, "获取天气信息失败");
         }
     }
 
@@ -520,7 +517,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
                 @Override
                 public boolean onPreDraw() {
                     holder.item_count.getViewTreeObserver().removeOnPreDrawListener(this);
-                    if (holder.item_count.getLineCount() == 5){
+                    if (holder.item_count.getLineCount() == 5) {
                         holder.item_look.setVisibility(View.VISIBLE);
                     }
                     return false;
@@ -538,9 +535,9 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
             holder.item_compile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(mContext,NoticeContentActivity.class);
-                    intent.putExtra("content",holder.item_count.getText().toString());
-                    intent.putExtra("id",list.get(position).getId());
+                    Intent intent = new Intent(mContext, NoticeContentActivity.class);
+                    intent.putExtra("content", holder.item_count.getText().toString());
+                    intent.putExtra("id", list.get(position).getId());
                     startActivity(intent);
                 }
             });
@@ -549,9 +546,9 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
             holder.item_look.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(mContext,NoticeContentActivity.class);
-                    intent.putExtra("content",holder.item_count.getText().toString());
-                    intent.putExtra("id",list.get(position).getId());
+                    Intent intent = new Intent(mContext, NoticeContentActivity.class);
+                    intent.putExtra("content", holder.item_count.getText().toString());
+                    intent.putExtra("id", list.get(position).getId());
                     startActivity(intent);
                 }
             });

@@ -238,7 +238,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
     private void gobofang(final PlayerBean playerBean) {
         int apnType = NetWorkUtils.getAPNType(this);
         if (apnType == 0) {
-            Toast.makeText(this, "没有网络呢~", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
         } else if (apnType == 2 || apnType == 3 || apnType == 4) {
             if (SpUtils.getBoolean(this, "nowifiallowlisten", false)) {//记住用户允许流量播放
                 playerBean.setMsg("refreshplayer");
@@ -395,7 +395,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
         }
         int apnType = NetWorkUtils.getAPNType(this);
         if (apnType == 0) {
-            Toast.makeText(this, "没有网络呢~", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
             return;
         } else if (apnType == 2 || apnType == 3 || apnType == 4) {
             nowifiallowdown = SpUtils.getBoolean(this, "nowifiallowdown", false);

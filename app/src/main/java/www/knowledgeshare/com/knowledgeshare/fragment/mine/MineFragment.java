@@ -16,8 +16,6 @@ import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.Response;
-import com.lzy.okserver.OkDownload;
-import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -88,7 +86,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         EventBus.getDefault().register(this);
         apnType = NetWorkUtils.getAPNType(mContext);
         if (apnType == 0) {
-            Toast.makeText(mContext, "没有网络呢~", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
             linearLayout.setVisibility(View.GONE);
         } else{
             linearLayout.setVisibility(View.VISIBLE);
@@ -123,12 +121,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         super.onHiddenChanged(hidden);
         apnType = NetWorkUtils.getAPNType(mContext);
         if (apnType == 0) {
-            Toast.makeText(mContext, "没有网络呢~", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
             linearLayout.setVisibility(View.GONE);
         } else if (apnType == 1){
             linearLayout.setVisibility(View.VISIBLE);
             requestUserInfo1();
-            OkDownload.getInstance().startAll();
+//            OkDownload.getInstance().startAll();
 
         }else {
             linearLayout.setVisibility(View.VISIBLE);
@@ -279,7 +277,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     public void onClick(View view) {
         apnType = NetWorkUtils.getAPNType(mContext);
         if (apnType == 0) {
-            Toast.makeText(mContext, "没有网络呢~", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
         } else{
             switch (view.getId()) {
                 case R.id.title_message_iv://消息

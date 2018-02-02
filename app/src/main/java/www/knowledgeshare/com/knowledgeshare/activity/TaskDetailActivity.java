@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -35,9 +34,7 @@ import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.TaskListBean;
-import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.LearnContentBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.LearnTimeBean;
-import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.TaskDetailBean;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.FullyLinearLayoutManager;
@@ -105,6 +102,7 @@ public class TaskDetailActivity extends BaseActivity implements View.OnClickList
                             try {
                                 JSONObject jsonObject = new JSONObject(body);
                                 JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                String user_integral = jsonObject.getString("user_integral");
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                                     Logger.e(jsonObject1.toString());
@@ -124,7 +122,7 @@ public class TaskDetailActivity extends BaseActivity implements View.OnClickList
                                     adapter = new TaskDetailAdapter(R.layout.item_task_detail,list);
                                     View header = LayoutInflater.from(TaskDetailActivity.this).inflate(R.layout.header_taskdetail,recyclerTask,false);
                                     TextView totalJifen = header.findViewById(R.id.total_jf_tv);
-                                    totalJifen.setText(jifen);
+                                    totalJifen.setText(user_integral);
                                     recyclerTask.addItemDecoration(new SpaceItemDecoration(10));
                                     adapter.addHeaderView(header);
                                     recyclerTask.setAdapter(adapter);

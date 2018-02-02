@@ -201,7 +201,7 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
                 }
                 int apnType = NetWorkUtils.getAPNType(DownLoadListActivity.this);
                 if (apnType == 0) {
-                    Toast.makeText(DownLoadListActivity.this, "没有网络呢~", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DownLoadListActivity.this, "无网络连接", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (apnType == 2 || apnType == 3 || apnType == 4) {
                     nowifiallowdown = SpUtils.getBoolean(DownLoadListActivity.this, "nowifiallowdown", false);

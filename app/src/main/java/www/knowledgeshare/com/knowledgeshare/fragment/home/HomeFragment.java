@@ -145,11 +145,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        int apnType = NetWorkUtils.getAPNType(mContext);
-        if (apnType == 1) {
-            OkDownload.getInstance().startAll();
-
-        }
     }
 
     @Override
@@ -718,7 +713,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             @Override
             public void onRefresh() {
                 if (!NetWorkUtils.isNetworkConnected(mContext)){
-                    Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 new Handler().postDelayed(new Runnable() {
@@ -1113,7 +1108,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         isBofang = false;
         int apnType = NetWorkUtils.getAPNType(mContext);
         if (apnType == 0) {
-            Toast.makeText(mContext, "没有网络呢~", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
         } else if (apnType == 2 || apnType == 3 || apnType == 4) {
             if (SpUtils.getBoolean(mContext, "nowifiallowlisten", false)) {//记住用户允许流量播放
                 isBofang = true;

@@ -2,18 +2,14 @@ package www.knowledgeshare.com.knowledgeshare.fragment.buy;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.lzy.okgo.db.DownloadManager;
 import com.lzy.okgo.model.Progress;
@@ -40,9 +36,6 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.adapter.BuyTabAdapter;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.SearchActivity;
-import www.knowledgeshare.com.knowledgeshare.fragment.mine.MusicDownLoadingFragment;
-import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
-import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.view.NoScrollViewPager;
 
 /**
@@ -78,10 +71,6 @@ public class BuyFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        int apnType = NetWorkUtils.getAPNType(mContext);
-        if (apnType == 1) {
-            OkDownload.getInstance().startAll();
-        }
     }
 
     @Override

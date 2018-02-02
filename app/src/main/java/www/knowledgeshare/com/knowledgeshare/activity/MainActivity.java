@@ -25,6 +25,7 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.lzy.okserver.OkDownload;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -97,7 +98,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setISshow(false);
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
-        SpUtils.putBoolean(MainActivity.this,"wifichecked",false);
         initView();
         // initData();
         initListener();
@@ -295,6 +295,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             iv_listen.clearAnimation();
             iv_listen.setImageResource(R.drawable.tab_listen_pause);
             //播放界面传来的
+        }else if (eventBean.getMsg().equals("wifidown")){
+            OkDownload.getInstance().startAll();
+        } else if (eventBean.getMsg().equals("nonetwork")){
+            Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -371,7 +375,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.ll_listen:
                 if (!NetWorkUtils.isNetworkConnected(this)){
-                    Toast.makeText(this, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (isPause) {
