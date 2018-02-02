@@ -1,11 +1,8 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.mine;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.view.Gravity;
@@ -19,10 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.lzy.okgo.OkGo;
 import com.lzy.okgo.db.DownloadManager;
 import com.lzy.okgo.model.Progress;
-import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.OkDownload;
 import com.lzy.okserver.download.DownloadListener;
 import com.lzy.okserver.download.DownloadTask;
@@ -48,14 +43,11 @@ import butterknife.Unbinder;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
-import www.knowledgeshare.com.knowledgeshare.bean.MusicDownLoadBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanDetail2Activity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
-import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
 /**
@@ -106,16 +98,16 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
     }
 
     private void initAdapter() {
-//        taskList = OkDownload.restore(DownloadManager.getInstance().getDownloading());
+        //        taskList = OkDownload.restore(DownloadManager.getInstance().getDownloading());
         adapter = new DownloadAdapter(getActivity());
         adapter.updateData(DownloadAdapter.TYPE_ING);
         recyclerXzz.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerXzz.setNestedScrollingEnabled(false);
         recyclerXzz.setAdapter(adapter);
         okDownload.addOnAllTaskEndListener(this);
-        if (values.size() == 0 ){
+        if (values.size() == 0) {
             kongzhiLl.setVisibility(View.GONE);
-        }else {
+        } else {
             EventBean eventBean = new EventBean("number");
             EventBus.getDefault().postSticky(eventBean);
         }
@@ -130,20 +122,20 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-            EventBean eventBean = new EventBean("refrash");
-            EventBus.getDefault().postSticky(eventBean);
+        EventBean eventBean = new EventBean("refrash");
+        EventBus.getDefault().postSticky(eventBean);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("wifidown1")) {
             boolean wifichecked = SpUtils.getBoolean(mContext, "wifichecked", false);
-            Logger.e(wifichecked+"");
-            if (wifichecked){
-                if (values.size() > 0){
+            Logger.e(wifichecked + "");
+            if (wifichecked) {
+                if (values.size() > 0) {
                     okDownload.startAll();
                     Logger.e("wifidown----下载");
-                }else {
+                } else {
                     Logger.e("wifidown----未下载");
                 }
             }
@@ -155,12 +147,12 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
         super.onDestroy();
         okDownload.removeOnAllTaskEndListener(this);
         EventBus.getDefault().unregister(this);
-//        adapter.unRegister();
+        //        adapter.unRegister();
     }
 
     @Override
     public void onAllTaskEnd() {
-//        TUtils.showShort(mContext,"所有下载任务已结束");
+        //        TUtils.showShort(mContext,"所有下载任务已结束");
         kaishiTv.setText("全部开始");
     }
 
@@ -184,34 +176,39 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.qbks_ll:
-                if (TextUtils.equals("全部开始",kaishiTv.getText().toString())){
+                if (TextUtils.equals("全部开始", kaishiTv.getText().toString())) {
                     int apnType = NetWorkUtils.getAPNType(mContext);
                     if (apnType == 0) {
-                        Toast.makeText(mContext, "没有网络呢~", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
                         return;
                     } else if (apnType == 2 || apnType == 3 || apnType == 4) {
-                            mTv_content.setText("当前无WiFi，是否允许用流量下载");
-                            mNetDialog.show();
-                            mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    mNetDialog.dismiss();
-                                    return;
-                                }
-                            });
-                            mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {//记住用户允许流量下载
-                                    SpUtils.putBoolean(mContext, "nowifiallowdown", true);
-                                    kaishiTv.setText("全部暂停");
-                                    okDownload.startAll();
-                                    mNetDialog.dismiss();
-                                }
-                            });
+                        mTv_content.setText("当前无WiFi，是否允许用流量下载");
+                        mNetDialog.show();
+                        mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mNetDialog.dismiss();
+                                return;
+                            }
+                        });
+                        mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {//记住用户允许流量下载
+                                SpUtils.putBoolean(mContext, "nowifiallowdown", true);
+                                kaishiTv.setText("全部暂停");
+                                okDownload.startAll();
+                                mNetDialog.dismiss();
+                            }
+                        });
+                    } else {
+                        SpUtils.putBoolean(mContext, "nowifiallowdown", true);
+                        kaishiTv.setText("全部暂停");
+                        okDownload.startAll();
+                        mNetDialog.dismiss();
                     }
-                }else {
+                } else {
                     okDownload.pauseAll();
                     kaishiTv.setText("全部开始");
                 }
@@ -237,7 +234,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                     @Override
                     public void clickLeftButton(NormalAlertDialog dialog, View view) {
                         dialog.dismiss();
-//                        okDownload.removeAll();
+                        //                        okDownload.removeAll();
                         adapter.updateData(DownloadAdapter.TYPE_REMOVE);
                         adapter.notifyDataSetChanged();
                         EventBean eventBean = new EventBean("number");
@@ -259,7 +256,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                 .show();
     }
 
-    public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHolder>{
+    public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHolder> {
 
         public static final int TYPE_ALL = 0;
         public static final int TYPE_FINISH = 1;
@@ -284,12 +281,15 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
         public void updateData(int type) {
             //这里是将数据库的数据恢复
             this.type = type;
-            if (type == TYPE_ALL) values = OkDownload.restore(DownloadManager.getInstance().getAll());
-            if (type == TYPE_FINISH) values = OkDownload.restore(DownloadManager.getInstance().getFinished());
-            if (type == TYPE_ING) values = OkDownload.restore(DownloadManager.getInstance().getDownloading());
-            if (type == TYPE_REMOVE){
+            if (type == TYPE_ALL)
+                values = OkDownload.restore(DownloadManager.getInstance().getAll());
+            if (type == TYPE_FINISH)
+                values = OkDownload.restore(DownloadManager.getInstance().getFinished());
+            if (type == TYPE_ING)
                 values = OkDownload.restore(DownloadManager.getInstance().getDownloading());
-                for (int i = values.size()-1; i >= 0; i--) {
+            if (type == TYPE_REMOVE) {
+                values = OkDownload.restore(DownloadManager.getInstance().getDownloading());
+                for (int i = values.size() - 1; i >= 0; i--) {
                     task = values.get(i);
                     values.remove(i);
                     task.remove(true);
@@ -346,14 +346,22 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            @BindView(R.id.icon) CircleImageView icon;
-            @BindView(R.id.name) TextView name;
-            @BindView(R.id.downloadSize) TextView downloadSize;
-            @BindView(R.id.pbProgress) ProgressBar pbProgress;
-            @BindView(R.id.start) ImageView download;
-            @BindView(R.id.start_or_pause) TextView startOrPause;
-            @BindView(R.id.shachu_tv) TextView shanchuTv;
-            @BindView(R.id.content_ll) LinearLayout contentLl;
+            @BindView(R.id.icon)
+            CircleImageView icon;
+            @BindView(R.id.name)
+            TextView name;
+            @BindView(R.id.downloadSize)
+            TextView downloadSize;
+            @BindView(R.id.pbProgress)
+            ProgressBar pbProgress;
+            @BindView(R.id.start)
+            ImageView download;
+            @BindView(R.id.start_or_pause)
+            TextView startOrPause;
+            @BindView(R.id.shachu_tv)
+            TextView shanchuTv;
+            @BindView(R.id.content_ll)
+            LinearLayout contentLl;
             private DownloadTask task;
             private String tag;
             private int apnType;
@@ -382,12 +390,13 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                 }
                 if (listAllBeen != null) {
                     Glide.with(context).load(listAllBeen.get(getAdapterPosition()).getIconUrl()).into(icon);
-                    Logger.e("下载中头像URL地址："+listAllBeen.get(getAdapterPosition()).getIconUrl());
+                    Logger.e("下载中头像URL地址：" + listAllBeen.get(getAdapterPosition()).getIconUrl());
                     name.setText(listAllBeen.get(getAdapterPosition()).getName());
                 } else {
                     name.setText(progress.fileName);
                 }
             }
+
             public void refresh(Progress progress) {
                 String currentSize = Formatter.formatFileSize(context, progress.currentSize);
                 String totalSize = Formatter.formatFileSize(context, progress.totalSize);
@@ -429,31 +438,31 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                 switch (progress.status) {
                     case Progress.PAUSE:
                         if (apnType == 0) {
-                            Toast.makeText(mContext, "没有网络呢~", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
                             return;
                         } else if (apnType == 2 || apnType == 3 || apnType == 4) {
-                                mTv_content.setText("当前无WiFi，是否允许用流量下载");
-                                mNetDialog.show();
-                                mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        mNetDialog.dismiss();
-                                        task.pause();
-                                    }
-                                });
-                                mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {//记住用户允许流量下载
-                                        SpUtils.putBoolean(mContext, "nowifiallowdown", true);
-                                        kaishiTv.setText("全部暂停");
-                                        task.start();
-                                        mNetDialog.dismiss();
-                                    }
-                                });
+                            mTv_content.setText("当前无WiFi，是否允许用流量下载");
+                            mNetDialog.show();
+                            mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mNetDialog.dismiss();
+                                    task.pause();
+                                }
+                            });
+                            mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {//记住用户允许流量下载
+                                    SpUtils.putBoolean(mContext, "nowifiallowdown", true);
+                                    kaishiTv.setText("全部暂停");
+                                    task.start();
+                                    mNetDialog.dismiss();
+                                }
+                            });
                         }
                     case Progress.NONE:
                         if (apnType == 0) {
-                            Toast.makeText(mContext, "没有网络呢~", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
                             return;
                         } else if (apnType == 2 || apnType == 3 || apnType == 4) {
                             mTv_content.setText("当前无WiFi，是否允许用流量下载");
@@ -478,9 +487,9 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                     case Progress.ERROR:
                         task.start();
                         for (int i = 0; i < values.size(); i++) {
-                            if (progress.status  == Progress.LOADING){
+                            if (progress.status == Progress.LOADING) {
                                 kaishiTv.setText("全部暂停");
-                            }else {
+                            } else {
                                 kaishiTv.setText("全部开始");
                             }
                         }
@@ -488,9 +497,9 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                     case Progress.LOADING:
                         task.pause();
                         for (int i = 0; i < values.size(); i++) {
-                            if (progress.status  == Progress.LOADING){
+                            if (progress.status == Progress.LOADING) {
                                 kaishiTv.setText("全部暂停");
-                            }else {
+                            } else {
                                 kaishiTv.setText("全部开始");
                             }
                         }
@@ -545,13 +554,14 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
             @Override
             public void onError(Progress progress) {
                 Throwable throwable = progress.exception;
-                if (throwable != null) throwable.printStackTrace();
+                if (throwable != null)
+                    throwable.printStackTrace();
             }
 
             @Override
             public void onFinish(File file, Progress progress) {
-//            Toast.makeText(context, "下载完成:" + progress.filePath, Toast.LENGTH_SHORT).show();
-                Toast.makeText(context, "下载完成" , Toast.LENGTH_SHORT).show();
+                //            Toast.makeText(context, "下载完成:" + progress.filePath, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "下载完成", Toast.LENGTH_SHORT).show();
                 updateData(type);
                 EventBean eventBean = new EventBean("number");
                 EventBus.getDefault().postSticky(eventBean);

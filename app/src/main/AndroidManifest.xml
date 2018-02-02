@@ -234,6 +234,13 @@
         <activity android:name=".activity.NoticeContentActivity"></activity>
         <activity android:name=".fragment.home.SearchMusicActivity"/>
         <activity android:name=".fragment.home.SearchMusicActivity2"/>
+        <receiver android:name=".receiver.NetBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED"></action>
+                <action android:name="android.net.wifi.STATE_CHANGE"></action>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

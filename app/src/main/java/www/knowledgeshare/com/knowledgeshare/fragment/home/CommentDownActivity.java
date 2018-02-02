@@ -202,7 +202,7 @@ public class CommentDownActivity extends BaseActivity implements View.OnClickLis
                 }
                 int apnType = NetWorkUtils.getAPNType(CommentDownActivity.this);
                 if (apnType == 0) {
-                    Toast.makeText(CommentDownActivity.this, "没有网络呢~", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CommentDownActivity.this, "无网络连接", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (apnType == 2 || apnType == 3 || apnType == 4) {
                     nowifiallowdown = SpUtils.getBoolean(CommentDownActivity.this, "nowifiallowdown", false);

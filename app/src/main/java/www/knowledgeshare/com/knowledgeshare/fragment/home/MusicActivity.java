@@ -513,7 +513,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
         }
         int apnType = NetWorkUtils.getAPNType(this);
         if (apnType == 0) {
-            Toast.makeText(this, "没有网络呢~", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
             return;
         } else if (apnType == 2 || apnType == 3 || apnType == 4) {
             nowifiallowdown = SpUtils.getBoolean(this, "nowifiallowdown", false);
