@@ -54,7 +54,8 @@ import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 public class SearchMusicActivity2 extends BaseActivity implements View.OnClickListener {//小课进来的，因为bean类不一样，所以用2个类
     private EditText et_search;
     private TextView tv_back;
-    private ImageView iv_delete, iv_delete_text;
+    private ImageView iv_delete;
+//    private ImageView iv_delete_text;
     private RecyclerView recycler_lishi;
     private RecyclerView recycler_search;
     private RecyclerView recycler_result;
@@ -75,8 +76,8 @@ public class SearchMusicActivity2 extends BaseActivity implements View.OnClickLi
         et_search = (EditText) findViewById(R.id.et_search);
         tv_back = (TextView) findViewById(R.id.tv_back);
         tv_back.setOnClickListener(this);
-        iv_delete_text = (ImageView) findViewById(R.id.iv_delete_text);
-        iv_delete_text.setOnClickListener(this);
+//        iv_delete_text = (ImageView) findViewById(R.id.iv_delete_text);
+//        iv_delete_text.setOnClickListener(this);
         iv_delete = (ImageView) findViewById(R.id.iv_delete);
         iv_delete.setOnClickListener(this);
         recycler_lishi = (RecyclerView) findViewById(R.id.recycler_lishi);
@@ -173,7 +174,7 @@ public class SearchMusicActivity2 extends BaseActivity implements View.OnClickLi
                 String content = et_search.getText().toString();
                 if (!TextUtils.isEmpty(content))
                     doSavehistory(content);
-                iv_delete_text.setVisibility(View.VISIBLE);
+//                iv_delete_text.setVisibility(View.VISIBLE);
                 recycler_search.setVisibility(View.GONE);
                 recycler_result.setVisibility(View.VISIBLE);
                 mResultAdapter = new ResultAdapter(R.layout.item_search_music, mData);
@@ -291,7 +292,7 @@ public class SearchMusicActivity2 extends BaseActivity implements View.OnClickLi
                 if (!TextUtils.isEmpty(et_search.getText().toString())) {
                     doSearch(et_search.getText().toString());
                 } else {
-                    iv_delete_text.setVisibility(View.GONE);
+//                    iv_delete_text.setVisibility(View.GONE);
                     ll_lishi.setVisibility(View.VISIBLE);
                     mHistoryList = getHistory();//从本地取出来
                     if (mHistoryList != null && mHistoryList.size() > 0) {
