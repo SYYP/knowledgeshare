@@ -55,11 +55,12 @@
         android:layout_height="1dp"
         android:layout_marginTop="10dp"
         android:background="@color/huise"></View>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
-    >
+        android:padding="15dp">
+
         <TextView
             android:id="@+id/tv_rss_count"
             android:layout_width="wrap_content"
@@ -69,7 +70,8 @@
             android:drawableLeft="@drawable/icon_rili"
             android:drawablePadding="10dp"
             android:gravity="center"
-            android:text="1223"/>
+            android:text="1223" />
+
         <TextView
             android:id="@+id/tv_collect_count"
             android:layout_width="wrap_content"
@@ -80,7 +82,8 @@
             android:drawableLeft="@drawable/zhuanlan_collect"
             android:drawablePadding="10dp"
             android:gravity="center"
-            android:text="1223"/>
+            android:text="1223" />
+
         <TextView
             android:id="@+id/tv_look_count"
             android:layout_width="wrap_content"
@@ -90,6 +93,6 @@
             android:drawableLeft="@drawable/zhuanlan_read"
             android:drawablePadding="10dp"
             android:gravity="center"
-            android:text="1223"/>
+            android:text="1223" />
     </RelativeLayout>
 </LinearLayout>

@@ -76,7 +76,7 @@
             android:focusableInTouchMode="false"
             android:id="@+id/item_count"
             android:background="@null"
-            android:textColor="@color/textblack"
+            android:textColor="#666666"
             android:textSize="14sp"
             android:maxLines="5"
             android:ellipsize="end"

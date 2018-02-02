@@ -170,6 +170,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                             SpUtils.putString(mContext,"setphone",userInfoBean.getConfig().get(0).getValue());
                             SpUtils.putString(mContext,"setemail",userInfoBean.getConfig().get(1).getValue());
                             SpUtils.putString(mContext,"mobile",userInfoBean.getUser_mobile());
+                            SpUtils.putString(mContext,"wx_id",userInfoBean.getWx_unionid());
                             user_education = userInfoBean.getUser_education();
                             user_level = userInfoBean.getUser_level();
                             user_integral = userInfoBean.getUser_integral();

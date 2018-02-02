@@ -359,6 +359,9 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 });
                 myviewhiodler3.class_titles.setText(list.get(position).getVideo_name());
                 Glide.with(context).load(list.get(position).getImgurl()).into(myviewhiodler3.class_img);
+                myviewhiodler3.class_read.setText(list.get(position).getIs_view() == 0 ? list.get(position).getView_count() + "" : list.get(position).getView_count_true() + "");
+                myviewhiodler3.class_dianxin.setText(list.get(position).getIs_collect() == 0 ? list.get(position).getCollect_count() + "" : list.get(position).getCollect_count_true() + "");
+                myviewhiodler3.class_content.setText(list.get(position).getDescription());
                 break;
         }
     }
@@ -500,6 +503,7 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public TextView class_dianxin;
         public TextView class_read;
         public ImageView class_xinxin;
+        public TextView class_content;
 
         public Myviewholder3(View rootView) {
             super(rootView);
@@ -510,6 +514,7 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             this.class_dianxin = (TextView) rootView.findViewById(R.id.class_dianxin);
             this.class_read = (TextView) rootView.findViewById(R.id.class_read);
             this.class_xinxin = (ImageView) rootView.findViewById(R.id.class_xinxin);
+            this.class_content = rootView.findViewById(R.id.class_content);
         }
     }
 

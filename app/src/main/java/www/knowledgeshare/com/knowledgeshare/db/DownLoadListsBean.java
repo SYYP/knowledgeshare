@@ -107,7 +107,7 @@ public class DownLoadListsBean extends DataSupport implements Serializable {
         private String iconUrl;
         private String tName;
         private boolean save;
-        private boolean isChecked=true;
+        private boolean isChecked=false;
         private boolean isVisibility = false;
         private String parentName;
         private String h5_url;

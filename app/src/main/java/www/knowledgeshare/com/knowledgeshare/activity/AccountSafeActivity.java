@@ -73,7 +73,7 @@ public class AccountSafeActivity extends BaseActivity implements View.OnClickLis
         wx_id = SpUtils.getString(this, "wx_id", "");
         Logger.e(mobile+"\n"+wx_id);
         telTv.setText(mobile);
-        if (wx_id == null){
+        if (wx_id == null || wx_id.equals("")){
             ifBangdingTv.setText("未绑定");
         }else {
             ifBangdingTv.setText("已绑定");
@@ -97,7 +97,7 @@ public class AccountSafeActivity extends BaseActivity implements View.OnClickLis
                 }
                 break;
             case R.id.bdwx_rl:
-                if (wx_id == null){
+                if (wx_id == null || wx_id.equals("")){
                     //TODO 请求绑定微信接口
                     config.setSinaAuthType(UMShareConfig.AUTH_TYPE_SSO);
                     umShareAPI.setShareConfig(config);
@@ -165,7 +165,9 @@ public class AccountSafeActivity extends BaseActivity implements View.OnClickLis
                     public void onSuccess(Response<BaseBean> response) {
                         int code = response.code();
                         if (code >= 200 && code <= 204){
+
                             baseBean = response.body();
+                            ifBangdingTv.setText("已绑定");
                             TUtils.showShort(AccountSafeActivity.this, baseBean.getMessage());
                         }else {
                             TUtils.showShort(AccountSafeActivity.this,baseBean.getMessage());

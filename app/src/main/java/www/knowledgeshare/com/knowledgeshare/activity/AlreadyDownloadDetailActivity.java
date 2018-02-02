@@ -276,11 +276,11 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                 break;
             case R.id.title_content_right_tv:
                 if (TextUtils.equals("编辑", titleContentRightTv.getText().toString())) {
-
                         titleContentRightTv.setText("取消");
                         MyUtils.setMargins(recyclerKcmc, 0, 0, 0, 100);
                         bianjiRl.setVisibility(View.VISIBLE);
                         for (int i = 0; i < list.size(); i++) {
+                            list.get(i).setChecked(false);
                             list.get(i).setVisibility(true);
                         }
                         adapter.notifyDataSetChanged();
@@ -419,7 +419,6 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
             nameTv.setText(item.gettName());
             timeTv.setText(item.getTime());
             checkBox.setChecked(item.isChecked());
-
 
             checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
