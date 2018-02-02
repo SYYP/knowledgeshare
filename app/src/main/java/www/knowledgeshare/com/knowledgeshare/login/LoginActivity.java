@@ -170,7 +170,7 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
             return;
         }
         else if (!MyUtils.isMobileNO(login_phone.getText().toString())) {
-            Toast.makeText(this, "手机号格式不正确", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "请输入正确手机号", Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(login_pwd.getText().toString())) {
