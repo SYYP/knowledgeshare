@@ -143,6 +143,16 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        int apnType = NetWorkUtils.getAPNType(mContext);
+        if (apnType == 1) {
+            OkDownload.getInstance().startAll();
+
+        }
+    }
+
+    @Override
     protected View initView() {
         EventBus.getDefault().register(this);
         View inflate = View.inflate(mContext, R.layout.fragment_home, null);

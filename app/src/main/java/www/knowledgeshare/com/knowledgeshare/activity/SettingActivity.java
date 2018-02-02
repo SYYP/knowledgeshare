@@ -53,11 +53,21 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
         titleContentTv.setText("设置");
+        boolean wifichecked = SpUtils.getBoolean(SettingActivity.this, "wifichecked", false);
+        if (wifichecked){
+            voiceSwitchBtn.setChecked(true);
+        }else {
+            voiceSwitchBtn.setChecked(false);
+        }
         voiceSwitchBtn.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                 //TODO YOU job
-
+                if (isChecked){
+                    SpUtils.putBoolean(SettingActivity.this,"wifichecked",true);
+                }else {
+                    SpUtils.putBoolean(SettingActivity.this,"wifichecked",false);
+                }
             }
         });
         titleBackIv.setOnClickListener(this);

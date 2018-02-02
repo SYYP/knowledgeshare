@@ -42,6 +42,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.buy.adapter.BuyTabAdapter;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.SearchActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.MusicDownLoadingFragment;
 import www.knowledgeshare.com.knowledgeshare.utils.LogDownloadListener;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.view.NoScrollViewPager;
 
 /**
@@ -72,6 +73,15 @@ public class BuyFragment extends BaseFragment implements View.OnClickListener {
     @Override
     protected void lazyLoad() {
 
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        int apnType = NetWorkUtils.getAPNType(mContext);
+        if (apnType == 1) {
+            OkDownload.getInstance().startAll();
+        }
     }
 
     @Override

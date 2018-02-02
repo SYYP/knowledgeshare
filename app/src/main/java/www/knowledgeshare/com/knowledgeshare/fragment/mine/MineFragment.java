@@ -16,6 +16,8 @@ import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.Response;
+import com.lzy.okserver.OkDownload;
+import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -123,7 +125,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         if (apnType == 0) {
             Toast.makeText(mContext, "没有网络呢~", Toast.LENGTH_SHORT).show();
             linearLayout.setVisibility(View.GONE);
-        } else{
+        } else if (apnType == 1){
+            linearLayout.setVisibility(View.VISIBLE);
+            requestUserInfo1();
+            OkDownload.getInstance().startAll();
+
+        }else {
             linearLayout.setVisibility(View.VISIBLE);
             requestUserInfo1();
         }

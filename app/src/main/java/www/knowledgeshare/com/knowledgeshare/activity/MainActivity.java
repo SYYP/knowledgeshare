@@ -97,6 +97,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setISshow(false);
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
+        SpUtils.putBoolean(MainActivity.this,"wifichecked",false);
         initView();
         // initData();
         initListener();

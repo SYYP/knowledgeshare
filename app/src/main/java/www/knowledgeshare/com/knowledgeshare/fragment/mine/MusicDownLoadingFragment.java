@@ -32,6 +32,8 @@ import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.text.NumberFormat;
@@ -90,6 +92,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
     protected View initView() {
         View inflate = View.inflate(mContext, R.layout.fragment_downloading, null);
         unbinder = ButterKnife.bind(this, inflate);
+        EventBus.getDefault().register(this);
         qbscLl.setOnClickListener(this);
         qbksLl.setOnClickListener(this);
         okDownload = OkDownload.getInstance();
@@ -131,10 +134,27 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
             EventBus.getDefault().postSticky(eventBean);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("wifidown1")) {
+            boolean wifichecked = SpUtils.getBoolean(mContext, "wifichecked", false);
+            Logger.e(wifichecked+"");
+            if (wifichecked){
+                if (values.size() > 0){
+                    okDownload.startAll();
+                    Logger.e("wifidown----下载");
+                }else {
+                    Logger.e("wifidown----未下载");
+                }
+            }
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         okDownload.removeOnAllTaskEndListener(this);
+        EventBus.getDefault().unregister(this);
 //        adapter.unRegister();
     }
 

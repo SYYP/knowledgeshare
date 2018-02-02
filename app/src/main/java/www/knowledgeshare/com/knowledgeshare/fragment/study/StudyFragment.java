@@ -32,6 +32,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.lzy.okserver.OkDownload;
 import com.orhanobut.logger.Logger;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
@@ -118,6 +119,11 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         super.onHiddenChanged(hidden);
         requestNoteList("");
         study_name.setText("Hi  "+SpUtils.getString(mContext,"name",""));
+        int apnType = NetWorkUtils.getAPNType(mContext);
+        if (apnType == 1) {
+            OkDownload.getInstance().startAll();
+
+        }
     }
 
     @Override
