@@ -129,7 +129,9 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
         initLunarPicker();//初始化时间选择器
 
         String url = getIntent().getStringExtra("url");
-        Glide.with(this).load(url).into(faceIv);
+        if (url != null && !url.equals("")){
+            Glide.with(this).load(url).into(faceIv);
+        }
         String name = getIntent().getStringExtra("name");
         nameTv.setText(name);
         String sex = getIntent().getStringExtra("sex");

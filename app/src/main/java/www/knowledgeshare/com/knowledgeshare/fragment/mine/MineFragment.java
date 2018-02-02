@@ -262,8 +262,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.mine_face_iv://个人信息
                 intent = new Intent(getActivity(),PersonInfomationActivity.class);
-                intent.putExtra("url",userInfoBean.getUser_avatar());
-                intent.putExtra("name",userInfoBean.getUser_name());
+                intent.putExtra("url",SpUtils.getString(mContext,"userFace",""));
+                intent.putExtra("name",SpUtils.getString(mContext,"name",""));
                 intent.putExtra("sex",userInfoBean.getUser_sex()+"");
                 intent.putExtra("brithday",userInfoBean.getUser_birthday());
                 intent.putExtra("education",userInfoBean.getUser_education()+"");

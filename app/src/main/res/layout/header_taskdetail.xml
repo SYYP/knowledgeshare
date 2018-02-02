@@ -6,13 +6,12 @@
     android:layout_height="match_parent">
     <TextView
         android:id="@+id/total_jf_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="9999"
         android:textColor="@color/red2"
         android:textSize="35dp"
         android:gravity="center"
-        android:layout_marginBottom="10dp"
         android:background="@drawable/power_task_bg"/>
 </LinearLayout>
