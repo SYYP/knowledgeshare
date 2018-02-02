@@ -22,6 +22,8 @@ public class NetBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         // TODO Auto-generated method stub
         // 如果相等的话就说明网络状态发生了变化
+        SpUtils.putBoolean(MyApplication.getGloableContext(), "nowifiallowdown", false);
+        SpUtils.putBoolean(MyApplication.getGloableContext(), "nowifiallowlisten", false);
         int apnType = NetWorkUtils.getAPNType(MyApplication.getGloableContext());
         if (apnType == 1) {
             boolean wifichecked = SpUtils.getBoolean(MyApplication.getGloableContext(), "wifichecked", false);
@@ -31,6 +33,9 @@ public class NetBroadcastReceiver extends BroadcastReceiver {
         }
         if (apnType == 0) {
             EventBus.getDefault().postSticky(new EventBean("nonetwork"));
+        }
+        if (apnType == 2 || apnType == 3 || apnType == 4){
+            EventBus.getDefault().postSticky(new EventBean("nonetwork1"));
         }
     }
 }

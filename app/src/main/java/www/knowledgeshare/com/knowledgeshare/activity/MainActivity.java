@@ -299,6 +299,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             OkDownload.getInstance().startAll();
         } else if (eventBean.getMsg().equals("nonetwork")){
             Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
+        }else if (eventBean.getMsg().equals("nonetwork1")){
+            OkDownload.getInstance().pauseAll();
         }
     }
 
