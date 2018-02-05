@@ -45,7 +45,7 @@ public class UserAgreementActivity extends BaseActivity implements View.OnClickL
 
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
-        titleContentTv.setText("用户协议");
+        titleContentTv.setText("用户注册协议");
         titleBackIv.setOnClickListener(this);
 
         requestReg();

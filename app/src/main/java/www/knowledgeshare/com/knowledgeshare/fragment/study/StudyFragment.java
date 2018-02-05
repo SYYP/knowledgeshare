@@ -474,7 +474,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
             if (weatherLiveResult != null && weatherLiveResult.getLiveResult() != null) {
                 LocalWeatherLive weatherlive = weatherLiveResult.getLiveResult();
                 study_weather.setText(weatherlive.getWeather());
-                study_wendu.setText(weatherlive.getTemperature() + "°");
+                study_wendu.setText(weatherlive.getTemperature() + "℃");
                 //                wind.setText(weatherlive.getWindDirection()+"风     "+weatherlive.getWindPower()+"级");
                 //                humidity.setText("湿度         "+weatherlive.getHumidity()+"%");
             } else {
