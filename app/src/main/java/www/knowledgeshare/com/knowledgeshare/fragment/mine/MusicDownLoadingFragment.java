@@ -134,9 +134,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
             if (wifichecked) {
                 if (values.size() > 0) {
                     okDownload.startAll();
-                    Logger.e("wifidown----下载");
                 } else {
-                    Logger.e("wifidown----未下载");
                 }
             }
         }
@@ -411,7 +409,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                         download.setImageDrawable(context.getResources().getDrawable(R.drawable.power_kaishi_iv));
                         break;
                     case Progress.ERROR:
-                        startOrPause.setText("下载出错");
+                        startOrPause.setText("已暂停");
                         download.setImageDrawable(context.getResources().getDrawable(R.drawable.power_kaishi_iv));
                         break;
                     case Progress.WAITING:
