@@ -249,8 +249,6 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
                             intent.putExtra("token",token);
                             startActivity(intent);
                             finish();
-                        }else if (response.code() == 404){
-                            //TODO 微信登录，没有绑定帐号
                         }else {
                             TUtils.showShort(LoginActivity.this,loginBean.getMessage());
                         }

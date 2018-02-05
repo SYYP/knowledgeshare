@@ -219,7 +219,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 progressBar.setProgress(integral);
                 xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v0));
                 xzStartTv.setText("默认");
-                Glide.with(mContext).load(level.get(0).getLevel_get_img()).into(xzStartIv);
+                Glide.with(mContext).load(level.get(0).getLevel_get_img()).into(xzEndIv);
 //                xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v1));
                 xzEndTv.setText("铜勋章");
                 break;
@@ -229,7 +229,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 Glide.with(mContext).load(level.get(0).getLevel_get_img()).into(xzStartIv);
 //                xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v1));
                 xzStartTv.setText("铜勋章");
-                Glide.with(mContext).load(level.get(1).getLevel_get_img()).into(xzStartIv);
+                Glide.with(mContext).load(level.get(1).getLevel_get_img()).into(xzEndIv);
 //                xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v2));
                 xzEndTv.setText("银勋章");
                 break;
@@ -239,7 +239,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 Glide.with(mContext).load(level.get(1).getLevel_get_img()).into(xzStartIv);
 //                xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v2));
                 xzStartTv.setText("银勋章");
-                Glide.with(mContext).load(level.get(2).getLevel_get_img()).into(xzStartIv);
+                Glide.with(mContext).load(level.get(2).getLevel_get_img()).into(xzEndIv);
 //                xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v3));
                 xzEndTv.setText("金勋章");
                 break;
@@ -249,7 +249,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 Glide.with(mContext).load(level.get(2).getLevel_get_img()).into(xzStartIv);
 //                xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v3));
                 xzStartTv.setText("金勋章");
-                Glide.with(mContext).load(level.get(3).getLevel_get_img()).into(xzStartIv);
+                Glide.with(mContext).load(level.get(3).getLevel_get_img()).into(xzEndIv);
 //                xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v4));
                 xzEndTv.setText("白金勋章");
                 break;
@@ -259,7 +259,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 Glide.with(mContext).load(level.get(3).getLevel_get_img()).into(xzStartIv);
 //                xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v4));
                 xzStartTv.setText("白金勋章");
-                Glide.with(mContext).load(level.get(4).getLevel_get_img()).into(xzStartIv);
+                Glide.with(mContext).load(level.get(4).getLevel_get_img()).into(xzEndIv);
 //                xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v5));
                 xzEndTv.setText("钻石勋章");
                 break;

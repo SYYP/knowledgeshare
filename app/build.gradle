@@ -21,7 +21,7 @@ android {
             keyAlias 'China'
             keyPassword 'fujuwang'
             storePassword 'fujuwang'
-            storeFile file('D:/keystore.jks')
+            storeFile file('E:/mywork/boyue.jks')
         }
     }
     buildTypes {
@@ -69,6 +69,13 @@ dependencies {
     //沉浸式
 
     //流式布局
+    compile files('libs/fastjson-1.2.5.jar')
+    compile files('libs/AMap_Location_V3.6.1_20171012.jar')
+    compile files('libs/litepal-1.6.1.jar')
+    //阿里云推送
+    compile files('libs/alipaySdk-20170922.jar')
+    //3D地图so及jar
+    //搜索功能
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:appcompat-v7:25.3.1'
@@ -92,6 +99,8 @@ dependencies {
     compile 'com.lzy.net:okgo:3.0.4'
     compile 'com.lzy.net:okserver:2.0.5'
     compile 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.1'
+    compile 'com.aliyun.ams:alicloud-android-push:3.1.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile files('libs/fastjson-1.2.5.jar')
@@ -100,10 +109,4 @@ dependencies {
     compile 'com.aliyun.ams:alicloud-android-push:3.1.0'
     //阿里云推送
     compile files('libs/alipaySdk-20170922.jar')
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    //3D地图so及jar
-    compile 'com.amap.api:3dmap:latest.integration'
-    //搜索功能
-    compile 'com.amap.api:search:latest.integration'
-    compile 'com.squareup.picasso:picasso:2.5.2'
 }

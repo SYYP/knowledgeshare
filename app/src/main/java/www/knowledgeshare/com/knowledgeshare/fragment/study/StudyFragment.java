@@ -22,11 +22,6 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.amap.api.services.weather.LocalWeatherForecastResult;
-import com.amap.api.services.weather.LocalWeatherLive;
-import com.amap.api.services.weather.LocalWeatherLiveResult;
-import com.amap.api.services.weather.WeatherSearch;
-import com.amap.api.services.weather.WeatherSearchQuery;
 import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
@@ -50,6 +45,7 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.NoteListBean;
+import www.knowledgeshare.com.knowledgeshare.bean.WeatherBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.SearchActivity;
@@ -66,7 +62,7 @@ import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 /**
  * Created by Administrator on 2017/11/17.
  */
-public class StudyFragment extends BaseFragment implements View.OnClickListener, AMapLocationListener, WeatherSearch.OnWeatherSearchListener {
+public class StudyFragment extends BaseFragment implements View.OnClickListener, AMapLocationListener{
     public TextView tv_search;
     public ImageView iv_message;
     public LinearLayout ll_download;
@@ -103,7 +99,6 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     //声明AMapLocationClientOption对象
     public AMapLocationClientOption mLocationOption = null;
     private AMapLocationClient mapLocationClient;
-    private WeatherSearch mweathersearch;
     private LinearLayout noteLl;
     private ImageView study_newNotice;
     private String note_count;
@@ -446,12 +441,13 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         if (aMapLocation != null) {
             if (aMapLocation.getErrorCode() == 0) {
                 study_city.setText(aMapLocation.getCity() + aMapLocation.getDistrict());
+                requsetWeather(aMapLocation.getCity());
                 //检索参数为城市和天气类型，实况天气为WEATHER_TYPE_LIVE、天气预报为WEATHER_TYPE_FORECAST
-                WeatherSearchQuery mquery = new WeatherSearchQuery(aMapLocation.getCity(), WeatherSearchQuery.WEATHER_TYPE_LIVE);
+                /*WeatherSearchQuery mquery = new WeatherSearchQuery(aMapLocation.getCity(), WeatherSearchQuery.WEATHER_TYPE_LIVE);
                 mweathersearch = new WeatherSearch(mContext);
                 mweathersearch.setOnWeatherSearchListener(this);
                 mweathersearch.setQuery(mquery);
-                mweathersearch.searchWeatherAsyn(); //异步搜索
+                mweathersearch.searchWeatherAsyn(); //异步搜索*/
 
                 Logger.e(aMapLocation.getLocationType() + "\n" + aMapLocation.getLatitude() + "\n" + aMapLocation.getLongitude() + "\n"
                         + aMapLocation.getAccuracy() + "\n" + aMapLocation.getAddress() + "\n" + aMapLocation.getProvince() + "\n"
@@ -468,26 +464,26 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
-    @Override
-    public void onWeatherLiveSearched(LocalWeatherLiveResult weatherLiveResult, int rCode) {
-        if (rCode == 1000) {
-            if (weatherLiveResult != null && weatherLiveResult.getLiveResult() != null) {
-                LocalWeatherLive weatherlive = weatherLiveResult.getLiveResult();
-                study_weather.setText(weatherlive.getWeather());
-                study_wendu.setText(weatherlive.getTemperature() + "℃");
-                //                wind.setText(weatherlive.getWindDirection()+"风     "+weatherlive.getWindPower()+"级");
-                //                humidity.setText("湿度         "+weatherlive.getHumidity()+"%");
-            } else {
-                TUtils.showShort(mContext, "没有天气信息");
-            }
-        } else {
-            TUtils.showShort(mContext, "获取天气信息失败");
-        }
-    }
-
-    @Override
-    public void onWeatherForecastSearched(LocalWeatherForecastResult localWeatherForecastResult, int i) {
-
+    private void requsetWeather(String city) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization","APPCODE 7142db13615540c4896b7963bb8c78be" );
+        HttpParams params = new HttpParams();
+        params.put("city",city);
+        OkGo.<WeatherBean>get("http://jisutqybmf.market.alicloudapi.com/weather/query")
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<WeatherBean>(WeatherBean.class) {
+                    @Override
+                    public void onSuccess(Response<WeatherBean> response) {
+                        WeatherBean body = response.body();
+                        if (body.getStatus().equals("0")){
+                            study_weather.setText(body.getResult().getWeather());
+                            study_wendu.setText(body.getResult().getTemp() + "℃");
+                        }else {
+                            Logger.e(body.getMsg());
+                        }
+                    }
+                });
     }
 
     class Studyadapter extends RecyclerView.Adapter<Studyadapter.MyViewholder> {
