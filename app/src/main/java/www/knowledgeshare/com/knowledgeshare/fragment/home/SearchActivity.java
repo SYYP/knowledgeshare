@@ -212,7 +212,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 ll_hot.setVisibility(View.GONE);
                 String content = et_search.getText().toString();
                 if (!TextUtils.isEmpty(content))
-                doSavehistory(content);
+                    doSavehistory(content);
                 ll_result.setVisibility(View.VISIBLE);
                 mMDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban1, mZhuanlan);
                 recycler_dashiban.setAdapter(mMDaShiBanAdapter);
@@ -319,6 +319,82 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 });
     }
 
+    private void doSearch2(final String content) {
+        HttpParams params = new HttpParams();
+        params.put("keyword", content);
+        OkGo.<SearchBean>get(MyContants.LXKURL + "search")
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<SearchBean>(SearchBean.class) {
+                    @Override
+                    public void onSuccess(Response<SearchBean> response) {
+                        int code = response.code();
+                        if (response.code() >= 200 && response.code() <= 204) {
+                            Logger.e(code + "");
+                            SearchBean searchBean = response.body();
+                            mXiaoke = searchBean.getXiaoke();
+                            mZhuanlan = searchBean.getZhuanlan();
+                            if (mZhuanlan.size() > 0 || mXiaoke.size() > 0) {
+                                recycler_search.setVisibility(View.VISIBLE);
+                                final List<SearchBean2> list = new ArrayList<SearchBean2>();
+                                if (mZhuanlan != null && mZhuanlan.size() > 0) {
+                                    for (int i = 0; i < mZhuanlan.size(); i++) {
+                                        SearchBean.ZhuanlanEntity entity = mZhuanlan.get(i);
+                                        String zl_name = entity.getZl_name();
+                                        int id = entity.getId();
+                                        list.add(new SearchBean2(zl_name, "zl", id + ""));
+                                    }
+                                }
+                                if (mXiaoke != null && mXiaoke.size() > 0) {
+                                    for (int i = 0; i < mXiaoke.size(); i++) {
+                                        SearchBean.XiaokeEntity entity = mXiaoke.get(i);
+                                        String xk_name = entity.getXk_name();
+                                        int id = entity.getXk_id();
+                                        list.add(new SearchBean2(xk_name, "xk", id + ""));
+                                    }
+                                }
+                                recycler_search.setVisibility(View.GONE);
+                                ll_lishi.setVisibility(View.GONE);
+                                ll_hot.setVisibility(View.GONE);
+                                String content = et_search.getText().toString();
+                                if (!TextUtils.isEmpty(content))
+                                    doSavehistory(content);
+                                ll_result.setVisibility(View.VISIBLE);
+                                mMDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban1, mZhuanlan);
+                                recycler_dashiban.setAdapter(mMDaShiBanAdapter);
+                                mMDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                        Intent intent = new Intent(SearchActivity.this, ZhuanLanActivity.class);
+                                        intent.putExtra("id", mMDaShiBanAdapter.getData().get(position).getId() + "");
+                                        startActivity(intent);
+                                    }
+                                });
+                                mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, mXiaoke);
+                                recycler_yinyueke.setAdapter(mYinYueKeAdapter);
+                                mYinYueKeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                        Intent intent = new Intent(SearchActivity.this, SoftMusicDetailActivity.class);
+                                        intent.putExtra("id", mYinYueKeAdapter.getData().get(position).getXk_id() + "");
+                                        startActivity(intent);
+                                    }
+                                });
+                                SoftKeyboardTool.closeKeyboard(SearchActivity.this);
+                            } else {
+                                Toast.makeText(SearchActivity.this, "抱歉，没有该课程~", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(SearchActivity.this, "抱歉，没有该课程~", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<SearchBean> response) {
+                        super.onError(response);
+                    }
+                });
+    }
 
     private void doSearchHot(final String content) {
         HttpParams params = new HttpParams();
@@ -340,7 +416,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                 ll_lishi.setVisibility(View.GONE);
                                 ll_hot.setVisibility(View.GONE);
                                 String content = et_search.getText().toString();
-                                if (!TextUtils.isEmpty(content)){
+                                if (!TextUtils.isEmpty(content)) {
                                     doSavehistory(content);
                                     doSearch(content);
                                 }
@@ -392,7 +468,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             mHistoryAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    doSearch(mHistoryAdapter.getData().get(position).getContent());
+                    doSearch2(mHistoryAdapter.getData().get(position).getContent());
                 }
             });
         } else {

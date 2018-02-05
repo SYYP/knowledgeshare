@@ -32,7 +32,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="13dp"
-            android:src="@drawable/icon_share2"/>
+            android:src="@drawable/icon_share"/>
     </RelativeLayout>
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nestView"

@@ -113,7 +113,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void SlidePopShow() {
-        if (isshow && !musicPop.isShowing() && mMyBinder.isPlaying()) {
+        if (isshow && !musicPop.isShowing()) {
             musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
             //            EventBean eventBean = new EventBean("rotate");
             //            EventBus.getDefault().postSticky(eventBean);
