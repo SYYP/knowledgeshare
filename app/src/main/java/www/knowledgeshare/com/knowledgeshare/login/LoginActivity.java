@@ -251,6 +251,7 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
                             finish();
                         }else {
                             TUtils.showShort(LoginActivity.this,loginBean.getMessage());
+
                         }
                     }
                 });
