@@ -143,6 +143,18 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
             //学习时长
             pretime = SystemClock.currentThreadTimeMillis();
         }
+
+        //暂停的时候才显示叉号
+        if (eventBean.getMsg().equals("home_bofang")) {
+            rl_bofang.setVisibility(View.VISIBLE);
+            iv_delete.setVisibility(View.GONE);
+        } else if (eventBean.getMsg().equals("home_pause")) {
+            isBofang = false;
+            iv_delete.setVisibility(View.VISIBLE);
+        } else if (eventBean.getMsg().equals("home_close")) {
+            isBofang = false;
+            rl_bofang.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -155,7 +167,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
         //绑定布局
         mPopView = inflater.inflate(R.layout.smallmusic, null);
         iv_delete = (ImageView) mPopView.findViewById(R.id.iv_delete);
-        iv_delete.setVisibility(View.VISIBLE);
+        iv_delete.setVisibility(View.GONE);//默认不显示
         iv_delete.setOnClickListener(this);
         iv_bo_head = (CircleImageView) mPopView.findViewById(R.id.iv_bo_head);
         tv_title = (TextView) mPopView.findViewById(R.id.tv_title);
@@ -165,6 +177,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
         iv_mulu = (ImageView) mPopView.findViewById(R.id.iv_mulu);
         iv_mulu.setOnClickListener(this);
         rl_bofang = (RelativeLayout) mPopView.findViewById(R.id.rl_bofang);
+        rl_bofang.setVisibility(View.GONE);//默认不显示
         Glide.with(mContext).load(header).into(iv_bo_head);
         tv_title.setText(title);
         tv_subtitle.setText(subtitle);
