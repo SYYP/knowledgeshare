@@ -485,7 +485,29 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                         }
                         break;
                     case Progress.ERROR:
-                        task.start();
+                        if (apnType == 0) {
+                            Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                            return;
+                        } else if (apnType == 2 || apnType == 3 || apnType == 4) {
+                            mTv_content.setText("当前无WiFi，是否允许用流量下载");
+                            mNetDialog.show();
+                            mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mNetDialog.dismiss();
+                                    task.pause();
+                                }
+                            });
+                            mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {//记住用户允许流量下载
+                                    SpUtils.putBoolean(mContext, "nowifiallowdown", true);
+                                    kaishiTv.setText("全部暂停");
+                                    task.start();
+                                    mNetDialog.dismiss();
+                                }
+                            });
+                        }
                         for (int i = 0; i < values.size(); i++) {
                             if (progress.status == Progress.LOADING) {
                                 kaishiTv.setText("全部暂停");

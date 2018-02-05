@@ -77,9 +77,10 @@ public class MessageActivity extends BaseActivity {
                             messageadapter.setOnItemClickListener(new Messageadapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(View view, int position) {
-                                    int id = response.body().getData().get(position).getZl_id();
+                                    int id = response.body().getData().get(position).getId();
                                     Intent intent = new Intent(MessageActivity.this, ZhuanLanDetail2Activity.class);
                                     intent.putExtra("id",id+"");
+                                    intent.putExtra("type","alreadyBuy");
                                     startActivity(intent);
                                 }
                             });

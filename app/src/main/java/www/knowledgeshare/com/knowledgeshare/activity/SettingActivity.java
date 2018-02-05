@@ -8,7 +8,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.lzy.okgo.OkGo;
 import com.lzy.okgo.db.DownloadManager;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.Response;
 import com.suke.widget.SwitchButton;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
@@ -17,7 +20,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.utils.DataCleanManager;
+import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
@@ -153,6 +159,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                             case 2:
                                 break;
                             case 3:
+                                requsetLogout();
                                 TUtils.showShort(SettingActivity.this,"退出");
                                 SpUtils.putBoolean(SettingActivity.this, "abool", false);
                                 SpUtils.putString(SettingActivity.this,"id","");
@@ -191,5 +198,18 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 })
                 .build()
                 .show();
+    }
+
+    private void requsetLogout() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        OkGo.<BaseBean>get(MyContants.logout)
+                .headers(headers)
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+
+                    }
+                });
     }
 }

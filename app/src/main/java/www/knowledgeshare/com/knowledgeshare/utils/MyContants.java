@@ -94,4 +94,6 @@ public class MyContants {
     public static final String taskList = BASEURL + "api/v2/user/task-list";
     //我的账号 金额列表
     public static final String changeShow = BASEURL + "api/v2/user/recharge-show";
+    //退出
+    public static final String logout = BASEURL + "api/v2/user/logout";
 }

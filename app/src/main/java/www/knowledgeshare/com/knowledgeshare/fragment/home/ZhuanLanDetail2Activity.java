@@ -426,6 +426,9 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                              public void onSuccess(Response<FreeTryReadDetailBean> response) {
                                  int code = response.code();
                                  mFreeTryReadDetailBean = response.body();
+                                 if (TextUtils.isEmpty(tv_title.getText().toString()) || tv_title.getText().toString().equals("")){
+                                     tv_title.setText(mFreeTryReadDetailBean.getParent_name());
+                                 }
                                  Glide.with(MyApplication.getGloableContext()).load(mFreeTryReadDetailBean.getT_header()).into(iv_teacher_head);
                                  tv_teacher_name.setText(mFreeTryReadDetailBean.getT_name());
                                  tv_time1.setText(mFreeTryReadDetailBean.getCreated_at());
