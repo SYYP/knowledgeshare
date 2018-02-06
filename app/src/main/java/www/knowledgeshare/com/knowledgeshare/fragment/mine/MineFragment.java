@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -63,7 +64,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.wdxz_rl) RelativeLayout wdxzRl;@BindView(R.id.zhaq_rl) RelativeLayout zhaqRl;
     @BindView(R.id.rwxq_ll) LinearLayout rwxqLl;@BindView(R.id.xz_start_tv) TextView xzStartTv;
     @BindView(R.id.xz_end_tv) TextView xzEndTv;@BindView(R.id.end_LL) LinearLayout endLl;
-    @BindView(R.id.linearlayout) LinearLayout linearLayout;
+    @BindView(R.id.linearlayout) LinearLayout linearLayout;@BindView(R.id.frame_layout) FrameLayout frameLayout;
+    @BindView(R.id.title_message_tv) TextView titleMessageTv;
     Unbinder unbinder;
     private UserInfoBean userInfoBean;
     private Intent intent;
@@ -90,6 +92,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             linearLayout.setVisibility(View.GONE);
         } else{
             linearLayout.setVisibility(View.VISIBLE);
+            frameLayout.setVisibility(View.VISIBLE);
             titleMessageIv.setVisibility(View.VISIBLE);
             titleSettingIv.setVisibility(View.VISIBLE);
             titleContentTv.setText("我的");
@@ -150,6 +153,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                             user_integral = userInfoBean.getUser_integral();
                             getLevel(user_level, user_integral);
                             zhyeTv.setText(userInfoBean.getUser_android_balance()+"");
+                            if (!userInfoBean.getNote_count().equals("0")){
+                                titleMessageTv.setVisibility(View.VISIBLE);
+                                titleMessageTv.setText(userInfoBean.getNote_count());
+                            }else {
+                                titleMessageTv.setVisibility(View.GONE);
+                            }
 //                            zhyeTv.setText(userInfoBean.getUser_android_balance()+"元");
                         }
                     }
@@ -168,6 +177,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                         int code = response.code();
                         if (code >= 200 && code <= 204){
                             userInfoBean = response.body();
+                            if (!userInfoBean.getNote_count().equals("0")){
+                                titleMessageTv.setVisibility(View.VISIBLE);
+                                titleMessageTv.setText(userInfoBean.getNote_count());
+                            }else {
+                                titleMessageTv.setVisibility(View.GONE);
+                            }
                             if (userInfoBean.getUser_name() != null && !userInfoBean.getUser_name().equals("")){
                                 mineNameTv.setText(userInfoBean.getUser_name());
                                 SpUtils.putString(mContext,"name",userInfoBean.getUser_name());

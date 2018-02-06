@@ -52,8 +52,17 @@ public class UserInfoBean extends BaseBean implements Serializable {
     private String xk_notice_time;
     private int study_day;
     private boolean is_sign;
+    private String note_count;
     private List<LevelBean> level;
     private List<ConfigBean> config;
+
+    public String getNote_count() {
+        return note_count;
+    }
+
+    public void setNote_count(String note_count) {
+        this.note_count = note_count;
+    }
 
     public int getId() {
         return id;

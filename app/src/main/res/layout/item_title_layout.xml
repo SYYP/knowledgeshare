@@ -4,15 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/text_red_dark">
-    <ImageView
-        android:id="@+id/title_message_iv"
+    <FrameLayout
+        android:id="@+id/frame_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:src="@drawable/power_message_title"
-        android:layout_centerVertical="true"/>
+        android:visibility="visible"
+        android:layout_centerVertical="true">
+        <ImageView
+            android:id="@+id/title_message_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:src="@drawable/study_message"/>
+        <TextView
+            android:id="@+id/title_message_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:background="@drawable/bg_xiaoxi"
+            android:textSize="10dp"
+            android:text="0"
+            android:gravity="center"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/red2"/>
+    </FrameLayout>
     <ImageView
         android:id="@+id/title_back_iv"
         android:layout_width="wrap_content"
