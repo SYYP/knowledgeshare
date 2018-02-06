@@ -127,11 +127,12 @@
             android:src="@drawable/login_message"/>
         <EditText
             android:id="@+id/verify_yanzheng"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
+            android:layout_toLeftOf="@+id/verify_huoqu"
             android:layout_toRightOf="@id/set_pwd"
             android:background="@null"
             android:gravity="left|center_vertical"

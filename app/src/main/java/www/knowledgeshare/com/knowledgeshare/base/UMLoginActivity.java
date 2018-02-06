@@ -90,7 +90,7 @@ public class UMLoginActivity extends BaseActivity {
             //            Toast.makeText(MyApplication.getGloableContext(), "登陆成功", Toast.LENGTH_SHORT).show();
             username = data.get("name");
             userhead = data.get("iconurl");
-            uid = data.get("uid");
+            uid = data.get("openid");
             Logger.e(data.toString());
             //            SpUtils.putString(MyApplication.getGloableContext(), "threeid", uid);
             //            SpUtils.putString(MyApplication.getGloableContext(), "logintype", "three");

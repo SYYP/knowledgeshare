@@ -8,6 +8,8 @@ public class MyContants {
 
     //短信发送
     public static final String verifycodes = BASEURL + "api/v2/verifycodes";
+    //绑定微信获取验证码
+    public static final String bindWxSms = BASEURL + "api/v2/verifycodes/wx-bind-code";
     //注册第一步
     public static final String registSetOne = BASEURL + "api/v2/register/set-one";
     //注册第二步

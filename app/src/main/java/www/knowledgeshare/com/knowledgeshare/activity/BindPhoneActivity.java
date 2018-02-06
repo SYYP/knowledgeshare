@@ -187,8 +187,9 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
         headers.put("X-Header-Sms","HxP&sU1YFs78RL&Src@G3YnN5ne3HYvR");
         HttpParams params = new HttpParams();
         params.put("mobile",verifyPhone.getText().toString());
+        Logger.e(verifyPhone.getText().toString());
 
-        OkGo.<VerifyCodesBean>post(MyContants.getPwdCode)
+        OkGo.<VerifyCodesBean>post(MyContants.bindWxSms)
                 .tag(this)
                 .headers(headers)
                 .params(params)
@@ -213,8 +214,10 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
         params.put("code",verifyYanzheng.getText().toString());
         params.put("wx_unionid",wxId);
         params.put("wx_name",name);
+        params.put("wx_avatar",userFace);
         params.put("device_token",device_token);
         params.put("from_type","2");
+        Logger.e(verifyPhone.getText().toString()+"\n"+verifyYanzheng.getText().toString()+"\n"+wxId+"\n"+name+"\n"+userFace+"\n"+device_token);
 
         OkGo.<LoginBean>post(MyContants.bindMobile)
                 .tag(this)
