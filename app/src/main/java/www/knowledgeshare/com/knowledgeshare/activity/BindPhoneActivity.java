@@ -22,6 +22,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.orhanobut.logger.Logger;
 
+import org.greenrobot.eventbus.EventBus;
 import org.zackratos.ultimatebar.UltimateBar;
 
 import java.util.UUID;
@@ -30,6 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.LoginBean;
 import www.knowledgeshare.com.knowledgeshare.bean.VerifyCodesBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
@@ -231,6 +233,7 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
                             SpUtils.putString(BindPhoneActivity.this,"name",loginBean.getUser().getUser_name());
                             SpUtils.putString(BindPhoneActivity.this,"userFace",loginBean.getUser().getUser_avatar());
                             SpUtils.putString(BindPhoneActivity.this,"wx_id",loginBean.getUser().getWx_unionid());
+                            SpUtils.putString(BindPhoneActivity.this,"mobile",loginBean.getUser().getWx_unionid());
                             String token = loginBean.getToken();
                             SpUtils.putString(BindPhoneActivity.this,"token",token);
                             long ttlMs = loginBean.getTtl() * 60 * 1000L;
@@ -249,6 +252,7 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
                                 finish();
                             }if (flag == 1){
                                 TUtils.showShort(BindPhoneActivity.this,"绑定成功");
+                                EventBus.getDefault().postSticky(new EventBean("bindshouji"));
                                 finish();
                             }
 

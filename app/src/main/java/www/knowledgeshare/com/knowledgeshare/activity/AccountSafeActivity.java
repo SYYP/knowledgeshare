@@ -21,6 +21,10 @@ import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareConfig;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.Map;
 
 import butterknife.BindView;
@@ -28,6 +32,7 @@ import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.login.AlterActivity;
 import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
@@ -59,7 +64,18 @@ public class AccountSafeActivity extends BaseActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_safe);
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         initView();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("bindshouji")) {
+            mobile = SpUtils.getString(this, "mobile", "");
+            if (mobile != null || !mobile.equals("")){
+                telTv.setText(mobile);
+            }
+        }
     }
 
     private void initView() {
@@ -88,7 +104,7 @@ public class AccountSafeActivity extends BaseActivity implements View.OnClickLis
                 finish();
                 break;
             case R.id.bdsjh_rl:
-                if (mobile == null){
+                if (mobile == null || mobile.equals("")){
                     Intent intent = new Intent(this, BindPhoneActivity.class);
                     intent.putExtra("type","isbind");
                     startActivity(intent);
