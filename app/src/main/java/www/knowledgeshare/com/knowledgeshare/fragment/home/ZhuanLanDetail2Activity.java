@@ -135,7 +135,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
                     if (TextUtils.equals(resultStatus, "9000")) {
                         Toast.makeText(ZhuanLanDetail2Activity.this, "支付成功", Toast.LENGTH_SHORT).show();
-//                        finish();
+                        //                        finish();
                         showPaySuccessDialog();
                     } else {
                         // 判断resultStatus 为非"9000"则代表可能支付失败
@@ -174,6 +174,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         // 将该app注册到微信
         api.registerApp(WX_APPID);
     }
+
     private boolean weixinpaysuccess;
 
     @Override
@@ -188,13 +189,13 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     protected void onResume() {
         super.onResume();
         pretime = System.currentTimeMillis();
-//        Toast.makeText(this, " "+pretime, Toast.LENGTH_SHORT).show();
+        //        Toast.makeText(this, " "+pretime, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-//        Toast.makeText(this, " "+System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
+        //        Toast.makeText(this, " "+System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
         long lasttime = System.currentTimeMillis() - pretime;
         if (!StudyTimeUtils.isHave("zhuanlandetail", mId)) {
             StudyTimeBean studyTimeBean = new StudyTimeBean(Integer.parseInt(mId), "zhuanlandetail",
@@ -319,9 +320,22 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
             isBofang = false;
             iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
         }
-        //当在该页面下拉通知栏点击暂停的时候这边按钮也要变化
         if (eventBean.getMsg().equals("weixinpaysuccess")) {
             weixinpaysuccess = true;
+        }
+        //下面这些不好使，不知道为什么
+        if (eventBean.getMsg().equals("home_pause")) {
+            SpUtils.putString(ZhuanLanDetail2Activity.this, "zlisbofang", "");
+            isBofang = false;
+            iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
+        } else if (eventBean.getMsg().equals("home_close")) {
+            SpUtils.putString(ZhuanLanDetail2Activity.this, "zlisbofang", "");
+            isBofang = false;
+            iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
+        } else if (eventBean.getMsg().equals("norotate")) {
+            SpUtils.putString(ZhuanLanDetail2Activity.this, "zlisbofang", "");
+            isBofang = false;
+            iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
         }
     }
 
@@ -369,7 +383,11 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 mNetDialog.dismiss();
                 ClickPopShow();
                 SpUtils.putBoolean(this, "nowifiallowlisten", true);
-                isBofang=true;
+                isBofang = true;
+                //这个判断专栏的音频是否播放，哪个在播放
+                SpUtils.putString(ZhuanLanDetail2Activity.this, "zlisbofang", mFreeTryReadDetailBean.getVideo_url());
+                iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
+                isBofang = true;
             } else {
                 mNetDialog.show();
                 mNetDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
@@ -382,7 +400,11 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                         mNetDialog.dismiss();
                         ClickPopShow();
                         SpUtils.putBoolean(ZhuanLanDetail2Activity.this, "nowifiallowlisten", true);
-                        isBofang=true;
+                        isBofang = true;
+                        //这个判断专栏的音频是否播放，哪个在播放
+                        SpUtils.putString(ZhuanLanDetail2Activity.this, "zlisbofang", mFreeTryReadDetailBean.getVideo_url());
+                        iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
+                        isBofang = true;
                     }
                 });
                 mNetDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
@@ -390,20 +412,24 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                     public void onClick(View v) {
                         mNetDialog.dismiss();
                         iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
-                        isBofang=false;
+                        isBofang = false;
                     }
                 });
             }
         } else if (NetWorkUtils.isMobileConnected(ZhuanLanDetail2Activity.this)) {
             Toast.makeText(this, "wifi不可用呢~", Toast.LENGTH_SHORT).show();
-            isBofang=false;
+            isBofang = false;
         } else {
-            isBofang=true;
+            isBofang = true;
             playerBean.setMsg("refreshplayer");
             EventBus.getDefault().postSticky(playerBean);
             mMyBinder.setMusicUrl(playerBean.getVideo_url());
             mMyBinder.playMusic(playerBean);
             ClickPopShow();
+            //这个判断专栏的音频是否播放，哪个在播放
+            SpUtils.putString(ZhuanLanDetail2Activity.this, "zlisbofang", mFreeTryReadDetailBean.getVideo_url());
+            iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
+            isBofang = true;
         }
     }
 
@@ -415,7 +441,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         params.put("userid", SpUtils.getString(this, "id", ""));
         if (getIntent().getStringExtra("type") != null) {
             params.put("type", "2");
-        }else {
+        } else {
             params.put("type", "1");
         }
         OkGo.<FreeTryReadDetailBean>post(MyContants.LXKURL + "zl/trials-show")
@@ -426,7 +452,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                              public void onSuccess(Response<FreeTryReadDetailBean> response) {
                                  int code = response.code();
                                  mFreeTryReadDetailBean = response.body();
-                                 if (TextUtils.isEmpty(tv_title.getText().toString()) || tv_title.getText().toString().equals("")){
+                                 if (TextUtils.isEmpty(tv_title.getText().toString()) || tv_title.getText().toString().equals("")) {
                                      tv_title.setText(mFreeTryReadDetailBean.getParent_name());
                                  }
                                  Glide.with(MyApplication.getGloableContext()).load(mFreeTryReadDetailBean.getT_header()).into(iv_teacher_head);
@@ -445,6 +471,24 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                      iv_collect.setImageResource(R.drawable.weiguanzhuxin);
                                  }
                                  initWebView(mFreeTryReadDetailBean.getZl_h5_url());
+                                 //判断哪个专栏的音频在播放
+                                 String zlisbofang = SpUtils.getString(ZhuanLanDetail2Activity.this, "zlisbofang", "");
+                                 if (!TextUtils.isEmpty(zlisbofang)) {
+                                     if (zlisbofang.equals(mFreeTryReadDetailBean.getVideo_url())) {
+                                         isBofang = true;
+                                         iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
+                                     } else {
+                                         isBofang = false;
+                                         iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
+                                     }
+                                 } else {
+                                     isBofang = false;
+                                     iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
+                                 }
+                                 if (!mMyBinder.isPlaying()){
+                                     isBofang = false;
+                                     iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
+                                 }
                              }
                          }
                 );
@@ -685,7 +729,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("id", mFreeTryReadDetailBean.getZl_id()+"");
+        params.put("id", mFreeTryReadDetailBean.getZl_id() + "");
         params.put("type", "zhuanlan");
         params.put("from", "android");
         OkGo.<OrderBean>post(MyContants.LXKURL + "order/buy")
@@ -828,7 +872,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 mDialog.dismiss();
                 removeAllActivitys();
                 Intent intent = new Intent(ZhuanLanDetail2Activity.this, MainActivity.class);
-                intent.putExtra("gobuy","gobuy");
+                intent.putExtra("gobuy", "gobuy");
                 startActivity(intent);
             }
         });
@@ -880,14 +924,14 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
             case R.id.iv_bofang:
                 if (!isBofang) {
                     //                    Toast.makeText(this, "播放", Toast.LENGTH_SHORT).show();
-                    if (mMyBinder.isClosed()) {
+                    if (mMyBinder.isClosed()||!mMyBinder.getPlayingUrl().equals(mFreeTryReadDetailBean.getVideo_url())) {
                         PlayerBean playerBean = new PlayerBean(mFreeTryReadDetailBean.getT_header(),
                                 mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getT_tag(),
                                 mFreeTryReadDetailBean.getVideo_url());
                         gobofang(playerBean);
                         addListenCount(mFreeTryReadDetailBean.getId() + "");
                         MusicTypeBean musicTypeBean = new MusicTypeBean("zhuanlandetail",
-                                mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getId()+"",
+                                mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getId() + "",
                                 mFreeTryReadDetailBean.isIsfav());
                         musicTypeBean.setMsg("musicplayertype");
                         EventBus.getDefault().postSticky(musicTypeBean);
@@ -912,7 +956,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                         iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
                         setISshow(true);
                         mMyBinder.playMusic();
-                        isBofang=true;
+                        isBofang = true;
                     }
                 } else {
                     //                    Toast.makeText(this, "暂停", Toast.LENGTH_SHORT).show();
@@ -922,7 +966,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                     EventBus.getDefault().postSticky(eventBean);
                     EventBean eventBean2 = new EventBean("home_pause");
                     EventBus.getDefault().postSticky(eventBean2);
-                    isBofang=false;
+                    isBofang = false;
                 }
                 break;
             case R.id.iv_download:
@@ -954,7 +998,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                 download();
                             }
                         });
-                    }else {
+                    } else {
                         download();
                     }
                 } else {
@@ -975,7 +1019,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         }
     }
 
-    private void download(){
+    private void download() {
         String created_at = mFreeTryReadDetailBean.getCreated_at();
         String[] split = created_at.split(" ");
 
@@ -1000,7 +1044,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         listBean.setDianzan(mFreeTryReadDetailBean.isIsfav());
         listBean.setCollected(mFreeTryReadDetailBean.isIsfav());
         list.add(listBean);
-        if (MyUtils.isHaveFile("zhuanlan",mFreeTryReadDetailBean.getName() + mFreeTryReadDetailBean.getZl_id() + "_" + mFreeTryReadDetailBean.getId() + ".mp3")){
+        if (MyUtils.isHaveFile("zhuanlan", mFreeTryReadDetailBean.getName() + mFreeTryReadDetailBean.getZl_id() + "_" + mFreeTryReadDetailBean.getId() + ".mp3")) {
             Toast.makeText(ZhuanLanDetail2Activity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
             return;
         }

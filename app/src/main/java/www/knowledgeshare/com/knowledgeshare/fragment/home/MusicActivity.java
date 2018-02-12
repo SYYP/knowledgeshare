@@ -197,7 +197,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                 iv_pause.setImageResource(R.drawable.pause_yellow_big);
             }
             play_seek.setMax(mMyBinder.getProgress());
-            music_duration.setText(time.format(mMyBinder.getProgress()) + "");
+            String format = time.format(mMyBinder.getProgress());
+            music_duration.setText(format);
             initCollect();
         }
     }
@@ -255,7 +256,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                 iv_pause.setImageResource(R.drawable.pause_yellow_big);
             }
             play_seek.setMax(mMyBinder.getProgress());
-            music_duration.setText(time.format(mMyBinder.getProgress()) + "");
+            String format = time.format(mMyBinder.getProgress());
+            music_duration.setText(format);
             mMyBinder.refreshhuanchong();
             play_seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override

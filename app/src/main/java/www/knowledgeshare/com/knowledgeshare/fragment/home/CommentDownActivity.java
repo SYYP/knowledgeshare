@@ -172,6 +172,7 @@ public class CommentDownActivity extends BaseActivity implements View.OnClickLis
             String created_at = item.getCreated_at();
             Logger.e(created_at);
             String[] split = created_at.split(" ");
+            helper.setVisible(R.id.tv_time,false);//先隐藏掉
             helper.setText(R.id.tv_name, item.getVideo_name())
                     .setText(R.id.tv_date, split[0])
                     .setText(R.id.tv_time, item.getVideo_time())

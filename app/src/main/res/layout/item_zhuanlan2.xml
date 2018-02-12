@@ -35,6 +35,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:singleLine="true"
+            android:layout_marginRight="50dp"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:text="崔宗顺的男低音歌唱家秘籍"/>

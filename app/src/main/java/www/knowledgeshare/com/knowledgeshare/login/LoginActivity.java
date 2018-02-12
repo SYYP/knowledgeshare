@@ -1,14 +1,10 @@
 package www.knowledgeshare.com.knowledgeshare.login;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
@@ -20,31 +16,26 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.sdk.android.push.CloudPushService;
+import com.alibaba.sdk.android.push.CommonCallback;
+import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.orhanobut.logger.Logger;
-import com.umeng.socialize.Config;
-import com.umeng.socialize.PlatformConfig;
-import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareConfig;
-import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.zackratos.ultimatebar.UltimateBar;
 
-import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.activity.BindPhoneActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.MainActivity;
 import www.knowledgeshare.com.knowledgeshare.activity.RegisterActivity;
-import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.base.UMLoginActivity;
-import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.bean.LoginBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
@@ -248,6 +239,19 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.putExtra("token",token);
                             startActivity(intent);
+                            //阿里云推送绑定账号
+                            final CloudPushService pushService = PushServiceFactory.getCloudPushService();
+                            pushService.bindAccount(login_phone.getText().toString(), new CommonCallback() {
+                                @Override
+                                public void onSuccess(String s) {
+
+                                }
+
+                                @Override
+                                public void onFailed(String s, String s1) {
+
+                                }
+                            });
                             finish();
                         }else {
                             TUtils.showShort(LoginActivity.this,loginBean.getMessage());

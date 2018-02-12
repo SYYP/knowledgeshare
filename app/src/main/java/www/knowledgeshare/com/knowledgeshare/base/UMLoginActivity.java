@@ -1,18 +1,15 @@
 package www.knowledgeshare.com.knowledgeshare.base;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.alibaba.sdk.android.push.CloudPushService;
+import com.alibaba.sdk.android.push.CommonCallback;
+import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
@@ -22,7 +19,6 @@ import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.Map;
-import java.util.UUID;
 
 import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.activity.BindPhoneActivity;
@@ -30,7 +26,6 @@ import www.knowledgeshare.com.knowledgeshare.activity.MainActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.bean.LoginBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
-import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
@@ -201,6 +196,19 @@ public class UMLoginActivity extends BaseActivity {
                             Intent intent = new Intent(mContext, MainActivity.class);
                             intent.putExtra("token",token);
                             mContext.startActivity(intent);
+                            //阿里云推送绑定账号
+                            final CloudPushService pushService = PushServiceFactory.getCloudPushService();
+                            pushService.bindAccount(loginBean.getUser().getUser_mobile(), new CommonCallback() {
+                                @Override
+                                public void onSuccess(String s) {
+
+                                }
+
+                                @Override
+                                public void onFailed(String s, String s1) {
+
+                                }
+                            });
                             mContext.finish();
                         }else if (response.code() == 404){
                             //TODO 微信登录，没有绑定帐号

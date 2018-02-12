@@ -372,7 +372,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     tv_buy.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
                     tv_study.setTextColor(getResources().getColor(R.color.tab_text_selected_color));
                     tv_mine.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
-
                 }
                 break;
             case R.id.ll_listen:
@@ -398,6 +397,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     EventBean eventBean = new EventBean("home_pause");
                     EventBus.getDefault().postSticky(eventBean);
                     mMyBinder.pauseMusic();
+                    ////////////////专栏详情里面的
+                    SpUtils.putString(this, "zlisbofang", "");
                 }
                 isPause = !isPause;
                 break;

@@ -348,6 +348,10 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             return MediaService.this;
         }
 
+        public String getPlayingUrl(){
+            return mMusicUrl;
+        }
+
         /**
          * 播放音乐
          */

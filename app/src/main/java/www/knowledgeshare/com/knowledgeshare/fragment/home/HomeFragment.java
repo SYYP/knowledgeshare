@@ -880,7 +880,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         @Override
         protected void convert(final BaseViewHolder helper, final HomeBean.DailyEntity item) {
-            helper.getView(R.id.tv_teacher_name).setVisibility(View.VISIBLE);
+            helper.getView(R.id.tv_teacher_name).setVisibility(View.GONE);
             final ImageView iv_pause = helper.getView(R.id.iv_pause);
             if (item.isChecked()) {
                 iv_pause.setImageResource(R.drawable.bofang_yellow);
