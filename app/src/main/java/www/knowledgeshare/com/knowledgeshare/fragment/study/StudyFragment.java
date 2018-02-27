@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,7 @@ import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.SearchActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.CollectActivity;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.login.MessageActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
@@ -111,6 +113,15 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+        if (!hidden) {
+            String id = SpUtils.getString(mContext, "id", "");
+            if (TextUtils.isEmpty(id)) {
+                Intent intent = new Intent(mContext, LoginActivity.class);
+                startActivity(intent);
+                mActivity.overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
+                return;
+            }
+        }
         requestNoteList("");
         study_name.setText("Hi  " + SpUtils.getString(mContext, "name", ""));
     }

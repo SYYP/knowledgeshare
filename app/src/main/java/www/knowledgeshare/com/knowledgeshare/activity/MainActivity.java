@@ -168,7 +168,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void pop() {
-        if (SpUtils.getBoolean(this, "homewindow", false)) {
+        if (!SpUtils.getBoolean(this, "homewindow", false)) {
             return;
         }
         HttpParams params2 = new HttpParams();
@@ -234,7 +234,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                         }
                                     }
                                 });
-                                SpUtils.putBoolean(MainActivity.this, "homewindow", true);
+                                SpUtils.putBoolean(MainActivity.this, "homewindow", false);
                             }
                         } else {
 
@@ -295,11 +295,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             iv_listen.clearAnimation();
             iv_listen.setImageResource(R.drawable.tab_listen_pause);
             //播放界面传来的
-        }else if (eventBean.getMsg().equals("wifidown")){
+        } else if (eventBean.getMsg().equals("wifidown")) {
             OkDownload.getInstance().startAll();
-        } else if (eventBean.getMsg().equals("nonetwork")){
+        } else if (eventBean.getMsg().equals("nonetwork")) {
             Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
-        }else if (eventBean.getMsg().equals("nonetwork1")){
+        } else if (eventBean.getMsg().equals("nonetwork1")) {
             OkDownload.getInstance().pauseAll();
         }
     }
@@ -338,6 +338,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        String id = SpUtils.getString(this, "id", "");
         switch (v.getId()) {
             case R.id.ll_home:
                 //  position = 0;
@@ -355,6 +356,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 tv_mine.setTextColor(getResources().getColor(R.color.tab_text_normal_color));
                 break;
             case R.id.ll_study:
+                if (TextUtils.isEmpty(id)) {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
+                    return;
+                }
                 if (!abool) {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
@@ -375,7 +382,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 }
                 break;
             case R.id.ll_listen:
-                if (!NetWorkUtils.isNetworkConnected(this)){
+                if (!NetWorkUtils.isNetworkConnected(this)) {
                     Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -403,6 +410,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 isPause = !isPause;
                 break;
             case R.id.ll_buy:
+                if (TextUtils.isEmpty(id)) {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
+                    return;
+                }
                 if (!abool) {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
@@ -423,6 +436,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 }
                 break;
             case R.id.ll_mine:
+                if (TextUtils.isEmpty(id)) {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
+                    return;
+                }
                 if (!abool) {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
@@ -494,7 +513,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         } else {
             EventBean eventBean = new EventBean("home_pause");//发一个保证正在播放音频的学习时长的终止
             EventBus.getDefault().postSticky(eventBean);
-            SpUtils.putBoolean(this, "homewindow", false);
+            SpUtils.putBoolean(this, "homewindow", true);
             SpUtils.putBoolean(this, "nowifiallowdown", false);
             SpUtils.putBoolean(this, "nowifiallowlisten", false);
             super.onBackPressed();//相当于finish()

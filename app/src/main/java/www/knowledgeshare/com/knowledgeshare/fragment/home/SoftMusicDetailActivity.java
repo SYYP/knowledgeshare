@@ -161,7 +161,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                             Toast.makeText(SoftMusicDetailActivity.this, "支付结果确认中", Toast.LENGTH_SHORT).show();
                         } else {
                             // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
-                            Toast.makeText(SoftMusicDetailActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SoftMusicDetailActivity.this, "支付宝支付取消", Toast.LENGTH_SHORT).show();
                         }
                     }
                     break;
@@ -198,13 +198,13 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
             weixinpaysuccess = true;
         }
         if (eventBean.getMsg().equals("refresh_xk")) {
-            String id=eventBean.getMsg2();
+            String id = eventBean.getMsg2();
             for (int i = 0; i < mChild.size(); i++) {
                 String id1 = mChild.get(i).getId() + "";
-                if (id.equals(id1)){
-//                    recycler_free.scrollToPosition(i);
+                if (id.equals(id1)) {
+                    //                    recycler_free.scrollToPosition(i);
                     int measuredHeight = tv_teacher_intro.getMeasuredHeight();
-                    nestView.scrollTo(0,MyUtils.dip2px(this,200+measuredHeight+i*70));
+                    nestView.scrollTo(0, MyUtils.dip2px(this, 200 + measuredHeight + i * 70));
                     return;
                 }
             }
@@ -309,11 +309,11 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
 
             @Override
             public void onLoadmore() {
-//                loadMoreComment(lastID + "");
+                //                loadMoreComment(lastID + "");
             }
         });
         springview.setHeader(new MyHeader(this));
-//        springview.setFooter(new MyFooter(this));
+        //        springview.setFooter(new MyFooter(this));
     }
 
     private void initView() {
@@ -372,7 +372,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
         params.put("userid", SpUtils.getString(this, "id", ""));
         if (getIntent().getStringExtra("type") != null) {
             params.put("type", "2");
-        }else {
+        } else {
             params.put("type", "1");
         }
         OkGo.<SoftMusicDetailBean>post(MyContants.LXKURL + "xk/show")
@@ -383,7 +383,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                              public void onSuccess(Response<SoftMusicDetailBean> response) {
                                  int code = response.code();
                                  mMusicDetailBean = response.body();
-                                 RequestOptions options=new RequestOptions();
+                                 RequestOptions options = new RequestOptions();
                                  options.error(R.drawable.default_banner);
                                  options.placeholder(R.drawable.default_banner);
                                  Glide.with(MyApplication.getGloableContext()).load(mMusicDetailBean.getImgurl()).apply(options).into(iv_beijing);
@@ -415,7 +415,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                          if (mLieBiaoAdapter.getData().get(position).getIs_try() != 1
-                                                 &&getIntent().getStringExtra("type") == null) {
+                                                 && getIntent().getStringExtra("type") == null) {
                                              showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
                                          } else {
                                              setISshow(true);
@@ -452,8 +452,8 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                                          entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
                                                          entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
                                                          , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url()
-                                                         , SystemClock.currentThreadTimeMillis(),mMusicDetailBean.getXk_class_id() + "",
-                                                         entity.getParent_name(),entity.getTxt_url());
+                                                         , SystemClock.currentThreadTimeMillis(), mMusicDetailBean.getXk_class_id() + "",
+                                                         entity.getParent_name(), entity.getTxt_url());
                                                  histroyBeanList.add(bofangHistroyBean);
                                              }
                                              MediaService.insertBoFangHistroyList(histroyBeanList);
@@ -482,17 +482,19 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
     @Override
     protected void onPause() {
         super.onPause();
-        for (int i = 0; i < mChild.size(); i++) {
-            if (mChild.get(i).isChecked()){
-                size++;
+        if (mChild != null) {
+            for (int i = 0; i < mChild.size(); i++) {
+                if (mChild.get(i).isChecked()) {
+                    size++;
+                }
             }
+            double jindu = new BigDecimal((float) size / mChild.size()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            Logger.e(jindu + "");
+            BofangjinduBean bean = new BofangjinduBean(mMusicDetailBean.getId() + "", jindu);
+            JinduUtils.add(bean);
+            EventBean eventBean = new EventBean("jindu");
+            EventBus.getDefault().postSticky(eventBean);
         }
-        double jindu = new BigDecimal((float)size/mChild.size()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-        Logger.e(jindu+"");
-        BofangjinduBean bean = new BofangjinduBean(mMusicDetailBean.getId()+"",jindu);
-        JinduUtils.add(bean);
-        EventBean eventBean = new EventBean("jindu");
-        EventBus.getDefault().postSticky(eventBean);
     }
 
     private void addListenCount(String id) {
@@ -618,19 +620,20 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
 
         @Override
         protected void convert(final BaseViewHolder helper, final SoftMusicDetailBean.ChildEntity item) {
+            TextView tv_trylisten=helper.getView(R.id.tv_trylisten);
             if (getIntent().getStringExtra("type") != null) {
-                helper.setVisible(R.id.tv_trylisten, false);
+                tv_trylisten.setVisibility(View.INVISIBLE);
                 helper.setVisible(R.id.iv_wengao, true);
             } else {
                 if (item.getIs_try() == 1) {
-                    helper.setVisible(R.id.tv_trylisten, true);
+                    tv_trylisten.setVisibility(View.VISIBLE);
                 } else {
-                    helper.setVisible(R.id.tv_trylisten, false);
+                    tv_trylisten.setVisibility(View.INVISIBLE);
                 }
-                ImageView iv_wengao=helper.getView(R.id.iv_wengao);
+                ImageView iv_wengao = helper.getView(R.id.iv_wengao);
                 if (item.getIs_try() == 1) {
                     iv_wengao.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     iv_wengao.setVisibility(View.INVISIBLE);
                 }
             }
@@ -666,7 +669,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
             });
             if (helper.getAdapterPosition() <= 8) {
                 helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
-            }else {
+            } else {
                 helper.setText(R.id.tv_order, "" + (helper.getAdapterPosition() + 1));
             }
         }
@@ -979,7 +982,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                 listBean.setDianzan(childEntity.isIslive());
                                 listBean.setCollected(childEntity.isIsfav());
                                 list.add(listBean);
-                                if (MyUtils.isHaveFile("xiaoke",childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId() + ".mp3")){
+                                if (MyUtils.isHaveFile("xiaoke", childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId() + ".mp3")) {
                                     Toast.makeText(SoftMusicDetailActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
@@ -1018,7 +1021,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                 mNetDialog.dismiss();
                             }
                         });
-                    }else {
+                    } else {
                         SoftMusicDetailBean.ChildEntity childEntity = mChild.get(adapterPosition);
                         String created_at = childEntity.getCreated_at();
                         String[] split = created_at.split(" ");
@@ -1042,7 +1045,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                         listBean.setDianzan(childEntity.isIslive());
                         listBean.setCollected(childEntity.isIsfav());
                         list.add(listBean);
-                        if (MyUtils.isHaveFile("xiaoke",childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId() + ".mp3")){
+                        if (MyUtils.isHaveFile("xiaoke", childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId() + ".mp3")) {
                             Toast.makeText(SoftMusicDetailActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -1104,7 +1107,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                     listBean.setDianzan(childEntity.isIslive());
                     listBean.setCollected(childEntity.isIsfav());
                     list.add(listBean);
-                    if (MyUtils.isHaveFile("xiaoke",childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId() + ".mp3")){
+                    if (MyUtils.isHaveFile("xiaoke", childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId() + ".mp3")) {
                         Toast.makeText(SoftMusicDetailActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -1359,7 +1362,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                      req.partnerId = wxPayBean.getPartnerid();// 微信支付分配的商户号
                                      req.prepayId = wxPayBean.getPrepayid();// 预支付订单号，app服务器调用“统一下单”接口获取
                                      req.nonceStr = wxPayBean.getNoncestr();// 随机字符串，不长于32位，服务器小哥会给咱生成
-                                     req.timeStamp = wxPayBean.getTimestamp()+"";// 时间戳，app服务器小哥给出
+                                     req.timeStamp = wxPayBean.getTimestamp() + "";// 时间戳，app服务器小哥给出
                                      req.packageValue = wxPayBean.getPackage1();// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
                                      req.sign = wxPayBean.getSign();// 签名，服务器小哥给出
                                      //                        req.extData = "app data"; // optional
@@ -1461,7 +1464,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                 mDialog.dismiss();
                 removeAllActivitys();
                 Intent intent = new Intent(SoftMusicDetailActivity.this, MainActivity.class);
-                intent.putExtra("gobuy","gobuy");
+                intent.putExtra("gobuy", "gobuy");
                 startActivity(intent);
             }
         });
@@ -1488,8 +1491,8 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                 break;
             case R.id.tv_search:
                 Intent intent1 = new Intent(this, SearchMusicActivity2.class);
-//                intent1.putExtra("type","xk");
-                intent1.putExtra("id",mMusicDetailBean.getId()+"");
+                //                intent1.putExtra("type","xk");
+                intent1.putExtra("id", mMusicDetailBean.getId() + "");
                 startActivity(intent1);
                 break;
             case R.id.tv_share:
@@ -1557,8 +1560,8 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                 entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
                                 entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
                                 , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url()
-                                , SystemClock.currentThreadTimeMillis(),mMusicDetailBean.getXk_class_id() + "",
-                                entity.getParent_name(),entity.getTxt_url());
+                                , SystemClock.currentThreadTimeMillis(), mMusicDetailBean.getXk_class_id() + "",
+                                entity.getParent_name(), entity.getTxt_url());
                         histroyBeanList.add(bofangHistroyBean);
                     }
                     MediaService.insertBoFangHistroyList(histroyBeanList);

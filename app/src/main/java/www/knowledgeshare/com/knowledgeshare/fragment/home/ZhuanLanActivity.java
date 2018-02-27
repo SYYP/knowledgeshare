@@ -122,7 +122,7 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                             Toast.makeText(ZhuanLanActivity.this, "支付结果确认中", Toast.LENGTH_SHORT).show();
                         } else {
                             // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
-                            Toast.makeText(ZhuanLanActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ZhuanLanActivity.this, "支付宝支付取消", Toast.LENGTH_SHORT).show();
                         }
                     }
                     break;

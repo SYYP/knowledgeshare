@@ -44,6 +44,7 @@ import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.UserInfoBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
@@ -122,6 +123,15 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+        if (!hidden) {
+            String id = SpUtils.getString(mContext, "id", "");
+            if (TextUtils.isEmpty(id)) {
+                Intent intent = new Intent(mContext, LoginActivity.class);
+                startActivity(intent);
+                mActivity.overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
+                return;
+            }
+        }
         apnType = NetWorkUtils.getAPNType(mContext);
         if (apnType == 0) {
 //            Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();

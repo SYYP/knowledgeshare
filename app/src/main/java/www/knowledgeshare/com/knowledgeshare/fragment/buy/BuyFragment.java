@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,6 +37,8 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.adapter.BuyTabAdapter;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.SearchActivity;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.NoScrollViewPager;
 
 /**
@@ -71,6 +74,14 @@ public class BuyFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+        if (!hidden) {
+            String id = SpUtils.getString(mContext, "id", "");
+            if (TextUtils.isEmpty(id)) {
+                Intent intent = new Intent(mContext, LoginActivity.class);
+                startActivity(intent);
+                mActivity.overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
+            }
+        }
     }
 
     @Override
@@ -115,7 +126,7 @@ public class BuyFragment extends BaseFragment implements View.OnClickListener {
         linearLayout.setDividerDrawable(ContextCompat.getDrawable(getActivity(),
                 R.drawable.layout_divider_vertical));
 
-        BuyTabAdapter adapter = new BuyTabAdapter(getActivity().getSupportFragmentManager(),fragmentList,tab_list);
+        BuyTabAdapter adapter = new BuyTabAdapter(getActivity().getSupportFragmentManager(), fragmentList, tab_list);
         buyViewpager.setAdapter(adapter);
         buyTablayout.setupWithViewPager(buyViewpager);
 
@@ -123,20 +134,20 @@ public class BuyFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void initNumber() {
-         int TYPE_ING = 2;
+        int TYPE_ING = 2;
         List<DownloadTask> taskList = OkDownload.restore(DownloadManager.getInstance().getDownloading());
         for (int i = 0; i < taskList.size(); i++) {
             DownloadTask task = taskList.get(i);
-            String tag = TYPE_ING+ "_" + task.progress.tag;
+            String tag = TYPE_ING + "_" + task.progress.tag;
             task.register(new ListDownloadListener(tag));
         }
-        if (taskList.size() == 0){
+        if (taskList.size() == 0) {
             tvDownloadNumber.setText("");
             ivDownloadNumber.setVisibility(View.GONE);
-        }else {
+        } else {
             ivDownloadNumber.setVisibility(View.VISIBLE);
-            tvDownloadNumber.setText(taskList.size()+"");
-            Logger.e("正在下载的数量："+ taskList.size());
+            tvDownloadNumber.setText(taskList.size() + "");
+            Logger.e("正在下载的数量：" + taskList.size());
         }
     }
 
@@ -158,12 +169,13 @@ public class BuyFragment extends BaseFragment implements View.OnClickListener {
         @Override
         public void onError(Progress progress) {
             Throwable throwable = progress.exception;
-            if (throwable != null) throwable.printStackTrace();
+            if (throwable != null)
+                throwable.printStackTrace();
         }
 
         @Override
         public void onFinish(File file, Progress progress) {
-//            Toast.makeText(context, "下载完成:" + progress.filePath, Toast.LENGTH_SHORT).show();
+            //            Toast.makeText(context, "下载完成:" + progress.filePath, Toast.LENGTH_SHORT).show();
             EventBean eventBean = new EventBean("number");
             EventBus.getDefault().postSticky(eventBean);
         }
@@ -222,12 +234,12 @@ public class BuyFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_search:
-                startActivity(new Intent(getActivity(),SearchActivity.class));
+                startActivity(new Intent(getActivity(), SearchActivity.class));
                 break;
             case R.id.ll_download:
-                startActivity(new Intent(getActivity(),DownLoadActivity.class));
+                startActivity(new Intent(getActivity(), DownLoadActivity.class));
         }
     }
 }

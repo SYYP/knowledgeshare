@@ -6,13 +6,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/tv_order"
@@ -21,7 +22,6 @@
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/circle_yellow"
                 android:gravity="center"
-                android:padding="5dp"
                 android:text="01"
                 android:textColor="@color/yellow"
                 android:textSize="14sp"/>
@@ -31,7 +31,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:padding="5dp"
                 android:text="试听"
                 android:textColor="@color/text_red_dark"
                 android:textSize="14sp"/>
@@ -40,16 +39,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="男低音，一个神秘又充满魅力的声部"
-                android:singleLine="true"
                 android:ellipsize="end"
+                android:singleLine="true"
+                android:text="男低音，一个神秘又充满魅力的声部"
                 android:textColor="@color/textblack"/>
             <TextView
                 android:id="@+id/tv_time"
@@ -105,7 +104,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"
         >
             <ImageView
                 android:id="@+id/iv_wengao"
