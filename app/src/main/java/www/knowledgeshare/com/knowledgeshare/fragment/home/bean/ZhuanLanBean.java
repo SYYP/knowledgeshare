@@ -46,6 +46,15 @@ public class ZhuanLanBean {
     private String zl_look;
     private int zl_buy_count;
     private String h5_url;
+    private boolean is_try_look;
+
+    public boolean is_try_look() {
+        return is_try_look;
+    }
+
+    public void setIs_try_look(boolean is_try_look) {
+        this.is_try_look = is_try_look;
+    }
 
     public String getH5_url() {
         return h5_url;

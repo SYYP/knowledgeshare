@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:background="@drawable/click_selector"
               android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -96,14 +97,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/liebiao_yellow"/>
+                android:src="@drawable/liebiao_yellow_selector"/>
             <ImageView
                 android:id="@+id/iv_dian"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
-                android:src="@drawable/more_yellow"/>
+                android:src="@drawable/more_yellow_selector"/>
         </LinearLayout>
     </LinearLayout>
     <View

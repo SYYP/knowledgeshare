@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -279,6 +280,10 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                             options.error(R.drawable.default_banner);
                             options.placeholder(R.drawable.default_banner);
                             Glide.with(MyApplication.getGloableContext()).load(mFreeBean.getImgurl()).apply(options).into(iv_beijing);
+                            ViewGroup.LayoutParams layoutParams = iv_beijing.getLayoutParams();
+                            int width = MyUtils.getScreenWidth(FreeActivity.this);
+                            layoutParams.height= width*7/15;
+                            iv_beijing.setLayoutParams(layoutParams);
                             tv_teacher_intro.setText(mFreeBean.getLook());
                             isGuanzhu = mTeacher_has.isIsfollow();
                             if (isGuanzhu) {

@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -355,6 +356,10 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                  options.error(R.drawable.default_banner);
                                  options.placeholder(R.drawable.default_banner);
                                  Glide.with(MyApplication.getGloableContext()).load(mMusicDetailBean.getImgurl()).apply(options).into(iv_beijing);
+                                 ViewGroup.LayoutParams layoutParams = iv_beijing.getLayoutParams();
+                                 int width = MyUtils.getScreenWidth(LikeDetailActivity.this);
+                                 layoutParams.height= width*7/15;
+                                 iv_beijing.setLayoutParams(layoutParams);
                                  mTeacher = mMusicDetailBean.getTeacher();
                                  tv_teacher_intro.setText(mTeacher.getT_introduce());
                                  isGuanzhu = mTeacher.isIsfollow();
@@ -497,16 +502,14 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
 
         @Override
         protected void convert(final BaseViewHolder helper, final SoftMusicDetailBean.ChildEntity item) {
-            if (item.getIs_try() == 1) {
-                helper.setVisible(R.id.tv_trylisten, true);
-            } else {
-                helper.setVisible(R.id.tv_trylisten, false);
-            }
+            TextView tv_trylisten=helper.getView(R.id.tv_trylisten);
             ImageView iv_wengao=helper.getView(R.id.iv_wengao);
             if (item.getIs_try() == 1) {
                 iv_wengao.setVisibility(View.VISIBLE);
+                tv_trylisten.setVisibility(View.VISIBLE);
             }else {
                 iv_wengao.setVisibility(View.INVISIBLE);
+                tv_trylisten.setVisibility(View.INVISIBLE);
             }
             String created_at = item.getCreated_at();
             String[] split = created_at.split(" ");

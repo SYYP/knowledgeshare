@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -223,6 +224,10 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                             options.error(R.drawable.default_banner);
                             options.placeholder(R.drawable.default_banner);
                             Glide.with(EveryDayCommentActivity.this).load(everyDayBean.getImgurl()).apply(options).into(iv_beijing);
+                            ViewGroup.LayoutParams layoutParams = iv_beijing.getLayoutParams();
+                            int width = MyUtils.getScreenWidth(EveryDayCommentActivity.this);
+                            layoutParams.height= width*7/15;
+                            iv_beijing.setLayoutParams(layoutParams);
                             tv_jie_count.setText("已更新：" + everyDayBean.getUpdate_count() + "节");
                             tv_look_count.setText("浏览次数：" + everyDayBean.getView_count() + "");
                             tv_collect_count.setText("收藏次数：" + everyDayBean.getCollect_count() + "");

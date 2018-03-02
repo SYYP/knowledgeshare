@@ -8,6 +8,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.TeacherDetailBean;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class TeacherDetailActivity extends BaseActivity implements View.OnClickListener {
@@ -98,6 +100,10 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
                                  int code = response.code();
                                  mTeacherDetailBean = response.body();
                                  Glide.with(MyApplication.getGloableContext()).load(mTeacherDetailBean.getT_img()).into(iv_bigphoto);
+                                 ViewGroup.LayoutParams layoutParams = iv_bigphoto.getLayoutParams();
+                                 int width = MyUtils.getScreenWidth(TeacherDetailActivity.this);
+                                 layoutParams.height= width*7/15;
+                                 iv_bigphoto.setLayoutParams(layoutParams);
                                  tv_teacher_intro.setText(mTeacherDetailBean.getT_introduce());
                                  mXiaoke = mTeacherDetailBean.getXiaoke();
                                  mZhuanlan = mTeacherDetailBean.getZhuanlan();

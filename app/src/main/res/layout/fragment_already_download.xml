@@ -31,6 +31,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:paddingTop="15dp"
+                    android:background="@drawable/click_selector"
                     android:paddingBottom="15dp">
                     <TextView
                         android:layout_width="0dp"
@@ -60,6 +61,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:paddingTop="15dp"
+                    android:background="@drawable/click_selector"
                     android:paddingBottom="15dp">
                     <TextView
                         android:layout_width="0dp"

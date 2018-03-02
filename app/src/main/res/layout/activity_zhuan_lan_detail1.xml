@@ -5,19 +5,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#edecea"
     android:orientation="vertical"
     tools:context="www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanDetail1Activity">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/text_red_dark"
-        >
+    >
         <ImageView
             android:id="@+id/iv_back"
-            android:padding="13dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:padding="13dp"
             android:src="@drawable/icon_back_white"/>
         <TextView
             android:id="@+id/tv_title"
@@ -29,8 +30,7 @@
     </RelativeLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
-        android:background="#edecea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        ></android.support.v7.widget.RecyclerView>
+    ></android.support.v7.widget.RecyclerView>
 </LinearLayout>

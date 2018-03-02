@@ -68,6 +68,7 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
     @Override
     public void onFinish() {
         super.onFinish();
+        //这里处理的是用户在另一个设备上登录，所以当再次请求接口的时候就会返回这个返回码
         if (code == 410){
             BaseActivity.removeAllActivitys();
             Intent intent = new Intent(MyApplication.getGloableContext(), LoginActivity.class);

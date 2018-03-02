@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -59,6 +60,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.ZhuanLanBean;
 import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class ZhuanLanActivity extends UMShareActivity implements View.OnClickListener {
@@ -205,6 +207,10 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                                  options.error(R.drawable.default_banner);
                                  options.placeholder(R.drawable.default_banner);
                                  Glide.with(MyApplication.getGloableContext()).load(mZhuanLanBean.getZl_img()).apply(options).into(iv_beijing);
+                                 ViewGroup.LayoutParams layoutParams = iv_beijing.getLayoutParams();
+                                 int width = MyUtils.getScreenWidth(ZhuanLanActivity.this);
+                                 layoutParams.height= width*7/15;
+                                 iv_beijing.setLayoutParams(layoutParams);
                                  tv_shiyirenqun.setText(mZhuanLanBean.getZl_suitable());
                                  tv_zhuanlanjianjie.setText(mZhuanLanBean.getZl_introduce());
                                  tv_readxuzhi.setText(mZhuanLanBean.getZl_look());
@@ -221,6 +227,11 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                                  } else {
                                      LookUtils.updateTime(SystemClock.currentThreadTimeMillis(), mZhuanLanBean.getZl_name()
                                              , "zhuanlan");
+                                 }
+                                 if (!mZhuanLanBean.is_try_look()){
+                                     tv_tryread.setBackgroundColor(getResources().getColor(R.color.tab_text_normal_color));
+                                     tv_tryread.setTextColor(getResources().getColor(R.color.textcolor));
+                                     tv_tryread.setClickable(false);
                                  }
                              }
                          }

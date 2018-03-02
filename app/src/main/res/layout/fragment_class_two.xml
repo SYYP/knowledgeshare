@@ -10,7 +10,7 @@
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:orientation="vertical"
-    android:background="@drawable/shape_radioline"
+    android:background="@drawable/click_wanjiao_selector"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 

@@ -6,6 +6,7 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:id="@+id/rl_root_view"
+                android:background="@drawable/click_selector"
                 android:paddingTop="10dp">
     <TextView
         android:id="@+id/tv_teacher_name"

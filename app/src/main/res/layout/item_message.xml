@@ -23,7 +23,7 @@
        android:layout_marginRight="5dp"
        android:orientation="vertical"
        android:id="@+id/mesg_recl"
-       android:background="@drawable/shape_radioline"
+       android:background="@drawable/click_wanjiao_selector"
        android:layout_width="match_parent"
        android:layout_height="wrap_content">
        <RelativeLayout

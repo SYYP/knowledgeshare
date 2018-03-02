@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -387,6 +388,10 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                  options.error(R.drawable.default_banner);
                                  options.placeholder(R.drawable.default_banner);
                                  Glide.with(MyApplication.getGloableContext()).load(mMusicDetailBean.getImgurl()).apply(options).into(iv_beijing);
+                                 ViewGroup.LayoutParams layoutParams = iv_beijing.getLayoutParams();
+                                 int width = MyUtils.getScreenWidth(SoftMusicDetailActivity.this);
+                                 layoutParams.height= width*7/15;
+                                 iv_beijing.setLayoutParams(layoutParams);
                                  mTeacher = mMusicDetailBean.getTeacher();
                                  tv_teacher_intro.setText(mTeacher.getT_introduce());
                                  isGuanzhu = mTeacher.isIsfollow();

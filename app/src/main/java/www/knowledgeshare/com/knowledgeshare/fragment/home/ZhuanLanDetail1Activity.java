@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +27,7 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.FreeTryReadListBean;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 
 public class ZhuanLanDetail1Activity extends BaseActivity {
 
@@ -119,6 +121,11 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
             RequestOptions options=new RequestOptions();
             options.error(R.drawable.default_banner);
             options.placeholder(R.drawable.default_banner);
+            ViewGroup.LayoutParams layoutParams = iv_tupian.getLayoutParams();
+            int width = MyUtils.getScreenWidth(ZhuanLanDetail1Activity.this)
+                    - MyUtils.dip2px(ZhuanLanDetail1Activity.this, 60);
+            layoutParams.height= width*8/17;
+            iv_tupian.setLayoutParams(layoutParams);
             Glide.with(MyApplication.getGloableContext()).load(item.getImgurl()).apply(options).into(iv_tupian);
             helper.setText(R.id.tv_name, item.getName())
                     .setText(R.id.tv_introduce, item.getDescription())
