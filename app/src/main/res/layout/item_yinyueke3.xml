@@ -52,6 +52,8 @@
                     android:layout_gravity="center_vertical"
                     android:text="如何成为一名合格的歌者"
                     android:textColor="@color/textblack"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     android:textSize="15sp"
                 />
                 <ImageView
@@ -76,6 +78,7 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:paddingTop="2dp"
+                    android:maxLength="4"
                     android:text="夏洛"/>
                 <TextView
                     android:id="@+id/tv_teacher_tag"

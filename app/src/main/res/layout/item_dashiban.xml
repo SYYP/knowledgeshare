@@ -51,7 +51,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="男低音，一个神秘而又充满魅力的声部"
+                android:minLines="2"
                 android:maxLines="2"
+                android:gravity="center_vertical"
                 android:ellipsize="end"
                 android:textColor="@color/textblack"
                 android:textSize="14sp"/>

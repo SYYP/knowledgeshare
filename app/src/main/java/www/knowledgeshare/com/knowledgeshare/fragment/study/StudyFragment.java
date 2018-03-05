@@ -61,6 +61,8 @@ import www.knowledgeshare.com.knowledgeshare.utils.TimeUtils;
 import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
 import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
+import static www.knowledgeshare.com.knowledgeshare.R.id.springview;
+
 /**
  * Created by Administrator on 2017/11/17.
  */
@@ -122,6 +124,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
                 return;
             }
         }
+        springView.callFresh();
         requestNoteList("");
         study_name.setText("Hi  " + SpUtils.getString(mContext, "name", ""));
     }
@@ -151,7 +154,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         this.study_dates = (TextView) rootView.findViewById(R.id.study_dates);
         this.tv_suishenting = (TextView) rootView.findViewById(R.id.tv_suishenting);
         tv_suishenting.setOnClickListener(this);
-        this.springView = rootView.findViewById(R.id.springview);
+        this.springView = rootView.findViewById(springview);
         this.historyRl = rootView.findViewById(R.id.history_rl);
         this.noteLl = rootView.findViewById(R.id.note_ll);
         study_recycler = rootView.findViewById(R.id.study_recycle);

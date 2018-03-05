@@ -16,6 +16,7 @@ import okhttp3.ResponseBody;
 import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public abstract class JsonCallback<T> extends AbsCallback<T> {
     private Type type;
@@ -55,13 +56,16 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
     @Override
     public T convertResponse(Response response) throws Throwable {
         ResponseBody body = response.body();
-        if (body == null) return null;
+        if (body == null)
+            return null;
         code = response.code();
         T data = null;
         Gson gson = new Gson();
         JsonReader jsonReader = new JsonReader(body.charStream());
-        if (type != null) data = gson.fromJson(jsonReader,type);
-        if (clazz != null) data = gson.fromJson(jsonReader,clazz);
+        if (type != null)
+            data = gson.fromJson(jsonReader, type);
+        if (clazz != null)
+            data = gson.fromJson(jsonReader, clazz);
         return data;
     }
 
@@ -69,13 +73,16 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
     public void onFinish() {
         super.onFinish();
         //这里处理的是用户在另一个设备上登录，所以当再次请求接口的时候就会返回这个返回码
-        if (code == 410){
+        if (code == 410) {
             BaseActivity.removeAllActivitys();
             Intent intent = new Intent(MyApplication.getGloableContext(), LoginActivity.class);
+            intent.putExtra("lxk","lxk");
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            MyApplication.getGloableContext()
-                    .startActivity(intent
-                    );
+            SpUtils.putBoolean(MyApplication.getGloableContext(), "abool", false);
+            SpUtils.putString(MyApplication.getGloableContext(), "id", "");
+            SpUtils.putBoolean(MyApplication.getGloableContext(), "wengaowindow", false);
+            SpUtils.putString(MyApplication.getGloableContext(), "token", "");
+            MyApplication.getGloableContext().startActivity(intent);
         }
     }
 }

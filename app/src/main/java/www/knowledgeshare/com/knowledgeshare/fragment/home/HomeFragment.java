@@ -145,6 +145,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+        nestView.scrollTo(0, 0);
+        if (!hidden) {
+            springview.callFresh();
+        }
     }
 
     @Override
@@ -221,6 +225,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         return inflate;
     }
 
+
     private void initAnim() {
         mRotate_anim = AnimationUtils.loadAnimation(mContext, R.anim.rotate_animation);
         LinearInterpolator interpolator = new LinearInterpolator();  //设置匀速旋转，在xml文件中设置会出现卡顿
@@ -261,8 +266,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     private void suishenting() {
         morenbofang();
-//        mytype = "comment";
-//        myposition = 0;
+        //        mytype = "comment";
+        //        myposition = 0;
         if (mCommentListBeanData != null && mCommentListBeanData.size() > 0) {
             CommentListBean.DataEntity dataEntity = mCommentListBeanData.get(myposition);
             if (dataEntity != null) {
@@ -337,9 +342,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void morenbofang() {
-//        isBofang = true;
-//        rl_bofang.setVisibility(View.VISIBLE);
-//        iv_delete.setVisibility(View.GONE);
+        //        isBofang = true;
+        //        rl_bofang.setVisibility(View.VISIBLE);
+        //        iv_delete.setVisibility(View.GONE);
         mytype = "zhuanlan";
         myposition = 0;
         if (mFreeListBeanData != null && mFreeListBeanData.size() > 0) {
@@ -712,7 +717,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         springview.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
-                if (!NetWorkUtils.isNetworkConnected(mContext)){
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
                     Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -727,12 +732,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
             @Override
             public void onLoadmore() {
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        springview.onFinishFreshAndLoad();
-//                    }
-//                }, 2000);
+                //                new Handler().postDelayed(new Runnable() {
+                //                    @Override
+                //                    public void run() {
+                //                        springview.onFinishFreshAndLoad();
+                //                    }
+                //                }, 2000);
             }
         });
         springview.setHeader(new MyHeader(mContext));
@@ -999,7 +1004,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         @Override
         protected void convert(BaseViewHolder helper, HomeBean.ZhuanlanEntity item) {
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-            RequestOptions options=new RequestOptions();
+            RequestOptions options = new RequestOptions();
             options.error(R.drawable.home_default_zl);
             options.placeholder(R.drawable.home_default_zl);
             Glide.with(MyApplication.getGloableContext()).load(item.getZl_img()).apply(options).into(imageView);
@@ -1020,7 +1025,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         @Override
         protected void convert(BaseViewHolder helper, HomeDaShiBanNewBean.DataEntity item) {
             final ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-            RequestOptions options=new RequestOptions();
+            RequestOptions options = new RequestOptions();
             options.error(R.drawable.home_default_zl);
             options.placeholder(R.drawable.home_default_zl);
             Glide.with(MyApplication.getGloableContext()).load(item.getZl_img()).apply(options).into(imageView);
@@ -1046,7 +1051,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             layoutParams.width = www;
             layoutParams.height = www;
             imageView.setLayoutParams(layoutParams);
-            RequestOptions options=new RequestOptions();
+            RequestOptions options = new RequestOptions();
             options.error(R.drawable.home_default_xk);
             options.placeholder(R.drawable.home_default_xk);
             Glide.with(MyApplication.getGloableContext()).load(item.getXk_image()).into(imageView);
@@ -1074,7 +1079,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             layoutParams.width = www;
             layoutParams.height = www * 7 / 5;
             imageView.setLayoutParams(layoutParams);
-            RequestOptions options=new RequestOptions();
+            RequestOptions options = new RequestOptions();
             options.error(R.drawable.home_default_like);
             options.placeholder(R.drawable.home_default_like);
             Glide.with(MyApplication.getGloableContext()).load(item.getXk_image()).apply(options).into(imageView);
@@ -1096,7 +1101,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             layoutParams.width = www;
             layoutParams.height = www * 7 / 5;
             imageView.setLayoutParams(layoutParams);
-            RequestOptions options=new RequestOptions();
+            RequestOptions options = new RequestOptions();
             options.error(R.drawable.home_default_like);
             options.placeholder(R.drawable.home_default_like);
             Glide.with(MyApplication.getGloableContext()).load(item.getXk_image()).apply(options).into(imageView);

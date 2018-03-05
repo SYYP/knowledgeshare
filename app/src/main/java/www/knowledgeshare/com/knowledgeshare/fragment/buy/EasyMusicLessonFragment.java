@@ -125,6 +125,8 @@ public class EasyMusicLessonFragment extends BaseFragment {
         if (eventBean.getMsg().equals("jindu")) {
             listAll.clear();
             requestBuyXk("");
+        }else if (eventBean.getMsg().equals("softmusicrefresh")){
+            springView.callFresh();
         }
     }
 

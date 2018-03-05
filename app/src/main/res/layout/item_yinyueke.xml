@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="如何成为一名合格的歌者"
-                android:maxLines="2"
+                android:singleLine="true"
                 android:ellipsize="end"
                 android:textColor="@color/textblack"
                 android:textSize="14sp"/>
@@ -63,6 +63,8 @@
                 android:paddingRight="8dp"
                 android:paddingTop="2dp"
                 android:textSize="12sp"
+                android:maxLength="4"
+                android:ellipsize="end"
                 android:text="夏洛"/>
             <RelativeLayout
                 android:layout_width="match_parent"

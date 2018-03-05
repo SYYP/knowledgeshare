@@ -15,6 +15,7 @@ import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 /**
  * Created by Administrator on 2017/10/11.
@@ -85,9 +86,12 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
                 BaseActivity.removeAllActivitys();
                 Intent intent = new Intent(MyApplication.getGloableContext(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                MyApplication.getGloableContext()
-                        .startActivity(intent
-                        );
+                intent.putExtra("lxk","lxk");
+                SpUtils.putBoolean(MyApplication.getGloableContext(), "abool", false);
+                SpUtils.putString(MyApplication.getGloableContext(),"id","");
+                SpUtils.putBoolean(MyApplication.getGloableContext(), "wengaowindow", false);
+                SpUtils.putString(MyApplication.getGloableContext(),"token","");
+                MyApplication.getGloableContext().startActivity(intent);
             }
         }
     }

@@ -81,6 +81,8 @@ public class BuyFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(intent);
                 mActivity.overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
             }
+        }else {
+            EventBus.getDefault().postSticky(new EventBean("softmusicrefresh"));
         }
     }
 

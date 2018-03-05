@@ -67,6 +67,7 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
     private String userFace;
     private String name;
     private int code;
+    private boolean isBeiDingDiao;
 
 
     @Override
@@ -98,12 +99,11 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
         img_weixin.setOnClickListener(this);
 
 
-
-        if (SpUtils.getBoolean(LoginActivity.this,"rember_pwd",false)){
+        if (SpUtils.getBoolean(LoginActivity.this, "rember_pwd", false)) {
             rember_pwd.setChecked(true);
-            if (!TextUtils.isEmpty(SpUtils.getString(LoginActivity.this,"zhanghao",""))){
-                login_phone.setText(SpUtils.getString(LoginActivity.this,"zhanghao",""));
-                login_pwd.setText(SpUtils.getString(LoginActivity.this,"mima",""));
+            if (!TextUtils.isEmpty(SpUtils.getString(LoginActivity.this, "zhanghao", ""))) {
+                login_phone.setText(SpUtils.getString(LoginActivity.this, "zhanghao", ""));
+                login_pwd.setText(SpUtils.getString(LoginActivity.this, "mima", ""));
             }
         }
 
@@ -114,7 +114,10 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
             }
         });
 
-//        initUM();
+        //        initUM();
+        if (!TextUtils.isEmpty(getIntent().getStringExtra("lxk"))) {
+            isBeiDingDiao = true;
+        }
     }
 
     @Override
@@ -149,6 +152,16 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
     }
 
     @Override
+    public void onBackPressed() {
+        if (isBeiDingDiao) {
+            startActivity(new Intent(this,MainActivity.class));
+            finish();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
@@ -159,8 +172,7 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
         if (TextUtils.isEmpty(login_phone.getText().toString())) {
             Toast.makeText(this, "请填写您的手机号", Toast.LENGTH_SHORT).show();
             return;
-        }
-        else if (!MyUtils.isMobileNO(login_phone.getText().toString())) {
+        } else if (!MyUtils.isMobileNO(login_phone.getText().toString())) {
             Toast.makeText(this, "请输入正确手机号", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -168,7 +180,7 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
             Toast.makeText(this, "请填写您的密码", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (!ispsd(login_pwd.getText().toString())){
+        if (!ispsd(login_pwd.getText().toString())) {
             Toast.makeText(this, "请输入6-20位字母+数字组合！", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -180,6 +192,7 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
 
     /**
      * 是否是纯数字或者纯英文
+     *
      * @param psd
      * @return
      */
@@ -194,50 +207,50 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
     private void requestLogin() {
 
         HttpParams params = new HttpParams();
-        params.put("mobile",login_phone.getText().toString());
+        params.put("mobile", login_phone.getText().toString());
         Logger.e(login_phone.getText().toString());
         //字符串倒序
-        params.put("password",new StringBuffer(login_pwd.getText().toString()).reverse().toString());
+        params.put("password", new StringBuffer(login_pwd.getText().toString()).reverse().toString());
         Logger.e(new StringBuffer(login_pwd.getText().toString()).reverse().toString());
         //0--手机号登录  1--微信登录
-        params.put("type","0");
+        params.put("type", "0");
         String device_token = SpUtils.getString(this, "device_token", "");
-        params.put("device_token",device_token);
-//        params.put("device_token",uniqueId);
-        params.put("from_type","2");
+        params.put("device_token", device_token);
+        //        params.put("device_token",uniqueId);
+        params.put("from_type", "2");
         Logger.e(uniqueId);
 
         OkGo.<LoginBean>post(MyContants.login)
                 .tag(this)
                 .params(params)
-                .execute(new DialogCallback<LoginBean>(LoginActivity.this,LoginBean.class) {
+                .execute(new DialogCallback<LoginBean>(LoginActivity.this, LoginBean.class) {
                     @Override
                     public void onSuccess(Response<LoginBean> response) {
                         code = response.code();
                         LoginBean loginBean = response.body();
-                        if ( response.code() >= 200 && response.code() <= 204){
-                            if (rember_pwd.isChecked()){
-                                SpUtils.putBoolean(LoginActivity.this,"rember_pwd",true);
-                                SpUtils.putString(LoginActivity.this,"zhanghao",login_phone.getText().toString());
-                                SpUtils.putString(LoginActivity.this,"mima",login_pwd.getText().toString());
-                            }else {
-                                SpUtils.putBoolean(LoginActivity.this,"rember_pwd",false);
+                        if (response.code() >= 200 && response.code() <= 204) {
+                            if (rember_pwd.isChecked()) {
+                                SpUtils.putBoolean(LoginActivity.this, "rember_pwd", true);
+                                SpUtils.putString(LoginActivity.this, "zhanghao", login_phone.getText().toString());
+                                SpUtils.putString(LoginActivity.this, "mima", login_pwd.getText().toString());
+                            } else {
+                                SpUtils.putBoolean(LoginActivity.this, "rember_pwd", false);
                             }
-                            SpUtils.putString(LoginActivity.this,"id",loginBean.getUser().getId());
-                            SpUtils.putString(LoginActivity.this,"name",loginBean.getUser().getUser_name());
-                            SpUtils.putString(LoginActivity.this,"userFace",loginBean.getUser().getUser_avatar());
-                            SpUtils.putString(LoginActivity.this,"wx_id",loginBean.getUser().getWx_unionid());
+                            SpUtils.putString(LoginActivity.this, "id", loginBean.getUser().getId());
+                            SpUtils.putString(LoginActivity.this, "name", loginBean.getUser().getUser_name());
+                            SpUtils.putString(LoginActivity.this, "userFace", loginBean.getUser().getUser_avatar());
+                            SpUtils.putString(LoginActivity.this, "wx_id", loginBean.getUser().getWx_unionid());
                             String token = loginBean.getToken();
-                            SpUtils.putString(LoginActivity.this,"token",token);
+                            SpUtils.putString(LoginActivity.this, "token", token);
                             long ttlMs = loginBean.getTtl() * 60 * 1000L;
                             long timeMillis = System.currentTimeMillis();
                             long totalMs = ttlMs + timeMillis;
-                            SpUtils.putString(LoginActivity.this,"totalMs",totalMs+"");
+                            SpUtils.putString(LoginActivity.this, "totalMs", totalMs + "");
                             String go = MyUtils.go(ttlMs);
                             Logger.e(go);
                             //跳转到主页面
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.putExtra("token",token);
+                            intent.putExtra("token", token);
                             startActivity(intent);
                             //阿里云推送绑定账号
                             final CloudPushService pushService = PushServiceFactory.getCloudPushService();
@@ -253,8 +266,8 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
                                 }
                             });
                             finish();
-                        }else {
-                            TUtils.showShort(LoginActivity.this,loginBean.getMessage());
+                        } else {
+                            TUtils.showShort(LoginActivity.this, loginBean.getMessage());
 
                         }
                     }
@@ -264,7 +277,7 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 101){
+        if (requestCode == 101) {
             TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
             String tmDevice, tmSerial, tmPhone, androidId;
             tmDevice = "" + tm.getDeviceId();

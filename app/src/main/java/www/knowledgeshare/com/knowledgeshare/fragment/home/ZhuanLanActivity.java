@@ -231,7 +231,6 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                                  if (!mZhuanLanBean.is_try_look()){
                                      tv_tryread.setBackgroundColor(getResources().getColor(R.color.tab_text_normal_color));
                                      tv_tryread.setTextColor(getResources().getColor(R.color.textcolor));
-                                     tv_tryread.setClickable(false);
                                  }
                              }
                          }
@@ -645,6 +644,10 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                 showBuyDialog();
                 break;
             case R.id.tv_read:
+                if (!mZhuanLanBean.is_try_look()){
+                    Toast.makeText(this, "暂无试读课程~", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 intent = new Intent(this, ZhuanLanDetail1Activity.class);
                 intent.putExtra("id", mZhuanLanBean.getId() + "");
                 intent.putExtra("title", mZhuanLanBean.getZl_name());

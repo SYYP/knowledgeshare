@@ -32,6 +32,9 @@
                     android:layout_gravity="center_vertical"
                     android:text="崔宗顺的男低音歌唱家秘籍"
                     android:textColor="@color/textblack"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:layout_marginRight="25dp"
                     android:textSize="15sp"
                 />
                 <ImageView

@@ -20,6 +20,10 @@ import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.bean.BuyZlBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
@@ -58,10 +63,18 @@ public class MaestroClassFragment extends BaseFragment {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("softmusicrefresh")){
+            springView.callFresh();
+        }
+    }
+
     @Override
     protected View initView() {
         View inflate = View.inflate(mContext, R.layout.fragment_meastro_class, null);
         unbinder = ButterKnife.bind(this, inflate);
+        EventBus.getDefault().register(this);
         initLoadMore();
         return inflate;
     }
@@ -157,6 +170,7 @@ public class MaestroClassFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        EventBus.getDefault().unregister(this);
     }
 
     private class MeastroClassAdapter extends BaseQuickAdapter<BuyZlBean.DataBean, BaseViewHolder> {
