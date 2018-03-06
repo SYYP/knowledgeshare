@@ -1047,7 +1047,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         protected void convert(BaseViewHolder helper, HomeBean.XiaokeEntity item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
             ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-            int www = MyUtils.getScreenWidth(mContext) / 2 - 20;
+            int www = MyUtils.getScreenWidth(mContext) / 2 - 40;
             layoutParams.width = www;
             layoutParams.height = www;
             imageView.setLayoutParams(layoutParams);
@@ -1075,7 +1075,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         protected void convert(BaseViewHolder helper, HomeBean.LiveEntity item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
             ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-            int www = MyUtils.getScreenWidth(mContext) / 3 - 20;
+            int www = MyUtils.getScreenWidth(mContext) / 3 - 60;
             layoutParams.width = www;
             layoutParams.height = www * 7 / 5;
             imageView.setLayoutParams(layoutParams);
@@ -1097,7 +1097,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         protected void convert(BaseViewHolder helper, LikeMoreBean.DataEntity item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
             ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-            int www = MyUtils.getScreenWidth(mContext) / 3 - 20;
+            int www = MyUtils.getScreenWidth(mContext) / 3 - 60;
             layoutParams.width = www;
             layoutParams.height = www * 7 / 5;
             imageView.setLayoutParams(layoutParams);
