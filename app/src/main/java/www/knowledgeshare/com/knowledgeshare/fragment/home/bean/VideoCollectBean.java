@@ -9,7 +9,7 @@ import java.util.List;
 public class VideoCollectBean {
 
     /**
-     * data : [{"islive":true,"isfav":false}]
+     * data : [{"islive":false,"share_h5_url":"http://mop.xfkeji.cn/player.html?id=18&type=free","isfav":false}]
      */
     private List<DataEntity> data;
 
@@ -23,14 +23,20 @@ public class VideoCollectBean {
 
     public static class DataEntity {
         /**
-         * islive : true
+         * islive : false
+         * share_h5_url : http://mop.xfkeji.cn/player.html?id=18&type=free
          * isfav : false
          */
         private boolean islive;
+        private String share_h5_url;
         private boolean isfav;
 
         public void setIslive(boolean islive) {
             this.islive = islive;
+        }
+
+        public void setShare_h5_url(String share_h5_url) {
+            this.share_h5_url = share_h5_url;
         }
 
         public void setIsfav(boolean isfav) {
@@ -39,6 +45,10 @@ public class VideoCollectBean {
 
         public boolean isIslive() {
             return islive;
+        }
+
+        public String getShare_h5_url() {
+            return share_h5_url;
         }
 
         public boolean isIsfav() {

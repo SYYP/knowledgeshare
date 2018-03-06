@@ -26,6 +26,7 @@ import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.OkDownload;
 import com.orhanobut.logger.Logger;
 import com.squareup.picasso.Picasso;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,7 +39,7 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
@@ -61,7 +62,7 @@ import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
-public class MusicActivity extends BaseActivity implements View.OnClickListener {
+public class MusicActivity extends UMShareActivity implements View.OnClickListener {
 
     private ImageView iv_back;
     private ImageView iv_bigphoto;
@@ -90,6 +91,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
     private SimpleDateFormat time = new SimpleDateFormat("m:ss");
     private boolean isbofang = true;
     private MusicTypeBean mMusicTypeBean;
+    private String mShare_h5_url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +152,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
                                 drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                                 tv_collect.setCompoundDrawables(null, drawable, null, null);
                             }
+                            mShare_h5_url = dataEntity.getShare_h5_url();
                         } else {
                         }
                     }
@@ -311,6 +314,46 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener 
         mDialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_weixin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareWebUrl(mShare_h5_url, mMusicTypeBean.getVideo_name(),
+                        mMusicTypeBean.getT_head(), "", MusicActivity.this, SHARE_MEDIA.WEIXIN);
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareWebUrl(mShare_h5_url, mMusicTypeBean.getVideo_name(),
+                        mMusicTypeBean.getT_head(), "", MusicActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareWebUrl(mShare_h5_url,mMusicTypeBean.getVideo_name(),
+                        mMusicTypeBean.getT_head(), "", MusicActivity.this, SHARE_MEDIA.QZONE);
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareWebUrl(mShare_h5_url, mMusicTypeBean.getVideo_name(),
+                        mMusicTypeBean.getT_head(), "", MusicActivity.this, SHARE_MEDIA.QQ);
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareWebUrl(mShare_h5_url, mMusicTypeBean.getVideo_name(),
+                        mMusicTypeBean.getT_head(), "", MusicActivity.this, SHARE_MEDIA.SINA);
                 mDialog.dismiss();
             }
         });

@@ -233,6 +233,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("userinfo")) {
             requestUserInfo();
+        }else if (eventBean.getMsg().equals("msgcountrefresh")){
+            requestUserInfo1();
         }
     }
 
