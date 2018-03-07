@@ -314,7 +314,7 @@ public class Myclassadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                                 item.getCreated_at(), item.getVideo_url(), item.getGood_count(),
                                 item.getCollect_count(), item.getView_count(), item.isIslive(), item.isIsfav(),
                                 item.getT_header(), item.getT_tag(),
-                                item.getShare_h5_url(), SystemClock.currentThreadTimeMillis()
+                                item.getShare_h5_url(), System.currentTimeMillis()
                                 ,dataBean.getId() + "",
                                 item.getParent_name(),item.getTxt_url());
                         histroyBeanList.add(bofangHistroyBean);

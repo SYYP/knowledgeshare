@@ -2,7 +2,6 @@ package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -229,7 +228,7 @@ public class SearchMusicActivity extends BaseActivity implements View.OnClickLis
                                     childEntity.getCreated_at(), childEntity.getVideo_url(), childEntity.getGood_count(),
                                     childEntity.getCollect_count(), childEntity.getView_count(), false, false,
                                     childEntity.getT_header(), childEntity.getParent_name(),
-                                    childEntity.getShare_h5_url(), SystemClock.currentThreadTimeMillis()
+                                    childEntity.getShare_h5_url(), System.currentTimeMillis()
                                     , type2 + "Id", childEntity.getParent_name(), childEntity.getTxt_url());
                             histroyBeanList.add(bofangHistroyBean);
                         }

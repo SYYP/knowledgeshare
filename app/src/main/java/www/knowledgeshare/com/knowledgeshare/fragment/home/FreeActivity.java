@@ -340,7 +340,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                                 childEntity.getCreated_at(), childEntity.getVideo_url(), childEntity.getGood_count(),
                                                 childEntity.getCollect_count(), childEntity.getView_count(), childEntity.isIslive(), childEntity.isIsfav(),
                                                 childEntity.getT_header(), childEntity.getParent_name(),
-                                                childEntity.getShare_h5_url(), SystemClock.currentThreadTimeMillis()
+                                                childEntity.getShare_h5_url(), System.currentTimeMillis()
                                                 , "freeId", childEntity.getParent_name(), childEntity.getTxt_url());
                                         histroyBeanList.add(bofangHistroyBean);
                                     }

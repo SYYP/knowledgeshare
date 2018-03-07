@@ -150,7 +150,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                     bofangHistroyBean.setTime(SystemClock.currentThreadTimeMillis());
                     HistroyUtils.add(bofangHistroyBean);
                 } else {
-                    HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(), bofangHistroyBean.getVideo_name());
+                    HistroyUtils.updateTime(System.currentTimeMillis(), bofangHistroyBean.getVideo_name());
                 }
             }
         }
@@ -174,7 +174,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                     bofangHistroyBean.setTime(SystemClock.currentThreadTimeMillis());
                     HistroyUtils.add(bofangHistroyBean);
                 } else {
-                    HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(), bofangHistroyBean.getVideo_name());
+                    HistroyUtils.updateTime(System.currentTimeMillis(), bofangHistroyBean.getVideo_name());
                 }
             }
         }
@@ -198,7 +198,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                     bofangHistroyBean.setTime(SystemClock.currentThreadTimeMillis());
                     HistroyUtils.add(bofangHistroyBean);
                 } else {
-                    HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(), bofangHistroyBean.getVideo_name());
+                    HistroyUtils.updateTime(System.currentTimeMillis(), bofangHistroyBean.getVideo_name());
                 }
             }
             registerReceiver(mNoisyReceiver, mNoisyFilter);
@@ -229,7 +229,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                         bofangHistroyBean.setTime(SystemClock.currentThreadTimeMillis());
                         HistroyUtils.add(bofangHistroyBean);
                     } else {
-                        HistroyUtils.updateTime(SystemClock.currentThreadTimeMillis(), bofangHistroyBean.getVideo_name());
+                        HistroyUtils.updateTime(System.currentTimeMillis(), bofangHistroyBean.getVideo_name());
                     }
                 }
                 registerReceiver(mNoisyReceiver, mNoisyFilter);

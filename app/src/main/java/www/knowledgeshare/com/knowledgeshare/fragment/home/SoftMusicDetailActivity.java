@@ -457,7 +457,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                                          entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
                                                          entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
                                                          , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url()
-                                                         , SystemClock.currentThreadTimeMillis(), mMusicDetailBean.getXk_class_id() + "",
+                                                         , System.currentTimeMillis(), mMusicDetailBean.getXk_class_id() + "",
                                                          entity.getParent_name(), entity.getTxt_url());
                                                  histroyBeanList.add(bofangHistroyBean);
                                              }
@@ -474,9 +474,9 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                      LookUtils.add(new LookBean(Integer.parseInt(mId), "xiaoke", mMusicDetailBean.getXk_name(),
                                              mMusicDetailBean.getTeacher().getT_name(),
                                              mMusicDetailBean.getXk_teacher_tags(), mMusicDetailBean.getXk_price()
-                                             , SystemClock.currentThreadTimeMillis()));
+                                             , System.currentTimeMillis()));
                                  } else {
-                                     LookUtils.updateTime(SystemClock.currentThreadTimeMillis(),
+                                     LookUtils.updateTime(System.currentTimeMillis(),
                                              mMusicDetailBean.getXk_name(), "xiaoke");
                                  }
                              }
@@ -1565,7 +1565,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                 entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
                                 entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
                                 , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url()
-                                , SystemClock.currentThreadTimeMillis(), mMusicDetailBean.getXk_class_id() + "",
+                                , System.currentTimeMillis(), mMusicDetailBean.getXk_class_id() + "",
                                 entity.getParent_name(), entity.getTxt_url());
                         histroyBeanList.add(bofangHistroyBean);
                     }

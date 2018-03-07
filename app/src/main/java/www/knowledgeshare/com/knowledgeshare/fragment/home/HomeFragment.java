@@ -300,7 +300,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             dataEntity1.getCreated_at(), dataEntity1.getVideo_url(), dataEntity1.getGood_count(),
                             dataEntity1.getCollect_count(), dataEntity1.getView_count(), dataEntity1.getIs_good() == 1 ? true : false,
                             dataEntity1.isIsfav(), dataEntity1.getT_header(), dataEntity1.getT_tag(), dataEntity1.getShare_h5_url()
-                            , SystemClock.currentThreadTimeMillis(), "commentId", dataEntity1.getParent_name(), dataEntity1.getTxt_url());
+                            , System.currentTimeMillis(), "commentId", dataEntity1.getParent_name(), dataEntity1.getTxt_url());
                     histroyBeanList.add(bofangHistroyBean);
                 }
                 MediaService.insertBoFangHistroyList2(histroyBeanList);
@@ -334,7 +334,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         dailyEntity.getCreated_at(), dailyEntity.getVideo_url(), dailyEntity.getGood_count(),
                         dailyEntity.getCollect_count(), dailyEntity.getView_count(), dailyEntity.getIs_good() == 1 ? true : false,
                         dailyEntity.isIsfav(), dailyEntity.getT_header(), dailyEntity.getT_tag(), dailyEntity.getShare_h5_url()
-                        , SystemClock.currentThreadTimeMillis(), "commentId", dailyEntity.getParent_name(), dailyEntity.getTxt_url());
+                        , System.currentTimeMillis(), "commentId", dailyEntity.getParent_name(), dailyEntity.getTxt_url());
                 histroyBeanList.add(bofangHistroyBean);
             }
             MediaService.insertBoFangHistroyList2(histroyBeanList);
@@ -389,7 +389,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             dataEntity1.getCreated_at(), dataEntity1.getVideo_url(), dataEntity1.getGood_count(),
                             dataEntity1.getCollect_count(), dataEntity1.getView_count(), dataEntity1.getIs_good() == 1 ? true : false,
                             dataEntity1.isIsfav(), dataEntity1.getT_header(), dataEntity1.getParent_name(), dataEntity1.getShare_h5_url()
-                            , SystemClock.currentThreadTimeMillis(), "freeId", dataEntity1.getParent_name(), dataEntity1.getTxt_url());
+                            , System.currentTimeMillis(), "freeId", dataEntity1.getParent_name(), dataEntity1.getTxt_url());
                     histroyBeanList.add(bofangHistroyBean);
                 }
                 MediaService.insertBoFangHistroyList(histroyBeanList);
@@ -434,7 +434,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         childEntity.getCreated_at(), childEntity.getVideo_url(), childEntity.getGood_count(),
                         childEntity.getCollect_count(), childEntity.getView_count(), childEntity.getIs_good() == 1 ? true : false,
                         childEntity.isIsfav(), childEntity.getT_header(), childEntity.getParent_name(), childEntity.getShare_h5_url()
-                        , SystemClock.currentThreadTimeMillis(), "freeId", childEntity.getParent_name(), childEntity.getTxt_url());
+                        , System.currentTimeMillis(), "freeId", childEntity.getParent_name(), childEntity.getTxt_url());
                 histroyBeanList.add(bofangHistroyBean);
             }
             MediaService.insertBoFangHistroyList(histroyBeanList);
@@ -823,7 +823,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                         dataEntity1.getCreated_at(), dataEntity1.getVideo_url(), dataEntity1.getGood_count(),
                                         dataEntity1.getCollect_count(), dataEntity1.getView_count(), dataEntity1.getIs_good() == 1 ? true : false,
                                         dataEntity1.isIsfav(), dataEntity1.getT_header(), dataEntity1.getParent_name(), dataEntity1.getShare_h5_url()
-                                        , SystemClock.currentThreadTimeMillis(), "freeId", dataEntity1.getParent_name(), dataEntity1.getTxt_url());
+                                        , System.currentTimeMillis(), "freeId", dataEntity1.getParent_name(), dataEntity1.getTxt_url());
                                 histroyBeanList.add(bofangHistroyBean);
                             }
                             MediaService.insertBoFangHistroyList(histroyBeanList);
@@ -867,7 +867,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                     childEntity.getCreated_at(), childEntity.getVideo_url(), childEntity.getGood_count(),
                                     childEntity.getCollect_count(), childEntity.getView_count(), childEntity.getIs_good() == 1 ? true : false,
                                     childEntity.isIsfav(), childEntity.getT_header(), childEntity.getParent_name(), childEntity.getShare_h5_url()
-                                    , SystemClock.currentThreadTimeMillis(), "freeId", childEntity.getParent_name(), childEntity.getTxt_url());
+                                    , System.currentTimeMillis(), "freeId", childEntity.getParent_name(), childEntity.getTxt_url());
                             histroyBeanList.add(bofangHistroyBean);
                         }
                         MediaService.insertBoFangHistroyList(histroyBeanList);
@@ -941,7 +941,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                         dataEntity1.getCreated_at(), dataEntity1.getVideo_url(), dataEntity1.getGood_count(),
                                         dataEntity1.getCollect_count(), dataEntity1.getView_count(), dataEntity1.getIs_good() == 1 ? true : false,
                                         dataEntity1.isIsfav(), dataEntity1.getT_header(), dataEntity1.getT_tag(), dataEntity1.getShare_h5_url()
-                                        , SystemClock.currentThreadTimeMillis(), "commentId", dataEntity1.getParent_name(), dataEntity1.getTxt_url());
+                                        , System.currentTimeMillis(), "commentId", dataEntity1.getParent_name(), dataEntity1.getTxt_url());
                                 histroyBeanList.add(bofangHistroyBean);
                             }
                             MediaService.insertBoFangHistroyList(histroyBeanList);
@@ -985,7 +985,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                     dailyEntity.getCreated_at(), dailyEntity.getVideo_url(), dailyEntity.getGood_count(),
                                     dailyEntity.getCollect_count(), dailyEntity.getView_count(), dailyEntity.getIs_good() == 1 ? true : false,
                                     dailyEntity.isIsfav(), dailyEntity.getT_header(), dailyEntity.getT_tag(), dailyEntity.getShare_h5_url()
-                                    , SystemClock.currentThreadTimeMillis(), "commentId", dailyEntity.getParent_name(), dailyEntity.getTxt_url());
+                                    , System.currentTimeMillis(), "commentId", dailyEntity.getParent_name(), dailyEntity.getTxt_url());
                             histroyBeanList.add(bofangHistroyBean);
                         }
                         MediaService.insertBoFangHistroyList(histroyBeanList);

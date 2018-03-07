@@ -3,11 +3,9 @@ package www.knowledgeshare.com.knowledgeshare.activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,10 +43,7 @@ import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
-import www.knowledgeshare.com.knowledgeshare.utils.DataCleanManager;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
-import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
-import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 
 /**
  * 已下载点进来的详情
@@ -182,7 +177,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                                            entity.getDate(), entity.getVideoUrl(), entity.getGood_count(),
                                                            entity.getCollect_count(), entity.getView_count(), entity.isDianzan(), entity.isCollected()
                                                            , entity.getIconUrl(), entity.getParentName(), entity.getH5_url()
-                                                           , SystemClock.currentThreadTimeMillis(), entity.getTypeId(),
+                                                           , System.currentTimeMillis(), entity.getTypeId(),
                                                            entity.getParentName(), entity.getTxtUrl());
                                                    bofangHistroyBean.setLocal(true);
                                                    histroyBeanList.add(bofangHistroyBean);

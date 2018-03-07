@@ -269,7 +269,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                                 entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
                                                 entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
                                                 , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url(),
-                                                SystemClock.currentThreadTimeMillis()
+                                                System.currentTimeMillis()
                                                 , "commentId", entity.getParent_name(), entity.getTxt_url());
                                         histroyBeanList.add(bofangHistroyBean);
                                     }

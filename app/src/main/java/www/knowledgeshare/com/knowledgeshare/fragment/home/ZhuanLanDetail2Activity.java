@@ -947,7 +947,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                 mFreeTryReadDetailBean.getCollect_count(), mFreeTryReadDetailBean.getView_count(),
                                 mFreeTryReadDetailBean.isIsfav(), mFreeTryReadDetailBean.isIsfav(),
                                 mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getT_tag(),
-                                mFreeTryReadDetailBean.getH5_url(), SystemClock.currentThreadTimeMillis()
+                                mFreeTryReadDetailBean.getH5_url(), System.currentTimeMillis()
                                 , mFreeTryReadDetailBean.getZl_id() + "",
                                 mFreeTryReadDetailBean.getParent_name(), "");
                         histroyBeanList.add(bofangHistroyBean);

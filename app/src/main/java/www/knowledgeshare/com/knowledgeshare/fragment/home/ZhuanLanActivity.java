@@ -223,9 +223,9 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                                  if (!LookUtils.isInserted(mZhuanLanBean.getZl_name())) {
                                      LookUtils.add(new LookBean(Integer.parseInt(mId), "zhuanlan", mZhuanLanBean.getZl_name()
                                              , mZhuanLanBean.getZl_teacher_tags(), mZhuanLanBean.getZl_price()
-                                             , SystemClock.currentThreadTimeMillis()));
+                                             , System.currentTimeMillis()));
                                  } else {
-                                     LookUtils.updateTime(SystemClock.currentThreadTimeMillis(), mZhuanLanBean.getZl_name()
+                                     LookUtils.updateTime(System.currentTimeMillis(), mZhuanLanBean.getZl_name()
                                              , "zhuanlan");
                                  }
                                  if (!mZhuanLanBean.is_try_look()){

@@ -158,7 +158,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                                 bean.getCreated_at(), bean.getVideo_url(), bean.getGood_count(),
                                 bean.getCollect_count(), bean.getView_count(), bean.isDianzan(), bean.isCollected(),
                                 bean.getT_header(), bean.getParentName(),
-                                bean.getH5_url(), SystemClock.currentThreadTimeMillis(), bean.getParentId(),
+                                bean.getH5_url(), System.currentTimeMillis(), bean.getParentId(),
                                 bean.getParentName(), bean.getTxt_url());
                         histroyBeanList.add(bofangHistroyBean);
                     }
