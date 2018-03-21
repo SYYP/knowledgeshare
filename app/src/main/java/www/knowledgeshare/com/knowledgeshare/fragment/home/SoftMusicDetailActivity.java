@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -84,6 +83,8 @@ import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
+import static www.knowledgeshare.com.knowledgeshare.R.id.bottom_ll;
+
 public class SoftMusicDetailActivity extends UMShareActivity implements View.OnClickListener {
 
     private ImageView iv_back;
@@ -98,6 +99,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
     private TextView tv_shiyirenqun;
     private TextView tv_readxuzhi;
     private TextView tv_writeliuyan;
+    private TextView tv_read;
     private RecyclerView recycler_liuyan;
     private LinearLayout activity_free;
     private TextView tv_tryread;
@@ -283,6 +285,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
         }
     }
 
+
     private void initListener() {
         nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -341,13 +344,15 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
         activity_free = (LinearLayout) findViewById(R.id.activity_free);
         tv_tryread = (TextView) findViewById(R.id.tv_tryread);
         tv_tryread.setOnClickListener(this);
+        tv_read = (TextView) findViewById(R.id.tv_read);
+        tv_read.setOnClickListener(this);
         tv_buy = (TextView) findViewById(R.id.tv_buy);
         tv_buy.setOnClickListener(this);
         iv_guanzhu = (ImageView) findViewById(R.id.iv_guanzhu);
         iv_guanzhu.setOnClickListener(this);
         iv_dianzan = (ImageView) findViewById(R.id.iv_dianzan);
         iv_dianzan.setOnClickListener(this);
-        bottomLl = (LinearLayout) findViewById(R.id.bottom_ll);
+        bottomLl = (LinearLayout) findViewById(bottom_ll);
         nestView = (NestedScrollView) findViewById(R.id.nestView);
         recycler_free.setLayoutManager(new LinearLayoutManager(this));
         recycler_free.setNestedScrollingEnabled(false);
@@ -390,7 +395,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                  Glide.with(MyApplication.getGloableContext()).load(mMusicDetailBean.getImgurl()).apply(options).into(iv_beijing);
                                  ViewGroup.LayoutParams layoutParams = iv_beijing.getLayoutParams();
                                  int width = MyUtils.getScreenWidth(SoftMusicDetailActivity.this);
-                                 layoutParams.height= width*7/15;
+                                 layoutParams.height = width * 7 / 15;
                                  iv_beijing.setLayoutParams(layoutParams);
                                  mTeacher = mMusicDetailBean.getTeacher();
                                  tv_teacher_intro.setText(mTeacher.getT_introduce());
@@ -413,6 +418,13 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                  tv_dianzan_count.setText(mTeacher_zan_count + "");
                                  tv_shiyirenqun.setText(mMusicDetailBean.getXk_suitable());
                                  tv_readxuzhi.setText(mMusicDetailBean.getXk_rss());
+                                 if (mMusicDetailBean.is_buy()) {
+                                     bottomLl.setVisibility(View.GONE);
+                                     tv_read.setVisibility(View.VISIBLE);
+                                 } else {
+                                     bottomLl.setVisibility(View.VISIBLE);
+                                     tv_read.setVisibility(View.GONE);
+                                 }
                                  mChild = mMusicDetailBean.getChild();
                                  mLieBiaoAdapter = new LieBiaoAdapter(R.layout.item_like_liebiao, mChild);
                                  recycler_free.setAdapter(mLieBiaoAdapter);
@@ -420,7 +432,8 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                          if (mLieBiaoAdapter.getData().get(position).getIs_try() != 1
-                                                 && getIntent().getStringExtra("type") == null) {
+                                                 && getIntent().getStringExtra("type") == null
+                                                 && !mMusicDetailBean.is_buy()) {
                                              showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
                                          } else {
                                              setISshow(true);
@@ -625,8 +638,8 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
 
         @Override
         protected void convert(final BaseViewHolder helper, final SoftMusicDetailBean.ChildEntity item) {
-            TextView tv_trylisten=helper.getView(R.id.tv_trylisten);
-            if (getIntent().getStringExtra("type") != null) {
+            TextView tv_trylisten = helper.getView(R.id.tv_trylisten);
+            if (getIntent().getStringExtra("type") != null || mMusicDetailBean.is_buy()) {
                 tv_trylisten.setVisibility(View.INVISIBLE);
                 helper.setVisible(R.id.iv_wengao, true);
             } else {
@@ -652,10 +665,14 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
             helper.getView(R.id.iv_dian).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (item.getIs_try() == 1) {
+                    if (mMusicDetailBean.is_buy()) {
                         showListDialog(helper.getAdapterPosition(), item.isIsfav(), item.isIslive(), item.getId());
                     } else {
-                        showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
+                        if (item.getIs_try() == 1) {
+                            showListDialog(helper.getAdapterPosition(), item.isIsfav(), item.isIslive(), item.getId());
+                        } else {
+                            showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
+                        }
                     }
                 }
             });
@@ -1529,6 +1546,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                 startActivity(intent);
                 break;
             case R.id.tv_tryread:
+            case R.id.tv_read:
                 if (mLieBiaoAdapter.getData().get(0).getIs_try() != 1) {
                     showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
                 } else {

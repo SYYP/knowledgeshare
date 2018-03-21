@@ -261,22 +261,16 @@
             android:textColor="@color/white"
             android:textSize="17sp"/>
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/ll_root_view1"
-        android:visibility="gone"
+    <TextView
+        android:id="@+id/tv_read"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_gravity="bottom">
-        <TextView
-            android:id="@+id/tv_read"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/text_red_dark"
-            android:gravity="center"
-            android:padding="14dp"
-            android:text="阅 读"
-            android:textColor="@color/white"
-            android:textSize="17sp"/>
-    </LinearLayout>
+        android:layout_gravity="bottom"
+        android:background="@color/text_red_dark"
+        android:gravity="center"
+        android:padding="12dp"
+        android:visibility="gone"
+        android:text="阅读"
+        android:textColor="@color/white"
+        android:textSize="17sp"/>
 </FrameLayout>

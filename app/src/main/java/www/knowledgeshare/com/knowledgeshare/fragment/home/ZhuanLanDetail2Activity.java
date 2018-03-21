@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -19,6 +18,7 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -111,6 +111,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     private String mTime;
     private String mId;
     private TextView mTv_content;
+    private FrameLayout fl_root_view;
     private boolean nowifiallowdown;
     private BaseDialog mNetDialog;
     private long pretime;
@@ -522,6 +523,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         tv_buy.setOnClickListener(this);
         recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
         recycler_liuyan.setNestedScrollingEnabled(false);
+        fl_root_view= (FrameLayout) findViewById(R.id.fl_root_view);
         nestView = (NestedScrollView) findViewById(R.id.nestView);
         webview = (CustomActionWebView) findViewById(R.id.webview);
         if (getIntent().getStringExtra("type") != null) {
