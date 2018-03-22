@@ -360,9 +360,11 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 return;
             }
             mPlayerBean = playerBean;
-            if (mPlayerBean.getPosition() != 0) {
+            if (mPlayerBean.getPosition() != 0 ) {
                 //因为有构造器是不传position的，当播放下一首的时候会再走一遍会变成0
                 currPosition = mPlayerBean.getPosition();
+            }else {
+                currPosition = 0;
             }
             // 为解决第二次播放时抛出的IllegalStateException，这里做了try-catch处理
             try {
@@ -519,12 +521,13 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                     if (TextUtils.isEmpty(musicList.get(currPosition).getVideo_url())) {
                         playLocal(musicList.get(currPosition).getLocalPath());
                     } else {
-                        mBinder.setMusicUrl(musicList.get(currPosition).getVideo_url());
-                        mBinder.playMusic(musicList.get(currPosition));
                         //当播放下一首的时候小型播放器的数据和播放主界面都需要变
                         PlayerBean playerBean = musicList.get(currPosition);
+                        playerBean.setPosition(currPosition);
                         playerBean.setMsg("refreshplayer");
                         EventBus.getDefault().postSticky(playerBean);
+                        mBinder.setMusicUrl(playerBean.getVideo_url());
+                        mBinder.playMusic(playerBean);
                     }
                 }
             }
@@ -543,12 +546,13 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                     if (TextUtils.isEmpty(musicList.get(currPosition).getVideo_url())) {
                         playLocal(musicList.get(currPosition).getLocalPath());
                     } else {
-                        mBinder.setMusicUrl(musicList.get(currPosition).getVideo_url());
-                        mBinder.playMusic(musicList.get(currPosition));
                         //当播放下一首的时候小型播放器的数据和播放主界面都需要变
                         PlayerBean playerBean = musicList.get(currPosition);
+                        playerBean.setPosition(currPosition);
                         playerBean.setMsg("refreshplayer");
                         EventBus.getDefault().postSticky(playerBean);
+                        mBinder.setMusicUrl(playerBean.getVideo_url());
+                        mBinder.playMusic(playerBean);
                     }
                 }
             }

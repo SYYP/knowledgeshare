@@ -149,21 +149,11 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
         api.registerApp(WX_APPID);
         EventBus.getDefault().register(this);
     }
-    private boolean weixinpaysuccess;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         //当在该页面下拉通知栏点击暂停的时候这边按钮也要变化
         if (eventBean.getMsg().equals("weixinpaysuccess")) {
-            weixinpaysuccess = true;
-        }
-    }
-
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (weixinpaysuccess) {
             showPaySuccessDialog();
         }
     }

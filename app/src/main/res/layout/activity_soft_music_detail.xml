@@ -175,7 +175,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:paddingLeft="5dp"
-                                    android:text="11"/>
+                                    android:text=""/>
                             </LinearLayout>
                         </LinearLayout>
                     </RelativeLayout>
@@ -349,7 +349,7 @@
         <TextView
             android:id="@+id/tv_buy"
             android:layout_weight="1"
-            android:text="￥198.00/年  立即购买"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="15sp"
             android:gravity="center"

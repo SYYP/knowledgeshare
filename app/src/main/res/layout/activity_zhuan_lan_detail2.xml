@@ -207,4 +207,5 @@
         android:text="订阅：198.00/年"
         android:textColor="@color/white"
         android:textSize="17sp"/>
+    <include layout="@layout/smallmusic"/>
 </FrameLayout>

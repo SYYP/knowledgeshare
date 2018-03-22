@@ -113,6 +113,9 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
         }
         HttpParams params = new HttpParams();
         params.put("userid", SpUtils.getString(this, "id", ""));
+        if (mMusicTypeBean == null) {
+            return;
+        }
         if (mMusicTypeBean.getType().equals("free")) {
             params.put("type", "free");
         } else if (mMusicTypeBean.getType().equals("everydaycomment")) {
@@ -487,6 +490,10 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                 showShareDialog();
                 break;
             case R.id.tv_wengao:
+                if (mMusicTypeBean.getType().equals("zhuanlandetail")){
+                    Toast.makeText(this, "此音频暂时无文稿", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(this, WenGaoActivity.class);
                 intent.putExtra("type", mMusicTypeBean.getType());
                 //                intent.putExtra("t_name", mMusicTypeBean.getT_name());

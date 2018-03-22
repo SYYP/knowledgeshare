@@ -66,7 +66,7 @@
                         android:background="#30000000"
                         android:gravity="center_vertical"
                         android:padding="15dp"
-                        android:text="崔宗顺的男低音歌唱家秘籍"
+                        android:text=""
                         android:textColor="@color/white"
                         android:textSize="16sp"/>
                 </FrameLayout>
@@ -105,7 +105,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:text="10000人订阅"/>
+                            android:text=""/>
                     </RelativeLayout>
                     <View
                         android:layout_width="match_parent"
@@ -257,7 +257,7 @@
             android:background="@color/text_red_dark"
             android:gravity="center"
             android:padding="14dp"
-            android:text="订阅：￥198/年"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="17sp"/>
     </LinearLayout>

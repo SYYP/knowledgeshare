@@ -13,6 +13,7 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import org.greenrobot.eventbus.EventBus;
 
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 
 import static com.tencent.mm.sdk.constants.ConstantsAPI.COMMAND_PAY_BY_WX;
 
@@ -61,8 +62,8 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
         //        Log.d(TAG, "onPayFinish, errCode = " + resp.errCode);// 支付结果码
         if (baseResp.getType() == COMMAND_PAY_BY_WX) {
             if (baseResp.errCode == 0) {
+                EventBus.getDefault().postSticky(new EventBean("weixinpaysuccess"));
                 Toast.makeText(this, "微信支付成功", Toast.LENGTH_SHORT).show();
-                EventBus.getDefault().postSticky("weixinpaysuccess");
             }
             if (baseResp.errCode == -1) {
                 Toast.makeText(this, "微信支付失败", Toast.LENGTH_SHORT).show();

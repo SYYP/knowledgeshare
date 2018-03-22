@@ -61,7 +61,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="180dp"
                         android:scaleType="fitXY"
-                        android:src="@drawable/demo"/>
+                        />
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -183,7 +183,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:paddingLeft="5dp"
-                                    android:text="11"/>
+                                    android:text=""/>
                             </LinearLayout>
                         </LinearLayout>
                     </RelativeLayout>
@@ -340,6 +340,7 @@
     </LinearLayout>
     <LinearLayout
         android:layout_gravity="bottom"
+        android:id="@+id/bottom_ll"
         android:layout_width="match_parent"
         android:layout_height="50dp">
         <TextView
@@ -356,7 +357,7 @@
         <TextView
             android:id="@+id/tv_buy"
             android:layout_weight="1"
-            android:text="购买：￥9.9"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="17sp"
             android:gravity="center"
@@ -365,4 +366,16 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"/>
     </LinearLayout>
+    <TextView
+        android:id="@+id/tv_read"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:background="@color/text_red_dark"
+        android:gravity="center"
+        android:padding="12dp"
+        android:visibility="gone"
+        android:text="阅读"
+        android:textColor="@color/white"
+        android:textSize="17sp"/>
 </FrameLayout>
