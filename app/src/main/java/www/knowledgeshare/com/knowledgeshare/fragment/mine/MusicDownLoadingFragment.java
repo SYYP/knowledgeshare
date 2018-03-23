@@ -457,6 +457,9 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                                     mNetDialog.dismiss();
                                 }
                             });
+                        } else if (apnType == 1){
+                            kaishiTv.setText("全部暂停");
+                            task.start();
                         }
                         break;
                     case Progress.NONE:
@@ -482,6 +485,9 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                                     mNetDialog.dismiss();
                                 }
                             });
+                        } else if (apnType == 1){
+                            kaishiTv.setText("全部暂停");
+                            task.start();
                         }
                         break;
                     case Progress.ERROR:
@@ -507,6 +513,9 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                                     mNetDialog.dismiss();
                                 }
                             });
+                        } else if (apnType == 1){
+                            kaishiTv.setText("全部暂停");
+                            task.start();
                         }
                         for (int i = 0; i < values.size(); i++) {
                             if (progress.status == Progress.LOADING) {
