@@ -23,7 +23,7 @@
                 android:padding="13dp"
                 android:src="@drawable/icon_back_white"/>
             <TextView
-                android:id="@+id/tv_title"
+                android:id="@+id/tv_miantitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"

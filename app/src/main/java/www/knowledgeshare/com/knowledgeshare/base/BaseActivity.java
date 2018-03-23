@@ -61,6 +61,9 @@ public class BaseActivity extends AppCompatActivity {
         super.onWindowFocusChanged(hasFocus);
         if (musicPop == null) {
             musicPop = new CustomPopupWindow(this);
+            if (isshow && mMyBinder.isPlaying()) {
+                musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
+            }
         }
     }
 
@@ -103,9 +106,9 @@ public class BaseActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMyBinder = (MediaService.MyBinder) service;
-            //            if (isshow && mMyBinder.isPlaying()) {
-            //                musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
-            //            }
+//            if (isshow && mMyBinder.isPlaying()) {
+//                musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
+//            }
         }
 
         @Override

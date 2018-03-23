@@ -86,7 +86,7 @@ import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClickListener {
 
     private ImageView iv_back;
-    private TextView tv_title;
+    private TextView tv_miantitle;
     private CircleImageView iv_teacher_head;
     private TextView tv_teacher_name;
     private ImageView iv_collect, iv_beijing;
@@ -160,9 +160,10 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         }
     };
     private ImageView iv_delete, iv_bo_head, iv_arrow_top, iv_mulu;
-    private TextView tvtitle, tv_subtitle;
+    private TextView tv_subtitle;
     private RelativeLayout rl_bofang;
     private MusicTypeBean mMusicTypeBean;
+    private TextView tv_title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,6 +172,26 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         EventBus.getDefault().register(this);
         setISshow(false);
         initView();
+        List<String> list = new ArrayList<>();
+        list.add("添加笔记");
+        webview.setWebViewClient(new CustomWebViewClient());
+        //设置item
+        webview.setActionList(list);
+        //链接js注入接口，使能选中返回数据
+        webview.linkJSInterface();
+        webview.getSettings().setBuiltInZoomControls(true);
+        webview.getSettings().setDisplayZoomControls(false);
+        //使用javascript
+        webview.getSettings().setJavaScriptEnabled(true);
+        webview.getSettings().setDomStorageEnabled(true);
+        //增加点击回调
+        webview.setActionSelectListener(new ActionSelectListener() {
+            @Override
+            public void onClick(String title, String selectText) {
+                //                Toast.makeText(ZhuanLanDetail2Activity.this, "Click Item: " + title + "。\n\nValue: " + selectText, Toast.LENGTH_LONG).show();
+                addNote(selectText);
+            }
+        });
         initDialog();
         initData();
         initListener();
@@ -230,26 +251,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     }
 
     private void initWebView(String url) {
-        List<String> list = new ArrayList<>();
-        list.add("添加笔记");
-        webview.setWebViewClient(new CustomWebViewClient());
-        //设置item
-        webview.setActionList(list);
-        //链接js注入接口，使能选中返回数据
-        webview.linkJSInterface();
-        webview.getSettings().setBuiltInZoomControls(true);
-        webview.getSettings().setDisplayZoomControls(false);
-        //使用javascript
-        webview.getSettings().setJavaScriptEnabled(true);
-        webview.getSettings().setDomStorageEnabled(true);
-        //增加点击回调
-        webview.setActionSelectListener(new ActionSelectListener() {
-            @Override
-            public void onClick(String title, String selectText) {
-                //                Toast.makeText(ZhuanLanDetail2Activity.this, "Click Item: " + title + "。\n\nValue: " + selectText, Toast.LENGTH_LONG).show();
-                addNote(selectText);
-            }
-        });
         webview.loadUrl(url);
     }
 
@@ -320,7 +321,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         if (eventBean.getMsg().equals("weixinpaysuccess")) {
             showPaySuccessDialog();
         }
-        //下面这些不好使，不知道为什么
         if (eventBean.getMsg().equals("norotate")) {
             SpUtils.putString(ZhuanLanDetail2Activity.this, "zlisbofang", "");
             isBofang = false;
@@ -465,7 +465,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     }
 
     private void initData() {
-        tv_title.setText(getIntent().getStringExtra("title"));
+        tv_miantitle.setText(getIntent().getStringExtra("title"));
         mId = getIntent().getStringExtra("id");
         HttpParams params = new HttpParams();
         params.put("id", mId);
@@ -483,6 +483,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                              public void onSuccess(Response<FreeTryReadDetailBean> response) {
                                  int code = response.code();
                                  mFreeTryReadDetailBean = response.body();
+                                 initWebView(mFreeTryReadDetailBean.getZl_h5_url());
                                  if (TextUtils.isEmpty(tv_title.getText().toString()) || tv_title.getText().toString().equals("")) {
                                      tv_title.setText(mFreeTryReadDetailBean.getParent_name());
                                  }
@@ -501,7 +502,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                  } else {
                                      iv_collect.setImageResource(R.drawable.weiguanzhuxin);
                                  }
-                                 initWebView(mFreeTryReadDetailBean.getZl_h5_url());
                                  //判断哪个专栏的音频在播放
                                  String zlisbofang = SpUtils.getString(ZhuanLanDetail2Activity.this, "zlisbofang", "");
                                  if (!TextUtils.isEmpty(zlisbofang)) {
@@ -532,7 +532,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     private void initView() {
         iv_back = (ImageView) findViewById(R.id.iv_back);
         iv_back.setOnClickListener(this);
-        tv_title = (TextView) findViewById(R.id.tv_title);
+        tv_miantitle = (TextView) findViewById(R.id.tv_miantitle);
         iv_teacher_head = (CircleImageView) findViewById(R.id.iv_teacher_head);
         tv_teacher_name = (TextView) findViewById(R.id.tv_teacher_name);
         iv_collect = (ImageView) findViewById(R.id.iv_collect);
@@ -1009,7 +1009,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                         EventBus.getDefault().postSticky(eventBean2);
                     }
                 } else {
-                    rl_bofang.setVisibility(View.GONE);
+                    iv_delete.setVisibility(View.VISIBLE);
                     //                    Toast.makeText(this, "暂停", Toast.LENGTH_SHORT).show();
                     iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
                     mMyBinder.pauseMusic();
@@ -1072,6 +1072,8 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 rl_bofang.setVisibility(View.GONE);
                 EventBean eventBean = new EventBean("norotate");
                 EventBus.getDefault().postSticky(eventBean);
+                EventBean eventBean2 = new EventBean("home_close");
+                EventBus.getDefault().postSticky(eventBean2);
                 break;
             case R.id.iv_arrow_top:
                 Intent intent1 = new Intent(this, MusicActivity.class);

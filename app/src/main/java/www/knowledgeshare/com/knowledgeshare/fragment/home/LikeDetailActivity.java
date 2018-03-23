@@ -387,7 +387,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                  tv_readxuzhi.setText(mMusicDetailBean.getXk_rss());
                                  if (mMusicDetailBean.is_buy()) {
                                      bottomLl.setVisibility(View.GONE);
-                                     tv_read.setVisibility(View.VISIBLE);
+                                     tv_read.setVisibility(View.GONE);
+                                     LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) springview.getLayoutParams();
+                                     layoutParams1.setMargins(0,0,0,0);
+                                     springview.setLayoutParams(layoutParams1);
+                                     springview.requestLayout();
                                  } else {
                                      bottomLl.setVisibility(View.VISIBLE);
                                      tv_read.setVisibility(View.GONE);

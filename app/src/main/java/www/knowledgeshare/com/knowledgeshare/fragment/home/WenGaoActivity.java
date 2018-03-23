@@ -3,7 +3,6 @@ package www.knowledgeshare.com.knowledgeshare.fragment.home;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -82,9 +81,29 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wen_gao);
         initView();
+        List<String> list = new ArrayList<>();
+        list.add("添加笔记");
+        webview.setWebViewClient(new CustomWebViewClient());
+        //设置item
+        webview.setActionList(list);
+        //链接js注入接口，使能选中返回数据
+        webview.linkJSInterface();
+        webview.getSettings().setBuiltInZoomControls(true);
+        webview.getSettings().setDisplayZoomControls(false);
+        //使用javascript
+        webview.getSettings().setJavaScriptEnabled(true);
+        webview.getSettings().setDomStorageEnabled(true);
+        //增加点击回调
+        webview.setActionSelectListener(new ActionSelectListener() {
+            @Override
+            public void onClick(String title, String selectText) {
+                //                Toast.makeText(WenGaoActivity.this, "Click Item: " + title + "。\n\nValue: " + selectText, Toast.LENGTH_LONG).show();
+                addNote(selectText);
+            }
+        });
+        initData();
         initDialog();
         showTanchuangDialog();
-        initData();
         setTimeRecord();
     }
 
@@ -140,26 +159,6 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
     }
 
     private void initWebView(String url) {
-        List<String> list = new ArrayList<>();
-        list.add("添加笔记");
-        webview.setWebViewClient(new CustomWebViewClient());
-        //设置item
-        webview.setActionList(list);
-        //链接js注入接口，使能选中返回数据
-        webview.linkJSInterface();
-        webview.getSettings().setBuiltInZoomControls(true);
-        webview.getSettings().setDisplayZoomControls(false);
-        //使用javascript
-        webview.getSettings().setJavaScriptEnabled(true);
-        webview.getSettings().setDomStorageEnabled(true);
-        //增加点击回调
-        webview.setActionSelectListener(new ActionSelectListener() {
-            @Override
-            public void onClick(String title, String selectText) {
-                //                Toast.makeText(WenGaoActivity.this, "Click Item: " + title + "。\n\nValue: " + selectText, Toast.LENGTH_LONG).show();
-                addNote(selectText);
-            }
-        });
         webview.loadUrl(url);
     }
 
@@ -276,6 +275,7 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
                         mWenGaoBean = response.body();
                         if (response.code() >= 200 && response.code() <= 204) {
                             Logger.e(code + "");
+                            initWebView(mWenGaoBean.getH5_url());
                             Glide.with(MyApplication.getGloableContext()).load(mWenGaoBean.getT_header()).into(iv_teacher_head);
                             tv_teacher_name.setText(mWenGaoBean.getT_name());
                             tv_ke_name.setText(mWenGaoBean.getVideo_name());
@@ -290,7 +290,6 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
                             }
                             mLiuYanAdapter = new LiuYanAdapter(R.layout.item_liuyan2, mComment);
                             recycler_liuyan.setAdapter(mLiuYanAdapter);
-                            initWebView(mWenGaoBean.getH5_url());
                         } else {
                         }
                     }
