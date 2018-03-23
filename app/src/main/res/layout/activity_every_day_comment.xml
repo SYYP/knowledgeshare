@@ -57,7 +57,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/meirituijian"/>
+                    />
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="已更新：1234节"
+                        android:text="已更新："
                         android:textSize="13sp"/>
                     <TextView
                         android:id="@+id/tv_look_count"
@@ -118,7 +118,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:layout_centerVertical="true"
-                        android:text="浏览次数：1234"
+                        android:text="浏览次数："
                         android:textSize="13sp"/>
                     <TextView
                         android:id="@+id/tv_collect_count"
@@ -126,7 +126,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:text="收藏次数：1234"
+                        android:text="收藏次数："
                         android:textSize="13sp"/>
                 </RelativeLayout>
                 <View

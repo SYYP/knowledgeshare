@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -63,6 +62,8 @@ import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
+import static www.knowledgeshare.com.knowledgeshare.R.id.tv_read;
+
 public class ZhuanLanActivity extends UMShareActivity implements View.OnClickListener {
 
     private ImageView iv_back;
@@ -87,7 +88,6 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
     private String mId;
     private String mTime;
     private LinearLayout rootView;
-    private LinearLayout rootView01;
     private TextView readTv;
     private Intent intent;
     // IWXAPI 是第三方app和微信通信的openapi接口
@@ -149,21 +149,11 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
         api.registerApp(WX_APPID);
         EventBus.getDefault().register(this);
     }
-    private boolean weixinpaysuccess;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         //当在该页面下拉通知栏点击暂停的时候这边按钮也要变化
         if (eventBean.getMsg().equals("weixinpaysuccess")) {
-            weixinpaysuccess = true;
-        }
-    }
-
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (weixinpaysuccess) {
             showPaySuccessDialog();
         }
     }
@@ -190,11 +180,12 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
     private void initData() {
         if (getIntent().getStringExtra("type") != null) {
             rootView.setVisibility(View.GONE);
-            rootView01.setVisibility(View.VISIBLE);
+            readTv.setVisibility(View.VISIBLE);
         }
         mId = getIntent().getStringExtra("id");
         HttpParams params = new HttpParams();
         params.put("id", mId);
+        params.put("userid", SpUtils.getString(this, "id", ""));
         OkGo.<ZhuanLanBean>post(MyContants.LXKURL + "zl/show")
                 .tag(this)
                 .params(params)
@@ -231,6 +222,13 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                                  if (!mZhuanLanBean.is_try_look()){
                                      tv_tryread.setBackgroundColor(getResources().getColor(R.color.tab_text_normal_color));
                                      tv_tryread.setTextColor(getResources().getColor(R.color.textcolor));
+                                 }
+                                 if (mZhuanLanBean.is_buy()){
+                                     rootView.setVisibility(View.GONE);
+                                     readTv.setVisibility(View.VISIBLE);
+                                 }else {
+                                     rootView.setVisibility(View.VISIBLE);
+                                     readTv.setVisibility(View.GONE);
                                  }
                              }
                          }
@@ -603,7 +601,6 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
         tv_buy = (TextView) findViewById(R.id.tv_buy);
         tv_buy.setOnClickListener(this);
         rootView = (LinearLayout) findViewById(R.id.ll_root_view);
-        rootView01 = (LinearLayout) findViewById(R.id.ll_root_view1);
         readTv = (TextView) findViewById(R.id.tv_read);
         readTv.setOnClickListener(this);
         recycler_lately.setLayoutManager(new LinearLayoutManager(this));
@@ -638,18 +635,20 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                 intent = new Intent(this, ZhuanLanDetail1Activity.class);
                 intent.putExtra("id", mZhuanLanBean.getId() + "");
                 intent.putExtra("title", mZhuanLanBean.getZl_name());
+                intent.putExtra("is_buy", mZhuanLanBean.is_buy());
                 startActivity(intent);
                 break;
             case R.id.tv_buy:
                 showBuyDialog();
                 break;
-            case R.id.tv_read:
+            case tv_read:
                 if (!mZhuanLanBean.is_try_look()){
                     Toast.makeText(this, "暂无试读课程~", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 intent = new Intent(this, ZhuanLanDetail1Activity.class);
                 intent.putExtra("id", mZhuanLanBean.getId() + "");
+                intent.putExtra("is_buy", mZhuanLanBean.is_buy());
                 intent.putExtra("title", mZhuanLanBean.getZl_name());
                 if (getIntent().getStringExtra("type") != null) {
                     intent.putExtra("type","alreadyBuy");

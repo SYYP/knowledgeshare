@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -1294,7 +1293,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 Intent intent1 = new Intent(mContext, MusicActivity.class);
                 intent1.putExtra("data", mMusicTypeBean);
                 startActivity(intent1);
-                mActivity.overridePendingTransition(R.anim.bottom_in, 0);
+                mActivity.overridePendingTransition(R.anim.bottom_in, R.anim.alpha_out);
                 break;
             case R.id.iv_mulu:
                 Intent intent11 = new Intent(mContext, BoFangListActivity.class);

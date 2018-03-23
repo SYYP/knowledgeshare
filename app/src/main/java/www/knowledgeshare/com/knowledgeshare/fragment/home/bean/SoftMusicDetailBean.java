@@ -40,6 +40,16 @@ public class SoftMusicDetailBean implements Serializable{
     private String xk_price;
     private List<ChildEntity> child;
     private String h5_url;
+    private boolean is_buy;
+
+    public boolean is_buy() {
+        return is_buy;
+    }
+
+    public void setIs_buy(boolean is_buy) {
+        this.is_buy = is_buy;
+    }
+
 
     public String getH5_url() {
         return h5_url;

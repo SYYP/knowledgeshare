@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -84,6 +83,8 @@ import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
+import static www.knowledgeshare.com.knowledgeshare.R.id.bottom_ll;
+
 public class SoftMusicDetailActivity extends UMShareActivity implements View.OnClickListener {
 
     private ImageView iv_back;
@@ -98,6 +99,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
     private TextView tv_shiyirenqun;
     private TextView tv_readxuzhi;
     private TextView tv_writeliuyan;
+    private TextView tv_read;
     private RecyclerView recycler_liuyan;
     private LinearLayout activity_free;
     private TextView tv_tryread;
@@ -190,13 +192,12 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
         EventBus.getDefault().register(this);
     }
 
-    private boolean weixinpaysuccess;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         //当在该页面下拉通知栏点击暂停的时候这边按钮也要变化
         if (eventBean.getMsg().equals("weixinpaysuccess")) {
-            weixinpaysuccess = true;
+            showPaySuccessDialog();
         }
         if (eventBean.getMsg().equals("refresh_xk")) {
             String id = eventBean.getMsg2();
@@ -209,14 +210,6 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                     return;
                 }
             }
-        }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (weixinpaysuccess) {
-            showPaySuccessDialog();
         }
     }
 
@@ -283,6 +276,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
         }
     }
 
+
     private void initListener() {
         nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -341,13 +335,15 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
         activity_free = (LinearLayout) findViewById(R.id.activity_free);
         tv_tryread = (TextView) findViewById(R.id.tv_tryread);
         tv_tryread.setOnClickListener(this);
+        tv_read = (TextView) findViewById(R.id.tv_read);
+        tv_read.setOnClickListener(this);
         tv_buy = (TextView) findViewById(R.id.tv_buy);
         tv_buy.setOnClickListener(this);
         iv_guanzhu = (ImageView) findViewById(R.id.iv_guanzhu);
         iv_guanzhu.setOnClickListener(this);
         iv_dianzan = (ImageView) findViewById(R.id.iv_dianzan);
         iv_dianzan.setOnClickListener(this);
-        bottomLl = (LinearLayout) findViewById(R.id.bottom_ll);
+        bottomLl = (LinearLayout) findViewById(bottom_ll);
         nestView = (NestedScrollView) findViewById(R.id.nestView);
         recycler_free.setLayoutManager(new LinearLayoutManager(this));
         recycler_free.setNestedScrollingEnabled(false);
@@ -390,7 +386,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                  Glide.with(MyApplication.getGloableContext()).load(mMusicDetailBean.getImgurl()).apply(options).into(iv_beijing);
                                  ViewGroup.LayoutParams layoutParams = iv_beijing.getLayoutParams();
                                  int width = MyUtils.getScreenWidth(SoftMusicDetailActivity.this);
-                                 layoutParams.height= width*7/15;
+                                 layoutParams.height = width * 7 / 15;
                                  iv_beijing.setLayoutParams(layoutParams);
                                  mTeacher = mMusicDetailBean.getTeacher();
                                  tv_teacher_intro.setText(mTeacher.getT_introduce());
@@ -413,6 +409,17 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                  tv_dianzan_count.setText(mTeacher_zan_count + "");
                                  tv_shiyirenqun.setText(mMusicDetailBean.getXk_suitable());
                                  tv_readxuzhi.setText(mMusicDetailBean.getXk_rss());
+                                 if (mMusicDetailBean.is_buy()) {
+                                     bottomLl.setVisibility(View.GONE);
+                                     tv_read.setVisibility(View.GONE);
+                                     LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) springview.getLayoutParams();
+                                     layoutParams1.setMargins(0,0,0,0);
+                                     springview.setLayoutParams(layoutParams1);
+                                     springview.requestLayout();
+                                 } else {
+                                     bottomLl.setVisibility(View.VISIBLE);
+                                     tv_read.setVisibility(View.GONE);
+                                 }
                                  mChild = mMusicDetailBean.getChild();
                                  mLieBiaoAdapter = new LieBiaoAdapter(R.layout.item_like_liebiao, mChild);
                                  recycler_free.setAdapter(mLieBiaoAdapter);
@@ -420,46 +427,53 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                          if (mLieBiaoAdapter.getData().get(position).getIs_try() != 1
-                                                 && getIntent().getStringExtra("type") == null) {
+                                                 && getIntent().getStringExtra("type") == null
+                                                 && !mMusicDetailBean.is_buy()) {
                                              showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
                                          } else {
                                              setISshow(true);
                                              SoftMusicDetailBean.ChildEntity item = mChild.get(position);
                                              item.setChecked(true);
                                              //刷新小型播放器
-                                             PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getName(), item.getParent_name(), item.getVideo_url());
+                                             PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getName(), item.getParent_name(), item.getVideo_url(),position);
                                              gobofang(playerBean);
                                              addListenCount(item.getId() + "");
                                              //设置进入播放主界面的数据
                                              List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
                                              for (int i = 0; i < mChild.size(); i++) {
                                                  SoftMusicDetailBean.ChildEntity childEntity = mChild.get(i);
-                                                 MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
-                                                         childEntity.getT_header(), childEntity.getName(), childEntity.getId() + "", childEntity.isIsfav());
-                                                 musicTypeBean.setMsg("musicplayertype");
-                                                 musicTypeBeanList.add(musicTypeBean);
+                                                 if (childEntity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
+                                                     MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
+                                                             childEntity.getT_header(), childEntity.getName(), childEntity.getId() + "", childEntity.isIsfav());
+                                                     musicTypeBean.setMsg("musicplayertype");
+                                                     musicTypeBeanList.add(musicTypeBean);
+                                                 }
                                              }
                                              MediaService.insertMusicTypeList(musicTypeBeanList);
                                              //加入默认的播放列表
                                              List<PlayerBean> list = new ArrayList<PlayerBean>();
                                              for (int i = 0; i < mChild.size(); i++) {
                                                  SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
-                                                 PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getName(), entity.getParent_name(),
-                                                         entity.getVideo_url(), position);
-                                                 list.add(playerBean1);
+                                                 if (entity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
+                                                     PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getName(), entity.getParent_name(),
+                                                             entity.getVideo_url(), position);
+                                                     list.add(playerBean1);
+                                                 }
                                              }
                                              MediaService.insertMusicList(list);
                                              //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
                                              List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
                                              for (int i = 0; i < mChild.size(); i++) {
                                                  SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
-                                                 BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", entity.getId(), entity.getName(),
-                                                         entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
-                                                         entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
-                                                         , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url()
-                                                         , System.currentTimeMillis(), mMusicDetailBean.getXk_class_id() + "",
-                                                         entity.getParent_name(), entity.getTxt_url());
-                                                 histroyBeanList.add(bofangHistroyBean);
+                                                 if (entity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
+                                                     BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", entity.getId(), entity.getName(),
+                                                             entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
+                                                             entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
+                                                             , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url()
+                                                             , System.currentTimeMillis(), mMusicDetailBean.getXk_class_id() + "",
+                                                             entity.getParent_name(), entity.getTxt_url());
+                                                     histroyBeanList.add(bofangHistroyBean);
+                                                 }
                                              }
                                              MediaService.insertBoFangHistroyList(histroyBeanList);
                                          }
@@ -625,8 +639,8 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
 
         @Override
         protected void convert(final BaseViewHolder helper, final SoftMusicDetailBean.ChildEntity item) {
-            TextView tv_trylisten=helper.getView(R.id.tv_trylisten);
-            if (getIntent().getStringExtra("type") != null) {
+            TextView tv_trylisten = helper.getView(R.id.tv_trylisten);
+            if (getIntent().getStringExtra("type") != null || mMusicDetailBean.is_buy()) {
                 tv_trylisten.setVisibility(View.INVISIBLE);
                 helper.setVisible(R.id.iv_wengao, true);
             } else {
@@ -652,10 +666,14 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
             helper.getView(R.id.iv_dian).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (item.getIs_try() == 1) {
+                    if (mMusicDetailBean.is_buy()) {
                         showListDialog(helper.getAdapterPosition(), item.isIsfav(), item.isIslive(), item.getId());
                     } else {
-                        showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
+                        if (item.getIs_try() == 1) {
+                            showListDialog(helper.getAdapterPosition(), item.isIsfav(), item.isIslive(), item.getId());
+                        } else {
+                            showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
+                        }
                     }
                 }
             });
@@ -1529,6 +1547,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                 startActivity(intent);
                 break;
             case R.id.tv_tryread:
+            case R.id.tv_read:
                 if (mLieBiaoAdapter.getData().get(0).getIs_try() != 1) {
                     showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
                 } else {
@@ -1542,32 +1561,38 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                     List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
                     for (int i = 0; i < mChild.size(); i++) {
                         SoftMusicDetailBean.ChildEntity childEntity = mChild.get(i);
-                        MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
-                                childEntity.getT_header(), childEntity.getVideo_old_name(), childEntity.getId() + "", childEntity.isIsfav());
-                        musicTypeBean.setMsg("musicplayertype");
-                        musicTypeBeanList.add(musicTypeBean);
+                        if (childEntity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
+                            MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
+                                    childEntity.getT_header(), childEntity.getVideo_old_name(), childEntity.getId() + "", childEntity.isIsfav());
+                            musicTypeBean.setMsg("musicplayertype");
+                            musicTypeBeanList.add(musicTypeBean);
+                        }
                     }
                     MediaService.insertMusicTypeList(musicTypeBeanList);
                     //加入默认的播放列表
                     List<PlayerBean> list = new ArrayList<PlayerBean>();
                     for (int i = 0; i < mChild.size(); i++) {
                         SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
-                        PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_old_name(), entity.getParent_name(),
-                                entity.getVideo_url(), 0);
-                        list.add(playerBean1);
+                        if (entity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
+                            PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_old_name(), entity.getParent_name(),
+                                    entity.getVideo_url(), 0);
+                            list.add(playerBean1);
+                        }
                     }
                     MediaService.insertMusicList(list);
                     //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
                     List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
                     for (int i = 0; i < mChild.size(); i++) {
                         SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
-                        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", entity.getId(), entity.getVideo_old_name(),
-                                entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
-                                entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
-                                , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url()
-                                , System.currentTimeMillis(), mMusicDetailBean.getXk_class_id() + "",
-                                entity.getParent_name(), entity.getTxt_url());
-                        histroyBeanList.add(bofangHistroyBean);
+                        if (entity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
+                            BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", entity.getId(), entity.getVideo_old_name(),
+                                    entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
+                                    entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
+                                    , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url()
+                                    , System.currentTimeMillis(), mMusicDetailBean.getXk_class_id() + "",
+                                    entity.getParent_name(), entity.getTxt_url());
+                            histroyBeanList.add(bofangHistroyBean);
+                        }
                     }
                     MediaService.insertBoFangHistroyList(histroyBeanList);
                 }

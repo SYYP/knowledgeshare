@@ -16,6 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:visibility="gone"
             android:src="@drawable/icon_cha"/>
         <www.knowledgeshare.com.knowledgeshare.view.CircleImageView
             android:id="@+id/iv_bo_head"
@@ -23,7 +24,7 @@
             android:layout_height="50dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/face"/>
+            />
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,7 +38,7 @@
                 android:layout_marginRight="40dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="如何成为一名合格的歌者"
+                android:text=""
                 android:textColor="@color/textblack"
                 android:textSize="15sp"/>
             <TextView
@@ -48,7 +49,7 @@
                 android:layout_marginTop="5dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="为什么要唱歌"/>
+                android:text=""/>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout

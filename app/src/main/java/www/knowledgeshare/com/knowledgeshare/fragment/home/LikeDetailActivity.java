@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -115,9 +114,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
     private List<CommentMoreBean.DataEntity> mComment;
     private LiuYanAdapter mLiuYanAdapter;
     private int lastID;
+    private LinearLayout bottomLl;
     private TextView mTv_collect;
     private TextView mTv_dianzan;
     private boolean isRefreshing;
+    private TextView tv_read;
     private TextView mTv_content;
     private String mId;
     private BaseDialog mNetDialog;
@@ -283,11 +284,11 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
 
             @Override
             public void onLoadmore() {
-//                loadMoreComment(lastID + "");
+                //                loadMoreComment(lastID + "");
             }
         });
         springview.setHeader(new MyHeader(this));
-//        springview.setFooter(new MyFooter(this));
+        //        springview.setFooter(new MyFooter(this));
     }
 
     private void initView() {
@@ -313,11 +314,14 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
         tv_buy.setOnClickListener(this);
         recycler_free = (RecyclerView) findViewById(R.id.recycler_free);
         tv_shiyirenqun = (TextView) findViewById(R.id.tv_shiyirenqun);
+        bottomLl = (LinearLayout) findViewById(R.id.bottom_ll);
         tv_readxuzhi = (TextView) findViewById(R.id.tv_readxuzhi);
         tv_writeliuyan = (TextView) findViewById(R.id.tv_writeliuyan);
         tv_writeliuyan.setOnClickListener(this);
         recycler_liuyan = (RecyclerView) findViewById(R.id.recycler_liuyan);
         recycler_free.setLayoutManager(new LinearLayoutManager(this));
+        tv_read = (TextView) findViewById(R.id.tv_read);
+        tv_read.setOnClickListener(this);
         recycler_free.setNestedScrollingEnabled(false);
         recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
         recycler_liuyan.setNestedScrollingEnabled(false);
@@ -352,13 +356,13 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                              public void onSuccess(Response<SoftMusicDetailBean> response) {
                                  int code = response.code();
                                  mMusicDetailBean = response.body();
-                                 RequestOptions options=new RequestOptions();
+                                 RequestOptions options = new RequestOptions();
                                  options.error(R.drawable.default_banner);
                                  options.placeholder(R.drawable.default_banner);
                                  Glide.with(MyApplication.getGloableContext()).load(mMusicDetailBean.getImgurl()).apply(options).into(iv_beijing);
                                  ViewGroup.LayoutParams layoutParams = iv_beijing.getLayoutParams();
                                  int width = MyUtils.getScreenWidth(LikeDetailActivity.this);
-                                 layoutParams.height= width*7/15;
+                                 layoutParams.height = width * 7 / 15;
                                  iv_beijing.setLayoutParams(layoutParams);
                                  mTeacher = mMusicDetailBean.getTeacher();
                                  tv_teacher_intro.setText(mTeacher.getT_introduce());
@@ -381,13 +385,26 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                  tv_dianzan_count.setText(mTeacher_zan_count + "");
                                  tv_shiyirenqun.setText(mMusicDetailBean.getXk_suitable());
                                  tv_readxuzhi.setText(mMusicDetailBean.getXk_rss());
+                                 if (mMusicDetailBean.is_buy()) {
+                                     bottomLl.setVisibility(View.GONE);
+                                     tv_read.setVisibility(View.GONE);
+                                     LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) springview.getLayoutParams();
+                                     layoutParams1.setMargins(0,0,0,0);
+                                     springview.setLayoutParams(layoutParams1);
+                                     springview.requestLayout();
+                                 } else {
+                                     bottomLl.setVisibility(View.VISIBLE);
+                                     tv_read.setVisibility(View.GONE);
+                                 }
+
                                  mChild = mMusicDetailBean.getChild();
                                  mLieBiaoAdapter = new LieBiaoAdapter(R.layout.item_like_liebiao, mChild);
                                  recycler_free.setAdapter(mLieBiaoAdapter);
                                  mLieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                      @Override
                                      public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                         if (mLieBiaoAdapter.getData().get(position).getIs_try() != 1) {
+                                         if (mLieBiaoAdapter.getData().get(position).getIs_try() != 1
+                                                 && !mMusicDetailBean.is_buy()) {
                                              showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
                                          } else {
                                              setISshow(true);
@@ -401,31 +418,38 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                              List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
                                              for (int i = 0; i < mChild.size(); i++) {
                                                  SoftMusicDetailBean.ChildEntity childEntity = mChild.get(i);
-                                                 MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
-                                                         childEntity.getT_header(), childEntity.getVideo_old_name(), childEntity.getId() + "", childEntity.isIsfav());
-                                                 musicTypeBean.setMsg("musicplayertype");
-                                                 musicTypeBeanList.add(musicTypeBean);
+                                                 if (childEntity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
+                                                     MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
+                                                             childEntity.getT_header(), childEntity.getVideo_old_name(), childEntity.getId() + "", childEntity.isIsfav());
+                                                     musicTypeBean.setMsg("musicplayertype");
+                                                     musicTypeBeanList.add(musicTypeBean);
+                                                 }
                                              }
                                              MediaService.insertMusicTypeList(musicTypeBeanList);
                                              //加入默认的播放列表
                                              List<PlayerBean> list = new ArrayList<PlayerBean>();
                                              for (int i = 0; i < mChild.size(); i++) {
                                                  SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
-                                                 PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_old_name(), entity.getParent_name(), entity.getVideo_url());
-                                                 list.add(playerBean1);
+                                                 if (entity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
+                                                     PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_old_name(), entity.getParent_name(), entity.getVideo_url());
+                                                     list.add(playerBean1);
+
+                                                 }
                                              }
                                              MediaService.insertMusicList(list);
                                              //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
                                              List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
                                              for (int i = 0; i < mChild.size(); i++) {
                                                  SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
-                                                 BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", entity.getId(), entity.getVideo_old_name(),
-                                                         entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
-                                                         entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
-                                                         , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url()
-                                                         , System.currentTimeMillis(), mMusicDetailBean.getXk_class_id() + "",
-                                                         entity.getParent_name(), entity.getTxt_url());
-                                                 histroyBeanList.add(bofangHistroyBean);
+                                                 if (entity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
+                                                     BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", entity.getId(), entity.getVideo_old_name(),
+                                                             entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
+                                                             entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
+                                                             , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url()
+                                                             , System.currentTimeMillis(), mMusicDetailBean.getXk_class_id() + "",
+                                                             entity.getParent_name(), entity.getTxt_url());
+                                                     histroyBeanList.add(bofangHistroyBean);
+                                                 }
                                              }
                                              MediaService.insertBoFangHistroyList(histroyBeanList);
                                          }
@@ -502,15 +526,21 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
 
         @Override
         protected void convert(final BaseViewHolder helper, final SoftMusicDetailBean.ChildEntity item) {
-            TextView tv_trylisten=helper.getView(R.id.tv_trylisten);
-            ImageView iv_wengao=helper.getView(R.id.iv_wengao);
-            if (item.getIs_try() == 1) {
-                iv_wengao.setVisibility(View.VISIBLE);
-                tv_trylisten.setVisibility(View.VISIBLE);
-            }else {
-                iv_wengao.setVisibility(View.INVISIBLE);
+            TextView tv_trylisten = helper.getView(R.id.tv_trylisten);
+            ImageView iv_wengao = helper.getView(R.id.iv_wengao);
+            if (mMusicDetailBean.is_buy()) {
                 tv_trylisten.setVisibility(View.INVISIBLE);
+                helper.setVisible(R.id.iv_wengao, true);
+            } else {
+                if (item.getIs_try() == 1) {
+                    iv_wengao.setVisibility(View.VISIBLE);
+                    tv_trylisten.setVisibility(View.VISIBLE);
+                } else {
+                    iv_wengao.setVisibility(View.INVISIBLE);
+                    tv_trylisten.setVisibility(View.INVISIBLE);
+                }
             }
+
             String created_at = item.getCreated_at();
             String[] split = created_at.split(" ");
             helper.setText(R.id.tv_name, item.getVideo_old_name())
@@ -521,10 +551,14 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
             helper.getView(R.id.iv_dian).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (item.getIs_try() == 1) {
+                    if (mMusicDetailBean.is_buy()) {
                         showListDialog(helper.getAdapterPosition(), item.isIsfav(), item.isIslive(), item.getId());
                     } else {
-                        showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
+                        if (item.getIs_try() == 1) {
+                            showListDialog(helper.getAdapterPosition(), item.isIsfav(), item.isIslive(), item.getId());
+                        } else {
+                            showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
+                        }
                     }
                 }
             });
@@ -543,7 +577,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
             });
             if (helper.getAdapterPosition() <= 8) {
                 helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
-            }else {
+            } else {
                 helper.setText(R.id.tv_order, "" + (helper.getAdapterPosition() + 1));
             }
         }
@@ -682,7 +716,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                 listBean.setDianzan(childEntity.isIslive());
                                 listBean.setCollected(childEntity.isIsfav());
                                 list.add(listBean);
-                                if (MyUtils.isHaveFile("xiaoke",childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId() + ".mp3")){
+                                if (MyUtils.isHaveFile("xiaoke", childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId() + ".mp3")) {
                                     Toast.makeText(LikeDetailActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
@@ -722,7 +756,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                 mNetDialog.dismiss();
                             }
                         });
-                    }else {
+                    } else {
                         SoftMusicDetailBean.ChildEntity childEntity = mChild.get(adapterPosition);
                         String created_at = childEntity.getCreated_at();
                         String[] split = created_at.split(" ");
@@ -747,7 +781,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                         listBean.setDianzan(childEntity.isIslive());
                         listBean.setCollected(childEntity.isIsfav());
                         list.add(listBean);
-                        if (MyUtils.isHaveFile("xiaoke",childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId() + ".mp3")){
+                        if (MyUtils.isHaveFile("xiaoke", childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId() + ".mp3")) {
                             Toast.makeText(LikeDetailActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -811,7 +845,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                     listBean.setDianzan(childEntity.isIslive());
                     listBean.setCollected(childEntity.isIsfav());
                     list.add(listBean);
-                    if (MyUtils.isHaveFile("xiaoke",childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId() + ".mp3")){
+                    if (MyUtils.isHaveFile("xiaoke", childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId() + ".mp3")) {
                         Toast.makeText(LikeDetailActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -1118,7 +1152,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                 mDialog.dismiss();
                 removeAllActivitys();
                 Intent intent = new Intent(LikeDetailActivity.this, MainActivity.class);
-                intent.putExtra("gobuy","gobuy");
+                intent.putExtra("gobuy", "gobuy");
                 startActivity(intent);
             }
         });
@@ -1243,7 +1277,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                      req.partnerId = wxPayBean.getPartnerid();// 微信支付分配的商户号
                                      req.prepayId = wxPayBean.getPrepayid();// 预支付订单号，app服务器调用“统一下单”接口获取
                                      req.nonceStr = wxPayBean.getNoncestr();// 随机字符串，不长于32位，服务器小哥会给咱生成
-                                     req.timeStamp = wxPayBean.getTimestamp()+"";// 时间戳，app服务器小哥给出
+                                     req.timeStamp = wxPayBean.getTimestamp() + "";// 时间戳，app服务器小哥给出
                                      req.packageValue = wxPayBean.getPackage1();// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
                                      req.sign = wxPayBean.getSign();// 签名，服务器小哥给出
                                      //                        req.extData = "app data"; // optional
@@ -1456,6 +1490,56 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                     nodianzanTeacher(mMusicDetailBean.getXk_teacher_id());
                 } else {
                     dianzanTeacher(mMusicDetailBean.getXk_teacher_id());
+                }
+                break;
+            case R.id.tv_read:
+                if (mLieBiaoAdapter.getData().get(0).getIs_try() != 1) {
+                    showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
+                } else {
+                    setISshow(true);
+                    SoftMusicDetailBean.ChildEntity item = mChild.get(0);
+                    //刷新小型播放器
+                    PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_old_name(), item.getParent_name(), item.getVideo_url());
+                    gobofang(playerBean);
+                    addListenCount(item.getId() + "");
+                    //设置进入播放主界面的数据
+                    List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
+                    for (int i = 0; i < mChild.size(); i++) {
+                        SoftMusicDetailBean.ChildEntity childEntity = mChild.get(i);
+                        if (childEntity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
+                            MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
+                                    childEntity.getT_header(), childEntity.getVideo_old_name(), childEntity.getId() + "", childEntity.isIsfav());
+                            musicTypeBean.setMsg("musicplayertype");
+                            musicTypeBeanList.add(musicTypeBean);
+                        }
+                    }
+                    MediaService.insertMusicTypeList(musicTypeBeanList);
+                    //加入默认的播放列表
+                    List<PlayerBean> list = new ArrayList<PlayerBean>();
+                    for (int i = 0; i < mChild.size(); i++) {
+                        SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
+                        if (entity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
+                            PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_old_name(), entity.getParent_name(),
+                                    entity.getVideo_url(), 0);
+                            list.add(playerBean1);
+                        }
+                    }
+                    MediaService.insertMusicList(list);
+                    //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
+                    List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
+                    for (int i = 0; i < mChild.size(); i++) {
+                        SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
+                        if (entity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
+                            BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", entity.getId(), entity.getVideo_old_name(),
+                                    entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
+                                    entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
+                                    , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url()
+                                    , System.currentTimeMillis(), mMusicDetailBean.getXk_class_id() + "",
+                                    entity.getParent_name(), entity.getTxt_url());
+                            histroyBeanList.add(bofangHistroyBean);
+                        }
+                    }
+                    MediaService.insertBoFangHistroyList(histroyBeanList);
                 }
                 break;
         }

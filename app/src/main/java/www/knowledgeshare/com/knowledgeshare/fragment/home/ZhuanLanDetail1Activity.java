@@ -77,6 +77,7 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
                                          if (getIntent().getStringExtra("type") != null) {
                                              intent.putExtra("type", "alreadyBuy");
                                          }
+                                         intent.putExtra("is_buy", getIntent().getBooleanExtra("is_buy",false));
                                          startActivity(intent);
                                      }
                                  });

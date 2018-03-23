@@ -433,7 +433,7 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
                              }
                     );
         } else if (type.equals("2")) {//支付宝支付
-            OkGo.<AliPayBean>post(MyContants.LXKURL + "order/pay")
+            OkGo.<AliPayBean>post(MyContants.LXKURL + "user/recharge")
                     .tag(this)
                     .headers(headers)
                     .params(params)
