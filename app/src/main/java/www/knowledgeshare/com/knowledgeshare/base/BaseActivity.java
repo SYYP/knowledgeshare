@@ -59,12 +59,12 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+        if (!hasFocus)
+            return;
         if (musicPop == null) {
             musicPop = new CustomPopupWindow(this);
-            if (isshow && mMyBinder.isPlaying()) {
-                musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
-            }
         }
+        SlidePopShow();
     }
 
     private void refreshToken() {
@@ -106,9 +106,9 @@ public class BaseActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMyBinder = (MediaService.MyBinder) service;
-//            if (isshow && mMyBinder.isPlaying()) {
-//                musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
-//            }
+            //            if (isshow && mMyBinder.isPlaying()) {
+            //                musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
+            //            }
         }
 
         @Override
@@ -123,19 +123,9 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-
     public void SlidePopShow() {
         if (isshow && !mMyBinder.isClosed()) {
             musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
-        }
-    }
-
-
-    public void setPopDismiss() {
-        if (musicPop.isShowing()) {
-            musicPop.dismiss();
-            mMyBinder.closeMedia();
-            isshow = false;
         }
     }
 
@@ -158,6 +148,24 @@ public class BaseActivity extends AppCompatActivity {
         //        unbindService(mServiceConnection);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+//        setPopHide();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        setPopHide();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        SlidePopShow();
+    }
+
     public static void removeAllActivitys() {
         if (activityList != null && activityList.size() > 0) {
             for (int i = 0; i < activityList.size(); i++) {
@@ -177,7 +185,7 @@ public class BaseActivity extends AppCompatActivity {
                 }
             }
             activityList.clear();
-            activityList = null;
+            activityList=null;
         }
     }
 

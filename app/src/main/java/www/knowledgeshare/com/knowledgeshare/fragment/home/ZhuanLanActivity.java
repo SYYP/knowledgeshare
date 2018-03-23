@@ -635,6 +635,7 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                 intent = new Intent(this, ZhuanLanDetail1Activity.class);
                 intent.putExtra("id", mZhuanLanBean.getId() + "");
                 intent.putExtra("title", mZhuanLanBean.getZl_name());
+                intent.putExtra("is_buy", mZhuanLanBean.is_buy());
                 startActivity(intent);
                 break;
             case R.id.tv_buy:
@@ -647,6 +648,7 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                 }
                 intent = new Intent(this, ZhuanLanDetail1Activity.class);
                 intent.putExtra("id", mZhuanLanBean.getId() + "");
+                intent.putExtra("is_buy", mZhuanLanBean.is_buy());
                 intent.putExtra("title", mZhuanLanBean.getZl_name());
                 if (getIntent().getStringExtra("type") != null) {
                     intent.putExtra("type","alreadyBuy");
