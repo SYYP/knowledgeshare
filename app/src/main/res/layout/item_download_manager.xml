@@ -60,7 +60,8 @@
                             android:id="@+id/name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="如何成为一名合格的歌者"
+                            android:layout_marginRight="5dp"
+                            android:singleLine="true"
                             android:textColor="@color/text_black" />
                         <ProgressBar
                             android:id="@+id/pbProgress"
