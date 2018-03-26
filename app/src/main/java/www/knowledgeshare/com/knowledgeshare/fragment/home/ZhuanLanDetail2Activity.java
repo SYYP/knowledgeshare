@@ -462,7 +462,9 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                  //判断哪个专栏的音频在播放
                                  String zlisbofang = SpUtils.getString(ZhuanLanDetail2Activity.this, "zlisbofang", "");
                                  if (!TextUtils.isEmpty(zlisbofang)) {
-                                     if (zlisbofang.equals(mFreeTryReadDetailBean.getVideo_url()) && mMyBinder.isPlaying()) {
+                                     if (mMyBinder.getMusicType().equals("zhuanlandetail")
+                                             && zlisbofang.equals(mFreeTryReadDetailBean.getVideo_url())
+                                             && mMyBinder.isPlaying()) {
                                          isBofang = true;
                                          iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
                                      } else {
@@ -896,12 +898,21 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     @Override
     protected void onRestart() {
         super.onRestart();
-        if (mMyBinder.isPlaying()) {
-            iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
-            isBofang = true;
+        //判断哪个专栏的音频在播放
+        String zlisbofang = SpUtils.getString(ZhuanLanDetail2Activity.this, "zlisbofang", "");
+        if (!TextUtils.isEmpty(zlisbofang)) {
+            if (mMyBinder.getMusicType().equals("zhuanlandetail")
+                    && zlisbofang.equals(mFreeTryReadDetailBean.getVideo_url())
+                    && mMyBinder.isPlaying()) {
+                isBofang = true;
+                iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
+            } else {
+                isBofang = false;
+                iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
+            }
         } else {
-            iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
             isBofang = false;
+            iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
         }
     }
 
@@ -927,11 +938,15 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                 mFreeTryReadDetailBean.getVideo_url());
                         gobofang(playerBean);
                         addListenCount(mFreeTryReadDetailBean.getId() + "");
+                        //设置进入播放主界面的数据
+                        List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
                         mMusicTypeBean = new MusicTypeBean("zhuanlandetail",
                                 mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getId() + "",
                                 mFreeTryReadDetailBean.isIsfav());
                         mMusicTypeBean.setMsg("musicplayertype");
                         EventBus.getDefault().postSticky(mMusicTypeBean);
+                        musicTypeBeanList.add(mMusicTypeBean);
+                        MediaService.insertMusicTypeList(musicTypeBeanList);
                         List<PlayerBean> list = new ArrayList<PlayerBean>();
                         list.add(playerBean);
                         MediaService.insertMusicList(list);
@@ -1073,6 +1088,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
             Toast.makeText(ZhuanLanDetail2Activity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
             return;
         }
+        Toast.makeText(ZhuanLanDetail2Activity.this, "已加入下载列表", Toast.LENGTH_SHORT).show();
         DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                 "zhuanlan", mFreeTryReadDetailBean.getZl_id() + "", getIntent().getStringExtra("title"), mFreeTryReadDetailBean.getT_header(),
                 mFreeTryReadDetailBean.getT_name(), mFreeTryReadDetailBean.getT_tag(), "1", list);

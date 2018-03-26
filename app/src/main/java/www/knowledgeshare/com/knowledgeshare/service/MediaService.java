@@ -591,10 +591,10 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
          * 添加file文件到MediaPlayer对象并且准备播放音频
          */
         public void setMusicUrl(String musicUrl) {
-            if (mMusicUrl.equals(musicUrl) && isPlaying()) {
-                Toast.makeText(MyApplication.getGloableContext(), "音频正在播放中", Toast.LENGTH_SHORT).show();
-                return;
-            }
+//            if (mMusicUrl.equals(musicUrl) && isPlaying()) {
+//                Toast.makeText(MyApplication.getGloableContext(), "音频正在播放中", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
             mMusicUrl = musicUrl;
             try {
                 //此处的两个方法需要捕获IO异常
@@ -620,6 +620,13 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 //            Log.d(TAG, "设置资源，准备阶段出错");
                 e.printStackTrace();
             }
+        }
+
+        public String getMusicType(){
+            if (musicTypeBeanList==null || musicTypeBeanList.size()==0){
+                return "";
+            }
+            return musicTypeBeanList.get(currPosition).getType();
         }
 
         public void setMusicLocal(PlayerBean playerBean) {

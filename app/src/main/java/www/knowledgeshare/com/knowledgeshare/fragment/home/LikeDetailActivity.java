@@ -410,7 +410,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                              setISshow(true);
                                              SoftMusicDetailBean.ChildEntity item = mChild.get(position);
                                              //刷新小型播放器
-                                             PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_old_name(), item.getParent_name(),
+                                             PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getName(), item.getParent_name(),
                                                      item.getVideo_url(), position);
                                              gobofang(playerBean);
                                              addListenCount(item.getId() + "");
@@ -420,7 +420,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                                  SoftMusicDetailBean.ChildEntity childEntity = mChild.get(i);
                                                  if (childEntity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
                                                      MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
-                                                             childEntity.getT_header(), childEntity.getVideo_old_name(), childEntity.getId() + "", childEntity.isIsfav());
+                                                             childEntity.getT_header(), childEntity.getName(), childEntity.getId() + "", childEntity.isIsfav());
                                                      musicTypeBean.setMsg("musicplayertype");
                                                      musicTypeBeanList.add(musicTypeBean);
                                                  }
@@ -431,7 +431,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                              for (int i = 0; i < mChild.size(); i++) {
                                                  SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
                                                  if (entity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
-                                                     PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_old_name(), entity.getParent_name(), entity.getVideo_url());
+                                                     PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getName(), entity.getParent_name(), entity.getVideo_url());
                                                      list.add(playerBean1);
 
                                                  }
@@ -442,7 +442,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                              for (int i = 0; i < mChild.size(); i++) {
                                                  SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
                                                  if (entity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
-                                                     BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", entity.getId(), entity.getVideo_old_name(),
+                                                     BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", entity.getId(), entity.getName(),
                                                              entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
                                                              entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
                                                              , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url()
@@ -543,7 +543,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
 
             String created_at = item.getCreated_at();
             String[] split = created_at.split(" ");
-            helper.setText(R.id.tv_name, item.getVideo_old_name())
+            helper.setText(R.id.tv_name, item.getName())
                     .setText(R.id.tv_time, split[0] + "发布")
                     .setText(R.id.tv_look_count, item.getIs_view() == 0 ? item.getView_count() + "" : item.getView_count_true() + "")
                     .setText(R.id.tv_collect_count, item.getIs_collect() == 0 ? item.getCollect_count() + "" : item.getCollect_count_true() + "")
@@ -1499,7 +1499,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                     setISshow(true);
                     SoftMusicDetailBean.ChildEntity item = mChild.get(0);
                     //刷新小型播放器
-                    PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getVideo_old_name(), item.getParent_name(), item.getVideo_url());
+                    PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getName(), item.getParent_name(), item.getVideo_url());
                     gobofang(playerBean);
                     addListenCount(item.getId() + "");
                     //设置进入播放主界面的数据
@@ -1508,7 +1508,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                         SoftMusicDetailBean.ChildEntity childEntity = mChild.get(i);
                         if (childEntity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
                             MusicTypeBean musicTypeBean = new MusicTypeBean("softmusicdetail",
-                                    childEntity.getT_header(), childEntity.getVideo_old_name(), childEntity.getId() + "", childEntity.isIsfav());
+                                    childEntity.getT_header(), childEntity.getName(), childEntity.getId() + "", childEntity.isIsfav());
                             musicTypeBean.setMsg("musicplayertype");
                             musicTypeBeanList.add(musicTypeBean);
                         }
@@ -1519,7 +1519,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                     for (int i = 0; i < mChild.size(); i++) {
                         SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
                         if (entity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
-                            PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_old_name(), entity.getParent_name(),
+                            PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getName(), entity.getParent_name(),
                                     entity.getVideo_url(), 0);
                             list.add(playerBean1);
                         }
@@ -1530,7 +1530,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                     for (int i = 0; i < mChild.size(); i++) {
                         SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
                         if (entity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
-                            BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", entity.getId(), entity.getVideo_old_name(),
+                            BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", entity.getId(), entity.getName(),
                                     entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
                                     entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
                                     , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url()

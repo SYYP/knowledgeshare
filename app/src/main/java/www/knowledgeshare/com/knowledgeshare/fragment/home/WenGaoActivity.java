@@ -110,7 +110,7 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        pretime=System.currentTimeMillis();
+        pretime = System.currentTimeMillis();
     }
 
     @Override
@@ -275,7 +275,11 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
                         mWenGaoBean = response.body();
                         if (response.code() >= 200 && response.code() <= 204) {
                             Logger.e(code + "");
-                            initWebView(mWenGaoBean.getH5_url());
+                            if (mType.equals("softmusicdetail")) {
+                                initWebView(mWenGaoBean.getH5_url() + "&userid" + SpUtils.getString(WenGaoActivity.this, "id", ""));
+                            } else {
+                                initWebView(mWenGaoBean.getH5_url());
+                            }
                             Glide.with(MyApplication.getGloableContext()).load(mWenGaoBean.getT_header()).into(iv_teacher_head);
                             tv_teacher_name.setText(mWenGaoBean.getT_name());
                             tv_ke_name.setText(mWenGaoBean.getVideo_name());
@@ -514,7 +518,7 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
     }
 
     private void showTanchuangDialog() {
-        if (SpUtils.getBoolean(this,"wengaowindow",false)){
+        if (SpUtils.getBoolean(this, "wengaowindow", false)) {
             return;
         }
         mDialog = mBuilder.setViewId(R.layout.dialog_biji)
@@ -537,7 +541,7 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
                 mDialog.dismiss();
             }
         });
-        SpUtils.putBoolean(this,"wengaowindow",true);
+        SpUtils.putBoolean(this, "wengaowindow", true);
     }
 
     @Override
