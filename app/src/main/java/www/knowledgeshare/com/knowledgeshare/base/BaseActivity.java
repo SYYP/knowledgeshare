@@ -61,6 +61,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onWindowFocusChanged(hasFocus);
         if (!hasFocus)
             return;
+        CustomPopupWindow.setPopContext(this);
         if (musicPop == null) {
             musicPop = new CustomPopupWindow(this);
         }
@@ -146,12 +147,6 @@ public class BaseActivity extends AppCompatActivity {
             activityList.remove(this);
         }
         //        unbindService(mServiceConnection);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-//        setPopHide();
     }
 
     @Override

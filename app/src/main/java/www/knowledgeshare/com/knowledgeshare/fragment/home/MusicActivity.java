@@ -100,8 +100,8 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
         setISshow(false);
         EventBus.getDefault().register(this);
         initView();
-        initDialog();
         initMusic();
+        initDialog();
         initCollect();
         initNETDialog();
     }
@@ -137,9 +137,9 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                         if (response.code() >= 200 && response.code() <= 204) {
                             Logger.e(code + "");
                             VideoCollectBean.DataEntity dataEntity = videoCollectBean.getData().get(0);
-                            if (dataEntity.isIslive()){
+                            if (dataEntity.isIslive()) {
 
-                            }else {
+                            } else {
 
                             }
                             //是否收藏
@@ -184,14 +184,20 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(MusicTypeBean musicTypeBean) {
         if (musicTypeBean.getMsg().equals("musicplayertype")) {
+            if (musicTypeBean == null) {
+                iv_bigphoto.setVisibility(View.INVISIBLE);
+                tv_title.setText("");
+                return;
+            }
+            iv_bigphoto.setVisibility(View.VISIBLE);
             //接收到播放主界面要刷新的数据
             mMusicTypeBean = musicTypeBean;
             tv_title.setText(mMusicTypeBean.getVideo_name());
             //用glide会闪烁，而且网上的方法不好使，于是我就使用Picasso就OK了
-//            RequestOptions options=new RequestOptions();
-//            options.centerCrop();
-//            options.dontAnimate();
-//            Glide.with(this).load(mMusicTypeBean.getT_head()).apply(options).into(iv_bigphoto);
+            //            RequestOptions options=new RequestOptions();
+            //            options.centerCrop();
+            //            options.dontAnimate();
+            //            Glide.with(this).load(mMusicTypeBean.getT_head()).apply(options).into(iv_bigphoto);
             Picasso.with(this).load(mMusicTypeBean.getT_head()).into(iv_bigphoto);
             List<BofangHistroyBean> search = HistroyUtils.search();
             if (search != null && search.size() > 0) {
@@ -263,7 +269,9 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
             }
             play_seek.setMax(mMyBinder.getProgress());
             String format = time.format(mMyBinder.getProgress());
-            music_duration.setText(format);
+            if (!format.equals("59:59")) {//oppoA37的bug，老是出现59:59
+                music_duration.setText(format);
+            }
             mMyBinder.refreshhuanchong();
             play_seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
@@ -285,7 +293,6 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
 
                 }
             });
-
             mHandler.post(mRunnable);
         }
 
@@ -339,7 +346,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
         mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareWebUrl(mShare_h5_url,mMusicTypeBean.getVideo_name(),
+                shareWebUrl(mShare_h5_url, mMusicTypeBean.getVideo_name(),
                         mMusicTypeBean.getT_head(), "", MusicActivity.this, SHARE_MEDIA.QZONE);
                 mDialog.dismiss();
             }
@@ -397,10 +404,15 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
         play_seek.setProgress(0);
         play_seek.setMax(100);
         mMusicTypeBean = (MusicTypeBean) getIntent().getSerializableExtra("data");
-        if (mMusicTypeBean != null) {
-            tv_title.setText(mMusicTypeBean.getVideo_name());
+        String title = getIntent().getStringExtra("title");
+        tv_title.setText(title);
+        if (mMusicTypeBean == null) {
+            iv_bigphoto.setVisibility(View.INVISIBLE);
+//            tv_title.setText("");
+        } else {
+            iv_bigphoto.setVisibility(View.VISIBLE);
+//            tv_title.setText(mMusicTypeBean.getVideo_name());
             Picasso.with(this).load(mMusicTypeBean.getT_head()).into(iv_bigphoto);
-//            Glide.with(this).load(mMusicTypeBean.getT_head()).into(iv_bigphoto);
         }
         List<BofangHistroyBean> search = HistroyUtils.search();
         if (search != null && search.size() > 0) {
@@ -490,7 +502,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                 showShareDialog();
                 break;
             case R.id.tv_wengao:
-                if (mMusicTypeBean.getType().equals("zhuanlandetail")){
+                if (mMusicTypeBean.getType().equals("zhuanlandetail")) {
                     Toast.makeText(this, "此音频暂时无文稿", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -539,6 +551,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
     private BaseDialog mNetDialog;
     private TextView mTv_content;
     private boolean nowifiallowdown;
+
     private void initNETDialog() {
         BaseDialog.Builder builder = new BaseDialog.Builder(this);
         mNetDialog = builder.setViewId(R.layout.dialog_iswifi)
@@ -586,7 +599,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                         download();
                     }
                 });
-            }else {
+            } else {
                 download();
             }
         } else {
@@ -595,7 +608,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
 
     }
 
-    private void download(){
+    private void download() {
         mNetDialog.dismiss();
         HttpParams params = new HttpParams();
         params.put("id", mMusicTypeBean.getId());
@@ -633,7 +646,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                                      listBean.setTxtUrl(dataEntity.getTxt_url());
                                      listBean.setIconUrl(dataEntity.getImage());
                                      list.add(listBean);
-                                     if (MyUtils.isHaveFile("free",dataEntity.getVideo_name() + listBean.getTypeId() + "_" + dataEntity.getId() + ".mp3")){
+                                     if (MyUtils.isHaveFile("free", dataEntity.getVideo_name() + listBean.getTypeId() + "_" + dataEntity.getId() + ".mp3")) {
                                          Toast.makeText(MusicActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                                          return;
                                      }
@@ -688,7 +701,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                                      listBean.setTxtUrl(dataEntity.getTxt_url());
                                      listBean.setIconUrl(dataEntity.getImage());
                                      list.add(listBean);
-                                     if (MyUtils.isHaveFile("comment",dataEntity.getVideo_name() + listBean.getTypeId() + "_" + dataEntity.getId() + ".mp3")){
+                                     if (MyUtils.isHaveFile("comment", dataEntity.getVideo_name() + listBean.getTypeId() + "_" + dataEntity.getId() + ".mp3")) {
                                          Toast.makeText(MusicActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                                          return;
                                      }
@@ -744,7 +757,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                                      listBean.setIconUrl(dataEntity.getXk_image());
                                      listBean.settName(xk_data.getT_name());
                                      list.add(listBean);
-                                     if (MyUtils.isHaveFile("xiaoke",xk_data.getName() + dataEntity.getId() + "_" + xk_data.getId() + ".mp3")){
+                                     if (MyUtils.isHaveFile("xiaoke", xk_data.getName() + dataEntity.getId() + "_" + xk_data.getId() + ".mp3")) {
                                          Toast.makeText(MusicActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                                          return;
                                      }
@@ -800,7 +813,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                                      listBean.setIconUrl(dataEntity.getZl_image());
                                      listBean.settName(zl_data.getT_name());
                                      list.add(listBean);
-                                     if (MyUtils.isHaveFile("zhuanlan",zl_data.getName() + dataEntity.getId() + "_" + zl_data.getId() + ".mp3")){
+                                     if (MyUtils.isHaveFile("zhuanlan", zl_data.getName() + dataEntity.getId() + "_" + zl_data.getId() + ".mp3")) {
                                          Toast.makeText(MusicActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                                          return;
                                      }

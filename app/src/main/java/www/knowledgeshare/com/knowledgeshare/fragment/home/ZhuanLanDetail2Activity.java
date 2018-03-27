@@ -297,6 +297,9 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             super.onReceivedError(view, request, error);
             mLastLoadFailed = true;
+            webview.setVisibility(View.GONE);
+            iv_beijing.setVisibility(View.VISIBLE);
+            iv_beijing.setImageResource(R.drawable.zl_web_error);
         }
     }
 

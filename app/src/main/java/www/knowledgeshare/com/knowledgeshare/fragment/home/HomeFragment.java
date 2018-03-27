@@ -1292,8 +1292,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             case R.id.iv_arrow_top:
                 Intent intent1 = new Intent(mContext, MusicActivity.class);
                 intent1.putExtra("data", mMusicTypeBean);
+                intent1.putExtra("title", mMusicTypeBean.getVideo_name());
                 startActivity(intent1);
-                mActivity.overridePendingTransition(R.anim.bottom_in, R.anim.alpha_out);
+                mActivity.overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
                 break;
             case R.id.iv_mulu:
                 Intent intent11 = new Intent(mContext, BoFangListActivity.class);

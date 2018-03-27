@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context="www.knowledgeshare.com.knowledgeshare.fragment.home.MusicActivity">
     <ImageView
@@ -27,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="20dp"
-        android:text="如何成为一名合格的歌者"
+        android:text=""
         android:textColor="@color/textblack"
         android:textSize="18sp"/>
     <LinearLayout
@@ -114,7 +115,7 @@
             android:drawablePadding="5dp"
             android:drawableTop="@drawable/music_liebiao"
             android:gravity="center"
-            android:text="1/20"/>
+            android:text="1/1"/>
         <TextView
             android:id="@+id/tv_wengao"
             android:layout_width="0dp"

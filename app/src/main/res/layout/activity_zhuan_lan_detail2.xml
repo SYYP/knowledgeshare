@@ -60,14 +60,14 @@
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:layout_gravity="center_vertical"
-                                android:src="@drawable/demo"/>
+                                />
                             <TextView
                                 android:id="@+id/tv_teacher_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="10dp"
-                                android:text="崔宗顺"
+                                android:text=""
                                 android:textColor="@color/textblack"/>
                         </LinearLayout>
                         <ImageView
@@ -107,7 +107,7 @@
                                 android:id="@+id/tv_title2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="崔宗顺的男低音歌唱家秘籍"
+                                android:text=""
                                 android:textColor="@color/textblack"/>
                             <TextView
                                 android:id="@+id/tv_time2"
@@ -117,7 +117,7 @@
                                 android:layout_marginTop="5dp"
                                 android:drawableLeft="@drawable/icon_clock"
                                 android:drawablePadding="10dp"
-                                android:text="10:10"/>
+                                android:text=""/>
                         </LinearLayout>
                         <ImageView
                             android:id="@+id/iv_download"
@@ -138,7 +138,6 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:scaleType="fitXY"
-                        android:src="@drawable/demo"
                         android:visibility="gone"/>
                     <TextView
                         android:id="@+id/tv_content"
@@ -204,7 +203,7 @@
         android:background="@color/text_red_dark"
         android:gravity="center"
         android:padding="12dp"
-        android:text="订阅：198.00/年"
+        android:text="订阅：0.00/年"
         android:textColor="@color/white"
         android:textSize="17sp"/>
 </FrameLayout>

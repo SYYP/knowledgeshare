@@ -45,7 +45,7 @@ import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
  */
 
 public class CustomPopupWindow extends PopupWindow implements View.OnClickListener {
-    private final Activity mContext;
+    private static Activity mContext;
     private View mPopView;
     private ImageView iv_delete;
     private CircleImageView iv_bo_head;
@@ -63,10 +63,14 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
 
     public CustomPopupWindow(Activity context) {
         super(context);
-        this.mContext = context;
-        init(context);
+        //        this.mContext = context;
+        init(mContext);
         setPopupWindow();
         EventBus.getDefault().register(this);
+    }
+
+    public static void setPopContext(Activity activity) {
+        mContext = activity;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -184,7 +188,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
         tv_subtitle.setText(subtitle);
     }
 
-    public void setRlShow(){
+    public void setRlShow() {
         rl_bofang.setVisibility(View.VISIBLE);//默认不显示
     }
 
@@ -216,8 +220,10 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
             case R.id.iv_arrow_top:
                 Intent intent1 = new Intent(mContext, MusicActivity.class);
                 intent1.putExtra("data", mMusicTypeBean);
+                intent1.putExtra("title", title);
                 mContext.startActivity(intent1);
                 mContext.overridePendingTransition(R.anim.bottom_in, 0);
+                this.dismiss();
                 break;
             case R.id.iv_mulu:
                 String userid = SpUtils.getString(mContext, "id", "");
@@ -230,5 +236,4 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
                 break;
         }
     }
-
 }

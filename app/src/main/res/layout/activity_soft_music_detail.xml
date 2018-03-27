@@ -334,6 +334,7 @@
         android:id="@+id/bottom_ll"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="50dp">
         <TextView
             android:id="@+id/tv_tryread"
