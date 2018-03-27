@@ -262,6 +262,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMyBinder = (MediaService.MyBinder) service;
+            isbofang=mMyBinder.isPlaying();
             if (mMyBinder.isPlaying()) {
                 iv_pause.setImageResource(R.drawable.bofang_yellow_big);
             } else {

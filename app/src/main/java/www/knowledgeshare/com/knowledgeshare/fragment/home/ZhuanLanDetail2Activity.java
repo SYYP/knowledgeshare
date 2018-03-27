@@ -325,6 +325,33 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(MusicTypeBean musicTypeBean) {
+        if (musicTypeBean.getMsg().equals("musicplayertype")) {
+            refreshState();
+        }
+    }
+
+    private void refreshState() {
+        //判断哪个专栏的音频在播放
+        String zlisbofang = SpUtils.getString(ZhuanLanDetail2Activity.this, "zlisbofang", "");
+        if (!TextUtils.isEmpty(zlisbofang)) {
+            if (mMyBinder.getMusicType().equals("zhuanlandetail")
+                    && zlisbofang.equals(mFreeTryReadDetailBean.getVideo_url())
+                    && mMyBinder.isPlaying()) {
+                isBofang = true;
+                iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
+                SlidePopShow();
+            } else {
+                isBofang = false;
+                iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
+            }
+        } else {
+            isBofang = false;
+            iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
+        }
+    }
+
     private void initListener() {
         nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -902,21 +929,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     protected void onRestart() {
         super.onRestart();
         //判断哪个专栏的音频在播放
-        String zlisbofang = SpUtils.getString(ZhuanLanDetail2Activity.this, "zlisbofang", "");
-        if (!TextUtils.isEmpty(zlisbofang)) {
-            if (mMyBinder.getMusicType().equals("zhuanlandetail")
-                    && zlisbofang.equals(mFreeTryReadDetailBean.getVideo_url())
-                    && mMyBinder.isPlaying()) {
-                isBofang = true;
-                iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
-            } else {
-                isBofang = false;
-                iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
-            }
-        } else {
-            isBofang = false;
-            iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
-        }
+        refreshState();
     }
 
     @Override

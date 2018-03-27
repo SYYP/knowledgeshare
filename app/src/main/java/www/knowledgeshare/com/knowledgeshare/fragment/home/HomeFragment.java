@@ -705,8 +705,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (isBofang) {
                     if (scrollY - oldScrollY > 0) {
+//                        Animation animation=AnimationUtils.loadAnimation(mContext, R.anim.bottom_out);
+//                        rl_bofang.startAnimation(animation);
                         rl_bofang.setVisibility(View.GONE);
                     } else if (scrollY - oldScrollY < 0) {
+//                        Animation animation=AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
+//                        rl_bofang.startAnimation(animation);
                         rl_bofang.setVisibility(View.VISIBLE);
                     }
                 }
@@ -1116,6 +1120,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         } else if (apnType == 2 || apnType == 3 || apnType == 4) {
             if (SpUtils.getBoolean(mContext, "nowifiallowlisten", false)) {//记住用户允许流量播放
                 isBofang = true;
+                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
+                rl_bofang.startAnimation(animation);
                 rl_bofang.setVisibility(View.VISIBLE);
                 mMyBinder.setMusicUrl(playerBean.getVideo_url());
                 Glide.with(MyApplication.getGloableContext()).load(playerBean.getTeacher_head()).into(iv_bo_head);
@@ -1133,6 +1139,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     @Override
                     public void onClick(View v) {
                         isBofang = true;
+                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
+                        rl_bofang.startAnimation(animation);
                         rl_bofang.setVisibility(View.VISIBLE);
                         mMyBinder.setMusicUrl(playerBean.getVideo_url());
                         Glide.with(MyApplication.getGloableContext()).load(playerBean.getTeacher_head()).into(iv_bo_head);
@@ -1161,6 +1169,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         } else {
             isBofang = true;
             rl_bofang.setVisibility(View.VISIBLE);
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
+            rl_bofang.startAnimation(animation);
             mMyBinder.setMusicUrl(playerBean.getVideo_url());
             Glide.with(MyApplication.getGloableContext()).load(playerBean.getTeacher_head()).into(iv_bo_head);
             tv_title.setText(playerBean.getTitle());
@@ -1284,12 +1294,17 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.iv_delete:
                 isBofang = false;
+                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_out);
+                rl_bofang.startAnimation(animation);
                 rl_bofang.setVisibility(View.GONE);
                 EventBean eventBean = new EventBean("norotate");
                 EventBus.getDefault().postSticky(eventBean);
                 allclose();
                 break;
             case R.id.iv_arrow_top:
+                Animation animation2 = AnimationUtils.loadAnimation(mContext, R.anim.bottom_out);
+                rl_bofang.startAnimation(animation2);
+                rl_bofang.setVisibility(View.GONE);
                 Intent intent1 = new Intent(mContext, MusicActivity.class);
                 intent1.putExtra("data", mMusicTypeBean);
                 intent1.putExtra("title", mMusicTypeBean.getVideo_name());
@@ -1303,6 +1318,16 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.rl_bofang:
                 break;
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mMyBinder!=null && !mMyBinder.isClosed()) {
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
+            rl_bofang.startAnimation(animation);
+            rl_bofang.setVisibility(View.VISIBLE);
         }
     }
 
