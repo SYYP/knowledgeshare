@@ -147,6 +147,9 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
         } else if (eventBean.getMsg().equals("home_bofang") || eventBean.getMsg().equals("rotate")) {
             //学习时长
             pretime = SystemClock.currentThreadTimeMillis();
+        }else if (eventBean.getMsg().equals("allmusiccomplete")){
+            rl_bofang.setVisibility(View.VISIBLE);
+            iv_delete.setVisibility(View.GONE);
         }
 
         //暂停的时候才显示叉号

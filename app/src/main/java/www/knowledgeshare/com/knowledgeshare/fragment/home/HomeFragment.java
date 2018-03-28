@@ -260,6 +260,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             initNumber();
         } else if (eventBean.getMsg().equals("suishenting")) {
             suishenting();
+        }else if (eventBean.getMsg().equals("allmusiccomplete")){
+            isBofang = false;
+            iv_delete.setVisibility(View.VISIBLE);
+            allclose();
         }
     }
 

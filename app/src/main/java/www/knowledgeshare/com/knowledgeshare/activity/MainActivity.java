@@ -301,6 +301,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
         } else if (eventBean.getMsg().equals("nonetwork1")) {
             OkDownload.getInstance().pauseAll();
+        }else if (eventBean.getMsg().equals("allmusiccomplete")){
+            isPause = true;
+            iv_listen.clearAnimation();
+            iv_listen.setImageResource(R.drawable.tab_listen_pause);
         }
     }
 

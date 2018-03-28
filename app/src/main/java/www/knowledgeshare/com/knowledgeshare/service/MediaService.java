@@ -324,6 +324,11 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
+        if (currPosition==musicList.size()-1){
+            //全部播放完成
+            EventBus.getDefault().postSticky(new EventBean("allmusiccomplete"));
+            return;
+        }
          /*
         此方法的回调在很多情况下会被回调，例如
         1.当播放完成的时候会被回调

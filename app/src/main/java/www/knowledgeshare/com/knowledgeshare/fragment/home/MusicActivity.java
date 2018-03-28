@@ -170,13 +170,18 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
             //            System.out.println("ssssssssssssssssssssss"+play_seek.getMax()+"   "+eventBean.getPercent());
         }
     }
-
+    private boolean allmusiccomplete;
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         //当在该页面下拉通知栏点击暂停的时候这边按钮也要变化
         if (eventBean.getMsg().equals("home_bofang")) {
+            isbofang=true;
             iv_pause.setImageResource(R.drawable.bofang_yellow_big);
         } else if (eventBean.getMsg().equals("home_pause")) {
+            isbofang=false;
+            iv_pause.setImageResource(R.drawable.pause_yellow_big);
+        }else if (eventBean.getMsg().equals("allmusiccomplete")){
+            isbofang=false;
             iv_pause.setImageResource(R.drawable.pause_yellow_big);
         }
     }
@@ -210,7 +215,11 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
             }
             play_seek.setMax(mMyBinder.getProgress());
             String format = time.format(mMyBinder.getProgress());
-            music_duration.setText(format);
+            if (!format.equals("59:59")) {//oppoA37的bug，老是出现59:59
+                music_duration.setText(format);
+            }else {
+                music_duration.setText("00:00");
+            }
             initCollect();
         }
     }
@@ -272,6 +281,8 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
             String format = time.format(mMyBinder.getProgress());
             if (!format.equals("59:59")) {//oppoA37的bug，老是出现59:59
                 music_duration.setText(format);
+            }else {
+                music_duration.setText("00:00");
             }
             mMyBinder.refreshhuanchong();
             play_seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

@@ -275,11 +275,7 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
                         mWenGaoBean = response.body();
                         if (response.code() >= 200 && response.code() <= 204) {
                             Logger.e(code + "");
-                            if (mType.equals("softmusicdetail")) {
-                                initWebView(mWenGaoBean.getH5_url() + "&userid" + SpUtils.getString(WenGaoActivity.this, "id", ""));
-                            } else {
-                                initWebView(mWenGaoBean.getH5_url());
-                            }
+                            initWebView(mWenGaoBean.getH5_url());
                             Glide.with(MyApplication.getGloableContext()).load(mWenGaoBean.getT_header()).into(iv_teacher_head);
                             tv_teacher_name.setText(mWenGaoBean.getT_name());
                             tv_ke_name.setText(mWenGaoBean.getVideo_name());
