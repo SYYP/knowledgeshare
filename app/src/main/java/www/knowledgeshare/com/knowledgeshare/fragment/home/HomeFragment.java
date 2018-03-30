@@ -707,7 +707,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (isBofang) {
+                if (!mMyBinder.isClosed()) {
                     if (scrollY - oldScrollY > 0) {
 //                        Animation animation=AnimationUtils.loadAnimation(mContext, R.anim.bottom_out);
 //                        rl_bofang.startAnimation(animation);
@@ -1326,8 +1326,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         if (mMyBinder!=null && !mMyBinder.isClosed()) {
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
             rl_bofang.startAnimation(animation);

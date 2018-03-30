@@ -225,7 +225,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
                 intent1.putExtra("data", mMusicTypeBean);
                 intent1.putExtra("title", title);
                 mContext.startActivity(intent1);
-                mContext.overridePendingTransition(R.anim.bottom_in, 0);
+                mContext.overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
                 this.dismiss();
                 break;
             case R.id.iv_mulu:

@@ -119,18 +119,27 @@ public class BaseActivity extends AppCompatActivity {
     };
 
     public void ClickPopShow() {//在子类页面中点击音频的时候弹出popupwindow
+        if (musicPop==null){
+            return;
+        }
         if (isshow) {
             musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
         }
     }
 
     public void SlidePopShow() {
+        if (musicPop==null){
+            return;
+        }
         if (isshow && !mMyBinder.isClosed()) {
             musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
         }
     }
 
     public void setPopHide() {
+        if (musicPop==null){
+            return;
+        }
         if (musicPop.isShowing()) {
             musicPop.dismiss();
         }

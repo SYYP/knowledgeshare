@@ -1499,6 +1499,37 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
         EventBus.getDefault().unregister(this);
     }
 
+    private void showIsCancelGuanzhuDialog(int grary, int animationStyle) {
+        BaseDialog.Builder builder = new BaseDialog.Builder(this);
+        final BaseDialog dialog = builder.setViewId(R.layout.dialog_guanzhu)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(grary)
+                //设置动画
+                .setAnimation(animationStyle)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        dialog.show();
+        dialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                noguanzhu(mMusicDetailBean.getXk_teacher_id());
+            }
+        });
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -1524,7 +1555,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
             case R.id.tv_guanzhu:
             case R.id.iv_guanzhu:
                 if (isGuanzhu) {
-                    noguanzhu(mMusicDetailBean.getXk_teacher_id());
+                    showIsCancelGuanzhuDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
                 } else {
                     guanzhu(mMusicDetailBean.getXk_teacher_id());
                 }
@@ -1617,7 +1648,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                .execute(new DialogCallback<DianZanbean>(SoftMusicDetailActivity.this,DianZanbean.class) {
                              @Override
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
@@ -1644,7 +1675,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                .execute(new DialogCallback<DianZanbean>(SoftMusicDetailActivity.this,DianZanbean.class) {
                              @Override
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();

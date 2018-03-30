@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -1097,7 +1096,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
             case R.id.tv_guanzhu:
             case R.id.iv_guanzhu:
                 if (isGuanzhu) {
-                    noguanzhu(mFreeBean.getTeacher_id());
+                    showIsCancelGuanzhuDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
                 } else {
                     guanzhu(mFreeBean.getTeacher_id());
                 }
@@ -1119,6 +1118,37 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
         }
     }
 
+    private void showIsCancelGuanzhuDialog(int grary, int animationStyle) {
+        BaseDialog.Builder builder = new BaseDialog.Builder(this);
+        final BaseDialog dialog = builder.setViewId(R.layout.dialog_guanzhu)
+                //设置dialogpadding
+                .setPaddingdp(10, 0, 10, 0)
+                //设置显示位置
+                .setGravity(grary)
+                //设置动画
+                .setAnimation(animationStyle)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        dialog.show();
+        dialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                noguanzhu(mFreeBean.getTeacher_id());
+            }
+        });
+    }
+
     private void guanzhu(int teacher_id) {
         String userid = SpUtils.getString(this, "id", "");
         if (TextUtils.isEmpty(userid)) {
@@ -1133,7 +1163,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                .execute(new DialogCallback<DianZanbean>(FreeActivity.this,DianZanbean.class) {
                              @Override
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
@@ -1161,7 +1191,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                .execute(new DialogCallback<DianZanbean>(FreeActivity.this,DianZanbean.class) {
                              @Override
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
