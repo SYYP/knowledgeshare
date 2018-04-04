@@ -474,7 +474,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                      nestView.setLayoutParams(layoutParams1);
                                      nestView.requestLayout();
                                  }
-                                 Glide.with(MyApplication.getGloableContext()).load(mFreeTryReadDetailBean.getT_header()).into(iv_teacher_head);
+                                 Glide.with(MyApplication.getGloableContext()).load(mFreeTryReadDetailBean.getT_image()).into(iv_teacher_head);
                                  tv_teacher_name.setText(mFreeTryReadDetailBean.getT_name());
                                  tv_time1.setText(mFreeTryReadDetailBean.getCreated_at());
                                  tv_time2.setText(mFreeTryReadDetailBean.getVideo_time());

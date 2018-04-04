@@ -178,6 +178,16 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
+    private boolean isHasOneChecked(){
+        for (int i = 0; i < list.size(); i++) {
+            boolean checked = list.get(i).isChecked();
+            if (checked) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -197,6 +207,10 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
                 String userid = SpUtils.getString(MyApplication.getGloableContext(), "id", "");
                 if (TextUtils.isEmpty(userid)) {
                     startActivity(new Intent(this, LoginActivity.class));
+                    return;
+                }
+                if (!isHasOneChecked()){
+                    Toast.makeText(this, "请选中后再下载", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 int apnType = NetWorkUtils.getAPNType(DownLoadListActivity.this);

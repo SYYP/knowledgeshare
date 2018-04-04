@@ -15,16 +15,13 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
-import com.orhanobut.logger.Logger;
 
 import org.zackratos.ultimatebar.UltimateBar;
 
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
-import www.knowledgeshare.com.knowledgeshare.bean.ResultBean;
 import www.knowledgeshare.com.knowledgeshare.bean.VerifyCodesBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
-import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.login.SetloginActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
@@ -82,7 +79,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                   startActivity(intent);
                 break;
             case R.id.register_next:
-                 register();
+                Intent intent2 = new Intent(RegisterActivity.this, SetloginActivity.class);
+                SpUtils.putString(RegisterActivity.this,"mobile",register_phone.getText().toString());
+                startActivity(intent2);
+                finish();
+//                 register();
                 break;
             case R.id.register_phone:
                 register_phone.setCursorVisible(true);

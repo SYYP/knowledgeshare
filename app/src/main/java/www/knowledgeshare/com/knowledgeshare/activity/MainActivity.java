@@ -88,9 +88,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     StudyFragment studyFragment;
     BuyFragment buyFragment;
     MineFragment mineFragment;
-    private boolean abool;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
+    private String mUserid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +103,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initListener();
         initAnim();
         initMusic();
-        abool = SpUtils.getBoolean(this, "abool", false);
+        SpUtils.putBoolean(this, "abool", true);
         pop();
         setStudyTime();
         String gobuy = getIntent().getStringExtra("gobuy");
@@ -161,14 +161,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        abool = SpUtils.getBoolean(this, "abool", false);
-    }
-
     private void pop() {
-        if (!SpUtils.getBoolean(this, "homewindow", false)) {
+        if (SpUtils.getBoolean(this, "homewindow", true)) {
             return;
         }
         HttpParams params2 = new HttpParams();
@@ -234,7 +228,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                         }
                                     }
                                 });
-                                SpUtils.putBoolean(MainActivity.this, "homewindow", false);
+                                SpUtils.putBoolean(MainActivity.this, "homewindow", true);
                             }
                         } else {
 
@@ -366,7 +360,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
                     return;
                 }
-                if (!abool) {
+                mUserid = SpUtils.getString(this, "id", "");
+                if (TextUtils.isEmpty(mUserid)) {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
@@ -420,7 +415,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
                     return;
                 }
-                if (!abool) {
+                mUserid = SpUtils.getString(this, "id", "");
+                if (TextUtils.isEmpty(mUserid)) {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
@@ -446,7 +442,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
                     return;
                 }
-                if (!abool) {
+                mUserid = SpUtils.getString(this, "id", "");
+                if (TextUtils.isEmpty(mUserid)) {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
@@ -517,7 +514,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         } else {
             EventBean eventBean = new EventBean("home_pause");//发一个保证正在播放音频的学习时长的终止
             EventBus.getDefault().postSticky(eventBean);
-            SpUtils.putBoolean(this, "homewindow", true);
+            SpUtils.putBoolean(this, "homewindow", false);
             SpUtils.putBoolean(this, "nowifiallowdown", false);
             SpUtils.putBoolean(this, "nowifiallowlisten", false);
             super.onBackPressed();//相当于finish()

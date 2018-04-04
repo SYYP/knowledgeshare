@@ -55,6 +55,7 @@ public class FreeTryReadDetailBean {
     private int view_count_true;
     private int is_rss;
     private String t_header;
+    private String t_image;
     private String t_name;
     private int id;
     private int zl_id;
@@ -67,6 +68,14 @@ public class FreeTryReadDetailBean {
     private String name;
     private List<CommentEntity> comment;
     private int view_count;
+
+    public String getT_image() {
+        return t_image;
+    }
+
+    public void setT_image(String t_image) {
+        this.t_image = t_image;
+    }
 
     public void setVideo_time(String video_time) {
         this.video_time = video_time;

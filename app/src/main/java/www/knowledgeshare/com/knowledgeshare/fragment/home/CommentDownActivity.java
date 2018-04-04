@@ -136,6 +136,16 @@ public class CommentDownActivity extends BaseActivity implements View.OnClickLis
         iv_quanxuan.setImageResource(R.drawable.quanxuan_red);
     }
 
+    private boolean isHasOneChecked(){
+        for (int i = 0; i < list.size(); i++) {
+            boolean checked = list.get(i).isChecked();
+            if (checked) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private boolean isAllChecked() {
         for (int i = 0; i < list.size(); i++) {
             boolean checked = list.get(i).isChecked();
@@ -199,6 +209,10 @@ public class CommentDownActivity extends BaseActivity implements View.OnClickLis
                 String userid = SpUtils.getString(MyApplication.getGloableContext(), "id", "");
                 if (TextUtils.isEmpty(userid)) {
                     startActivity(new Intent(this, LoginActivity.class));
+                    return;
+                }
+                if (!isHasOneChecked()){
+                    Toast.makeText(this, "请选中后再下载", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 int apnType = NetWorkUtils.getAPNType(CommentDownActivity.this);

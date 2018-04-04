@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/study_liner"
-            android:layout_margin="10dp">
+            >
 
             <TextView
                 android:id="@+id/item_compile"
@@ -62,6 +62,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
                 android:text="编辑"
+                android:padding="10dp"
                 android:textColor="@color/textblack"
                 android:textSize="15sp"/>
             <ImageView
@@ -69,8 +70,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
                 android:layout_toLeftOf="@id/item_compile"
                 android:src="@drawable/study_bianji"/>
             <TextView

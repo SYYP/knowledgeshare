@@ -7,14 +7,10 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -41,7 +37,6 @@ import com.wevey.selector.dialog.NormalSelectionDialog;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
-import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -54,29 +49,52 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
-import www.knowledgeshare.com.knowledgeshare.bean.UserInfoBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseSelectPopupWindow;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
-import www.knowledgeshare.com.knowledgeshare.utils.TimeUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
 public class PersonInfomationActivity extends BaseActivity implements View.OnClickListener {
 
-    @BindView(R.id.title_back_iv) ImageView titleBackIv;@BindView(R.id.title_content_tv) TextView titleContentTv;
-    @BindView(R.id.face_iv) CircleImageView faceIv;@BindView(R.id.person_face_rl) RelativeLayout personFaceRl;
-    @BindView(R.id.zhye_tv) TextView nameTv;@BindView(R.id.person_name_rl) RelativeLayout personNameRl;
-    @BindView(R.id.sex_tv) TextView sexTv;@BindView(R.id.person_sex_rl) RelativeLayout personSexRl;
-    @BindView(R.id.date_tv) TextView dateTv;@BindView(R.id.person_date_rl) RelativeLayout personDateRl;
-    @BindView(R.id.xueli_tv) TextView xueliTv;@BindView(R.id.person_xueli_rl) RelativeLayout personXueliRl;
-    @BindView(R.id.hangye_tv) TextView hangyeTv;@BindView(R.id.person_hangye_rl) RelativeLayout personHangyeRl;
-    private List<String> cameraList;private List<LocalMedia> selectList = new ArrayList<>();
-    private String cutPath;private BaseSelectPopupWindow popWiw;// 昵称 编辑框
-    private List<String> sexLiset;private TimePickerView pvCustomLunar;
-    private OptionsPickerView pvCustomOptions;private List<String> xueliItem, hangyeItem;
+    @BindView(R.id.title_back_iv)
+    ImageView titleBackIv;
+    @BindView(R.id.title_content_tv)
+    TextView titleContentTv;
+    @BindView(R.id.face_iv)
+    CircleImageView faceIv;
+    @BindView(R.id.person_face_rl)
+    RelativeLayout personFaceRl;
+    @BindView(R.id.zhye_tv)
+    TextView nameTv;
+    @BindView(R.id.person_name_rl)
+    RelativeLayout personNameRl;
+    @BindView(R.id.sex_tv)
+    TextView sexTv;
+    @BindView(R.id.person_sex_rl)
+    RelativeLayout personSexRl;
+    @BindView(R.id.date_tv)
+    TextView dateTv;
+    @BindView(R.id.person_date_rl)
+    RelativeLayout personDateRl;
+    @BindView(R.id.xueli_tv)
+    TextView xueliTv;
+    @BindView(R.id.person_xueli_rl)
+    RelativeLayout personXueliRl;
+    @BindView(R.id.hangye_tv)
+    TextView hangyeTv;
+    @BindView(R.id.person_hangye_rl)
+    RelativeLayout personHangyeRl;
+    private List<String> cameraList;
+    private List<LocalMedia> selectList = new ArrayList<>();
+    private String cutPath;
+    private BaseSelectPopupWindow popWiw;// 昵称 编辑框
+    private List<String> sexLiset;
+    private TimePickerView pvCustomLunar;
+    private OptionsPickerView pvCustomOptions;
+    private List<String> xueliItem, hangyeItem;
     private int NAME = 0, SEX = 1, BIRTHDAY = 2, EDUCATION = 3, INDUSTRY = 4;
 
     @Override
@@ -129,19 +147,23 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
         initLunarPicker();//初始化时间选择器
 
         String url = getIntent().getStringExtra("url");
-        if (url != null && !url.equals("")){
+        if (url != null && !url.equals("")) {
             Glide.with(this).load(url).into(faceIv);
         }
         String name = getIntent().getStringExtra("name");
         nameTv.setText(name);
         String sex = getIntent().getStringExtra("sex");
-        if (TextUtils.equals("1",sex)){
+        if (TextUtils.equals("1", sex)) {
             sexTv.setText("男");
-        }else {
+        } else {
             sexTv.setText("女");
         }
         String brithday = getIntent().getStringExtra("brithday");
-        dateTv.setText(brithday);
+        if (TextUtils.isEmpty(brithday)) {
+            dateTv.setText("请选择");
+        } else {
+            dateTv.setText(brithday);
+        }
         String education = getIntent().getStringExtra("education");
         int educationInt = Integer.parseInt(education);
         getEducation(educationInt);
@@ -151,7 +173,7 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
     }
 
     private void getIndustry(int industry) {
-        switch (industry){
+        switch (industry) {
             case 1:
                 hangyeTv.setText(hangyeItem.get(0));
                 break;
@@ -195,7 +217,7 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
     }
 
     private void getEducation(int education) {
-        switch (education){
+        switch (education) {
             case 1:
                 xueliTv.setText(xueliItem.get(0));
                 break;
@@ -222,7 +244,7 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.title_back_iv:
                 finish();
                 break;
@@ -242,11 +264,11 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                 pvCustomLunar.show();
                 break;
             case R.id.person_xueli_rl://学历
-                initCustomOptionPicker(xueliItem,0);
+                initCustomOptionPicker(xueliItem, 0);
                 pvCustomOptions.show();
                 break;
             case R.id.person_hangye_rl://行业
-                initCustomOptionPicker(hangyeItem,1);
+                initCustomOptionPicker(hangyeItem, 1);
                 pvCustomOptions.show();
                 break;
         }
@@ -264,7 +286,7 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                     @Override
                     public void onItemClick(NormalSelectionDialog dialog, View button, int
                             position) {
-                        switch (position){
+                        switch (position) {
                             case 0://从相册选择
                                 requestPhoto();
                                 break;
@@ -302,7 +324,7 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                 .compressMode(PictureConfig.SYSTEM_COMPRESS_MODE)//系统自带 or 鲁班压缩 PictureConfig.SYSTEM_COMPRESS_MODE or LUBAN_COMPRESS_MODE
                 //.sizeMultiplier(0.5f)// glide 加载图片大小 0~1之间 如设置 .glideOverride()无效
                 .glideOverride(200, 200)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
-//                .withAspectRatio(aspect_ratio_x, aspect_ratio_y)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                //                .withAspectRatio(aspect_ratio_x, aspect_ratio_y)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
                 .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
                 .isGif(false)// 是否显示gif图片
                 .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
@@ -310,9 +332,9 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                 .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
                 .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
                 .openClickSound(false)// 是否开启点击声音
-//                .selectionMedia(list)// 是否传入已选图片
-//                        .videoMaxSecond(15)
-//                        .videoMinSecond(10)
+                //                .selectionMedia(list)// 是否传入已选图片
+                //                        .videoMaxSecond(15)
+                //                        .videoMinSecond(10)
                 //.previewEggs(false)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
                 //.cropCompressQuality(90)// 裁剪压缩质量 默认100
                 //.compressMaxKB()//压缩最大值kb compressGrade()为Luban.CUSTOM_GEAR有效
@@ -338,9 +360,9 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                 .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
                 .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
                 .scaleEnabled(false)// 裁剪是否可放大缩小图片
-//                .glideOverride(160, 160)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
-//                .selectionMedia(list)// 是否传入已选图片
-//                .previewEggs(true)//预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
+                //                .glideOverride(160, 160)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
+                //                .selectionMedia(list)// 是否传入已选图片
+                //                .previewEggs(true)//预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
                 .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
     }
 
@@ -353,8 +375,8 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                     // 图片选择结果回调
                     selectList = PictureSelector.obtainMultipleResult(data);
                     cutPath = selectList.get(0).getCutPath();
-//                    cutPath = selectList.get(0).getPath();
-//                    Glide.with(this).load(cutPath).into(faceIv);
+                    //                    cutPath = selectList.get(0).getPath();
+                    //                    Glide.with(this).load(cutPath).into(faceIv);
                     File file = new File(cutPath);
                     requestUploadAvatar(file);
                     break;
@@ -366,7 +388,7 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("upload_file",file);
+        params.put("upload_file", file);
         OkGo.<BaseBean>post(MyContants.uploadAvatar)
                 .tag(this)
                 .headers(headers)
@@ -375,7 +397,7 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                     @Override
                     public void onSuccess(Response<BaseBean> response) {
                         int code = response.code();
-                        if (code >= 200 && code <= 204){
+                        if (code >= 200 && code <= 204) {
                             Glide.with(PersonInfomationActivity.this).load(response.body().getUrl()).into(faceIv);
                             EventBean eventBean = new EventBean("userinfo");
                             EventBus.getDefault().postSticky(eventBean);
@@ -403,7 +425,7 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
         final ImageView close = popWiw.getContentView().findViewById(R.id.cancle_iv);
 
         edt.setInputType(EditorInfo.TYPE_CLASS_TEXT);
-//        edt.setImeOptions(EditorInfo.IME_ACTION_SEND);
+        //        edt.setImeOptions(EditorInfo.IME_ACTION_SEND);
         edt.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -437,7 +459,7 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                     // 昵称
                     String content = edt.getText().toString().trim();
                     nameTv.setText(content);
-                    requestEditInfo(NAME,content);
+                    requestEditInfo(NAME, content);
                     popWiw.dismiss();
                 }
             }
@@ -458,21 +480,21 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
         Logger.e(param);
-        switch (flag){
+        switch (flag) {
             case 0:
-                params.put("user_name",param);
+                params.put("user_name", param);
                 break;
             case 1:
-                params.put("user_sex",param);
+                params.put("user_sex", param);
                 break;
             case 2:
-                params.put("user_birthday",param);
+                params.put("user_birthday", param);
                 break;
             case 3:
-                params.put("user_education",param);
+                params.put("user_education", param);
                 break;
             case 4:
-                params.put("user_industry",param);
+                params.put("user_industry", param);
                 break;
         }
 
@@ -480,16 +502,16 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<BaseBean>(this,BaseBean.class) {
+                .execute(new DialogCallback<BaseBean>(this, BaseBean.class) {
                     @Override
                     public void onSuccess(Response<BaseBean> response) {
                         int code = response.code();
-                        if (code >= 200 && code <= 204){
-                            TUtils.showShort(PersonInfomationActivity.this,response.body().getMessage());
+                        if (code >= 200 && code <= 204) {
+                            TUtils.showShort(PersonInfomationActivity.this, response.body().getMessage());
                             EventBean eventBean = new EventBean("userinfo");
                             EventBus.getDefault().postSticky(eventBean);
-                        }else {
-                            TUtils.showShort(PersonInfomationActivity.this,response.body().getMessage());
+                        } else {
+                            TUtils.showShort(PersonInfomationActivity.this, response.body().getMessage());
                         }
                     }
                 });
@@ -507,14 +529,14 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                     @Override
                     public void onItemClick(NormalSelectionDialog dialog, View button, int
                             position) {
-                        switch (position){
+                        switch (position) {
                             case 0://男
                                 sexTv.setText("男");
-                                requestEditInfo(SEX,"1");
+                                requestEditInfo(SEX, "1");
                                 break;
                             case 1://女
                                 sexTv.setText("女");
-                                requestEditInfo(SEX,"2");
+                                requestEditInfo(SEX, "2");
                                 break;
                         }
                         dialog.dismiss();
@@ -545,7 +567,7 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                     return;
                 }*/
                 dateTv.setText(getTime(date));
-                requestEditInfo(BIRTHDAY,getTime(date));
+                requestEditInfo(BIRTHDAY, getTime(date));
             }
         })
                 .setDate(selectedDate)
@@ -587,24 +609,24 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
 
     private String getTime(Date date) {//可根据需要自行截取数据显示
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return format.format(date);
     }
 
-    private void initCustomOptionPicker(final List<String> data, final int flag){
+    private void initCustomOptionPicker(final List<String> data, final int flag) {
         pvCustomOptions = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
                 //返回的分别是三个级别的选中位置
                 String tx = data.get(options1);
-                switch (flag){
+                switch (flag) {
                     case 0:
                         xueliTv.setText(tx);
-                        requestEditInfo(EDUCATION,options1+1+"");
+                        requestEditInfo(EDUCATION, options1 + 1 + "");
                         break;
                     case 1:
                         hangyeTv.setText(tx);
-                        requestEditInfo(INDUSTRY,options1+1+"");
+                        requestEditInfo(INDUSTRY, options1 + 1 + "");
                         break;
                 }
             }

@@ -1,56 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/click_selector"
-    android:layout_height="wrap_content">
+    android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_wanjiao2"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_wanjiao2"
         android:padding="10dp">
         <TextView
             android:id="@+id/item_title_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_black"
-            android:text="如何成为一名合格的歌者"/>
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:layout_marginRight="60dp"
+            android:text="如何成为一名合格的歌者"
+            android:textColor="@color/text_black"/>
         <TextView
             android:id="@+id/item_name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="visible"
             android:layout_below="@+id/item_title_tv"
             android:layout_marginTop="10dp"
             android:background="@color/yellow3"
-            android:textSize="10dp"
-            android:textColor="@color/white"
             android:paddingBottom="2dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingTop="2dp"
-            android:text="刘鹏飞"/>
+            android:text="刘鹏飞"
+            android:textColor="@color/white"
+            android:textSize="10dp"
+            android:visibility="visible"/>
         <TextView
             android:id="@+id/item_content_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_below="@+id/item_title_tv"
             android:layout_marginLeft="10dp"
-            android:text="中国声乐好声音王牌级人物"
-            android:textSize="13dp"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@+id/item_name_tv"
-            android:layout_below="@+id/item_title_tv"/>
+            android:ellipsize="end"
+            android:layout_marginRight="60dp"
+            android:singleLine="true"
+            android:text="中国声乐好声音王牌级人物"
+            android:textSize="13dp"/>
         <TextView
             android:id="@+id/item_money_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="￥198/年"
-            android:textColor="@color/red2"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:text="￥198/年"
+            android:textColor="@color/red2"/>
     </RelativeLayout>
 </LinearLayout>

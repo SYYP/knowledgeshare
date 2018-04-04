@@ -51,6 +51,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textSize="13sp"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:text="中国好嗓门教父"/>
             <TextView
                 android:id="@+id/tv_teacher_name"

@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -121,7 +120,7 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
 //                                adapter.notifyDataSetChanged();
                                 recyclerGwc.setVisibility(View.GONE);
                                 nullRl.setVisibility(View.VISIBLE);
-                                hejiTv.setText("￥0.0/年");
+                                hejiTv.setText("合计：￥0.00");
                                 jiesuanTv.setText("结算（0）");
                                 allCheckBox.setChecked(false);
                             }else {
@@ -220,23 +219,24 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.jiesuan_tv:
                 if (TextUtils.equals("删除",jiesuanTv.getText().toString())){
-                    StringBuffer sb = new StringBuffer();
-                    for (int i = list.size()-1; i >= 0; i--) {
-                        if (list.get(i).isChecked()){
-                            list.get(i).getId();
-                            sb.append(list.get(i).getId()+",");
+                    if (list.size() > 0){
+                        StringBuffer sb = new StringBuffer();
+                        for (int i = list.size()-1; i >= 0; i--) {
+                            if (list.get(i).isChecked()){
+                                list.get(i).getId();
+                                sb.append(list.get(i).getId()+",");
                             /*if (TextUtils.equals("0",list.size()+"")){
                                 recyclerGwc.setVisibility(View.GONE);
                                 nullRl.setVisibility(View.VISIBLE);
                             }else {
                                 adapter.notifyDataSetChanged();
                             }*/
+                            }
                         }
+                        //当循环结束后截取最后一个逗号
+                        String ids = sb.substring(0, sb.length() - 1);
+                        requestDelCart(ids);
                     }
-                    //当循环结束后截取最后一个逗号
-                    String ids = sb.substring(0, sb.length() - 1);
-                    requestDelCart(ids);
-
                 }else {
                     StringBuilder sb = new StringBuilder();
                     for (int i = 0; i < list.size(); i++) {

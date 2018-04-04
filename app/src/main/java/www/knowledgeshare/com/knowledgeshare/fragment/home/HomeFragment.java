@@ -65,6 +65,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.HomeDaShiBanNewB
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.LikeMoreBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
+import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BannerUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
@@ -250,6 +251,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             isBofang = false;
             iv_delete.setVisibility(View.VISIBLE);
             allpause();
+        } else if (eventBean.getMsg().equals("norotate")) {
+            isBofang = false;
+            rl_bofang.setVisibility(View.GONE);
+            allclose();
         } else if (eventBean.getMsg().equals("home_close")) {
             isBofang = false;
             rl_bofang.setVisibility(View.GONE);
@@ -260,7 +265,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             initNumber();
         } else if (eventBean.getMsg().equals("suishenting")) {
             suishenting();
-        }else if (eventBean.getMsg().equals("allmusiccomplete")){
+        } else if (eventBean.getMsg().equals("allmusiccomplete")) {
             isBofang = false;
             iv_delete.setVisibility(View.VISIBLE);
             allclose();
@@ -709,12 +714,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (!mMyBinder.isClosed()) {
                     if (scrollY - oldScrollY > 0) {
-//                        Animation animation=AnimationUtils.loadAnimation(mContext, R.anim.bottom_out);
-//                        rl_bofang.startAnimation(animation);
+                        //                        Animation animation=AnimationUtils.loadAnimation(mContext, R.anim.bottom_out);
+                        //                        rl_bofang.startAnimation(animation);
                         rl_bofang.setVisibility(View.GONE);
                     } else if (scrollY - oldScrollY < 0) {
-//                        Animation animation=AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
-//                        rl_bofang.startAnimation(animation);
+                        //                        Animation animation=AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
+                        //                        rl_bofang.startAnimation(animation);
                         rl_bofang.setVisibility(View.VISIBLE);
                     }
                 }
@@ -1271,7 +1276,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(intent4);
                 break;
             case R.id.ll_guanzhu:
-                startActivity(new Intent(mContext, MyGuanzhuActivity.class));
+                String id = SpUtils.getString(mContext, "id", "");
+                if (TextUtils.isEmpty(id)) {
+                    startActivity(new Intent(mContext, LoginActivity.class));
+                } else {
+                    startActivity(new Intent(mContext, MyGuanzhuActivity.class));
+                }
                 break;
             case R.id.tv_lianxubofang:
                 EventBus.getDefault().post(new EventBean("morenbofang"));
@@ -1328,7 +1338,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        if (mMyBinder!=null && !mMyBinder.isClosed()) {
+        if (mMyBinder != null && !mMyBinder.isClosed()) {
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
             rl_bofang.startAnimation(animation);
             rl_bofang.setVisibility(View.VISIBLE);

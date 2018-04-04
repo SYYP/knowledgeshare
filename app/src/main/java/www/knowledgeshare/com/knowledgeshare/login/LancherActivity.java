@@ -17,6 +17,7 @@ import www.knowledgeshare.com.knowledgeshare.activity.MainActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.GuidePageBean;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.login.bean.HobbyActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
@@ -53,8 +54,8 @@ public class LancherActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        UltimateBar ultimateBar = new UltimateBar(this);
-//        ultimateBar.setImmersionBar();
+        //        UltimateBar ultimateBar = new UltimateBar(this);
+        //        ultimateBar.setImmersionBar();
         setISshow(false);
         setContentView(R.layout.activity_launcher);
         mHandler.postDelayed(new Runnable() {
@@ -62,9 +63,16 @@ public class LancherActivity extends BaseActivity {
             public void run() {
                 boolean isguide = SpUtils.getBoolean(LancherActivity.this, "guide", false);
                 if (isguide) {
-                    startActivity(new Intent(LancherActivity.this, MainActivity.class));
+                    boolean abool = SpUtils.getBoolean(LancherActivity.this, "abool", false);
+                    if (!abool) {
+                        Intent intent = new Intent(LancherActivity.this, HobbyActivity.class);
+                        intent.putExtra("flag","0");
+                        startActivity(intent);
+                    } else {
+                        startActivity(new Intent(LancherActivity.this, MainActivity.class));
+                    }
                 } else {
-//                    requestGuide();
+                    //                    requestGuide();
                     Intent intent = new Intent(LancherActivity.this, GuidePageActivity.class);
                     startActivity(intent);
                 }
@@ -75,8 +83,8 @@ public class LancherActivity extends BaseActivity {
 
     private void requestGuide() {
         HttpParams params = new HttpParams();
-        params.put("type","true");
-        params.put("from","android");
+        params.put("type", "true");
+        params.put("from", "android");
 
         OkGo.<GuidePageBean>get(MyContants.bootstrappers)
                 .tag(this)
@@ -85,13 +93,18 @@ public class LancherActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<GuidePageBean> response) {
                         GuidePageBean guidePageBean = response.body();
-                        if ( response.code() >= 200 && response.code() <= 204){
+                        if (response.code() >= 200 && response.code() <= 204) {
                             list = guidePageBean.getGuide();
                             for (int i = 0; i < list.size(); i++) {
-                                SpUtils.putString(LancherActivity.this,"yindao"+i,list.get(i).getImgurl());
+                                SpUtils.putString(LancherActivity.this, "yindao" + i, list.get(i).getImgurl());
                             }
                         }
                     }
                 });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

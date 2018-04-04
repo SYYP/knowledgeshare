@@ -1,8 +1,11 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.study;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -11,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -23,6 +28,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.bumptech.glide.Glide;
 import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
@@ -40,6 +46,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.activity.NoticeContentActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
@@ -49,10 +56,15 @@ import www.knowledgeshare.com.knowledgeshare.bean.NoteListBean;
 import www.knowledgeshare.com.knowledgeshare.bean.WeatherBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.BoFangListActivity;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.MusicActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.SearchActivity;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
+import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.CollectActivity;
 import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.login.MessageActivity;
+import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
@@ -61,12 +73,13 @@ import www.knowledgeshare.com.knowledgeshare.utils.TimeUtils;
 import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
 import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
+import static android.content.Context.BIND_AUTO_CREATE;
 import static www.knowledgeshare.com.knowledgeshare.R.id.springview;
 
 /**
  * Created by Administrator on 2017/11/17.
  */
-public class StudyFragment extends BaseFragment implements View.OnClickListener, AMapLocationListener{
+public class StudyFragment extends BaseFragment implements View.OnClickListener, AMapLocationListener {
     public TextView tv_search;
     public ImageView iv_message;
     public LinearLayout ll_download;
@@ -107,6 +120,10 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     private ImageView study_newNotice;
     private String note_count;
     private TextView messageTv;
+    private ImageView iv_delete, iv_bo_head, iv_arrow_top, iv_mulu;
+    private TextView tv_title, tv_subtitle;
+    private RelativeLayout rl_bofang;
+    private MusicTypeBean mMusicTypeBean;
 
     @Override
     protected void lazyLoad() {
@@ -129,9 +146,55 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         study_name.setText("Hi  " + SpUtils.getString(mContext, "name", ""));
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent2(EventBean eventBean) {
+        if (eventBean.getMsg().equals("home_bofang")) {
+            rl_bofang.setVisibility(View.VISIBLE);
+            iv_delete.setVisibility(View.GONE);
+        } else if (eventBean.getMsg().equals("home_pause")) {
+            iv_delete.setVisibility(View.VISIBLE);
+        } else if (eventBean.getMsg().equals("home_close")) {
+            rl_bofang.setVisibility(View.GONE);
+        } else if (eventBean.getMsg().equals("allmusiccomplete")) {
+            iv_delete.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent3(PlayerBean playerBean) {
+        if (playerBean.getMsg().equals("refreshplayer")) {
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
+            rl_bofang.startAnimation(animation);
+            rl_bofang.setVisibility(View.VISIBLE);
+            Glide.with(MyApplication.getGloableContext()).load(playerBean.getTeacher_head()).into(iv_bo_head);
+            tv_title.setText(playerBean.getTitle());
+            tv_subtitle.setText(playerBean.getSubtitle());
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(MusicTypeBean musicTypeBean) {
+        if (musicTypeBean.getMsg().equals("musicplayertype")) {
+            mMusicTypeBean = musicTypeBean;
+        }
+    }
+
     @Override
     protected View initView() {
         rootView = View.inflate(mContext, R.layout.fragment_study, null);
+        iv_delete = rootView.findViewById(R.id.iv_delete);
+        iv_delete.setOnClickListener(this);
+        iv_delete.setVisibility(View.GONE);
+        iv_arrow_top = rootView.findViewById(R.id.iv_arrow_top);
+        iv_arrow_top.setOnClickListener(this);
+        iv_mulu = rootView.findViewById(R.id.iv_mulu);
+        iv_mulu.setOnClickListener(this);
+        iv_bo_head = rootView.findViewById(R.id.iv_bo_head);
+        tv_title = rootView.findViewById(R.id.tv_title);
+        tv_subtitle = rootView.findViewById(R.id.tv_subtitle);
+        rl_bofang = rootView.findViewById(R.id.rl_bofang);
+        rl_bofang.setOnClickListener(this);
+        rl_bofang.setVisibility(View.GONE);
         tv_search = (TextView) rootView.findViewById(R.id.tv_search);
         fram_layout = rootView.findViewById(R.id.frame_layout);
         this.iv_message = (ImageView) rootView.findViewById(R.id.iv_message);
@@ -167,7 +230,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         initMap();
         initLoadMore();
         requestNoteList("");
-
+        initMusic();
         study_xinxin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -335,7 +398,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
-//        params.put("after", after);
+        //        params.put("after", after);
         Logger.e(after);
         OkGo.<NoteListBean>post(MyContants.noteList)
                 .tag(this)
@@ -405,6 +468,59 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
             case R.id.tv_suishenting:
                 suishenting();
                 break;
+            case R.id.iv_delete:
+                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_out);
+                rl_bofang.startAnimation(animation);
+                rl_bofang.setVisibility(View.GONE);
+                EventBean eventBean = new EventBean("norotate");
+                EventBus.getDefault().postSticky(eventBean);
+                break;
+            case R.id.iv_arrow_top:
+                Animation animation2 = AnimationUtils.loadAnimation(mContext, R.anim.bottom_out);
+                rl_bofang.startAnimation(animation2);
+                rl_bofang.setVisibility(View.GONE);
+                Intent intent1 = new Intent(mContext, MusicActivity.class);
+                intent1.putExtra("data", mMusicTypeBean);
+                intent1.putExtra("title", mMusicTypeBean.getVideo_name());
+                startActivity(intent1);
+                mActivity.overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
+                break;
+            case R.id.iv_mulu:
+                Intent intent11 = new Intent(mContext, BoFangListActivity.class);
+                startActivity(intent11);
+                break;
+        }
+    }
+
+    //“绑定”服务的intent
+    private Intent MediaServiceIntent;
+    private MediaService.MyBinder mMyBinder;
+
+    private void initMusic() {
+        MediaServiceIntent = new Intent(mContext, MediaService.class);
+        //        mContext.startService(MediaServiceIntent);
+        mContext.bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+    }
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mMyBinder = (MediaService.MyBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mMyBinder!=null && !mMyBinder.isClosed()) {
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
+            rl_bofang.startAnimation(animation);
+            rl_bofang.setVisibility(View.VISIBLE);
         }
     }
 
@@ -480,9 +596,9 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
 
     private void requsetWeather(String city) {
         HttpHeaders headers = new HttpHeaders();
-        headers.put("Authorization","APPCODE 7142db13615540c4896b7963bb8c78be" );
+        headers.put("Authorization", "APPCODE 7142db13615540c4896b7963bb8c78be");
         HttpParams params = new HttpParams();
-        params.put("city",city);
+        params.put("city", city);
         OkGo.<WeatherBean>get("http://jisutqybmf.market.alicloudapi.com/weather/query")
                 .headers(headers)
                 .params(params)
@@ -490,10 +606,10 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
                     @Override
                     public void onSuccess(Response<WeatherBean> response) {
                         WeatherBean body = response.body();
-                        if (body.getStatus().equals("0")){
+                        if (body.getStatus().equals("0")) {
                             study_weather.setText(body.getResult().getWeather());
                             study_wendu.setText(body.getResult().getTemp() + "℃");
-                        }else {
+                        } else {
                             Logger.e(body.getMsg());
                         }
                     }

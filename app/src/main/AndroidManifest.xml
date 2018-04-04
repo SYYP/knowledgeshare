@@ -75,7 +75,8 @@
         <activity android:name=".activity.LearningTimeActivity"/>
         <activity android:name=".fragment.home.DemoActivity"/>
         <activity android:name=".fragment.home.MusicActivity"/>
-        <activity android:name=".fragment.home.BoFangListActivity"/>
+        <activity android:name=".fragment.home.BoFangListActivity"
+        android:launchMode="singleTop"/>
         <activity android:name=".fragment.home.TeacherDetailActivity"/>
         <activity android:name=".activity.LearningRecordActivity"/>
         <activity android:name=".activity.MyAccountActivity"/>

@@ -129,6 +129,17 @@ public class FreeDownListActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
+    private boolean isHasOneChecked(){
+        for (int i = 0; i < list.size(); i++) {
+            boolean checked = list.get(i).isChecked();
+            if (checked) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     private void quanxuan() {
         for (int i = 0; i < list.size(); i++) {
             list.get(i).setChecked(true);
@@ -202,6 +213,10 @@ public class FreeDownListActivity extends BaseActivity implements View.OnClickLi
                 String userid = SpUtils.getString(MyApplication.getGloableContext(), "id", "");
                 if (TextUtils.isEmpty(userid)) {
                     startActivity(new Intent(this, LoginActivity.class));
+                    return;
+                }
+                if (!isHasOneChecked()){
+                    Toast.makeText(this, "请选中后再下载", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 int apnType = NetWorkUtils.getAPNType(this);

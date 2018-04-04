@@ -119,7 +119,7 @@ public class BaseActivity extends AppCompatActivity {
     };
 
     public void ClickPopShow() {//在子类页面中点击音频的时候弹出popupwindow
-        if (musicPop==null){
+        if (musicPop == null) {
             return;
         }
         if (isshow) {
@@ -128,7 +128,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void SlidePopShow() {
-        if (musicPop==null){
+        if (musicPop == null) {
             return;
         }
         if (isshow && !mMyBinder.isClosed()) {
@@ -137,7 +137,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void setPopHide() {
-        if (musicPop==null){
+        if (musicPop == null) {
             return;
         }
         if (musicPop.isShowing()) {
@@ -155,7 +155,7 @@ public class BaseActivity extends AppCompatActivity {
         if (activityList != null) {
             activityList.remove(this);
         }
-        //        unbindService(mServiceConnection);
+        unbindService(mServiceConnection);
     }
 
     @Override
@@ -189,7 +189,7 @@ public class BaseActivity extends AppCompatActivity {
                 }
             }
             activityList.clear();
-            activityList=null;
+            activityList = null;
         }
     }
 

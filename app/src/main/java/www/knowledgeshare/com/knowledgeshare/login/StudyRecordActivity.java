@@ -221,6 +221,7 @@ public class StudyRecordActivity extends BaseActivity {
                             //关闭键盘
                             SoftKeyboardTool.closeKeyboard(item_count);
                             MyApplication.stopClearClip();
+                            editNote(item.getId() + "", item_count.getText().toString());
                         } else {
                             item_count.setFocusableInTouchMode(true);
                             item_count.setFocusable(true);
@@ -242,7 +243,7 @@ public class StudyRecordActivity extends BaseActivity {
 
                                 @Override
                                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                    editNote(item.getId() + "", item_count.getText().toString());
+
                                 }
 
                                 @Override
@@ -308,7 +309,7 @@ public class StudyRecordActivity extends BaseActivity {
 
                                 @Override
                                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                    editNote(item.getId() + "", item_count.getText().toString());
+//                                    editNote(item.getId() + "", item_count.getText().toString());
                                 }
 
                                 @Override

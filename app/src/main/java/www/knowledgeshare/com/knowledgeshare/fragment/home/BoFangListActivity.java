@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -89,6 +88,12 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
         initNETDialog();
     }
 
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        SlidePopShow();
+    }
 
     private void initDialog() {
         mBuilder = new BaseDialog.Builder(this);

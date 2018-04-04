@@ -128,8 +128,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         //后来搜索的文字放在集合中的第一个位置
         mHistoryList.add(0, new SearchHistoryEntity(content));
 
-        if (mHistoryList.size() == 5) {//实现本地历史搜索记录最多不超过5个
-            mHistoryList.remove(4);
+        if (mHistoryList.size() == 6) {//实现本地历史搜索记录最多不超过5个
+            mHistoryList.remove(5);
         }
         //将这个mHistoryListData保存到sp中，其实sp中保存的就是这个mHistoryListData集合
         saveHistory();
@@ -302,6 +302,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                             intent.putExtra("id", list.get(position).getId() + "");
                                             startActivity(intent);
                                         }
+                                        SoftKeyboardTool.closeKeyboard(SearchActivity.this);
                                     }
                                 });
                             } else {
@@ -368,6 +369,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                         Intent intent = new Intent(SearchActivity.this, ZhuanLanActivity.class);
                                         intent.putExtra("id", mMDaShiBanAdapter.getData().get(position).getId() + "");
                                         startActivity(intent);
+                                        SoftKeyboardTool.closeKeyboard(SearchActivity.this);
                                     }
                                 });
                                 mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, mXiaoke);
@@ -378,6 +380,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                         Intent intent = new Intent(SearchActivity.this, SoftMusicDetailActivity.class);
                                         intent.putExtra("id", mYinYueKeAdapter.getData().get(position).getXk_id() + "");
                                         startActivity(intent);
+                                        SoftKeyboardTool.closeKeyboard(SearchActivity.this);
                                     }
                                 });
                                 SoftKeyboardTool.closeKeyboard(SearchActivity.this);
@@ -429,6 +432,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                         Intent intent = new Intent(SearchActivity.this, ZhuanLanActivity.class);
                                         intent.putExtra("id", mMDaShiBanAdapter.getData().get(position).getId() + "");
                                         startActivity(intent);
+                                        SoftKeyboardTool.closeKeyboard(SearchActivity.this);
                                     }
                                 });
                                 mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, mXiaoke);
@@ -439,6 +443,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                         Intent intent = new Intent(SearchActivity.this, SoftMusicDetailActivity.class);
                                         intent.putExtra("id", mYinYueKeAdapter.getData().get(position).getXk_id() + "");
                                         startActivity(intent);
+                                        SoftKeyboardTool.closeKeyboard(SearchActivity.this);
                                     }
                                 });
                             } else {
