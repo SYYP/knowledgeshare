@@ -8,8 +8,9 @@ import java.util.List;
 
 public class FreeTryReadListBean {
 
+
     /**
-     * data : [{"is_view":0,"description":"专栏小节介绍，男高音占有十分重要的地位，第一男主角多为男高音歌唱家扮演。当阉人歌手还霸占歌剧舞台时，一位男歌手以真正的声音唱出高音C","collect_count":0,"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/18x7.png","collect_count_true":0,"is_collect":1,"rss_count":0,"rss_count_true":0,"view_count_true":0,"is_rss":1,"name":"专栏小节，如何成为男高音1","id":1,"view_count":0}]
+     * data : [{"is_view":1,"description":"《床边故事》是由周杰伦作曲，方文山作词，黄雨勋编曲，周杰伦演唱的一首歌曲","collect_count":10,"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20180404/17：8详情页.png","collect_count_true":1,"is_collect":1,"rss_count":"2018-04-04","rss_count_true":"2018-04-04","view_count_true":20,"is_rss":1,"name":"床边故事","id":2,"view_count":10},{"is_view":1,"description":"《说走就走》是收录在2016年发行的音乐专辑 《周杰伦的床边故事》中的一首摇滚rap歌曲，由方文山填词、黄雨勋谱曲、周杰伦作曲演唱。","collect_count":0,"imgurl":"http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20180404/17：8.png","collect_count_true":0,"is_collect":1,"rss_count":"2018-04-04","rss_count_true":"2018-04-04","view_count_true":4,"is_rss":1,"name":"说走就走","id":3,"view_count":0}]
      */
     private List<DataEntity> data;
 
@@ -23,19 +24,19 @@ public class FreeTryReadListBean {
 
     public static class DataEntity {
         /**
-         * is_view : 0
-         * description : 专栏小节介绍，男高音占有十分重要的地位，第一男主角多为男高音歌唱家扮演。当阉人歌手还霸占歌剧舞台时，一位男歌手以真正的声音唱出高音C
-         * collect_count : 0
-         * imgurl : http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20171208/18x7.png
-         * collect_count_true : 0
+         * is_view : 1
+         * description : 《床边故事》是由周杰伦作曲，方文山作词，黄雨勋编曲，周杰伦演唱的一首歌曲
+         * collect_count : 10
+         * imgurl : http://knowledges.oss-cn-qingdao.aliyuncs.com/zhuanlan/20180404/17：8详情页.png
+         * collect_count_true : 1
          * is_collect : 1
-         * rss_count : 0
-         * rss_count_true : 0
-         * view_count_true : 0
+         * rss_count : 2018-04-04
+         * rss_count_true : 2018-04-04
+         * view_count_true : 20
          * is_rss : 1
-         * name : 专栏小节，如何成为男高音1
-         * id : 1
-         * view_count : 0
+         * name : 床边故事
+         * id : 2
+         * view_count : 10
          */
         private int is_view;
         private String description;
@@ -43,8 +44,8 @@ public class FreeTryReadListBean {
         private String imgurl;
         private int collect_count_true;
         private int is_collect;
-        private int rss_count;
-        private int rss_count_true;
+        private String rss_count;
+        private String rss_count_true;
         private int view_count_true;
         private int is_rss;
         private String name;
@@ -75,11 +76,11 @@ public class FreeTryReadListBean {
             this.is_collect = is_collect;
         }
 
-        public void setRss_count(int rss_count) {
+        public void setRss_count(String rss_count) {
             this.rss_count = rss_count;
         }
 
-        public void setRss_count_true(int rss_count_true) {
+        public void setRss_count_true(String rss_count_true) {
             this.rss_count_true = rss_count_true;
         }
 
@@ -127,11 +128,11 @@ public class FreeTryReadListBean {
             return is_collect;
         }
 
-        public int getRss_count() {
+        public String getRss_count() {
             return rss_count;
         }
 
-        public int getRss_count_true() {
+        public String getRss_count_true() {
             return rss_count_true;
         }
 

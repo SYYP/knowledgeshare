@@ -569,7 +569,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                     .setText(R.id.tv_dainzan_count, item.getLive() + "");
             if (item.getComment() != null && item.getComment().size() > 0) {
                 helper.setVisible(R.id.ll_author, true);
-                helper.setText(R.id.tv_author_content, item.getContent());
+                helper.setText(R.id.tv_author_content, item.getComment().get(0).getContent());
             } else {
                 helper.setVisible(R.id.ll_author, false);
             }

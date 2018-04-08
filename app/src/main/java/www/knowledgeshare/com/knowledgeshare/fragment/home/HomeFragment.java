@@ -485,6 +485,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             mLive = homeBean.getLive();
                             mXiaoke = homeBean.getXiaoke();
                             mZhuanlan = homeBean.getZhuanlan();
+                            tv_zhuanlan_name.setText(mFree.getName());
                             mDaShiBanAdapter = new DaShiBanAdapter(R.layout.item_dashiban, mZhuanlan);
                             recycler_dashiban.setAdapter(mDaShiBanAdapter);
                             mDaShiBanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {

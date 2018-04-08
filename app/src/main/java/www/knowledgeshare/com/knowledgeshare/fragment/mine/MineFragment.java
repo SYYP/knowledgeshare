@@ -215,8 +215,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                                 qiandaoBtn.setText("已签到");
                                 qiandaoBtn.setClickable(false);
                             }
-                            SpUtils.putString(mContext,"setphone",userInfoBean.getConfig().get(1).getValue());
-                            SpUtils.putString(mContext,"setemail",userInfoBean.getConfig().get(0).getValue());
+                            SpUtils.putString(mContext,"setphone",userInfoBean.getConfig().get(0).getValue());
+                            SpUtils.putString(mContext,"setemail",userInfoBean.getConfig().get(1).getValue());
                             SpUtils.putString(mContext,"mobile",userInfoBean.getUser_mobile());
                             SpUtils.putString(mContext,"wx_id",userInfoBean.getWx_unionid());
                             user_education = userInfoBean.getUser_education();

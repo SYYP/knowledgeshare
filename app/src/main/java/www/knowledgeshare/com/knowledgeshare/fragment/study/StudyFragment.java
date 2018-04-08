@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -124,6 +125,8 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     private TextView tv_title, tv_subtitle;
     private RelativeLayout rl_bofang;
     private MusicTypeBean mMusicTypeBean;
+    private LinearLayout ll_root_view;
+    private NestedScrollView nestView;
 
     @Override
     protected void lazyLoad() {
@@ -155,6 +158,14 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
             iv_delete.setVisibility(View.VISIBLE);
         } else if (eventBean.getMsg().equals("home_close")) {
             rl_bofang.setVisibility(View.GONE);
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) ll_root_view.getLayoutParams();
+            layoutParams.setMargins(0, 0, 0, 0);
+            ll_root_view.setLayoutParams(layoutParams);
+        } else if (eventBean.getMsg().equals("norotate")) {
+            rl_bofang.setVisibility(View.GONE);
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) ll_root_view.getLayoutParams();
+            layoutParams.setMargins(0, 0, 0, 0);
+            ll_root_view.setLayoutParams(layoutParams);
         } else if (eventBean.getMsg().equals("allmusiccomplete")) {
             iv_delete.setVisibility(View.VISIBLE);
         }
@@ -163,6 +174,9 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent3(PlayerBean playerBean) {
         if (playerBean.getMsg().equals("refreshplayer")) {
+            if (playerBean==null){
+                return;
+            }
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
             rl_bofang.startAnimation(animation);
             rl_bofang.setVisibility(View.VISIBLE);
@@ -194,7 +208,9 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         tv_subtitle = rootView.findViewById(R.id.tv_subtitle);
         rl_bofang = rootView.findViewById(R.id.rl_bofang);
         rl_bofang.setOnClickListener(this);
+        nestView=rootView.findViewById(R.id.nestView);
         rl_bofang.setVisibility(View.GONE);
+        ll_root_view = rootView.findViewById(R.id.ll_root_view);
         tv_search = (TextView) rootView.findViewById(R.id.tv_search);
         fram_layout = rootView.findViewById(R.id.frame_layout);
         this.iv_message = (ImageView) rootView.findViewById(R.id.iv_message);
@@ -272,8 +288,29 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
                 startActivity(new Intent(mContext, EditNoticeActivity.class));
             }
         });
+        initListener();
         return rootView;
     }
+
+    private void initListener() {
+        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (!mMyBinder.isClosed()) {
+                    if (scrollY - oldScrollY > 0) {
+                        //                        Animation animation=AnimationUtils.loadAnimation(mContext, R.anim.bottom_out);
+                        //                        rl_bofang.startAnimation(animation);
+                        rl_bofang.setVisibility(View.GONE);
+                    } else if (scrollY - oldScrollY < 0) {
+                        //                        Animation animation=AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
+                        //                        rl_bofang.startAnimation(animation);
+                        rl_bofang.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
+    }
+
 
     private void initMap() {
         //初始化AMapLocationClientOption对象
@@ -517,7 +554,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     @Override
     public void onResume() {
         super.onResume();
-        if (mMyBinder!=null && !mMyBinder.isClosed()) {
+        if (mMyBinder != null && !mMyBinder.isClosed()) {
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
             rl_bofang.startAnimation(animation);
             rl_bofang.setVisibility(View.VISIBLE);
