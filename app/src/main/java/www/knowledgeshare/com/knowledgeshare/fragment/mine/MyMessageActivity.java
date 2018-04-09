@@ -280,7 +280,6 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
                     layout.setVisibility(View.GONE);
                     isEditing = false;
                 }
-
                 break;
             //全选
             case R.id.check_all:

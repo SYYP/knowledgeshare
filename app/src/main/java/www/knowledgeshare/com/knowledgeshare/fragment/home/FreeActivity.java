@@ -135,7 +135,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 if (id.equals(id1)){
 //                    recycler_free.scrollToPosition(i);
                     int measuredHeight = tv_teacher_intro.getMeasuredHeight();
-                    nestView.scrollTo(0,MyUtils.dip2px(this,200+measuredHeight+i*70));
+                    nestView.scrollTo(0,measuredHeight+MyUtils.dip2px(this,200+i*50));
                     return;
                 }
             }

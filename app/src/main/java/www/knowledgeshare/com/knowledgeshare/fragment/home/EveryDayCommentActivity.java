@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -115,10 +114,8 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
             for (int i = 0; i < mDailys.size(); i++) {
                 String id1 = mDailys.get(i).getId() + "";
                 if (id.equals(id1)){
-//                    recycler_liebiao.setFocusableInTouchMode(true);
-//                    recycler_liebiao.setNestedScrollingEnabled(true);
-//                    recycler_liebiao.smoothScrollToPosition(i);
-                    nestView.scrollTo(0,MyUtils.dip2px(this,200+i*70));
+                    int measuredHeight = iv_beijing.getMeasuredHeight();
+                    nestView.scrollTo(0,measuredHeight+MyUtils.dip2px(this,20+i*50));
                     return;
                 }
             }

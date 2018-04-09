@@ -204,9 +204,8 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
             for (int i = 0; i < mChild.size(); i++) {
                 String id1 = mChild.get(i).getId() + "";
                 if (id.equals(id1)) {
-                    //                    recycler_free.scrollToPosition(i);
                     int measuredHeight = tv_teacher_intro.getMeasuredHeight();
-                    nestView.scrollTo(0, MyUtils.dip2px(this, 200 + measuredHeight + i * 70));
+                    nestView.scrollTo(0, measuredHeight + MyUtils.dip2px(this, 220 + i * 50));//胡乱弄得
                     return;
                 }
             }
@@ -421,7 +420,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                      tv_read.setVisibility(View.GONE);
                                  }
                                  boolean try_look = mMusicDetailBean.is_try_look();
-                                 if (!try_look){
+                                 if (!try_look) {
                                      tv_tryread.setBackgroundColor(getResources().getColor(R.color.tab_text_normal_color));
                                      tv_tryread.setTextColor(getResources().getColor(R.color.textcolor));
                                      tv_tryread.setClickable(false);
@@ -1587,7 +1586,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                 break;
             case R.id.tv_tryread:
             case R.id.tv_read:
-                if (mLieBiaoAdapter.getData().size()>0 && mLieBiaoAdapter.getData().get(0).getIs_try() != 1) {
+                if (mLieBiaoAdapter.getData().size() > 0 && mLieBiaoAdapter.getData().get(0).getIs_try() != 1) {
                     showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
                 } else {
                     setISshow(true);

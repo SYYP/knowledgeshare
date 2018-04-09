@@ -95,7 +95,6 @@
             android:textCursorDrawable="@null"
             android:inputType="number"
             android:background="@null"
-            android:maxLength="6"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:gravity="left|center_vertical"
@@ -104,7 +103,8 @@
             android:layout_centerHorizontal="true"
             android:id="@+id/verify_yanzheng"
             android:hint="请输入验证码"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginRight="120dp"
             android:layout_height="match_parent" />
         <TextView
             android:id="@+id/verify_huoqu"

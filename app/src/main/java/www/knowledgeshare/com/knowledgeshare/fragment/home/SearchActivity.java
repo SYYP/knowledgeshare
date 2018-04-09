@@ -60,7 +60,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private List<String> hotNameList = new ArrayList<>();
     private List<String> hotIdsList = new ArrayList<>();
     private RecyclerHistoryAdapter mHistoryAdapter;
-    //    private RecyclerHotAdapter mHotAdapter;
     private LinearLayout ll_lishi, ll_hot, ll_root_view, ll_result;
     private List<SearchHistoryEntity> mHistoryList = new ArrayList<>();
     private int position;
@@ -297,12 +296,13 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                             Intent intent = new Intent(SearchActivity.this, ZhuanLanActivity.class);
                                             intent.putExtra("id", list.get(position).getId() + "");
                                             startActivity(intent);
+                                            SoftKeyboardTool.closeKeyboard(SearchActivity.this);
                                         } else {
                                             Intent intent = new Intent(SearchActivity.this, SoftMusicDetailActivity.class);
                                             intent.putExtra("id", list.get(position).getId() + "");
                                             startActivity(intent);
+                                            SoftKeyboardTool.closeKeyboard(SearchActivity.this);
                                         }
-                                        SoftKeyboardTool.closeKeyboard(SearchActivity.this);
                                     }
                                 });
                             } else {
@@ -369,7 +369,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                         Intent intent = new Intent(SearchActivity.this, ZhuanLanActivity.class);
                                         intent.putExtra("id", mMDaShiBanAdapter.getData().get(position).getId() + "");
                                         startActivity(intent);
-                                        SoftKeyboardTool.closeKeyboard(SearchActivity.this);
                                     }
                                 });
                                 mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, mXiaoke);
@@ -380,16 +379,15 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                         Intent intent = new Intent(SearchActivity.this, SoftMusicDetailActivity.class);
                                         intent.putExtra("id", mYinYueKeAdapter.getData().get(position).getXk_id() + "");
                                         startActivity(intent);
-                                        SoftKeyboardTool.closeKeyboard(SearchActivity.this);
                                     }
                                 });
-                                SoftKeyboardTool.closeKeyboard(SearchActivity.this);
                             } else {
                                 Toast.makeText(SearchActivity.this, "抱歉，没有该课程~", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Toast.makeText(SearchActivity.this, "抱歉，没有该课程~", Toast.LENGTH_SHORT).show();
                         }
+                        SoftKeyboardTool.closeKeyboard(SearchActivity.this);
                     }
 
                     @Override
@@ -432,7 +430,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                         Intent intent = new Intent(SearchActivity.this, ZhuanLanActivity.class);
                                         intent.putExtra("id", mMDaShiBanAdapter.getData().get(position).getId() + "");
                                         startActivity(intent);
-                                        SoftKeyboardTool.closeKeyboard(SearchActivity.this);
                                     }
                                 });
                                 mYinYueKeAdapter = new YinYueKeAdapter(R.layout.item_yinyueke, mXiaoke);
@@ -443,9 +440,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                         Intent intent = new Intent(SearchActivity.this, SoftMusicDetailActivity.class);
                                         intent.putExtra("id", mYinYueKeAdapter.getData().get(position).getXk_id() + "");
                                         startActivity(intent);
-                                        SoftKeyboardTool.closeKeyboard(SearchActivity.this);
                                     }
                                 });
+                                SoftKeyboardTool.closeKeyboard(SearchActivity.this);
                             } else {
                                 Toast.makeText(SearchActivity.this, "抱歉，没有该课程~", Toast.LENGTH_SHORT).show();
                             }
@@ -479,15 +476,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         } else {
             iv_delete.setVisibility(View.GONE);
         }
-
-
-        //        mHotAdapter = new RecyclerHotAdapter(R.layout.search_hot_item, hotNameList);
-        //        recycler_hot.setAdapter(mHotAdapter);
-        //        mHotAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-        //            @Override
-        //            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        //            }
-        //        });
         OkGo.<HotBean>get(MyContants.LXKURL + "hot")
                 .tag(this)
                 .execute(new JsonCallback<HotBean>(HotBean.class) {
@@ -539,18 +527,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    class RecyclerHotAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
-
-        public RecyclerHotAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
-            super(layoutResId, data);
-        }
-
-        @Override
-        protected void convert(BaseViewHolder helper, String item) {
-            helper.setText(R.id.tv_hot, item);
-        }
-    }
-
     private void setHot() {
         liushiview.removeAllViews();
         for (int i = 0; i < hotNameList.size(); i++) {
@@ -580,9 +556,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         @Override
         protected void convert(BaseViewHolder helper, SearchBean.ZhuanlanEntity item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
-            ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-            layoutParams.height = MyUtils.dip2px(SearchActivity.this, 90);
-            imageView.setLayoutParams(layoutParams);
+            //            ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+            //            layoutParams.height = MyUtils.dip2px(SearchActivity.this, 90);
+            //            imageView.setLayoutParams(layoutParams);
             Glide.with(MyApplication.getGloableContext()).load(item.getZl_img()).into(imageView);
             helper.setText(R.id.tv_name, item.getZl_name())
                     .setText(R.id.tv_introduce, item.getZl_introduce())
