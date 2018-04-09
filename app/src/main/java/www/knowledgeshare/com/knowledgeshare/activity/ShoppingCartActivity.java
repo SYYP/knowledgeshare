@@ -236,6 +236,8 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
                         //当循环结束后截取最后一个逗号
                         String ids = sb.substring(0, sb.length() - 1);
                         requestDelCart(ids);
+                    }else {
+                        TUtils.showShort(this,"购物车是空的");
                     }
                 }else {
                     StringBuilder sb = new StringBuilder();
