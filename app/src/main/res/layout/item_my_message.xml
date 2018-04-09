@@ -5,46 +5,46 @@
     android:orientation="vertical"
    >
 
-      <RelativeLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content">
-          <CheckBox
-              android:clickable="false"
-              android:focusable="false"
-              android:visibility="gone"
-              android:layout_centerVertical="true"
-              android:id="@+id/msg_check"
-              android:layout_marginLeft="15dp"
-              android:layout_marginRight="10dp"
-              style="@style/MessageTheme"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content" />
-          <LinearLayout
-              android:layout_marginLeft="10dp"
-              android:layout_toRightOf="@id/msg_check"
-              android:layout_marginRight="30dp"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
-          <TextView
-              android:layout_marginTop="5dp"
-              android:textColor="@color/text_black"
-              android:id="@+id/message_date"
-              android:padding="4dp"
-              android:text="2017-10-10 10:00"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content" />
-              <TextView
-                  android:id="@+id/message_count"
-                  android:padding="4dp"
-                  android:textColor="@color/text_black"
-                  android:textSize="16sp"
-                  android:layout_marginBottom="10dp"
-                  android:text="系统消息：恭喜行走的肉夹馍获得金牌用户勋章，再接再厉，成为砖石会员。"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content" />
-          </LinearLayout>
-      </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <CheckBox
+            android:clickable="false"
+            android:focusable="false"
+            android:visibility="gone"
+            android:layout_centerVertical="true"
+            android:id="@+id/msg_check"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            style="@style/MessageTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/msg_check"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+            android:layout_marginTop="5dp"
+            android:textColor="@color/text_black"
+            android:id="@+id/message_date"
+            android:padding="4dp"
+            android:text="2017-10-10 10:00"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/message_count"
+                android:padding="4dp"
+                android:textColor="@color/text_black"
+                android:textSize="16sp"
+                android:layout_marginBottom="10dp"
+                android:text="系统消息：恭喜行走的肉夹馍获得金牌用户勋章，再接再厉，成为砖石会员。"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </RelativeLayout>
     <View
         android:background="#edecea"
         android:layout_width="match_parent"

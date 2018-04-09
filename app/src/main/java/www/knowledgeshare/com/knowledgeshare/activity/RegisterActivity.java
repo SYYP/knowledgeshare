@@ -79,11 +79,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                   startActivity(intent);
                 break;
             case R.id.register_next:
-                Intent intent2 = new Intent(RegisterActivity.this, SetloginActivity.class);
-                SpUtils.putString(RegisterActivity.this,"mobile",register_phone.getText().toString());
-                startActivity(intent2);
-                finish();
-//                 register();
+//                Intent intent2 = new Intent(RegisterActivity.this, SetloginActivity.class);
+//                SpUtils.putString(RegisterActivity.this,"mobile",register_phone.getText().toString());
+//                intent2.putExtra("verify",register_yanzheng.getText().toString());
+//                startActivity(intent2);
+//                finish();
+                 register();
                 break;
             case R.id.register_phone:
                 register_phone.setCursorVisible(true);

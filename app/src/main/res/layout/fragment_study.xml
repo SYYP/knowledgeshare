@@ -51,6 +51,7 @@
                         android:layout_marginLeft="15dp"
                         android:background="@drawable/bg_xiaoxi_selector"
                         android:gravity="center"
+                        android:layout_gravity="center_vertical"
                         android:text="0"
                         android:textColor="@color/red2"
                         android:textSize="10dp"

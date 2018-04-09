@@ -7,6 +7,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -131,21 +132,21 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("after",after);
+        params.put("after", after);
         OkGo.<Messagebean>get(MyContants.nitification)
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<Messagebean>(this,Messagebean.class) {
+                .execute(new DialogCallback<Messagebean>(this, Messagebean.class) {
                     @Override
                     public void onSuccess(Response<Messagebean> response) {
                         int code = response.code();
-                        if (code >= 200 && code <= 204){
+                        if (code >= 200 && code <= 204) {
                             list = response.body().getData();
-                            if (list.size() > 0){
+                            if (list.size() > 0) {
                                 listAll.addAll(list);
-                            }else {
-                                TUtils.showShort(MyMessageActivity.this,"没有更多数据了");
+                            } else {
+                                TUtils.showShort(MyMessageActivity.this, "没有更多数据了");
                             }
                             messageadapter = new Messageadapter(R.layout.item_my_message, listAll);
                             message_recy.setLayoutManager(new LinearLayoutManager(MyMessageActivity.this));
@@ -153,17 +154,17 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     listAll.get(position).setaBoolean(!listAll.get(position).isaBoolean());
-                                    if (isEditing){
+                                    if (isEditing) {
                                         if (isAllItemChecked()) {
                                             //如果所有item都选中了，就让全选按钮变红
                                             checkall.setChecked(true);
                                         } else {
                                             checkall.setChecked(false);
                                         }
-                                    }else {
-                                        Intent intent = new Intent(MyMessageActivity.this,MessageDetailActivity.class);
-                                        intent.putExtra("content",listAll.get(position).getContent());
-                                        intent.putExtra("time",listAll.get(position).getCreated_at());
+                                    } else {
+                                        Intent intent = new Intent(MyMessageActivity.this, MessageDetailActivity.class);
+                                        intent.putExtra("content", listAll.get(position).getContent());
+                                        intent.putExtra("time", listAll.get(position).getCreated_at());
                                         startActivity(intent);
                                     }
                                     messageadapter.notifyDataSetChanged();
@@ -212,37 +213,39 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void deleteCollect() {
-        for (int i = listAll.size()-1; i >= 0; i--) {
-            if (listAll.get(i).isaBoolean()){
-                sb.append(listAll.get(i).getNotid()+",");
+        for (int i = listAll.size() - 1; i >= 0; i--) {
+            if (listAll.get(i).isaBoolean()) {
+                sb.append(listAll.get(i).getNotid() + ",");
             }
         }
         //当循环结束后截取最后一个逗号
-        String tag = sb.substring(0,sb.length()-1);
-        Logger.e(tag);
-        requestDelNotification(tag);
-
+        if (!TextUtils.isEmpty(sb)){
+            String tag = sb.substring(0, sb.length() - 1);
+            Logger.e(tag);
+            requestDelNotification(tag);
+        }
     }
 
     private void requestDelNotification(String ids) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("ids",ids);
+        params.put("ids", ids);
 
         OkGo.<BaseBean>post(MyContants.delNotification)
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<BaseBean>(MyMessageActivity.this,BaseBean.class) {
+                .execute(new DialogCallback<BaseBean>(MyMessageActivity.this, BaseBean.class) {
                     @Override
                     public void onSuccess(Response<BaseBean> response) {
                         int code = response.code();
-                        if (code >= 200 && code <= 204){
-                            TUtils.showShort(MyMessageActivity.this,response.body().getMessage());
+                        if (code >= 200 && code <= 204) {
+                            TUtils.showShort(MyMessageActivity.this, response.body().getMessage());
+                            listAll.clear();
                             requestNotification("");
-                        }else {
-                            TUtils.showShort(MyMessageActivity.this,response.body().getMessage());
+                        } else {
+                            TUtils.showShort(MyMessageActivity.this, response.body().getMessage());
                         }
                     }
                 });
@@ -275,7 +278,7 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
                     deleteCollect();
                     message_bianji.setText("编辑");
                     layout.setVisibility(View.GONE);
-                    isEditing = !isEditing;
+                    isEditing = false;
                 }
 
                 break;

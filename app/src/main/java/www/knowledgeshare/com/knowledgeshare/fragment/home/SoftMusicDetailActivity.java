@@ -413,12 +413,18 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                      bottomLl.setVisibility(View.GONE);
                                      tv_read.setVisibility(View.GONE);
                                      LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) springview.getLayoutParams();
-                                     layoutParams1.setMargins(0,0,0,0);
+                                     layoutParams1.setMargins(0, 0, 0, 0);
                                      springview.setLayoutParams(layoutParams1);
                                      springview.requestLayout();
                                  } else {
                                      bottomLl.setVisibility(View.VISIBLE);
                                      tv_read.setVisibility(View.GONE);
+                                 }
+                                 boolean try_look = mMusicDetailBean.is_try_look();
+                                 if (!try_look){
+                                     tv_tryread.setBackgroundColor(getResources().getColor(R.color.tab_text_normal_color));
+                                     tv_tryread.setTextColor(getResources().getColor(R.color.textcolor));
+                                     tv_tryread.setClickable(false);
                                  }
                                  mChild = mMusicDetailBean.getChild();
                                  mLieBiaoAdapter = new LieBiaoAdapter(R.layout.item_like_liebiao, mChild);
@@ -435,7 +441,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                              SoftMusicDetailBean.ChildEntity item = mChild.get(position);
                                              item.setChecked(true);
                                              //刷新小型播放器
-                                             PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getName(), item.getParent_name(), item.getVideo_url(),position);
+                                             PlayerBean playerBean = new PlayerBean(item.getT_header(), item.getName(), item.getParent_name(), item.getVideo_url(), position);
                                              gobofang(playerBean);
                                              addListenCount(item.getId() + "");
                                              //设置进入播放主界面的数据
@@ -507,12 +513,14 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                     size++;
                 }
             }
-            double jindu = new BigDecimal((float) size / mChild.size()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-            Logger.e(jindu + "");
-            BofangjinduBean bean = new BofangjinduBean(mMusicDetailBean.getId() + "", jindu);
-            JinduUtils.add(bean);
-            EventBean eventBean = new EventBean("jindu");
-            EventBus.getDefault().postSticky(eventBean);
+            if (mChild.size() > 0) {
+                double jindu = new BigDecimal((float) size / mChild.size()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                Logger.e(jindu + "");
+                BofangjinduBean bean = new BofangjinduBean(mMusicDetailBean.getId() + "", jindu);
+                JinduUtils.add(bean);
+                EventBean eventBean = new EventBean("jindu");
+                EventBus.getDefault().postSticky(eventBean);
+            }
         }
     }
 
@@ -1579,7 +1587,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                 break;
             case R.id.tv_tryread:
             case R.id.tv_read:
-                if (mLieBiaoAdapter.getData().get(0).getIs_try() != 1) {
+                if (mLieBiaoAdapter.getData().size()>0 && mLieBiaoAdapter.getData().get(0).getIs_try() != 1) {
                     showIsBuyDialog(Gravity.CENTER, R.style.Alpah_aniamtion);
                 } else {
                     setISshow(true);
@@ -1648,7 +1656,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<DianZanbean>(SoftMusicDetailActivity.this,DianZanbean.class) {
+                .execute(new DialogCallback<DianZanbean>(SoftMusicDetailActivity.this, DianZanbean.class) {
                              @Override
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
@@ -1675,7 +1683,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<DianZanbean>(SoftMusicDetailActivity.this,DianZanbean.class) {
+                .execute(new DialogCallback<DianZanbean>(SoftMusicDetailActivity.this, DianZanbean.class) {
                              @Override
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();

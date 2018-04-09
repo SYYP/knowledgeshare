@@ -41,6 +41,15 @@ public class SoftMusicDetailBean implements Serializable{
     private List<ChildEntity> child;
     private String h5_url;
     private boolean is_buy;
+    private boolean is_try_look;
+
+    public boolean is_try_look() {
+        return is_try_look;
+    }
+
+    public void setIs_try_look(boolean is_try_look) {
+        this.is_try_look = is_try_look;
+    }
 
     public boolean is_buy() {
         return is_buy;
