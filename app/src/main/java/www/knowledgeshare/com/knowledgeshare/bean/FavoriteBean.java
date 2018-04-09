@@ -66,8 +66,16 @@ public class FavoriteBean extends BaseBean implements Serializable {
         private String create_at;
         private String day_week;
         private String description;
-
+        private boolean is_buy;
         private Child child;
+
+        public boolean isIs_buy() {
+            return is_buy;
+        }
+
+        public void setIs_buy(boolean is_buy) {
+            this.is_buy = is_buy;
+        }
 
         public Child getChildBean() {
             return child;

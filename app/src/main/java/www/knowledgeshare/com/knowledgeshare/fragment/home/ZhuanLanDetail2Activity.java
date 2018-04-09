@@ -28,6 +28,7 @@ import com.alipay.sdk.app.PayTask;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
@@ -111,7 +112,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     private String mTime;
     private String mId;
     private TextView mTv_content;
-    private FrameLayout fl_root_view;
+    private SpringView springView;
     private boolean nowifiallowdown;
     private BaseDialog mNetDialog;
     private long pretime;
@@ -474,6 +475,13 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                      nestView.setLayoutParams(layoutParams1);
                                      nestView.requestLayout();
                                  }
+                                 if (getIntent().getBooleanExtra("is_buy1",false)){
+                                     tv_buy.setVisibility(View.GONE);
+                                     LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) springView.getLayoutParams();
+                                     layoutParams1.setMargins(0, 0, 0, 0);
+                                     springView.setLayoutParams(layoutParams1);
+                                     springView.requestLayout();
+                                 }
                                  Glide.with(MyApplication.getGloableContext()).load(mFreeTryReadDetailBean.getT_image()).into(iv_teacher_head);
                                  tv_teacher_name.setText(mFreeTryReadDetailBean.getT_name());
                                  tv_time1.setText(mFreeTryReadDetailBean.getCreated_at());
@@ -538,7 +546,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         tv_buy.setOnClickListener(this);
         recycler_liuyan.setLayoutManager(new LinearLayoutManager(this));
         recycler_liuyan.setNestedScrollingEnabled(false);
-        fl_root_view = (FrameLayout) findViewById(R.id.fl_root_view);
+        springView = (SpringView) findViewById(R.id.springview);
         nestView = (NestedScrollView) findViewById(R.id.nestView);
         webview = (CustomActionWebView) findViewById(R.id.webview);
         if (getIntent().getStringExtra("type") != null) {

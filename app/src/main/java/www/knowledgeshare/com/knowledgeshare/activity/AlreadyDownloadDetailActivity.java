@@ -271,14 +271,14 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                 break;
             case R.id.title_content_right_tv:
                 if (TextUtils.equals("编辑", titleContentRightTv.getText().toString())) {
-                        titleContentRightTv.setText("取消");
-                        MyUtils.setMargins(recyclerKcmc, 0, 0, 0, 100);
-                        bianjiRl.setVisibility(View.VISIBLE);
-                        for (int i = 0; i < list.size(); i++) {
-                            list.get(i).setChecked(false);
-                            list.get(i).setVisibility(true);
-                        }
-                        adapter.notifyDataSetChanged();
+                    titleContentRightTv.setText("取消");
+                    MyUtils.setMargins(recyclerKcmc, 0, 0, 0, 100);
+                    bianjiRl.setVisibility(View.VISIBLE);
+                    for (int i = 0; i < list.size(); i++) {
+                        list.get(i).setChecked(false);
+                        list.get(i).setVisibility(true);
+                    }
+                    adapter.notifyDataSetChanged();
 
                 } else {
                     titleContentRightTv.setText("编辑");
@@ -291,7 +291,11 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                 }
                 break;
             case R.id.delete_tv:
-                showTips("提示","是否删除？","是","否");
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).isChecked()){
+                        showTips("提示", "是否删除？", "是", "否");
+                    }
+                }
                 break;
         }
     }
@@ -315,22 +319,22 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                 File file = null;
                                 switch (type) {
                                     case "free":
-                                        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download/"+
+                                        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download/" +
                                                 list.get(i).getName() + list.get(i).getTypeId() + "_" + list.get(i).getChildId() + ".mp3");
                                         file.delete();
                                         break;
                                     case "comment":
-                                        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download/"+
+                                        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download/" +
                                                 list.get(i).getName() + list.get(i).getTypeId() + "_" + list.get(i).getChildId() + ".mp3");
                                         file.delete();
                                         break;
                                     case "xiaoke":
-                                        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download/"+
+                                        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download/" +
                                                 list.get(i).getName() + list.get(i).getTypeId() + "_" + list.get(i).getChildId() + ".mp3");
                                         file.delete();
                                         break;
                                     case "zhuanlan":
-                                        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download/"+
+                                        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download/" +
                                                 list.get(i).getName() + list.get(i).getTypeId() + "_" + list.get(i).getChildId() + ".mp3");
                                         file.delete();
                                         break;

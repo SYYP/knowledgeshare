@@ -76,19 +76,19 @@ public class MyClassfragment extends BaseFragment {
                         int code = response.code();
                         if (code >= 200 && code <= 204){
                             list = response.body().getData();
-                            Myclassadapter myclassadapter=new Myclassadapter(getActivity(),list);
+                            final Myclassadapter myclassadapter=new Myclassadapter(getActivity(),list);
                             myclassadapter.setOnItemClickListener(new Myclassadapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(View view, int position, int type,int id) {
                                     Log.d("ccc",type+"");
                                     if(type==1){
-                                        Intent intent = new Intent(getActivity(), SoftMusicDetailActivity.class);
-                                        intent.putExtra("id",id+"");
-                                        startActivity(intent);
-                                    }
-                                    else if(type==2){
+//                                        Intent intent = new Intent(getActivity(), SoftMusicDetailActivity.class);
+//                                        intent.putExtra("id",id+"");
+//                                        startActivity(intent);
+                                    } else if(type==2){
                                         Intent intent = new Intent(getActivity(), ZhuanLanDetail2Activity.class);
                                         intent.putExtra("id",id+"");
+                                        intent.putExtra("is_buy1",list.get(position).isIs_buy());
                                         startActivity(intent);
                                     }
                                 }
