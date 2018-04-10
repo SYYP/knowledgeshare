@@ -173,7 +173,7 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
                             payMoneyTv.setText("支付金额：" + money.get(0).getData() + "元");
                             ChangeShowAdapter adapter = new ChangeShowAdapter(R.layout.item_change_show, money);
                             recyclerView.setAdapter(adapter);
-                            accountMoneyTv.setText(response.body().getUser().get(0).getUser_android_balance()+"元");
+                            accountMoneyTv.setText(response.body().getUser().get(0).getUser_android_balance()+"");
                         }
                     }
                 });

@@ -603,38 +603,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-//                showBuyDialog(Gravity.BOTTOM, R.style.Bottom_Top_aniamtion);
                 showPayStyleDialog();
-            }
-        });
-    }
-
-    private void showBuyDialog(int grary, int animationStyle) {
-        mDialog = mBuilder.setViewId(R.layout.dialog_buy)
-                //设置dialogpadding
-                .setPaddingdp(10, 0, 10, 0)
-                //设置显示位置
-                .setGravity(grary)
-                //设置动画
-                .setAnimation(animationStyle)
-                //设置dialog的宽高
-                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                //设置触摸dialog外围是否关闭
-                .isOnTouchCanceled(true)
-                //设置监听事件
-                .builder();
-        mDialog.show();
-        mDialog.getView(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-            }
-        });
-        mDialog.getView(R.id.rl_yuezhifu).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-                showChongzhiDialog();
             }
         });
     }

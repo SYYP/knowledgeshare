@@ -463,7 +463,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                  if (!LookUtils.isInserted(mMusicDetailBean.getXk_name())) {
                                      LookUtils.add(new LookBean(Integer.parseInt(mId), "like", mMusicDetailBean.getXk_name(),
                                              mMusicDetailBean.getTeacher().getT_name(),
-                                             mMusicDetailBean.getXk_teacher_tags(), mMusicDetailBean.getXk_price()
+                                             mMusicDetailBean.getTeacher().getT_tag(), mMusicDetailBean.getXk_price()
                                              , System.currentTimeMillis()));
                                  } else {
                                      LookUtils.updateTime(System.currentTimeMillis(),

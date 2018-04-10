@@ -171,6 +171,7 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
             list.get(i).setChecked(false);
         }
 //        adapter.setNewData(list);
+        if (adapter!=null)
         adapter.notifyDataSetChanged();
         totalMoney = 0;
         hejiTv.setText("￥0.00/年");

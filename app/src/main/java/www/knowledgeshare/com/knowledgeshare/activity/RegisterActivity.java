@@ -115,7 +115,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                         VerifyCodesBean verifyCodesBean = response.body();
                         if ( response.code() >= 200 && response.code() <= 204){
                             TUtils.showShort(RegisterActivity.this,verifyCodesBean.getMessage());
-                            SendSmsTimerUtils.sendSms(register_huoqu, R.color.white, R.color.text_red);
+                            SendSmsTimerUtils.sendSms(register_huoqu, R.color.white, R.color.red);
                         }else {
                             TUtils.showShort(RegisterActivity.this,verifyCodesBean.getMessage());
                         }
