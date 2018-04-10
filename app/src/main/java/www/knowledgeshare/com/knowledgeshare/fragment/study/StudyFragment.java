@@ -451,7 +451,8 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
                                 messageTv.setVisibility(View.VISIBLE);
                                 messageTv.setText(note_count);
                             } else {
-                                messageTv.setVisibility(View.GONE);
+                                messageTv.setVisibility(View.VISIBLE);
+                                messageTv.setText("");
                             }
                             list = response.body().getNote();
                             List<NoteListBean.GoldBean> gold = response.body().getGold();

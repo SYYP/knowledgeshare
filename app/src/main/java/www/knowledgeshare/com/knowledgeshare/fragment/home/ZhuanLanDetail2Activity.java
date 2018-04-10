@@ -18,7 +18,6 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -474,6 +473,8 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                      layoutParams1.setMargins(0, 0, 0, 0);
                                      nestView.setLayoutParams(layoutParams1);
                                      nestView.requestLayout();
+                                 }else {
+                                     tv_buy.setVisibility(View.VISIBLE);
                                  }
                                  if (getIntent().getBooleanExtra("is_buy1",false)){
                                      tv_buy.setVisibility(View.GONE);
@@ -481,6 +482,8 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                      layoutParams1.setMargins(0, 0, 0, 0);
                                      springView.setLayoutParams(layoutParams1);
                                      springView.requestLayout();
+                                 }else {
+                                     tv_buy.setVisibility(View.VISIBLE);
                                  }
                                  Glide.with(MyApplication.getGloableContext()).load(mFreeTryReadDetailBean.getT_image()).into(iv_teacher_head);
                                  tv_teacher_name.setText(mFreeTryReadDetailBean.getT_name());

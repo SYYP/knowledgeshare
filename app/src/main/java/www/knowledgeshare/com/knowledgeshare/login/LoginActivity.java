@@ -250,6 +250,7 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
                             Logger.e(go);
                             //跳转到主页面
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.putExtra("homewindow",getIntent().getBooleanExtra("homewindow",false));
                             intent.putExtra("token", token);
                             startActivity(intent);
                             //阿里云推送绑定账号

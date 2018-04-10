@@ -69,7 +69,9 @@ public class LancherActivity extends BaseActivity {
                         intent.putExtra("flag","0");
                         startActivity(intent);
                     } else {
-                        startActivity(new Intent(LancherActivity.this, MainActivity.class));
+                        Intent intent = new Intent(LancherActivity.this, MainActivity.class);
+                        intent.putExtra("homewindow",true);
+                        startActivity(intent);
                     }
                 } else {
                     //                    requestGuide();

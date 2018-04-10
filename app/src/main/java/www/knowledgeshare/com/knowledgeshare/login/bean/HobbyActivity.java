@@ -152,6 +152,7 @@ public class HobbyActivity extends BaseActivity {
                         VerifyCodesBean verifyCodesBean = response.body();
                         if ( response.code() >= 200 && response.code() <= 204){
                             Intent intent = new Intent(HobbyActivity.this, LoginActivity.class);
+                            intent.putExtra("homewindow",true);
                             startActivity(intent);
                             finish();
                         }else {

@@ -554,6 +554,15 @@ public class GuDianBean {
         private int id;
         private String zl_img;
         private String zl_introduce;
+        private int is_try;
+
+        public int getIs_try() {
+            return is_try;
+        }
+
+        public void setIs_try(int is_try) {
+            this.is_try = is_try;
+        }
 
         public void setZl_price(String zl_price) {
             this.zl_price = zl_price;

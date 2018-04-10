@@ -128,6 +128,8 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("home_pause") || eventBean.getMsg().equals("norotate")) {
+            isBofang = false;
+            iv_delete.setVisibility(View.VISIBLE);
             //我在用户退出APP的时候发了eventbus，就是为了这边接收到然后刷新学习时间
             long lasttime = SystemClock.currentThreadTimeMillis() - pretime;
             //我这边不判断数据库中是否有这条记录，是因为麻烦，还要根据type和id判断，容易和文稿界面和专栏详情界面冲突了

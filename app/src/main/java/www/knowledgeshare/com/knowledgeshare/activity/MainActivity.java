@@ -162,7 +162,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void pop() {
-        if (SpUtils.getBoolean(this, "homewindow", true)) {
+        if (!getIntent().getBooleanExtra("homewindow",false)) {
             return;
         }
         HttpParams params2 = new HttpParams();
@@ -228,7 +228,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                         }
                                     }
                                 });
-                                SpUtils.putBoolean(MainActivity.this, "homewindow", true);
                             }
                         } else {
 
@@ -514,7 +513,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         } else {
             EventBean eventBean = new EventBean("home_pause");//发一个保证正在播放音频的学习时长的终止
             EventBus.getDefault().postSticky(eventBean);
-            SpUtils.putBoolean(this, "homewindow", false);
             SpUtils.putBoolean(this, "nowifiallowdown", false);
             SpUtils.putBoolean(this, "nowifiallowlisten", false);
             super.onBackPressed();//相当于finish()

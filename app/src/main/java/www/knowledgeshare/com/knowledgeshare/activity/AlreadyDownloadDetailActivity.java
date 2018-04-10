@@ -183,11 +183,11 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                                    histroyBeanList.add(bofangHistroyBean);
                                                }
                                                MediaService.insertBoFangHistroyList(histroyBeanList);
-                                               setISshow(true);
                                                DownLoadListsBean.ListBean listBean = list.get(position);
                                                PlayerBean playerBean = new PlayerBean(listBean.getIconUrl(), listBean.getName(),
                                                        listBean.getParentName(), "", loadFromSDFile(listBean.getName() + listBean.getTypeId() + "_"
                                                        + listBean.getChildId() + ".mp3"), position);
+                                               setISshow(true);
                                                gobofang(playerBean);
                                            }
                                        }

@@ -2,7 +2,6 @@ package www.knowledgeshare.com.knowledgeshare.fragment.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -222,6 +221,10 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
             helper.getView(R.id.iv_bofang).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (item.getIs_try()==0){
+                        Toast.makeText(GuDianActivity.this, "暂无试听音频~", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     Intent intent = new Intent(GuDianActivity.this, ZhuanLanDetail2Activity.class);
                     intent.putExtra("id", item.getId() + "");
                     intent.putExtra("title", item.getZl_name());
@@ -238,7 +241,7 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
         }
 
         @Override
-        protected void convert(final BaseViewHolder helper, GuDianBean.XiaokeEntity item) {
+        protected void convert(final BaseViewHolder helper, final GuDianBean.XiaokeEntity item) {
             ImageView imageView = (ImageView) helper.getView(R.id.iv_tupian);
             RequestOptions options=new RequestOptions();
             options.error(R.drawable.home_default_like);
@@ -254,6 +257,10 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
             helper.getView(R.id.iv_bofang).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (item.getTry_video()==null || item.getTry_video().size()==0){
+                        Toast.makeText(GuDianActivity.this, "暂无试听音频~", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     setISshow(true);
                     GuDianBean.XiaokeEntity xiaokeEntity = mXiaoke.get(helper.getAdapterPosition());
                     List<GuDianBean.XiaokeEntity.TryVideoEntity> list = xiaokeEntity.getTry_video();

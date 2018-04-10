@@ -419,13 +419,13 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                      bottomLl.setVisibility(View.VISIBLE);
                                      tv_read.setVisibility(View.GONE);
                                  }
-                                 boolean try_look = mMusicDetailBean.is_try_look();
-                                 if (!try_look) {
+
+                                 mChild = mMusicDetailBean.getChild();
+                                 if (mChild==null || mChild.size()==0 ||mChild.get(0).getIs_try()!=1) {
                                      tv_tryread.setBackgroundColor(getResources().getColor(R.color.tab_text_normal_color));
                                      tv_tryread.setTextColor(getResources().getColor(R.color.textcolor));
                                      tv_tryread.setClickable(false);
                                  }
-                                 mChild = mMusicDetailBean.getChild();
                                  mLieBiaoAdapter = new LieBiaoAdapter(R.layout.item_like_liebiao, mChild);
                                  recycler_free.setAdapter(mLieBiaoAdapter);
                                  mLieBiaoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
