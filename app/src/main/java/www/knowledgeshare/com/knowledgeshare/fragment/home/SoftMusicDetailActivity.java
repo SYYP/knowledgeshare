@@ -603,7 +603,8 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                showBuyDialog(Gravity.BOTTOM, R.style.Bottom_Top_aniamtion);
+//                showBuyDialog(Gravity.BOTTOM, R.style.Bottom_Top_aniamtion);
+                showPayStyleDialog();
             }
         });
     }

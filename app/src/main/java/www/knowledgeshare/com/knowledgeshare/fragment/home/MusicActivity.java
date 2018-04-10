@@ -89,7 +89,6 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
     private Handler mHandler = new Handler();
     //进度条下面的当前进度文字，将毫秒化为m:ss格式
     private SimpleDateFormat time = new SimpleDateFormat("m:ss");
-    private boolean isbofang = true;
     private MusicTypeBean mMusicTypeBean;
     private String mShare_h5_url;
 
@@ -175,13 +174,10 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
     public void myEvent(EventBean eventBean) {
         //当在该页面下拉通知栏点击暂停的时候这边按钮也要变化
         if (eventBean.getMsg().equals("home_bofang")) {
-            isbofang=true;
             iv_pause.setImageResource(R.drawable.bofang_yellow_big);
         } else if (eventBean.getMsg().equals("home_pause")) {
-            isbofang=false;
             iv_pause.setImageResource(R.drawable.pause_yellow_big);
         }else if (eventBean.getMsg().equals("allmusiccomplete")){
-            isbofang=false;
             iv_pause.setImageResource(R.drawable.pause_yellow_big);
         }
     }
@@ -271,7 +267,6 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMyBinder = (MediaService.MyBinder) service;
-            isbofang=mMyBinder.isPlaying();
             if (mMyBinder.isPlaying()) {
                 iv_pause.setImageResource(R.drawable.bofang_yellow_big);
             } else {
@@ -537,7 +532,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                 mMyBinder.preciousMusic();
                 break;
             case R.id.iv_pause:
-                if (isbofang) {
+                if (mMyBinder.isPlaying()) {
                     mMyBinder.pauseMusic();
                     iv_pause.setImageResource(R.drawable.pause_yellow_big);
                     EventBean eventBean = new EventBean("main_pause");
@@ -552,7 +547,6 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                     EventBean eventBean2 = new EventBean("home_bofang");
                     EventBus.getDefault().postSticky(eventBean2);
                 }
-                isbofang = !isbofang;
                 break;
             case R.id.iv_next:
                 mMyBinder.nextMusic();

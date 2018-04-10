@@ -574,7 +574,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 iv_dianzan.setImageResource(R.drawable.free_dianzan);
             }
             Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into(iv_head);
-            helper.setText(R.id.tv_name, item.getUser_name())
+            helper.setText(R.id.tv_name, item.getUser_name().length()>6?item.getUser_name().substring(0,6)+"...":item.getUser_name())
                     .setText(R.id.tv_time, item.getCreated_at())
                     .setText(R.id.tv_content, item.getContent())
                     .setText(R.id.tv_dainzan_count, item.getLive() + "");

@@ -51,6 +51,7 @@
             android:layout_height="wrap_content"
             android:padding="15dp">
             <TextView
+                android:id="@+id/view_09"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -61,8 +62,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="176****5393"
                 android:layout_toLeftOf="@+id/view_05"
+                android:layout_toRightOf="@+id/view_09"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
             <ImageView
                 android:id="@+id/view_05"
