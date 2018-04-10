@@ -223,7 +223,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                             user_level = userInfoBean.getUser_level();
                             user_integral = userInfoBean.getUser_integral();
                             getLevel(user_level, user_integral);
-                            zhyeTv.setText(userInfoBean.getUser_android_balance()+"元");
+                            zhyeTv.setText(userInfoBean.getUser_android_balance()+"");
                         }
                     }
                 });

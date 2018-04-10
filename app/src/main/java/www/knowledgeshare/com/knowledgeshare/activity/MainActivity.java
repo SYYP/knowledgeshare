@@ -356,14 +356,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 if (TextUtils.isEmpty(id)) {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
+                    overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
                     return;
                 }
                 mUserid = SpUtils.getString(this, "id", "");
                 if (TextUtils.isEmpty(mUserid)) {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
+                    overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
                 } else {
                     if (studyFragment == null) {
                         studyFragment = new StudyFragment();
@@ -411,14 +411,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 if (TextUtils.isEmpty(id)) {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
+                    overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
                     return;
                 }
                 mUserid = SpUtils.getString(this, "id", "");
                 if (TextUtils.isEmpty(mUserid)) {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
+                    overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
                 } else {
                     if (buyFragment == null) {
                         buyFragment = new BuyFragment();
@@ -438,14 +438,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 if (TextUtils.isEmpty(id)) {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
+                    overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
                     return;
                 }
                 mUserid = SpUtils.getString(this, "id", "");
                 if (TextUtils.isEmpty(mUserid)) {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.start_anim, R.anim.close_anim);
+                    overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
                 } else {
                     if (mineFragment == null) {
                         mineFragment = new MineFragment();

@@ -10,8 +10,6 @@
         <item name="android:listDivider">@drawable/divider_bg</item>
         <!-- 设置activity切换动画 -->
         <item name="android:windowAnimationStyle">@style/activityAnimation</item>
-        <item name="android:windowBackground">@color/white</item>
-        <item name="android:windowIsTranslucent">true</item>
     </style>
     <!-- animation 样式 -->
     <style name="activityAnimation" parent="@android:style/Animation">
