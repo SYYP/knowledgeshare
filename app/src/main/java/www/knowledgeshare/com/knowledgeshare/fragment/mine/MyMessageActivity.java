@@ -279,6 +279,7 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
                     message_bianji.setText("编辑");
                     layout.setVisibility(View.GONE);
                     isEditing = false;
+                    messageadapter.notifyDataSetChanged();
                 }
                 break;
             //全选

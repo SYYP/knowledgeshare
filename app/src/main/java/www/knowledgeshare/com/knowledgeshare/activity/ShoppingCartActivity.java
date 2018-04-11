@@ -161,8 +161,13 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
         }
 //        adapter.setNewData(list);
         adapter.notifyDataSetChanged();
-        hejiTv.setText("￥"+totalMoney+"/年");
-        jiesuanTv.setText("结算（"+list.size()+"）");
+        if (TextUtils.equals("编辑",titleContentRightTv.getText().toString())){
+            hejiTv.setText("￥"+totalMoney+"/年");
+            jiesuanTv.setText("结算（"+list.size()+"）");
+        }else {
+            hejiTv.setText("全选");
+            jiesuanTv.setText("删除");
+        }
     }
 
 
@@ -174,8 +179,13 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
         if (adapter!=null)
         adapter.notifyDataSetChanged();
         totalMoney = 0;
-        hejiTv.setText("￥0.00/年");
-        jiesuanTv.setText("结算（"+0+"）");
+        if (TextUtils.equals("编辑",titleContentRightTv.getText().toString())){
+            hejiTv.setText("￥0.00/年");
+            jiesuanTv.setText("结算（"+0+"）");
+        }else {
+            hejiTv.setText("全选");
+            jiesuanTv.setText("删除");
+        }
     }
 
     private boolean isAllChecked() {
