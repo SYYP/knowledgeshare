@@ -331,16 +331,16 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
         iv_dianzan.setOnClickListener(this);
         springview = (SpringView) findViewById(R.id.springview);
         nestView = (NestedScrollView) findViewById(R.id.nestView);
-        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY - oldScrollY > 0) {
-                    setPopHide();
-                } else if (scrollY - oldScrollY < 0) {
-                    SlidePopShow();
-                }
-            }
-        });
+//        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+//            @Override
+//            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                if (scrollY - oldScrollY > 0) {
+//                    setPopHide();
+//                } else if (scrollY - oldScrollY < 0) {
+//                    SlidePopShow();
+//                }
+//            }
+//        });
     }
 
     private void initData() {

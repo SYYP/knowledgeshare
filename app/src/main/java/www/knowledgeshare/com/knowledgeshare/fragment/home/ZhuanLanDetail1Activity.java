@@ -48,7 +48,8 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
     }
 
     private void initData() {
-        tv_title.setText(getIntent().getStringExtra("title"));
+        String title = getIntent().getStringExtra("title");
+        tv_title.setText(title.length()>18?title.substring(0,17)+"...":title);
         mId = getIntent().getStringExtra("id");
         HttpParams params = new HttpParams();
         params.put("id", mId);
@@ -97,17 +98,17 @@ public class ZhuanLanDetail1Activity extends BaseActivity {
         tv_title = (TextView) findViewById(R.id.tv_title);
         recycler = (RecyclerView) findViewById(R.id.recycler);
         recycler.setLayoutManager(new LinearLayoutManager(this));
-        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0) {
-                    setPopHide();
-                } else if (dy < 0) {
-                    SlidePopShow();
-                }
-            }
-        });
+//        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                if (dy > 0) {
+//                    setPopHide();
+//                } else if (dy < 0) {
+//                    SlidePopShow();
+//                }
+//            }
+//        });
     }
 
     private class MyAdapter extends BaseQuickAdapter<FreeTryReadListBean.DataEntity, BaseViewHolder> {

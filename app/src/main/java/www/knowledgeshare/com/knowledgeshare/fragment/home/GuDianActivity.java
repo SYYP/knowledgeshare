@@ -79,16 +79,16 @@ public class GuDianActivity extends UMShareActivity implements View.OnClickListe
     }
 
     private void initListener() {
-        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY - oldScrollY > 0) {
-                    setPopHide();
-                } else if (scrollY - oldScrollY < 0) {
-                    SlidePopShow();
-                }
-            }
-        });
+//        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+//            @Override
+//            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                if (scrollY - oldScrollY > 0) {
+//                    setPopHide();
+//                } else if (scrollY - oldScrollY < 0) {
+//                    SlidePopShow();
+//                }
+//            }
+//        });
     }
 
     private void initView() {

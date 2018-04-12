@@ -47,7 +47,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/wanjiao_solid_yellow"
+                android:background="@drawable/wanjiao_solid_yellow2"
                 android:button="@null"
                 android:gravity="center"
                 android:paddingBottom="5dp"
@@ -55,7 +55,7 @@
                 android:paddingRight="13dp"
                 android:paddingTop="5dp"
                 android:text="古典"
-                android:textColor="@drawable/tab_text_selector"
+                android:textColor="@drawable/tab_text_selector2"
                 android:textSize="16sp"/>
             <RadioButton
                 android:id="@+id/rb_minzu"
@@ -64,7 +64,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/wanjiao_solid_yellow"
+                android:background="@drawable/wanjiao_solid_yellow2"
                 android:button="@null"
                 android:gravity="center"
                 android:paddingBottom="5dp"
@@ -72,7 +72,7 @@
                 android:paddingRight="13dp"
                 android:paddingTop="5dp"
                 android:text="民族"
-                android:textColor="@drawable/tab_text_selector"
+                android:textColor="@drawable/tab_text_selector2"
                 android:textSize="16sp"/>
             <RadioButton
                 android:id="@+id/rb_liuxing"
@@ -81,7 +81,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/wanjiao_solid_yellow"
+                android:background="@drawable/wanjiao_solid_yellow2"
                 android:button="@null"
                 android:gravity="center"
                 android:paddingBottom="5dp"
@@ -89,7 +89,7 @@
                 android:paddingRight="13dp"
                 android:paddingTop="5dp"
                 android:text="流行"
-                android:textColor="@drawable/tab_text_selector"
+                android:textColor="@drawable/tab_text_selector2"
                 android:textSize="16sp"/>
             <RadioButton
                 android:id="@+id/rb_suyang"
@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:background="@drawable/wanjiao_solid_yellow"
+                android:background="@drawable/wanjiao_solid_yellow2"
                 android:button="@null"
                 android:gravity="center"
                 android:paddingBottom="5dp"
@@ -105,7 +105,7 @@
                 android:paddingRight="13dp"
                 android:paddingTop="5dp"
                 android:text="素养"
-                android:textColor="@drawable/tab_text_selector"
+                android:textColor="@drawable/tab_text_selector2"
                 android:textSize="16sp"/>
         </RadioGroup>
         <View

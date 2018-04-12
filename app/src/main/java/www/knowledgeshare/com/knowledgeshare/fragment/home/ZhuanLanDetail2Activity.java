@@ -353,16 +353,16 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     }
 
     private void initListener() {
-        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY - oldScrollY > 0) {
-                    setPopHide();
-                } else if (scrollY - oldScrollY < 0) {
-                    SlidePopShow();
-                }
-            }
-        });
+//        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+//            @Override
+//            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                if (scrollY - oldScrollY > 0) {
+//                    setPopHide();
+//                } else if (scrollY - oldScrollY < 0) {
+//                    SlidePopShow();
+//                }
+//            }
+//        });
     }
 
     private void initNETDialog() {
@@ -448,7 +448,8 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     }
 
     private void initData() {
-        tv_miantitle.setText(getIntent().getStringExtra("title"));
+//        String title = getIntent().getStringExtra("title");
+//        tv_miantitle.setText(title.length()>18?title.substring(0,17)+"...":title);
         mId = getIntent().getStringExtra("id");
         HttpParams params = new HttpParams();
         params.put("id", mId);
@@ -476,15 +477,9 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                  }else {
                                      tv_buy.setVisibility(View.VISIBLE);
                                  }
-                                 if (getIntent().getBooleanExtra("is_buy1",false)){
-                                     tv_buy.setVisibility(View.GONE);
-                                     LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) springView.getLayoutParams();
-                                     layoutParams1.setMargins(0, 0, 0, 0);
-                                     springView.setLayoutParams(layoutParams1);
-                                     springView.requestLayout();
-                                 }else {
-                                     tv_buy.setVisibility(View.VISIBLE);
-                                 }
+                                 String title = mFreeTryReadDetailBean.getZl_name();
+                                 if (!TextUtils.isEmpty(title))
+                                 tv_miantitle.setText(title.length()>18?title.substring(0,17)+"...":title);
                                  Glide.with(MyApplication.getGloableContext()).load(mFreeTryReadDetailBean.getT_image()).into(iv_teacher_head);
                                  tv_teacher_name.setText(mFreeTryReadDetailBean.getT_name());
                                  tv_time1.setText(mFreeTryReadDetailBean.getCreated_at());

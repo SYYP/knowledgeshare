@@ -72,16 +72,16 @@ public class TeacherDetailActivity extends BaseActivity implements View.OnClickL
         recycler_yinyueke.setLayoutManager(new LinearLayoutManager(this));
         recycler_yinyueke.setNestedScrollingEnabled(false);
         nestView = (NestedScrollView) findViewById(R.id.nestView);
-        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY - oldScrollY > 0) {
-                    setPopHide();
-                } else if (scrollY - oldScrollY < 0) {
-                    SlidePopShow();
-                }
-            }
-        });
+//        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+//            @Override
+//            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                if (scrollY - oldScrollY > 0) {
+//                    setPopHide();
+//                } else if (scrollY - oldScrollY < 0) {
+//                    SlidePopShow();
+//                }
+//            }
+//        });
     }
 
     private void initData() {

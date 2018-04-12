@@ -66,8 +66,17 @@ public class FreeTryReadDetailBean {
     private String h5_url;
     private int rss_count;
     private String name;
+    private String zl_name;
     private List<CommentEntity> comment;
     private int view_count;
+
+    public String getZl_name() {
+        return zl_name;
+    }
+
+    public void setZl_name(String zl_name) {
+        this.zl_name = zl_name;
+    }
 
     public String getT_image() {
         return t_image;

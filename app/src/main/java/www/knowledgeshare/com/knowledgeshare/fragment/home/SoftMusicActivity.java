@@ -57,17 +57,17 @@ public class SoftMusicActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initListener() {
-        recycler_yinyueke.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0) {
-                    setPopHide();
-                } else if (dy < 0) {
-                    SlidePopShow();
-                }
-            }
-        });
+//        recycler_yinyueke.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                if (dy > 0) {
+//                    setPopHide();
+//                } else if (dy < 0) {
+//                    SlidePopShow();
+//                }
+//            }
+//        });
         springview.setType(SpringView.Type.FOLLOW);
         springview.setListener(new SpringView.OnFreshListener() {
             @Override

@@ -23,8 +23,6 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.FavoriteBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.SoftMusicDetailActivity;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanDetail2Activity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
@@ -88,7 +86,7 @@ public class MyClassfragment extends BaseFragment {
                                     } else if(type==2){
                                         Intent intent = new Intent(getActivity(), ZhuanLanDetail2Activity.class);
                                         intent.putExtra("id",id+"");
-                                        intent.putExtra("is_buy1",list.get(position).isIs_buy());
+                                        intent.putExtra("is_buy",list.get(position).isIs_buy());
                                         startActivity(intent);
                                     }
                                 }

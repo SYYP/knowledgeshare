@@ -171,17 +171,17 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                 }
             });
         }
-        recycler_bofang.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0) {
-                    setPopHide();
-                } else if (dy < 0) {
-                    SlidePopShow();
-                }
-            }
-        });
+//        recycler_bofang.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                if (dy > 0) {
+//                    setPopHide();
+//                } else if (dy < 0) {
+//                    SlidePopShow();
+//                }
+//            }
+//        });
     }
 
     private void gobofang2(final PlayerBean playerBean) {

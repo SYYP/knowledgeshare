@@ -10,7 +10,10 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import com.lzy.okgo.OkGo;
@@ -33,13 +36,15 @@ import www.knowledgeshare.com.knowledgeshare.view.CustomPopupWindow;
  * Created by lxk on 2017/6/10.
  */
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements GestureDetector.OnGestureListener, View.OnTouchListener {
     private static List<Activity> activityList = new ArrayList<>();
     private boolean isshow = true;//默认所有界面都显示
     public static CustomPopupWindow musicPop;
     public MediaService.MyBinder mMyBinder;
     //“绑定”服务的intent
     public Intent MediaServiceIntent;
+    private GestureDetector detector;
+    //声明一个手势检测器对象
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,6 +59,8 @@ public class BaseActivity extends AppCompatActivity {
         }
         initMusic();
         refreshToken();
+        //实例化这个手势检测器对象
+        detector = new GestureDetector(this, this);
     }
 
     @Override
@@ -193,4 +200,53 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float distanceX, float distanceY) {
+        //            Toast.makeText(this, " "+musicPop.isShowing(), Toast.LENGTH_SHORT).show();
+        //在滑动过程中popupwindow的isshowing一直是false，真不明白到底是为什么
+        if (distanceY >= 0) {
+//            Toast.makeText(this, "显示", Toast.LENGTH_SHORT).show();
+            SlidePopShow();
+        } else {
+//            Toast.makeText(this, "隐藏", Toast.LENGTH_SHORT).show();
+            setPopHide();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return detector.onTouchEvent(motionEvent);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        detector.onTouchEvent(ev);
+        return super.dispatchTouchEvent(ev);
+    }
 }

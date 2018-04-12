@@ -239,16 +239,16 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
         recycler_liuyan.setNestedScrollingEnabled(false);
         webview = (CustomActionWebView) findViewById(R.id.webview);
         nestView = (NestedScrollView) findViewById(R.id.nestView);
-        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY - oldScrollY > 0) {
-                    setPopHide();
-                } else if (scrollY - oldScrollY < 0) {
-                    SlidePopShow();
-                }
-            }
-        });
+//        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+//            @Override
+//            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                if (scrollY - oldScrollY > 0) {
+//                    setPopHide();
+//                } else if (scrollY - oldScrollY < 0) {
+//                    SlidePopShow();
+//                }
+//            }
+//        });
     }
 
     private void initData() {
@@ -316,7 +316,7 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
                 iv_dianzan.setImageResource(R.drawable.free_dianzan);
             }
             Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into(iv_head);
-            helper.setText(R.id.tv_name, item.getUser_name())
+            helper.setText(R.id.tv_name, item.getUser_name().length()>6?item.getUser_name().substring(0,6)+"...":item.getUser_name())
                     .setText(R.id.tv_time, item.getCreated_at())
                     .setText(R.id.tv_content, item.getContent())
                     .setText(R.id.tv_dainzan_count, item.getLive() + "");
