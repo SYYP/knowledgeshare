@@ -61,17 +61,17 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void initListener() {
-        recycler_dashiban.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0) {
-                    setPopHide();
-                } else if (dy < 0) {
-                    SlidePopShow();
-                }
-            }
-        });
+//        recycler_dashiban.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                if (dy > 0) {
+//                    setPopHide();
+//                } else if (dy < 0) {
+//                    SlidePopShow();
+//                }
+//            }
+//        });
         springview.setType(SpringView.Type.FOLLOW);
         springview.setListener(new SpringView.OnFreshListener() {
             @Override

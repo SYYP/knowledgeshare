@@ -101,7 +101,7 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
             switch (msg.what) {
                 case SDK_PAY_FLAG: {
                     PayResult payResult = new PayResult((String) msg.obj);
-//                    Toast.makeText(ZhuanLanActivity.this, " " + payResult.getResultStatus(), Toast.LENGTH_SHORT).show();
+                    //                    Toast.makeText(ZhuanLanActivity.this, " " + payResult.getResultStatus(), Toast.LENGTH_SHORT).show();
                     /**
                      * 同步返回的结果必须放置到服务端进行验证（验证的规则请看https://doc.open.alipay.com/doc2/
                      * detail.htm?spm=0.0.0.0.xdvAU6&treeId=59&articleId=103665&
@@ -112,7 +112,7 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
                     if (TextUtils.equals(resultStatus, "9000")) {
                         Toast.makeText(ZhuanLanActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
-//                        finish();
+                        //                        finish();
                         showPaySuccessDialog();
                     } else {
                         // 判断resultStatus 为非"9000"则代表可能支付失败
@@ -165,16 +165,16 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
     }
 
     private void initListener() {
-        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY - oldScrollY > 0) {
-                    setPopHide();
-                } else if (scrollY - oldScrollY < 0) {
-                    SlidePopShow();
-                }
-            }
-        });
+//        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+//            @Override
+//            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                if (scrollY - oldScrollY > 0) {
+//                    setPopHide();
+//                } else if (scrollY - oldScrollY < 0) {
+//                    SlidePopShow();
+//                }
+//            }
+//        });
     }
 
     private void initData() {
@@ -194,13 +194,13 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                              public void onSuccess(Response<ZhuanLanBean> response) {
                                  int code = response.code();
                                  mZhuanLanBean = response.body();
-                                 RequestOptions options=new RequestOptions();
+                                 RequestOptions options = new RequestOptions();
                                  options.error(R.drawable.default_banner);
                                  options.placeholder(R.drawable.default_banner);
                                  Glide.with(MyApplication.getGloableContext()).load(mZhuanLanBean.getZl_img()).apply(options).into(iv_beijing);
                                  ViewGroup.LayoutParams layoutParams = iv_beijing.getLayoutParams();
                                  int width = MyUtils.getScreenWidth(ZhuanLanActivity.this);
-                                 layoutParams.height= width*7/15;
+                                 layoutParams.height = width * 7 / 15;
                                  iv_beijing.setLayoutParams(layoutParams);
                                  tv_shiyirenqun.setText(mZhuanLanBean.getZl_suitable());
                                  tv_zhuanlanjianjie.setText(mZhuanLanBean.getZl_introduce());
@@ -219,14 +219,14 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                                      LookUtils.updateTime(System.currentTimeMillis(), mZhuanLanBean.getZl_name()
                                              , "zhuanlan");
                                  }
-                                 if (!mZhuanLanBean.is_try_look()){
+                                 if (!mZhuanLanBean.is_try_look()) {
                                      tv_tryread.setBackgroundColor(getResources().getColor(R.color.tab_text_normal_color));
                                      tv_tryread.setTextColor(getResources().getColor(R.color.textcolor));
                                  }
-                                 if (mZhuanLanBean.is_buy()){
+                                 if (mZhuanLanBean.is_buy()) {
                                      rootView.setVisibility(View.GONE);
                                      readTv.setVisibility(View.VISIBLE);
-                                 }else {
+                                 } else {
                                      rootView.setVisibility(View.VISIBLE);
                                      readTv.setVisibility(View.GONE);
                                  }
@@ -546,7 +546,7 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                 mDialog.dismiss();
                 removeAllActivitys();
                 Intent intent = new Intent(ZhuanLanActivity.this, MainActivity.class);
-                intent.putExtra("gobuy","gobuy");
+                intent.putExtra("gobuy", "gobuy");
                 startActivity(intent);
             }
         });
@@ -642,7 +642,7 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                 showBuyDialog();
                 break;
             case tv_read:
-                if (!mZhuanLanBean.is_try_look()){
+                if (!mZhuanLanBean.is_try_look()) {
                     Toast.makeText(this, "暂无试读课程~", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -650,9 +650,7 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
                 intent.putExtra("id", mZhuanLanBean.getId() + "");
                 intent.putExtra("is_buy", mZhuanLanBean.is_buy());
                 intent.putExtra("title", mZhuanLanBean.getZl_name());
-//                if (getIntent().getStringExtra("type") != null) {
-                    intent.putExtra("type","alreadyBuy");
-//                }
+                intent.putExtra("type", "alreadyBuy");
                 startActivity(intent);
                 break;
         }

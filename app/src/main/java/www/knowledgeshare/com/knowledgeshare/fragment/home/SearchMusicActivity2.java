@@ -71,7 +71,6 @@ public class SearchMusicActivity2 extends BaseActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_music);
-        setISshow(false);
         et_search = (EditText) findViewById(R.id.et_search);
         tv_back = (TextView) findViewById(R.id.tv_back);
         tv_back.setOnClickListener(this);

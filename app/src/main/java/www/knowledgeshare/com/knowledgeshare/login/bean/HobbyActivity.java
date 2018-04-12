@@ -84,6 +84,7 @@ public class HobbyActivity extends BaseActivity {
                         sb.delete(0,sb.length());
                         if (TextUtils.equals("0",flag)){
                             Intent intent = new Intent(HobbyActivity.this, MainActivity.class);
+                            intent.putExtra("homewindow",true);
                             intent.putExtra("tag",tag);
                             startActivity(intent);
                         }else if (TextUtils.equals("1",flag)){
