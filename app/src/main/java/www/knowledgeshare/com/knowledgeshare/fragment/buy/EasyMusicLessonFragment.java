@@ -151,7 +151,7 @@ public class EasyMusicLessonFragment extends BaseFragment {
                             list = response.body().getData();
                             if (list.size() > 0){
                                 listAll.addAll(list);
-                            }else {
+                            }else if (listAll.size() > 0 && list.size() == 0){
                                 TUtils.showShort(mContext,"没有更多数据了");
                             }
 
@@ -182,7 +182,7 @@ public class EasyMusicLessonFragment extends BaseFragment {
                             springView.onFinishFreshAndLoad();
 
                         }else {
-                            TUtils.showShort(mContext,response.body().getMessage());
+//                            TUtils.showShort(mContext,response.body().getMessage());
                         }
                     }
                 });

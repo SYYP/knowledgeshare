@@ -84,7 +84,6 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
         titleContentRightTv.setVisibility(View.VISIBLE);
-        titleContentTv.setText("崔宗顺等男低音歌唱家秘籍");
         titleContentRightTv.setText("编辑");
         titleBackIv.setOnClickListener(this);
         titleContentRightTv.setOnClickListener(this);
@@ -106,23 +105,28 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
 
     private void getIntentData() {
         type = getIntent().getStringExtra("type");
+        String title = getIntent().getStringExtra("title");
         switch (type) {
             case "free":
+                titleContentTv.setText("免费随身学");
                 listFree = (List<DownLoadListsBean>) getIntent().getExtras().getSerializable("list");
                 for (int i = 0; i < listFree.size(); i++) {
                     list.addAll(listFree.get(i).getList());
                 }
                 break;
             case "comment":
+                titleContentTv.setText("每日推荐");
                 listComment = (List<DownLoadListsBean>) getIntent().getExtras().getSerializable("list");
                 for (int i = 0; i < listComment.size(); i++) {
                     list.addAll(listComment.get(i).getList());
                 }
                 break;
             case "xiaoke":
+                titleContentTv.setText(title);
                 list = (List<DownLoadListsBean.ListBean>) getIntent().getExtras().getSerializable("list");
                 break;
             case "zhuanlan":
+                titleContentTv.setText(title);
                 list = (List<DownLoadListsBean.ListBean>) getIntent().getExtras().getSerializable("list");
                 break;
         }
@@ -416,7 +420,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
             sizeTv.setText(helper.getPosition() + 1 + "");
             titleTv.setText(item.getName());
             nameTv.setText(item.gettName());
-            timeTv.setText(item.getTime());
+            timeTv.setText(item.getVideoTime());
             checkBox.setChecked(item.isChecked());
 
             checkBox.setOnClickListener(new View.OnClickListener() {

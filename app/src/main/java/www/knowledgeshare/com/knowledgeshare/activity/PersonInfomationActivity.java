@@ -393,7 +393,7 @@ public class PersonInfomationActivity extends BaseActivity implements View.OnCli
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
+                .execute(new DialogCallback<BaseBean>(this,BaseBean.class) {
                     @Override
                     public void onSuccess(Response<BaseBean> response) {
                         int code = response.code();

@@ -68,6 +68,10 @@
         app:tabIndicatorHeight="4px"
         app:tabSelectedTextColor="#b00505"
         app:tabTextAppearance="@style/MyCustomTabTextAppearance"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/bg_mine"/>
     <www.knowledgeshare.com.knowledgeshare.view.NoScrollViewPager
         android:id="@+id/buy_viewpager"
         android:layout_width="match_parent"

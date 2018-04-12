@@ -141,7 +141,7 @@ public class MaestroClassFragment extends BaseFragment {
                             list = response.body().getData();
                             if (list.size() > 0){
                                 listAll.addAll(list);
-                            }else {
+                            }else if (listAll.size() > 0 && list.size() == 0){
                                 TUtils.showShort(mContext,"没有更多数据了");
                             }
                             MeastroClassAdapter adapter = new MeastroClassAdapter(R.layout.item_meastro_class, listAll);

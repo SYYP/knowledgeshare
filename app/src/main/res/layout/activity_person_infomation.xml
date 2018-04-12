@@ -63,7 +63,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/view_05"
-                android:layout_toRightOf="@+id/view_09"
+                android:singleLine="true"
+                android:ellipsize="middle"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
             <ImageView

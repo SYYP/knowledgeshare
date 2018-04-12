@@ -1,6 +1,7 @@
 package www.knowledgeshare.com.knowledgeshare.fragment.mine;
 
 import android.content.Intent;
+import android.os.Environment;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -24,6 +25,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +58,10 @@ public class AlreadyDownLoadFragment extends BaseFragment {
     private List<DownLoadListsBean> freeList;
     private List<DownLoadListsBean> commentList;
     private List<DownLoadListsBean> list = new ArrayList<>();
-    private List<DownloadTask> restoreList;
+
+    private List<DownloadTask> restoreList = new ArrayList<>();
+    List<String> xiaokeNameList = new ArrayList<>();
+    private String typeName = "";
 
     @Override
     protected void lazyLoad() {
@@ -96,8 +101,20 @@ public class AlreadyDownLoadFragment extends BaseFragment {
         restoreList = OkDownload.restore(DownloadManager.getInstance().getFinished());
         for (int i = 0; i < restoreList.size(); i++) {
             Progress progress = restoreList.get(i).progress;
+            DownLoadListsBean extra3 = (DownLoadListsBean) progress.extra3;
+            if (typeName.equals(extra3.getTypeName())){
+                restoreList.remove(i);
+            }else {
+                typeName = extra3.getTypeName();
+            }
+        }
+        for (int i = 0; i < restoreList.size(); i++) {
+            Progress progress = restoreList.get(i).progress;
             downLoadListBean = (DownLoadListsBean) progress.extra3;
-            if (downLoadListBean.getType().equals("xiaoke")|| downLoadListBean.getType().equals("zhuanlan")){
+            if (downLoadListBean.getType().equals("xiaoke")){
+                list.add(downLoadListBean);
+            }
+            if (downLoadListBean.getType().equals("zhuanlan")){
                 list.add(downLoadListBean);
             }
             if (downLoadListBean.getType().equals("free")){
@@ -107,6 +124,8 @@ public class AlreadyDownLoadFragment extends BaseFragment {
                 commentList.add(downLoadListBean);
             }
         }
+
+
 
         if (freeList.size() == 0){
             freeLl.setVisibility(View.GONE);
@@ -128,10 +147,23 @@ public class AlreadyDownLoadFragment extends BaseFragment {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (list.get(position).getType().equals("xiaoke")){
                     List<DownLoadListsBean.ListBean> list1 = list.get(position).getList();
+                    List<DownLoadListsBean.ListBean> list2 = new ArrayList<>();
+                    File file = null;
+                    for (int i = 0; i < list1.size(); i++) {
+                        DownLoadListsBean.ListBean listBean = list1.get(i);
+                        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download/" +
+                                list1.get(i).getName() + list1.get(i).getTypeId() + "_" + list1.get(i).getChildId() + ".mp3");
+                        if (file.exists()&&file.canRead()&&file.length()>3060000){//本地文件大于3M才显示
+                            list2.add(listBean);
+//                            Logger.e(file.length()+"");
+                        }
+
+                    }
                     Intent intent = new Intent(getActivity(),AlreadyDownloadDetailActivity.class);
                     SpUtils.putBoolean(mContext,SpUtils.getString(mContext,"id","")+"xiaoke"+list.get(position).getTypeId()+list.get(position).getTypeName(),true);
                     intent.putExtra("type","xiaoke");
-                    intent.putExtra("list", (Serializable) list1);
+                    intent.putExtra("title",list.get(position).getTypeName());
+                    intent.putExtra("list", (Serializable) list2);
                     startActivity(intent);
                 }
                 if (list.get(position).getType().equals("zhuanlan")){
@@ -139,6 +171,7 @@ public class AlreadyDownLoadFragment extends BaseFragment {
                     SpUtils.putBoolean(mContext,SpUtils.getString(mContext,"id","")+"zhuanlan"+list.get(position).getTypeId()+list.get(position).getTypeName(),true);
                     Intent intent = new Intent(getActivity(),AlreadyDownloadDetailActivity.class);
                     intent.putExtra("type","zhuanlan");
+                    intent.putExtra("title",list.get(position).getTypeName());
                     intent.putExtra("list", (Serializable) list1);
                     startActivity(intent);
                 }
@@ -204,6 +237,20 @@ public class AlreadyDownLoadFragment extends BaseFragment {
                     alreadyTishiIv.setVisibility(View.VISIBLE);
                 }
             }
+//            int num = 0;
+//            if (item.getType().equals("xiaoke")) {
+//                List<DownLoadListsBean.ListBean> list1 = item.getList();
+//                File file = null;
+//
+//                for (int i = 0; i < list1.size(); i++) {
+//                    DownLoadListsBean.ListBean listBean = list1.get(i);
+//                    file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download/" +
+//                            list1.get(i).getName() + list1.get(i).getTypeId() + "_" + list1.get(i).getChildId() + ".mp3");
+//                    if (file.exists() && file.canRead()) {
+//                        num = num + 1;
+//                    }
+//                }
+//            }
             alreadyDescTv.setText(item.gettTag());
             alreadyZhangjieTv.setText("共"+item.getTypeSize()+"节");
             alreadyXiazaiTv.setText("共缓存"+item.getList().size()+"章节");

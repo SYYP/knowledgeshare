@@ -162,7 +162,7 @@ public class ShoppingCartActivity extends BaseActivity implements View.OnClickLi
 //        adapter.setNewData(list);
         adapter.notifyDataSetChanged();
         if (TextUtils.equals("编辑",titleContentRightTv.getText().toString())){
-            hejiTv.setText("￥"+totalMoney+"/年");
+            hejiTv.setText("合计：￥"+totalMoney+"/年");
             jiesuanTv.setText("结算（"+list.size()+"）");
         }else {
             hejiTv.setText("全选");
