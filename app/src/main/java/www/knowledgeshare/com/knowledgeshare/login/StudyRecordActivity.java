@@ -94,7 +94,7 @@ public class StudyRecordActivity extends BaseActivity {
                         requestNotes();
                         springview.onFinishFreshAndLoad();
                     }
-                }, 2000);
+                }, 800);
             }
 
             @Override
@@ -106,7 +106,7 @@ public class StudyRecordActivity extends BaseActivity {
                         requestNotes();
                         springview.onFinishFreshAndLoad();
                     }
-                }, 2000);
+                }, 800);
             }
         });
         springview.setHeader(new MyHeader(this));

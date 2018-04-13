@@ -279,7 +279,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                         initData();
                         springview.onFinishFreshAndLoad();
                     }
-                }, 2000);
+                }, 800);
             }
 
             @Override

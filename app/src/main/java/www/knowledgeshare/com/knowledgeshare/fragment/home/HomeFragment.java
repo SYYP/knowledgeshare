@@ -740,7 +740,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         initData();
                         springview.onFinishFreshAndLoad();
                     }
-                }, 2000);
+                }, 800);
             }
 
             @Override

@@ -359,7 +359,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
                         requestNoteList("");
                         springView.onFinishFreshAndLoad();
                     }
-                }, 2000);
+                }, 800);
             }
 
             @Override
@@ -375,7 +375,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
                         requestNoteList("");
                         springView.onFinishFreshAndLoad();
                     }
-                }, 2000);
+                }, 800);
             }
         });
         springView.setHeader(new MyHeader(mContext));

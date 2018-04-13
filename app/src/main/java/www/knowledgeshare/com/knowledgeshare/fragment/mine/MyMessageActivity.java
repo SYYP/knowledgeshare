@@ -106,7 +106,7 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
                         listAll.clear();
                         requestNotification("");
                     }
-                }, 2000);
+                }, 800);
             }
 
             @Override
@@ -117,7 +117,7 @@ public class MyMessageActivity extends BaseActivity implements View.OnClickListe
                         requestNotification(lastId);
                         springView.onFinishFreshAndLoad();
                     }
-                }, 2000);
+                }, 800);
             }
         });
         springView.setHeader(new MyHeader(this));

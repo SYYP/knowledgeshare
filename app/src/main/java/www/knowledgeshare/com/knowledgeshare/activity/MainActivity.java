@@ -53,7 +53,6 @@ import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.BaseDialog;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
-import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
@@ -380,10 +379,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 }
                 break;
             case R.id.ll_listen:
-                if (!NetWorkUtils.isNetworkConnected(this)) {
-                    Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                if (!NetWorkUtils.isNetworkConnected(this)) {
+//                    Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
                 if (isPause) {
                     iv_listen.setImageResource(R.drawable.tab_listen_bo);
                     if (mMyBinder.isClosed()) {

@@ -50,7 +50,7 @@ public class MyFooter extends BaseFooter {
         mRotateDownAnim.setFillAfter(true);
         animationLoading = new AnimationDrawable();
         for (int src : this.refreshAnimSrcs) {
-            animationLoading.addFrame(ContextCompat.getDrawable(mContext, src), 100);
+            animationLoading.addFrame(ContextCompat.getDrawable(mContext, src), 50);
             animationLoading.setOneShot(false);
         }
     }

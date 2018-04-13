@@ -54,7 +54,7 @@ public class MyHeader extends BaseHeader {
         mRotateDownAnim.setFillAfter(true);
         animationRefresh = new AnimationDrawable();
         for (int src : this.refreshAnimSrcs) {
-            animationRefresh.addFrame(ContextCompat.getDrawable(mContext, src), 100);
+            animationRefresh.addFrame(ContextCompat.getDrawable(mContext, src), 50);
             animationRefresh.setOneShot(false);
         }
     }

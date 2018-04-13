@@ -47,12 +47,16 @@ public class LoadingDialog extends Dialog {
 
     @Override
     public void show() {
-        Window mwindow=this.getWindow();
-        WindowManager.LayoutParams lp=mwindow.getAttributes();
+        Window mwindow = this.getWindow();
+        WindowManager.LayoutParams lp = mwindow.getAttributes();
         lp.dimAmount = 0.5f;
         mwindow.setAttributes(lp);
         mwindow.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        super.show();
+        try {
+            super.show();
+        }catch (Exception e){
+            
+        }
     }
 
     @Override
@@ -62,7 +66,7 @@ public class LoadingDialog extends Dialog {
 
     @Override
     public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             dismiss();
         }
         return super.onKeyDown(keyCode, event);

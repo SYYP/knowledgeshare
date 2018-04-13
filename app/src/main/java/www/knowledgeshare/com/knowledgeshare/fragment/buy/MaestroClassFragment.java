@@ -94,7 +94,7 @@ public class MaestroClassFragment extends BaseFragment {
                         listAll.clear();
                         requestBuyZl("");
                     }
-                }, 2000);
+                }, 800);
             }
 
             @Override

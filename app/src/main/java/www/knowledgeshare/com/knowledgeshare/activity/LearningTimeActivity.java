@@ -139,7 +139,7 @@ public class LearningTimeActivity extends BaseActivity implements View.OnClickLi
                         initData();
                         springview.onFinishFreshAndLoad();
                     }
-                }, 2000);
+                }, 800);
             }
 
             @Override

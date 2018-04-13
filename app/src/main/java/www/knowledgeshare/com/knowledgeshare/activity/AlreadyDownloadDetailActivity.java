@@ -167,7 +167,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                                for (int i = 0; i < list.size(); i++) {
                                                    DownLoadListsBean.ListBean listBean1 = list.get(i);
                                                    PlayerBean playerBean1 = new PlayerBean(listBean1.getIconUrl(), listBean1.getName(),
-                                                           "", "", loadFromSDFile(listBean1.getName() + listBean1.getTypeId() + "_"
+                                                           listBean1.gettName(), "", loadFromSDFile(listBean1.getName() + listBean1.getTypeId() + "_"
                                                            + listBean1.getChildId() + ".mp3"));
                                                    beanList.add(playerBean1);
                                                }
@@ -180,7 +180,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                                            Integer.parseInt(entity.getChildId()), entity.getName(),
                                                            entity.getDate(), entity.getVideoUrl(), entity.getGood_count(),
                                                            entity.getCollect_count(), entity.getView_count(), entity.isDianzan(), entity.isCollected()
-                                                           , entity.getIconUrl(), entity.getParentName(), entity.getH5_url()
+                                                           , entity.getIconUrl(), entity.gettName(), entity.getH5_url()
                                                            , System.currentTimeMillis(), entity.getTypeId(),
                                                            entity.getParentName(), entity.getTxtUrl());
                                                    bofangHistroyBean.setLocal(true);
@@ -189,7 +189,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                                MediaService.insertBoFangHistroyList(histroyBeanList);
                                                DownLoadListsBean.ListBean listBean = list.get(position);
                                                PlayerBean playerBean = new PlayerBean(listBean.getIconUrl(), listBean.getName(),
-                                                       listBean.getParentName(), "", loadFromSDFile(listBean.getName() + listBean.getTypeId() + "_"
+                                                       listBean.gettName(), "", loadFromSDFile(listBean.getName() + listBean.getTypeId() + "_"
                                                        + listBean.getChildId() + ".mp3"), position);
                                                setISshow(true);
                                                gobofang(playerBean);

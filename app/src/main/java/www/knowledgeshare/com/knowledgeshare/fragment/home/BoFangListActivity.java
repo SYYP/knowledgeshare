@@ -103,7 +103,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
     public void finish() {
         //关闭窗体动画显示
         super.finish();
-        this.overridePendingTransition(0, R.anim.bottom_out);
+//        this.overridePendingTransition(0, R.anim.bottom_out);
     }
 
     @Override

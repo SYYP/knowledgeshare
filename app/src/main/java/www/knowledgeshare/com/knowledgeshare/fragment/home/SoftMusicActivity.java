@@ -79,7 +79,7 @@ public class SoftMusicActivity extends BaseActivity implements View.OnClickListe
                         initData(type);
                         springview.onFinishFreshAndLoad();
                     }
-                }, 2000);
+                }, 800);
             }
 
             @Override

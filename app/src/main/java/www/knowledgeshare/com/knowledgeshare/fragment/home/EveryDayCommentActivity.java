@@ -322,7 +322,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                         initData();
                         springview.onFinishFreshAndLoad();
                     }
-                }, 2000);
+                }, 800);
             }
 
             @Override
@@ -546,6 +546,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                     Toast.makeText(EveryDayCommentActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
+                                Toast.makeText(MyApplication.getInstance(), "已加入下载列表", Toast.LENGTH_SHORT).show();
                                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                                         "comment", "commentId", "", childEntity.getT_header(), "", "", list.size() + "", list);
                                 DownUtil.add(downLoadListsBean);
@@ -608,6 +609,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                             Toast.makeText(EveryDayCommentActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        Toast.makeText(MyApplication.getInstance(), "已加入下载列表", Toast.LENGTH_SHORT).show();
                         DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                                 "comment", "commentId", "", childEntity.getT_header(), "", "", list.size() + "", list);
                         DownUtil.add(downLoadListsBean);
@@ -669,6 +671,7 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                         Toast.makeText(EveryDayCommentActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                         return;
                     }
+                    Toast.makeText(MyApplication.getInstance(), "已加入下载列表", Toast.LENGTH_SHORT).show();
                     DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                             "comment", "commentId", "", childEntity.getT_header(), "", "", list.size() + "", list);
                     DownUtil.add(downLoadListsBean);
@@ -696,7 +699,6 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                     }
                                 }
                             });
-                    Toast.makeText(MyApplication.getInstance(), "已加入下载列表", Toast.LENGTH_SHORT).show();
                     EventBean eventBean = new EventBean("number");
                     EventBus.getDefault().postSticky(eventBean);
                     mDialog.dismiss();

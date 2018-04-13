@@ -186,7 +186,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                         initData();
                         springview.onFinishFreshAndLoad();
                     }
-                }, 2000);
+                }, 800);
             }
 
             @Override
@@ -198,7 +198,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                         initData();
                         springview.onFinishFreshAndLoad();
                     }
-                }, 2000);
+                }, 800);
                 //                loadMoreComment(lastID + "");
             }
         });
@@ -815,6 +815,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                     Toast.makeText(FreeActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
+                                Toast.makeText(FreeActivity.this, "已加入下载列表", Toast.LENGTH_SHORT).show();
                                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                                         "free", listBean.getTypeId(), "", childEntity.getT_header(), "", "", list.size() + "", list);
                                 DownUtil.add(downLoadListsBean);
@@ -842,7 +843,6 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                                 }
                                             }
                                         });
-                                Toast.makeText(MyApplication.getInstance(), "已加入下载列表", Toast.LENGTH_SHORT).show();
                                 EventBean eventBean = new EventBean("number");
                                 EventBus.getDefault().postSticky(eventBean);
                                 mDialog.dismiss();
@@ -877,6 +877,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                             Toast.makeText(FreeActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        Toast.makeText(MyApplication.getInstance(), "已加入下载列表", Toast.LENGTH_SHORT).show();
                         DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                                 "free", listBean.getTypeId(), "", childEntity.getT_header(), "", "", list.size() + "", list);
                         DownUtil.add(downLoadListsBean);
@@ -937,6 +938,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                         Toast.makeText(FreeActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                         return;
                     }
+                    Toast.makeText(MyApplication.getInstance(), "已加入下载列表", Toast.LENGTH_SHORT).show();
                     DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                             "free", listBean.getTypeId(), "", childEntity.getT_header(), "", "", list.size() + "", list);
                     DownUtil.add(downLoadListsBean);

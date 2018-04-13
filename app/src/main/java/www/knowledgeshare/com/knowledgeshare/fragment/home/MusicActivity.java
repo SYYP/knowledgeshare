@@ -503,7 +503,6 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
             case R.id.tv_liebiao:
                 Intent intent11 = new Intent(this, BoFangListActivity.class);
                 startActivity(intent11);
-                this.overridePendingTransition(R.anim.bottom_in, 0);
                 break;
             case R.id.tv_share:
                 showShareDialog();

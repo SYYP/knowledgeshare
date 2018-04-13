@@ -298,7 +298,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                         initData();
                         springview.onFinishFreshAndLoad();
                     }
-                }, 2000);
+                }, 800);
             }
 
             @Override
@@ -986,6 +986,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                     Toast.makeText(SoftMusicDetailActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
+                                Toast.makeText(MyApplication.getInstance(), "已加入下载列表", Toast.LENGTH_SHORT).show();
                                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                                         "xiaoke", mMusicDetailBean.getXk_class_id() + "", childEntity.getParent_name(), childEntity.getT_header(),
                                         childEntity.getT_name(), childEntity.getT_tag(), mChild.size() + "", list);
@@ -1014,7 +1015,6 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                                 }
                                             }
                                         });
-                                Toast.makeText(MyApplication.getInstance(), "已加入下载列表", Toast.LENGTH_SHORT).show();
                                 EventBean eventBean = new EventBean("number");
                                 EventBus.getDefault().postSticky(eventBean);
                                 mDialog.dismiss();
@@ -1049,6 +1049,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                             Toast.makeText(SoftMusicDetailActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        Toast.makeText(MyApplication.getInstance(), "已加入下载列表", Toast.LENGTH_SHORT).show();
                         DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                                 "xiaoke", mMusicDetailBean.getXk_class_id() + "", childEntity.getParent_name(), childEntity.getT_header(),
                                 childEntity.getT_name(), childEntity.getT_tag(), mChild.size() + "", list);
@@ -1077,7 +1078,6 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                         }
                                     }
                                 });
-                        Toast.makeText(MyApplication.getInstance(), "已加入下载列表", Toast.LENGTH_SHORT).show();
                         EventBean eventBean = new EventBean("number");
                         EventBus.getDefault().postSticky(eventBean);
                         mDialog.dismiss();
@@ -1111,6 +1111,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                         Toast.makeText(SoftMusicDetailActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                         return;
                     }
+                    Toast.makeText(MyApplication.getInstance(), "已加入下载列表", Toast.LENGTH_SHORT).show();
                     DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                             "xiaoke", mMusicDetailBean.getXk_class_id() + "", childEntity.getParent_name(), childEntity.getT_header(),
                             childEntity.getT_name(), childEntity.getT_tag(), mChild.size() + "", list);
@@ -1139,7 +1140,6 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                     }
                                 }
                             });
-                    Toast.makeText(MyApplication.getInstance(), "已加入下载列表", Toast.LENGTH_SHORT).show();
                     EventBean eventBean = new EventBean("number");
                     EventBus.getDefault().postSticky(eventBean);
                     mDialog.dismiss();

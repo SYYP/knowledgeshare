@@ -42,7 +42,7 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
     public DialogCallback(Activity activity, Type type) {
         super();
         this.type = type;
-        this.activity=activity;
+        this.activity = activity;
         initDialog(activity);
     }
 
@@ -67,12 +67,15 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
         ResponseBody body = response.body();
         code = response.code();
         T data = null;
-        if (body == null) return null;
+        if (body == null)
+            return null;
 
-            Gson gson = new Gson();
-            JsonReader jsonReader = new JsonReader(body.charStream());
-            if (type != null) data = gson.fromJson(jsonReader,type);
-            if (clazz != null) data = gson.fromJson(jsonReader,clazz);
+        Gson gson = new Gson();
+        JsonReader jsonReader = new JsonReader(body.charStream());
+        if (type != null)
+            data = gson.fromJson(jsonReader, type);
+        if (clazz != null)
+            data = gson.fromJson(jsonReader, clazz);
         return data;
     }
 
@@ -82,15 +85,15 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
         //网络请求结束后关闭对话框
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
-            if (code == 410){
+            if (code == 410) {
                 BaseActivity.removeAllActivitys();
                 Intent intent = new Intent(MyApplication.getGloableContext(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("lxk","lxk");
+                intent.putExtra("lxk", "lxk");
                 SpUtils.putBoolean(MyApplication.getGloableContext(), "abool", false);
-                SpUtils.putString(MyApplication.getGloableContext(),"id","");
+                SpUtils.putString(MyApplication.getGloableContext(), "id", "");
                 SpUtils.putBoolean(MyApplication.getGloableContext(), "wengaowindow", false);
-                SpUtils.putString(MyApplication.getGloableContext(),"token","");
+                SpUtils.putString(MyApplication.getGloableContext(), "token", "");
                 MyApplication.getGloableContext().startActivity(intent);
             }
         }

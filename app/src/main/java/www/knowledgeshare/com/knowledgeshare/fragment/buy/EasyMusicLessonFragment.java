@@ -91,7 +91,7 @@ public class EasyMusicLessonFragment extends BaseFragment {
                         listAll.clear();
                         requestBuyXk("");
                     }
-                }, 2000);
+                }, 800);
             }
 
             @Override

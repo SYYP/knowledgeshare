@@ -83,7 +83,7 @@ public class MusicMasterActivity extends BaseActivity implements View.OnClickLis
                         initData(after);
                         springview.onFinishFreshAndLoad();
                     }
-                }, 2000);
+                }, 800);
             }
 
             @Override
