@@ -54,7 +54,7 @@ public class DownLoadActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initData() {
-        AlreadyDownLoadFragment alreadyDownLoadFragment = new AlreadyDownLoadFragment();
+        AlreadyDownLoadFragment2 alreadyDownLoadFragment = new AlreadyDownLoadFragment2();
 //        DownLoadingFragment downLoadingFragment = new DownLoadingFragment();
         MusicDownLoadingFragment downLoadingFragment = new MusicDownLoadingFragment();
         fragmentList = new ArrayList<>();

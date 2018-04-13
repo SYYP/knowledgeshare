@@ -31,6 +31,7 @@ public class DownLoadListsBean extends DataSupport implements Serializable {
         this.list = list;
     }
 
+
     public String getTypeIcon() {
         return typeIcon;
     }

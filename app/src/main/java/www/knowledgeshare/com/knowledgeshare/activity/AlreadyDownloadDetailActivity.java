@@ -70,6 +70,8 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
     private List<DownLoadListsBean> listFree = new ArrayList<>();
     private List<DownLoadListsBean> listComment = new ArrayList<>();
     private List<DownLoadListsBean.ListBean> list = new ArrayList<>();
+    private List<DownLoadListsBean> dalist = new ArrayList<>();
+
     private String type;
 
     @Override
@@ -123,13 +125,20 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                 break;
             case "xiaoke":
                 titleContentTv.setText(title);
-                list = (List<DownLoadListsBean.ListBean>) getIntent().getExtras().getSerializable("list");
+                dalist = (List<DownLoadListsBean>) getIntent().getExtras().getSerializable("list");
+                for (int i = 0; i < dalist.size(); i++) {
+                    list.add(dalist.get(i).getList().get(0));
+                }
                 break;
             case "zhuanlan":
                 titleContentTv.setText(title);
-                list = (List<DownLoadListsBean.ListBean>) getIntent().getExtras().getSerializable("list");
+                dalist = (List<DownLoadListsBean>) getIntent().getExtras().getSerializable("list");
+                for (int i = 0; i < dalist.size(); i++) {
+                    list.add(dalist.get(i).getList().get(0));
+                }
                 break;
         }
+
         initData();
     }
 

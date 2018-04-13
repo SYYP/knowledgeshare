@@ -1,4 +1,4 @@
-package www.knowledgeshare.com.knowledgeshare.fragment.mine;
+package www.knowledgeshare.com.knowledgeshare.activity;
 
 import android.content.Intent;
 import android.os.Environment;
@@ -19,7 +19,6 @@ import com.lzy.okgo.db.DownloadManager;
 import com.lzy.okgo.model.Progress;
 import com.lzy.okserver.OkDownload;
 import com.lzy.okserver.download.DownloadTask;
-import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,18 +36,16 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import www.knowledgeshare.com.knowledgeshare.R;
-import www.knowledgeshare.com.knowledgeshare.activity.AlreadyDownloadDetailActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
-import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 /**
  * Created by Administrator on 2017/11/28.
  */
 
-public class AlreadyDownLoadFragment extends BaseFragment {
+public class AlreadyDownLoadFragment2 extends BaseFragment {
     @BindView(R.id.recycler_alread_download) RecyclerView recyclerAlreadDownload;
     @BindView(R.id.scrollView) NestedScrollView scrollView;
     @BindView(R.id.free_ll) LinearLayout freeLl;
@@ -128,18 +125,26 @@ public class AlreadyDownLoadFragment extends BaseFragment {
                 commentList.add(downLoadListBean);
             }
         }
+
+        List<String> ss = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            String typeName = list.get(i).getTypeName();
+            ss.add(typeName);
+        }
+
         Set set = new  HashSet();
-        List<DownLoadListsBean> newList = new  ArrayList();
-        for (DownLoadListsBean cd : list) {
+        List<String> newList = new ArrayList<>();
+        for (String cd : ss) {
             if(set.add(cd)){
                 newList.add(cd);
             }
         }
+
         int typenum = newList.size();//几种小课
-        List<List<DownLoadListsBean>> dalist = new ArrayList<>();
+        final List<List<DownLoadListsBean>> dalist = new ArrayList<>();
         for (int i = 0; i < typenum; i++) {
             List<DownLoadListsBean> itemList = new ArrayList<>();
-            String typeName = newList.get(i).getTypeName();
+            String typeName = newList.get(i);
             for (int j = 0; j < list.size(); j++) {
                 if (typeName.equals(list.get(j).getTypeName())){
                     itemList.add(list.get(j));
@@ -166,13 +171,13 @@ public class AlreadyDownLoadFragment extends BaseFragment {
             commentTv.setText("共缓存"+ commentList.size()+"节");
         }
 
-        AlreadyDownLoadAdapter adapter = new AlreadyDownLoadAdapter(R.layout.item_already_download,list);
+        AlreadyDownLoadAdapter adapter = new AlreadyDownLoadAdapter(R.layout.item_already_download,dalist);
         recyclerAlreadDownload.setAdapter(adapter);
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (list.get(position).getType().equals("xiaoke")){
-                    List<DownLoadListsBean.ListBean> list1 = list.get(position).getList();
+                if (dalist.get(position).get(0).getType().equals("xiaoke")){
+                    /*List<DownLoadListsBean.ListBean> list1 = list.get(position).getList();
                     List<DownLoadListsBean.ListBean> list2 = new ArrayList<>();
                     File file = null;
                     for (int i = 0; i < list1.size(); i++) {
@@ -183,22 +188,24 @@ public class AlreadyDownLoadFragment extends BaseFragment {
                             list2.add(listBean);
 //                            Logger.e(file.length()+"");
                         }
-                    }
+                    }*/
+
                     Intent intent = new Intent(getActivity(),AlreadyDownloadDetailActivity.class);
-                    SpUtils.putBoolean(mContext,SpUtils.getString(mContext,"id","")+"xiaoke"+list.get(position).getTypeId()+list.get(position).getTypeName(),true);
+                    SpUtils.putBoolean(mContext,SpUtils.getString(mContext,"id","")+"xiaoke"+dalist.get(position).get(0).getTypeId()+dalist.get(position).get(0).getTypeName(),true);
                     intent.putExtra("type","xiaoke");
-                    intent.putExtra("title",list.get(position).getTypeName());
-                    intent.putExtra("list", (Serializable) list2);
+                    intent.putExtra("title",dalist.get(position).get(0).getTypeName());
+                    intent.putExtra("list", (Serializable) dalist.get(position));
                     startActivity(intent);
                 }
-                if (list.get(position).getType().equals("zhuanlan")){
-                    List<DownLoadListsBean.ListBean> list1 = list.get(position).getList();
-                    SpUtils.putBoolean(mContext,SpUtils.getString(mContext,"id","")+"zhuanlan"+list.get(position).getTypeId()+list.get(position).getTypeName(),true);
+                if (dalist.get(position).get(0).getType().equals("zhuanlan")){
+//                    List<DownLoadListsBean.ListBean> list1 = list.get(position).getList();
+                    SpUtils.putBoolean(mContext,SpUtils.getString(mContext,"id","")+"zhuanlan"+dalist.get(position).get(0).getTypeId()+dalist.get(position).get(0).getTypeName(),true);
                     Intent intent = new Intent(getActivity(),AlreadyDownloadDetailActivity.class);
                     intent.putExtra("type","zhuanlan");
-                    intent.putExtra("title",list.get(position).getTypeName());
-                    intent.putExtra("list", (Serializable) list1);
+                    intent.putExtra("title",dalist.get(position).get(0).getTypeName());
+                    intent.putExtra("list", (Serializable) dalist.get(position));
                     startActivity(intent);
+
                 }
             }
         });
@@ -226,14 +233,14 @@ public class AlreadyDownLoadFragment extends BaseFragment {
         EventBus.getDefault().unregister(this);
     }
 
-    private class AlreadyDownLoadAdapter extends BaseQuickAdapter<DownLoadListsBean,BaseViewHolder>{
+    private class AlreadyDownLoadAdapter extends BaseQuickAdapter<List<DownLoadListsBean>,BaseViewHolder>{
 
-        public AlreadyDownLoadAdapter(@LayoutRes int layoutResId, @Nullable List<DownLoadListsBean> data) {
+        public AlreadyDownLoadAdapter(@LayoutRes int layoutResId, @Nullable List<List<DownLoadListsBean>> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, DownLoadListsBean item) {
+        protected void convert(BaseViewHolder helper, List<DownLoadListsBean> item) {
 
             ImageView alreadyFaceIv = helper.getView(R.id.already_face_iv);
             ImageView alreadyTishiIv = helper.getView(R.id.already_tishi_iv);
@@ -242,12 +249,13 @@ public class AlreadyDownLoadFragment extends BaseFragment {
             TextView alreadyDescTv = helper.getView(R.id.already_desc_tv);
             TextView alreadyZhangjieTv = helper.getView(R.id.already_zhangjie_tv);
             TextView alreadyXiazaiTv = helper.getView(R.id.already_xiazai_tv);
-
-            Glide.with(mActivity).load(item.getTypeIcon()).into(alreadyFaceIv);
-            alreadyTitleTv.setText(item.getTypeName());
-            if (item.getType().equals("xiaoke")){
-                alreadyNmaeTv.setText(item.gettName());
-                boolean isLook = SpUtils.getBoolean(mContext, SpUtils.getString(mContext, "id", "") + "xiaoke" + item.getTypeId()+item.getTypeName(), false);
+//            int adapterPosition = helper.getAdapterPosition();
+            int adapterPosition = 0;
+            Glide.with(mActivity).load(item.get(adapterPosition).getTypeIcon()).into(alreadyFaceIv);
+            alreadyTitleTv.setText(item.get(adapterPosition).getTypeName());
+            if (item.get(adapterPosition).getType().equals("xiaoke")){
+                alreadyNmaeTv.setText(item.get(adapterPosition).gettName());
+                boolean isLook = SpUtils.getBoolean(mContext, SpUtils.getString(mContext, "id", "") + "xiaoke" + item.get(adapterPosition).getTypeId()+item.get(adapterPosition).getTypeName(), false);
                 if (isLook){
                     alreadyTishiIv.setVisibility(View.GONE);
                 }else {
@@ -255,7 +263,7 @@ public class AlreadyDownLoadFragment extends BaseFragment {
                 }
             }else {
                 alreadyNmaeTv.setVisibility(View.GONE);
-                boolean isLook = SpUtils.getBoolean(mContext, SpUtils.getString(mContext, "id", "") + "zhuanlan" + item.getTypeId()+item.getTypeName(), false);
+                boolean isLook = SpUtils.getBoolean(mContext, SpUtils.getString(mContext, "id", "") + "zhuanlan" + item.get(adapterPosition).getTypeId()+item.get(adapterPosition).getTypeName(), false);
                 if (isLook){
                     alreadyTishiIv.setVisibility(View.GONE);
                 }else {
@@ -276,9 +284,10 @@ public class AlreadyDownLoadFragment extends BaseFragment {
 //                    }
 //                }
 //            }
-            alreadyDescTv.setText(item.gettTag());
-            alreadyZhangjieTv.setText("共"+item.getTypeSize()+"节");
-            alreadyXiazaiTv.setText("共缓存"+item.getList().size()+"章节");
+            alreadyDescTv.setText(item.get(adapterPosition).gettTag());
+            alreadyZhangjieTv.setText("共"+item.get(adapterPosition).getTypeSize()+"节");
+
+            alreadyXiazaiTv.setText("共缓存"+item.size()+"章节");
         }
     }
 }
