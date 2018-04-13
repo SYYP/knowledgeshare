@@ -206,7 +206,8 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
         this.setWidth(RelativeLayout.LayoutParams.MATCH_PARENT);// 设置弹出窗口的宽
         this.setHeight(RelativeLayout.LayoutParams.WRAP_CONTENT);// 设置弹出窗口的高
         this.setFocusable(false);//设置为true的话，界面中的滑动控件就不滑动了，所以我取消了焦点，但是并不影响点击事件
-        this.setOutsideTouchable(true);
+        this.setOutsideTouchable(false);
+        //点击外部是否消失要设置成false，之前我设置的true，明明手势向上滑动没走setpophide方法但是却消失了，就是点击外部的这个属性的问题
         this.setBackgroundDrawable(new ColorDrawable(0x00000000));// 设置背景透明
         this.setAnimationStyle(R.style.mypopwindow_anim_style);// 设置动画
     }

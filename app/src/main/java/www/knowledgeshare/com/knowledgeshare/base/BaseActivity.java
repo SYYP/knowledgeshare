@@ -46,6 +46,7 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
     private GestureDetector detector;
     //声明一个手势检测器对象
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +74,7 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
             musicPop = new CustomPopupWindow(this);
         }
         SlidePopShow();
+//        Toast.makeText(this, " "+musicPop.isShowing(), Toast.LENGTH_SHORT).show();
     }
 
     private void refreshToken() {
@@ -114,9 +116,6 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMyBinder = (MediaService.MyBinder) service;
-            //            if (isshow && mMyBinder.isPlaying()) {
-            //                musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
-            //            }
         }
 
         @Override
@@ -138,9 +137,10 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
         if (musicPop == null) {
             return;
         }
-        if (isshow && !mMyBinder.isClosed()) {
+        if (isshow && !mMyBinder.isClosed() && !musicPop.isShowing()) {
             musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
         }
+//        Toast.makeText(this, " "+musicPop.isShowing(), Toast.LENGTH_SHORT).show();
     }
 
     public void setPopHide() {
@@ -149,7 +149,9 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
         }
         if (musicPop.isShowing()) {
             musicPop.dismiss();
+//            Toast.makeText(this, " "+musicPop.isShowing(), Toast.LENGTH_SHORT).show();
         }
+//        Toast.makeText(this, " "+musicPop.isShowing(), Toast.LENGTH_SHORT).show();
     }
 
     public void setISshow(boolean iSshow) {
@@ -229,11 +231,12 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
     public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float distanceX, float distanceY) {
         //            Toast.makeText(this, " "+musicPop.isShowing(), Toast.LENGTH_SHORT).show();
         //在滑动过程中popupwindow的isshowing一直是false，真不明白到底是为什么
+        //            Logger.e("distanceY:::::::"+distanceY);
         if (distanceY >= 0) {
-//            Toast.makeText(this, "显示", Toast.LENGTH_SHORT).show();
+            //            Toast.makeText(this, "显示", Toast.LENGTH_SHORT).show();
             SlidePopShow();
         } else {
-//            Toast.makeText(this, "隐藏", Toast.LENGTH_SHORT).show();
+            //            Toast.makeText(this, "隐藏", Toast.LENGTH_SHORT).show();
             setPopHide();
         }
         return false;
