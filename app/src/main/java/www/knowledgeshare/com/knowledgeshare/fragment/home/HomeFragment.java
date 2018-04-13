@@ -1232,15 +1232,17 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void allclose() {
-        for (int i = 0; i < mMFreeChild.size(); i++) {
-            mMFreeChild.get(i).setChecked(false);
+        if (mMFreeChild != null) {
+            for (int i = 0; i < mMFreeChild.size(); i++) {
+                mMFreeChild.get(i).setChecked(false);
+            }
+            for (int i = 0; i < mDaily.size(); i++) {
+                mDaily.get(i).setChecked(false);
+            }
+            mZhuanLanAdapter.notifyDataSetChanged();
+            mCommentAdapter.notifyDataSetChanged();
+            mytype = "";
         }
-        for (int i = 0; i < mDaily.size(); i++) {
-            mDaily.get(i).setChecked(false);
-        }
-        mZhuanLanAdapter.notifyDataSetChanged();
-        mCommentAdapter.notifyDataSetChanged();
-        mytype = "";
     }
 
     @Override
