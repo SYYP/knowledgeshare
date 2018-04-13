@@ -54,7 +54,6 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
     private boolean isAllChecked;
     private SoftMusicDetailBean childEntityBean;
     private List<SoftMusicDetailBean.ChildEntity> list;
-    private List<DownLoadListsBean.ListBean> downList = new ArrayList<>();
     private BaseDialog mNetDialog;
     private TextView mTv_content;
     private boolean nowifiallowdown;
@@ -268,10 +267,12 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
                 listBean.setTxtUrl(childEntity.getTxt_url());
                 listBean.setIconUrl(childEntity.getT_header());
                 listBean.settName(childEntity.getT_name());
+                List<DownLoadListsBean.ListBean> downList = new ArrayList<>();
                 downList.add(listBean);
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                         "xiaoke", childEntityBean.getXk_class_id() + "", childEntity.getParent_name(),
                         childEntity.getT_header(), childEntity.getT_name(), childEntity.getT_tag(), list.size() + "", downList);
+                Logger.e("点击下载时音频的name："+downList.get(0).getName());
                 DownUtil.add(downLoadListsBean);
 
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());

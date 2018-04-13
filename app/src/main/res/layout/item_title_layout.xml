@@ -44,6 +44,8 @@
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:textSize="16dp"
+        android:maxLength="15"
+        android:ellipsize="middle"
         android:layout_centerInParent="true"
         android:padding="10dp"/>
     <ImageView

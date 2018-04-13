@@ -104,6 +104,7 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
         recyclerXzz.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerXzz.setNestedScrollingEnabled(false);
         recyclerXzz.setAdapter(adapter);
+
         okDownload.addOnAllTaskEndListener(this);
         if (values.size() == 0) {
             kongzhiLl.setVisibility(View.GONE);
@@ -381,18 +382,20 @@ public class MusicDownLoadingFragment extends BaseFragment implements View.OnCli
                 Progress progress = task.progress;
                 DownLoadListsBean downLoadListBean = (DownLoadListsBean) progress.extra3;
 
-                list.add(downLoadListBean);
-                for (int i = 0; i < list.size(); i++) {
-                    List<DownLoadListsBean.ListBean> listBeen = list.get(i).getList();
-                    listAllBeen.addAll(listBeen);
-                }
-                if (listAllBeen != null) {
-                    Glide.with(context).load(listAllBeen.get(getAdapterPosition()).getIconUrl()).into(icon);
-                    Logger.e("下载中头像URL地址：" + listAllBeen.get(getAdapterPosition()).getIconUrl());
-                    name.setText(listAllBeen.get(getAdapterPosition()).getName());
-                } else {
-                    name.setText(progress.fileName);
-                }
+//                list.add(downLoadListBean);
+//                for (int i = 0; i < list.size(); i++) {
+//                    List<DownLoadListsBean.ListBean> listBeen = list.get(i).getList();
+//                    listAllBeen.addAll(listBeen);
+//                }
+                Glide.with(context).load(downLoadListBean.getList().get(0).getIconUrl()).into(icon);
+                name.setText(downLoadListBean.getList().get(0).getName());
+//                if (listAllBeen != null) {
+//                    Glide.with(context).load(listAllBeen.get(getAdapterPosition()).getIconUrl()).into(icon);
+//                    Logger.e("下载中头像URL地址：" + listAllBeen.get(getAdapterPosition()).getIconUrl());
+//                    name.setText(listAllBeen.get(getAdapterPosition()).getName());
+//                } else {
+////                    name.setText(progress.fileName);
+//                }
             }
 
             public void refresh(Progress progress) {

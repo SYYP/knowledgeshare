@@ -28,7 +28,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -99,15 +101,17 @@ public class AlreadyDownLoadFragment extends BaseFragment {
         freeList = new ArrayList<>();
         commentList = new ArrayList<>();
         restoreList = OkDownload.restore(DownloadManager.getInstance().getFinished());
-        for (int i = 0; i < restoreList.size(); i++) {
+        /*for (int i = 0; i < restoreList.size(); i++) {
             Progress progress = restoreList.get(i).progress;
             DownLoadListsBean extra3 = (DownLoadListsBean) progress.extra3;
-            if (typeName.equals(extra3.getTypeName())){
-                restoreList.remove(i);
-            }else {
-                typeName = extra3.getTypeName();
+            if (extra3.getType().equals("xiaoke")){
+                if (typeName.equals(extra3.getTypeName())){
+                    restoreList.remove(i);
+                }else {
+                    typeName = extra3.getTypeName();
+                }
             }
-        }
+        }*/
         for (int i = 0; i < restoreList.size(); i++) {
             Progress progress = restoreList.get(i).progress;
             downLoadListBean = (DownLoadListsBean) progress.extra3;
@@ -125,6 +129,8 @@ public class AlreadyDownLoadFragment extends BaseFragment {
             }
         }
 
+        for (int i = 0; i < list.size(); i++) {
+        }
 
 
         if (freeList.size() == 0){
@@ -157,7 +163,6 @@ public class AlreadyDownLoadFragment extends BaseFragment {
                             list2.add(listBean);
 //                            Logger.e(file.length()+"");
                         }
-
                     }
                     Intent intent = new Intent(getActivity(),AlreadyDownloadDetailActivity.class);
                     SpUtils.putBoolean(mContext,SpUtils.getString(mContext,"id","")+"xiaoke"+list.get(position).getTypeId()+list.get(position).getTypeName(),true);
