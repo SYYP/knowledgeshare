@@ -377,7 +377,7 @@ public class WenGaoActivity extends UMShareActivity implements View.OnClickListe
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new JsonCallback<DianZanbean>(DianZanbean.class) {
+                .execute(new DialogCallback<DianZanbean>(WenGaoActivity.this,DianZanbean.class) {
                              @Override
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();

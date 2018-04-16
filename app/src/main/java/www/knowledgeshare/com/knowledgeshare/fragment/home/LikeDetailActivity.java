@@ -44,6 +44,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -331,16 +332,16 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
         iv_dianzan.setOnClickListener(this);
         springview = (SpringView) findViewById(R.id.springview);
         nestView = (NestedScrollView) findViewById(R.id.nestView);
-//        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                if (scrollY - oldScrollY > 0) {
-//                    setPopHide();
-//                } else if (scrollY - oldScrollY < 0) {
-//                    SlidePopShow();
-//                }
-//            }
-//        });
+        //        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+        //            @Override
+        //            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+        //                if (scrollY - oldScrollY > 0) {
+        //                    setPopHide();
+        //                } else if (scrollY - oldScrollY < 0) {
+        //                    SlidePopShow();
+        //                }
+        //            }
+        //        });
     }
 
     private void initData() {
@@ -389,7 +390,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                                      bottomLl.setVisibility(View.GONE);
                                      tv_read.setVisibility(View.GONE);
                                      LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) springview.getLayoutParams();
-                                     layoutParams1.setMargins(0,0,0,0);
+                                     layoutParams1.setMargins(0, 0, 0, 0);
                                      springview.setLayoutParams(layoutParams1);
                                      springview.requestLayout();
                                  } else {
@@ -1436,6 +1437,19 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
         EventBus.getDefault().unregister(this);
     }
 
+    private List<SoftMusicDetailBean.ChildEntity> getCanDownListData() {
+        List<SoftMusicDetailBean.ChildEntity> list = new ArrayList<>();
+        if (mChild != null && mChild.size() > 0) {
+            for (int i = 0; i < mChild.size(); i++) {
+                SoftMusicDetailBean.ChildEntity childEntity = mChild.get(i);
+                if (childEntity.getIs_try() == 1) {
+                    list.add(childEntity);
+                }
+            }
+        }
+        return list;
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -1444,9 +1458,17 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                 break;
             case R.id.tv_download:
                 //TODO 跳转下载页面
-                SoftMusicDetailBean model = mMusicDetailBean;
                 intent = new Intent(this, DownLoadListActivity.class);
-                intent.putExtra("model", model);
+                intent.putExtra("Xk_class_id", mMusicDetailBean.getXk_class_id() + "");
+                if (mMusicDetailBean.is_buy()) {
+                    intent.putExtra("model", (Serializable) mChild);
+                } else {
+                    if (getCanDownListData()==null || getCanDownListData().size()==0){
+                        Toast.makeText(this, "暂无音频可以下载~", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    intent.putExtra("model", (Serializable) getCanDownListData());
+                }
                 startActivity(intent);
                 break;
             case R.id.tv_search:
@@ -1615,7 +1637,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<DianZanbean>(LikeDetailActivity.this,DianZanbean.class) {
+                .execute(new DialogCallback<DianZanbean>(LikeDetailActivity.this, DianZanbean.class) {
                              @Override
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
@@ -1643,7 +1665,7 @@ public class LikeDetailActivity extends UMShareActivity implements View.OnClickL
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<DianZanbean>(LikeDetailActivity.this,DianZanbean.class) {
+                .execute(new DialogCallback<DianZanbean>(LikeDetailActivity.this, DianZanbean.class) {
                              @Override
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();

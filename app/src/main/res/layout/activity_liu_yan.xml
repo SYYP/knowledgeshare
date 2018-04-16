@@ -50,6 +50,9 @@
                 android:background="@drawable/bg_circle_white"
                 android:gravity="left"
                 android:minHeight="150dp"
+                android:hint="欢迎参与交流，留言将由讲师筛选后公开显示"
+                android:textColor="@color/text_black"
+                android:textColorHint="@color/textcolor"
                 android:padding="10dp"
                 android:textSize="14sp"/>
             <android.support.v7.widget.RecyclerView

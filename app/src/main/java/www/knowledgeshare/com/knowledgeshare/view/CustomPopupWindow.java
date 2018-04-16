@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -129,7 +128,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
             isBofang = false;
             iv_delete.setVisibility(View.VISIBLE);
             //我在用户退出APP的时候发了eventbus，就是为了这边接收到然后刷新学习时间
-            long lasttime = SystemClock.currentThreadTimeMillis() - pretime;
+            long lasttime = System.currentTimeMillis() - pretime;
             //我这边不判断数据库中是否有这条记录，是因为麻烦，还要根据type和id判断，容易和文稿界面和专栏详情界面冲突了
             //所以我直接每播放一次就存一次数据库
             StudyTimeBean studyTimeBean = new StudyTimeBean(Integer.parseInt(mMusicTypeBean.getId()), "music",
@@ -146,7 +145,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
             }*/
         } else if (eventBean.getMsg().equals("home_bofang") || eventBean.getMsg().equals("rotate")) {
             //学习时长
-            pretime = SystemClock.currentThreadTimeMillis();
+            pretime = System.currentTimeMillis();
         }else if (eventBean.getMsg().equals("allmusiccomplete")){
             rl_bofang.setVisibility(View.VISIBLE);
             iv_delete.setVisibility(View.GONE);

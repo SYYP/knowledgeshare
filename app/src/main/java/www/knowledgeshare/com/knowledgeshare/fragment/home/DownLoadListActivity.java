@@ -27,7 +27,6 @@ import com.orhanobut.logger.Logger;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,11 +52,11 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
     private TextView tv_download;
     private MyAdapter mMyAdapter;
     private boolean isAllChecked;
-    private SoftMusicDetailBean childEntityBean;
     private List<SoftMusicDetailBean.ChildEntity> list;
     private BaseDialog mNetDialog;
     private TextView mTv_content;
     private boolean nowifiallowdown;
+    private String xk_class_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,8 +102,8 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void getIntentData() {
-        childEntityBean = (SoftMusicDetailBean) getIntent().getExtras().getSerializable("model");
-        list = childEntityBean.getChild();
+        xk_class_id = getIntent().getStringExtra("Xk_class_id");
+        list = (List<SoftMusicDetailBean.ChildEntity>) getIntent().getExtras().getSerializable("model");
         if (list != null && list.size() > 0) {
             mMyAdapter = new MyAdapter(R.layout.item_download, list);
             recycler_list.setAdapter(mMyAdapter);
@@ -130,6 +129,9 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
             list.get(i).setChecked(true);
         }
         //        mMyAdapter.setNewData(mList);
+        if (mMyAdapter==null){
+            return;
+        }
         mMyAdapter.notifyDataSetChanged();
         iv_quanxuan.setImageResource(R.drawable.quanxuan_red);
     }
@@ -149,6 +151,9 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
             list.get(i).setChecked(false);
         }
         //        mMyAdapter.setNewData(mList);
+        if (mMyAdapter==null){
+            return;
+        }
         mMyAdapter.notifyDataSetChanged();
         iv_quanxuan.setImageResource(R.drawable.noquanxuan);
     }
@@ -271,7 +276,7 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
                 List<DownLoadListsBean.ListBean> downList = new ArrayList<>();
                 downList.add(listBean);
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
-                        "xiaoke", childEntityBean.getXk_class_id() + "", childEntity.getParent_name(),
+                        "xiaoke", xk_class_id, childEntity.getParent_name(),
                         childEntity.getT_header(), childEntity.getT_name(), childEntity.getT_tag(), list.size() + "", downList);
                 Logger.e("点击下载时音频的name："+downList.get(0).getName());
                 DownUtil.add(downLoadListsBean);

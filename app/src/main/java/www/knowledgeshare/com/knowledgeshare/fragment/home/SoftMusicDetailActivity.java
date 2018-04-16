@@ -44,6 +44,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -277,16 +278,16 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
 
 
     private void initListener() {
-//        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                if (scrollY - oldScrollY > 0) {
-//                    setPopHide();
-//                } else if (scrollY - oldScrollY < 0) {
-//                    SlidePopShow();
-//                }
-//            }
-//        });
+        //        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+        //            @Override
+        //            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+        //                if (scrollY - oldScrollY > 0) {
+        //                    setPopHide();
+        //                } else if (scrollY - oldScrollY < 0) {
+        //                    SlidePopShow();
+        //                }
+        //            }
+        //        });
         springview.setType(SpringView.Type.FOLLOW);
         springview.setListener(new SpringView.OnFreshListener() {
             @Override
@@ -421,7 +422,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                  }
 
                                  mChild = mMusicDetailBean.getChild();
-                                 if (mChild==null || mChild.size()==0 ||mChild.get(0).getIs_try()!=1) {
+                                 if (mChild == null || mChild.size() == 0 || mChild.get(0).getIs_try() != 1) {
                                      tv_tryread.setBackgroundColor(getResources().getColor(R.color.tab_text_normal_color));
                                      tv_tryread.setTextColor(getResources().getColor(R.color.textcolor));
                                      tv_tryread.setClickable(false);
@@ -1507,6 +1508,19 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
         });
     }
 
+    private List<SoftMusicDetailBean.ChildEntity> getCanDownListData() {
+        List<SoftMusicDetailBean.ChildEntity> list = new ArrayList<>();
+        if (mChild != null && mChild.size() > 0) {
+            for (int i = 0; i < mChild.size(); i++) {
+                SoftMusicDetailBean.ChildEntity childEntity = mChild.get(i);
+                if (childEntity.getIs_try() == 1) {
+                    list.add(childEntity);
+                }
+            }
+        }
+        return list;
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -1514,10 +1528,17 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                 finish();
                 break;
             case R.id.tv_download:
-                SoftMusicDetailBean model = mMusicDetailBean;
-                Logger.e(model.getChild().size() + "");
                 intent = new Intent(this, DownLoadListActivity.class);
-                intent.putExtra("model", model);
+                intent.putExtra("Xk_class_id", mMusicDetailBean.getXk_class_id()+"");
+                if (mMusicDetailBean.is_buy()) {
+                    intent.putExtra("model", (Serializable) mChild);
+                } else {
+                    if (getCanDownListData()==null || getCanDownListData().size()==0){
+                        Toast.makeText(this, "暂无音频可以下载~", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    intent.putExtra("model", (Serializable) getCanDownListData());
+                }
                 startActivity(intent);
                 break;
             case R.id.tv_search:

@@ -380,7 +380,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
     public void finish() {
         //关闭窗体动画显示
         super.finish();
-        this.overridePendingTransition(0, R.anim.bottom_out);
+        this.overridePendingTransition(0, R.anim.bottom_out2);
     }
 
     private void initView() {
