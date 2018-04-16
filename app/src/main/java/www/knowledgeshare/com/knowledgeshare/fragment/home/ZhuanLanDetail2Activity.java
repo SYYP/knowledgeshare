@@ -477,6 +477,8 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                  }else {
                                      tv_buy.setVisibility(View.VISIBLE);
                                  }
+                                 EventBean eventBean = new EventBean("studycount");
+                                 EventBus.getDefault().postSticky(eventBean);
                                  String title = mFreeTryReadDetailBean.getZl_name();
                                  if (!TextUtils.isEmpty(title))
                                  tv_miantitle.setText(title.length()>18?title.substring(0,17)+"...":title);

@@ -451,7 +451,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
                                 messageTv.setVisibility(View.VISIBLE);
                                 messageTv.setText(note_count);
                             } else {
-                                messageTv.setVisibility(View.VISIBLE);
+                                messageTv.setVisibility(View.GONE);
                                 messageTv.setText("");
                             }
                             list = response.body().getNote();
@@ -491,6 +491,9 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("noticerefrash")) {
+            requestNoteList("");
+        }
+        if (eventBean.getMsg().equals("studycount")){
             requestNoteList("");
         }
     }
