@@ -187,7 +187,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                                    DownLoadListsBean.ListBean entity = list.get(i);
                                                    BofangHistroyBean bofangHistroyBean = new BofangHistroyBean(mytype,
                                                            Integer.parseInt(entity.getChildId()), entity.getName(),
-                                                           entity.getDate(), entity.getVideoUrl(), entity.getGood_count(),
+                                                           entity.getDate(), "", entity.getGood_count(),
                                                            entity.getCollect_count(), entity.getView_count(), entity.isDianzan(), entity.isCollected()
                                                            , entity.getIconUrl(), entity.gettName(), entity.getH5_url()
                                                            , System.currentTimeMillis(), entity.getTypeId(),

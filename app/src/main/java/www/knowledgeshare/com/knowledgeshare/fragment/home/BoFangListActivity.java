@@ -103,7 +103,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
     public void finish() {
         //关闭窗体动画显示
         super.finish();
-//        this.overridePendingTransition(0, R.anim.bottom_out);
+        //        this.overridePendingTransition(0, R.anim.bottom_out);
     }
 
     @Override
@@ -151,7 +151,15 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                     List<PlayerBean> list = new ArrayList<PlayerBean>();
                     for (int i = 0; i < mList.size(); i++) {
                         BofangHistroyBean entity = mList.get(i);
-                        PlayerBean playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getParentName(), entity.getVideo_url());
+                        PlayerBean playerBean1 = null;
+                        if (!entity.isLocal()) {
+                            playerBean1 = new PlayerBean(entity.getT_header(), entity.getVideo_name(), entity.getParentName(), entity.getVideo_url());
+                        } else {
+                            //本地已经下载好的播放
+                            playerBean1 = new PlayerBean(entity.getT_header(),
+                                    entity.getVideo_name(), entity.getParentName(), "", loadFromSDFile(entity.getType(),
+                                    entity.getVideo_name() + entity.getParentId() + "_" + entity.getChildId() + ".mp3"), position);
+                        }
                         list.add(playerBean1);
                     }
                     MediaService.insertMusicList(list);
@@ -171,17 +179,17 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                 }
             });
         }
-//        recycler_bofang.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                if (dy > 0) {
-//                    setPopHide();
-//                } else if (dy < 0) {
-//                    SlidePopShow();
-//                }
-//            }
-//        });
+        //        recycler_bofang.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        //            @Override
+        //            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        //                super.onScrolled(recyclerView, dx, dy);
+        //                if (dy > 0) {
+        //                    setPopHide();
+        //                } else if (dy < 0) {
+        //                    SlidePopShow();
+        //                }
+        //            }
+        //        });
     }
 
     private void gobofang2(final PlayerBean playerBean) {
@@ -861,7 +869,7 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
             });
             if (helper.getAdapterPosition() <= 8) {
                 helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
-            }else {
+            } else {
                 helper.setText(R.id.tv_order, "" + (helper.getAdapterPosition() + 1));
             }
             if (item.getType().equals("zhuanlandetail")) {

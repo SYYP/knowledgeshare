@@ -324,7 +324,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        if (currPosition==musicList.size()-1){
+        if (currPosition == musicList.size() - 1) {
             //全部播放完成
             EventBus.getDefault().postSticky(new EventBean("allmusiccomplete"));
             return;
@@ -353,7 +353,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             return MediaService.this;
         }
 
-        public String getPlayingUrl(){
+        public String getPlayingUrl() {
             return mMusicUrl;
         }
 
@@ -365,10 +365,10 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 return;
             }
             mPlayerBean = playerBean;
-            if (mPlayerBean.getPosition() != 0 ) {
+            if (mPlayerBean.getPosition() != 0) {
                 //因为有构造器是不传position的，当播放下一首的时候会再走一遍会变成0
                 currPosition = mPlayerBean.getPosition();
-            }else {
+            } else {
                 currPosition = 0;
             }
             // 为解决第二次播放时抛出的IllegalStateException，这里做了try-catch处理
@@ -596,10 +596,10 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
          * 添加file文件到MediaPlayer对象并且准备播放音频
          */
         public void setMusicUrl(String musicUrl) {
-//            if (mMusicUrl.equals(musicUrl) && isPlaying()) {
-//                Toast.makeText(MyApplication.getGloableContext(), "音频正在播放中", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
+            //            if (mMusicUrl.equals(musicUrl) && isPlaying()) {
+            //                Toast.makeText(MyApplication.getGloableContext(), "音频正在播放中", Toast.LENGTH_SHORT).show();
+            //                return;
+            //            }
             mMusicUrl = musicUrl;
             try {
                 //此处的两个方法需要捕获IO异常
@@ -608,7 +608,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 //设置音频文件到MediaPlayer对象中
                 mMediaPlayer.setDataSource(mMusicUrl);
                 //让MediaPlayer对象准备
-                //                mMediaPlayer.prepare();
+                //                mMediaPlayer.prepare();卡顿
                 mMediaPlayer.prepareAsync();
             } catch (IllegalStateException e) {
                 mMediaPlayer = null;
@@ -616,19 +616,18 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 try {
                     mMediaPlayer.reset();
                     mMediaPlayer.setDataSource(mMusicUrl);
-                    //                    mMediaPlayer.prepare();
+                    //                    mMediaPlayer.prepare();卡顿
                     mMediaPlayer.prepareAsync();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
             } catch (IOException e) {
-                //            Log.d(TAG, "设置资源，准备阶段出错");
                 e.printStackTrace();
             }
         }
 
-        public String getMusicType(){
-            if (musicTypeBeanList==null || musicTypeBeanList.size()==0){
+        public String getMusicType() {
+            if (musicTypeBeanList == null || musicTypeBeanList.size() == 0) {
                 return "";
             }
             return musicTypeBeanList.get(currPosition).getType();
@@ -661,7 +660,6 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                     e1.printStackTrace();
                 }
             } catch (IOException e) {
-                //            Log.d(TAG, "设置资源，准备阶段出错");
                 e.printStackTrace();
             }
         }
