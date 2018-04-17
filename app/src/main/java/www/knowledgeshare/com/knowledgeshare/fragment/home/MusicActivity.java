@@ -39,6 +39,7 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.WenGaoFileActivity;
 import www.knowledgeshare.com.knowledgeshare.base.UMShareActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
@@ -169,7 +170,9 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
             //            System.out.println("ssssssssssssssssssssss"+play_seek.getMax()+"   "+eventBean.getPercent());
         }
     }
+
     private boolean allmusiccomplete;
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         //当在该页面下拉通知栏点击暂停的时候这边按钮也要变化
@@ -177,7 +180,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
             iv_pause.setImageResource(R.drawable.bofang_yellow_big);
         } else if (eventBean.getMsg().equals("home_pause")) {
             iv_pause.setImageResource(R.drawable.pause_yellow_big);
-        }else if (eventBean.getMsg().equals("allmusiccomplete")){
+        } else if (eventBean.getMsg().equals("allmusiccomplete")) {
             iv_pause.setImageResource(R.drawable.pause_yellow_big);
         }
     }
@@ -213,7 +216,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
             String format = time.format(mMyBinder.getProgress());
             if (!format.equals("59:59")) {//oppoA37的bug，老是出现59:59
                 music_duration.setText(format);
-            }else {
+            } else {
                 music_duration.setText("00:00");
             }
             initCollect();
@@ -276,7 +279,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
             String format = time.format(mMyBinder.getProgress());
             if (!format.equals("59:59")) {//oppoA37的bug，老是出现59:59
                 music_duration.setText(format);
-            }else {
+            } else {
                 music_duration.setText("00:00");
             }
             mMyBinder.refreshhuanchong();
@@ -415,10 +418,10 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
         tv_title.setText(title);
         if (mMusicTypeBean == null) {
             iv_bigphoto.setVisibility(View.INVISIBLE);
-//            tv_title.setText("");
+            //            tv_title.setText("");
         } else {
             iv_bigphoto.setVisibility(View.VISIBLE);
-//            tv_title.setText(mMusicTypeBean.getVideo_name());
+            //            tv_title.setText(mMusicTypeBean.getVideo_name());
             Picasso.with(this).load(mMusicTypeBean.getT_head()).into(iv_bigphoto);
         }
         List<BofangHistroyBean> search = HistroyUtils.search();
@@ -494,6 +497,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                 );
     }
 
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -512,14 +516,21 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                     Toast.makeText(this, "此音频暂时无文稿", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Intent intent = new Intent(this, WenGaoActivity.class);
-                intent.putExtra("type", mMusicTypeBean.getType());
-                //                intent.putExtra("t_name", mMusicTypeBean.getT_name());
-                //                intent.putExtra("t_head", mMusicTypeBean.getT_head());
-                //                intent.putExtra("video_name", mMusicTypeBean.getVideo_name());
-                intent.putExtra("id", mMusicTypeBean.getId());
-                //                intent.putExtra("teacher_id", mMusicTypeBean.getTeacher_id());
-                startActivity(intent);
+                if (!NetWorkUtils.isNetworkConnected(this)) {
+                    Intent intent = new Intent(this, WenGaoFileActivity.class);
+                    intent.putExtra("type", mMusicTypeBean.getType());
+                    intent.putExtra("mohuchaxun", mMusicTypeBean.getVideo_name());
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(this, WenGaoActivity.class);
+                    intent.putExtra("type", mMusicTypeBean.getType());
+                    //                intent.putExtra("t_name", mMusicTypeBean.getT_name());
+                    //                intent.putExtra("t_head", mMusicTypeBean.getT_head());
+                    //                intent.putExtra("video_name", mMusicTypeBean.getVideo_name());
+                    intent.putExtra("id", mMusicTypeBean.getId());
+                    //                intent.putExtra("teacher_id", mMusicTypeBean.getTeacher_id());
+                    startActivity(intent);
+                }
                 break;
             case R.id.tv_download:
                 goDownload();

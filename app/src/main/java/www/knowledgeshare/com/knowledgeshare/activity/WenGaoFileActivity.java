@@ -3,6 +3,7 @@ package www.knowledgeshare.com.knowledgeshare.activity;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.widget.NestedScrollView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,12 +23,18 @@ import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
 public class WenGaoFileActivity extends BaseActivity implements View.OnClickListener {
 
-    @BindView(R.id.iv_back) ImageView ivBack;
-    @BindView(R.id.iv_teacher_head) CircleImageView ivTeacherHead;
-    @BindView(R.id.tv_ke_name) TextView tvKeName;
-    @BindView(R.id.tv_teacher_name) TextView tvTeacherName;
-    @BindView(R.id.tv_content) TextView tvContent;
-    @BindView(R.id.nestView) NestedScrollView nestView;
+    @BindView(R.id.iv_back)
+    ImageView ivBack;
+    @BindView(R.id.iv_teacher_head)
+    CircleImageView ivTeacherHead;
+    @BindView(R.id.tv_ke_name)
+    TextView tvKeName;
+    @BindView(R.id.tv_teacher_name)
+    TextView tvTeacherName;
+    @BindView(R.id.tv_content)
+    TextView tvContent;
+    @BindView(R.id.nestView)
+    NestedScrollView nestView;
     private String type;
 
     @Override
@@ -36,22 +43,7 @@ public class WenGaoFileActivity extends BaseActivity implements View.OnClickList
         setContentView(R.layout.activity_wen_gao_file);
         ButterKnife.bind(this);
         initView();
-        initListener();
     }
-
-    private void initListener() {
-        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY - oldScrollY > 0) {
-                    setPopHide();
-                } else if (scrollY - oldScrollY < 0) {
-                    SlidePopShow();
-                }
-            }
-        });
-    }
-
 
     private void initView() {
         ivBack.setOnClickListener(this);
@@ -62,8 +54,15 @@ public class WenGaoFileActivity extends BaseActivity implements View.OnClickList
         type = getIntent().getStringExtra("type");
         Glide.with(this).load(img).into(ivTeacherHead);
         tvKeName.setText(title);
-        String fromSDFile = loadFromSDFile(id + "-" + childId + title + ".txt");
-        tvContent.setText(fromSDFile);
+        String mohuchaxun = getIntent().getStringExtra("mohuchaxun");
+        if (!TextUtils.isEmpty(mohuchaxun)) {
+            String fromSDFile = loadFromSDFile2(mohuchaxun);
+            tvContent.setText(fromSDFile);
+            //            getMohuPath(mohuchaxun);
+        } else {
+            String fromSDFile = loadFromSDFile(id + "-" + childId + title + ".txt");
+            tvContent.setText(fromSDFile);
+        }
     }
 
     @Override
@@ -76,37 +75,88 @@ public class WenGaoFileActivity extends BaseActivity implements View.OnClickList
     }
 
     private String loadFromSDFile(String fname) {
-        fname="/"+fname;
-        String result=null;
+        fname = "/" + fname;
+        String result = null;
         File f = null;
         try {
-            switch (type){
+            switch (type) {
                 case "free":
-                    f = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/boyue/download/free_download"+fname);
-                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath()+"/boyue/download/free_download"+fname);
+                    f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download" + fname);
+                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download" + fname);
                     break;
                 case "comment":
-                    f = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/boyue/download/comment_download"+fname);
-                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath()+"/boyue/download/comment_download"+fname);
+                    f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download" + fname);
+                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download" + fname);
                     break;
                 case "xiaoke":
-                    f = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/boyue/download/xk_download"+fname);
-                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath()+"/boyue/download/xk_download"+fname);
+                    f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download" + fname);
+                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download" + fname);
                     break;
                 case "zhuanlan":
-                    f = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/boyue/download/zl_download"+fname);
-                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath()+"/boyue/download/zl_download"+fname);
+                    f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download" + fname);
+                    Logger.e(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download" + fname);
                     break;
             }
-            int length=(int)f.length();
-            byte[] buff=new byte[length];
-            FileInputStream fin=new FileInputStream(f);
+            int length = (int) f.length();
+            byte[] buff = new byte[length];
+            FileInputStream fin = new FileInputStream(f);
             fin.read(buff);
             fin.close();
-            result=new String(buff,"GBK");
-        }catch (Exception e){
+            result = new String(buff, "GBK");
+        } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(WenGaoFileActivity.this,"没有找到指定文件",Toast.LENGTH_SHORT).show();
+            Toast.makeText(WenGaoFileActivity.this, "没有找到指定文件", Toast.LENGTH_SHORT).show();
+        }
+        return result;
+    }
+
+
+    private File sdDir = null;
+
+    private File getMohuPath(String fname) {
+        File file = null;
+        String[] list = sdDir.list();
+        for (int i = 0; i < list.length; i++) {
+            if (list[i].contains(fname) && list[i].contains(".txt")) {
+                //                Toast.makeText(this,"包含AFile",Toast.LENGTH_SHORT).show();
+                file = new File(sdDir, list[i]);
+            }
+        }
+        return file;
+    }
+
+    private String loadFromSDFile2(String fname) {
+        String result = null;
+        File f = null;
+        try {
+            switch (type) {
+                case "free":
+                    sdDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download");
+                    f = getMohuPath(fname);
+                    break;
+                case "everydaycomment":
+                    sdDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/comment_download");
+                    f = getMohuPath(fname);
+                    ;
+                    break;
+                case "softmusicdetail":
+                    sdDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/xk_download");
+                    f = getMohuPath(fname);
+                    break;
+                case "zhuanlan":
+                    sdDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/zl_download");
+                    f = getMohuPath(fname);
+                    break;
+            }
+            int length = (int) f.length();
+            byte[] buff = new byte[length];
+            FileInputStream fin = new FileInputStream(f);
+            fin.read(buff);
+            fin.close();
+            result = new String(buff, "GBK");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(WenGaoFileActivity.this, "没有找到指定文件", Toast.LENGTH_SHORT).show();
         }
         return result;
     }

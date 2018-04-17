@@ -202,6 +202,16 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                                        + listBean.getChildId() + ".mp3"), position);
                                                setISshow(true);
                                                gobofang(playerBean);
+//                                               //刷新没网情况下的文稿
+//                                               List<NoNetWenGaoBean> noNetWenGaoBeanList=new ArrayList<NoNetWenGaoBean>();
+//                                               for (int i = 0; i < list.size(); i++) {
+//                                                   DownLoadListsBean.ListBean listBean1 = list.get(i);
+//                                                   NoNetWenGaoBean noNetWenGaoBean = new NoNetWenGaoBean(listBean1.getIconUrl(), listBean1.getTypeId()
+//                                                           , listBean1.getName(), listBean1.getChildId(), type);
+//                                                   noNetWenGaoBean.setMsg("refreshnonetwengao");
+//                                                   noNetWenGaoBeanList.add(noNetWenGaoBean);
+//                                               }
+//                                               MediaService.insertWengaoBeanList(noNetWenGaoBeanList);
                                            }
                                        }
 
@@ -305,7 +315,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                 break;
             case R.id.delete_tv:
                 for (int i = 0; i < list.size(); i++) {
-                    if (list.get(i).isChecked()){
+                    if (list.get(i).isChecked()) {
                         showTips("提示", "是否删除？", "是", "否");
                     }
                 }
