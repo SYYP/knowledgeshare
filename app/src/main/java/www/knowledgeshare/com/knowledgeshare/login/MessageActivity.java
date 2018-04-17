@@ -19,7 +19,6 @@ import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.NoticeBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
-import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.ZhuanLanDetail2Activity;
 import www.knowledgeshare.com.knowledgeshare.login.adapter.Messageadapter;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
@@ -80,7 +79,7 @@ public class MessageActivity extends BaseActivity {
                                     int id = response.body().getData().get(position).getId();
                                     Intent intent = new Intent(MessageActivity.this, ZhuanLanDetail2Activity.class);
                                     intent.putExtra("id",id+"");
-                                    intent.putExtra("type","alreadyBuy");
+                                    intent.putExtra("is_buy",true);
                                     startActivity(intent);
                                 }
                             });

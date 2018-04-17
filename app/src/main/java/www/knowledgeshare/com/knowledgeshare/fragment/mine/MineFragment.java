@@ -246,7 +246,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 progressBar.setProgress(integral);
                 xzStartIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v0));
                 xzStartTv.setText("默认");
-                Glide.with(mContext).load(level.get(0).getLevel_get_img()).into(xzEndIv);
+                if (level!=null && level.size()>0){
+                    Glide.with(mContext).load(level.get(0).getLevel_get_img()).into(xzEndIv);
+                }
 //                xzEndIv.setImageDrawable(getResources().getDrawable(R.drawable.power_xz_v1));
                 xzEndTv.setText("铜勋章");
                 break;

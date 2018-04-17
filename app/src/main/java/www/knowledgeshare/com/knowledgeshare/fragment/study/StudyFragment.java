@@ -127,6 +127,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     private MusicTypeBean mMusicTypeBean;
     private LinearLayout ll_root_view;
     private NestedScrollView nestView;
+    private Animation delAnimation;
 
     @Override
     protected void lazyLoad() {
@@ -174,7 +175,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent3(PlayerBean playerBean) {
         if (playerBean.getMsg().equals("refreshplayer")) {
-            if (playerBean==null){
+            if (playerBean == null) {
                 return;
             }
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
@@ -208,7 +209,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         tv_subtitle = rootView.findViewById(R.id.tv_subtitle);
         rl_bofang = rootView.findViewById(R.id.rl_bofang);
         rl_bofang.setOnClickListener(this);
-        nestView=rootView.findViewById(R.id.nestView);
+        nestView = rootView.findViewById(R.id.nestView);
         rl_bofang.setVisibility(View.GONE);
         ll_root_view = rootView.findViewById(R.id.ll_root_view);
         tv_search = (TextView) rootView.findViewById(R.id.tv_search);
@@ -289,6 +290,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
             }
         });
         initListener();
+        delAnimation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_out);
         return rootView;
     }
 
@@ -493,7 +495,7 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         if (eventBean.getMsg().equals("noticerefrash")) {
             requestNoteList("");
         }
-        if (eventBean.getMsg().equals("studycount")){
+        if (eventBean.getMsg().equals("studycount")) {
             requestNoteList("");
         }
     }
@@ -510,15 +512,13 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
                 suishenting();
                 break;
             case R.id.iv_delete:
-                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_out);
-                rl_bofang.startAnimation(animation);
+                rl_bofang.startAnimation(delAnimation);
                 rl_bofang.setVisibility(View.GONE);
                 EventBean eventBean = new EventBean("norotate");
                 EventBus.getDefault().postSticky(eventBean);
                 break;
             case R.id.iv_arrow_top:
-                Animation animation2 = AnimationUtils.loadAnimation(mContext, R.anim.bottom_out);
-                rl_bofang.startAnimation(animation2);
+                rl_bofang.startAnimation(delAnimation);
                 rl_bofang.setVisibility(View.GONE);
                 Intent intent1 = new Intent(mContext, MusicActivity.class);
                 intent1.putExtra("data", mMusicTypeBean);
@@ -647,11 +647,13 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
                     @Override
                     public void onSuccess(Response<WeatherBean> response) {
                         WeatherBean body = response.body();
-                        if (body.getStatus().equals("0")) {
-                            study_weather.setText(body.getResult().getWeather());
-                            study_wendu.setText(body.getResult().getTemp() + "℃");
-                        } else {
-                            Logger.e(body.getMsg());
+                        if (body != null && body.getStatus() != null) {
+                            if (body.getStatus().equals("0")) {
+                                study_weather.setText(body.getResult().getWeather());
+                                study_wendu.setText(body.getResult().getTemp() + "℃");
+                            } else {
+                                Logger.e(body.getMsg());
+                            }
                         }
                     }
                 });

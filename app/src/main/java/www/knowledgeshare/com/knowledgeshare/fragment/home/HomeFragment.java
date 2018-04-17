@@ -136,6 +136,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private ImageView iv_download_number;
     private List<CommentListBean.DataEntity> mCommentListBeanData;
     private List<FreeListBean.DataEntity> mFreeListBeanData;
+    private Animation delAnimation;
 
     @Override
     protected void lazyLoad() {
@@ -222,9 +223,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         recycler_yinyueke.setNestedScrollingEnabled(false);
         recycler_like.setLayoutManager(new GridLayoutManager(mContext, 3));
         recycler_like.setNestedScrollingEnabled(false);
+        delAnimation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_out);
         return inflate;
     }
-
 
     private void initAnim() {
         mRotate_anim = AnimationUtils.loadAnimation(mContext, R.anim.rotate_animation);
@@ -1311,16 +1312,14 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.iv_delete:
                 isBofang = false;
-                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_out);
-                rl_bofang.startAnimation(animation);
+                rl_bofang.startAnimation(delAnimation);
                 rl_bofang.setVisibility(View.GONE);
                 EventBean eventBean = new EventBean("norotate");
                 EventBus.getDefault().postSticky(eventBean);
                 allclose();
                 break;
             case R.id.iv_arrow_top:
-                Animation animation2 = AnimationUtils.loadAnimation(mContext, R.anim.bottom_out);
-                rl_bofang.startAnimation(animation2);
+                rl_bofang.startAnimation(delAnimation);
                 rl_bofang.setVisibility(View.GONE);
                 Intent intent1 = new Intent(mContext, MusicActivity.class);
                 intent1.putExtra("data", mMusicTypeBean);

@@ -1,13 +1,7 @@
 package www.knowledgeshare.com.knowledgeshare.activity;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -25,8 +19,6 @@ import com.orhanobut.logger.Logger;
 import org.greenrobot.eventbus.EventBus;
 import org.zackratos.ultimatebar.UltimateBar;
 
-import java.util.UUID;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
@@ -35,7 +27,6 @@ import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.bean.LoginBean;
 import www.knowledgeshare.com.knowledgeshare.bean.VerifyCodesBean;
 import www.knowledgeshare.com.knowledgeshare.callback.DialogCallback;
-import www.knowledgeshare.com.knowledgeshare.login.LoginActivity;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SendSmsTimerUtils;
@@ -233,7 +224,7 @@ public class BindPhoneActivity extends BaseActivity implements View.OnClickListe
                             SpUtils.putString(BindPhoneActivity.this,"name",loginBean.getUser().getUser_name());
                             SpUtils.putString(BindPhoneActivity.this,"userFace",loginBean.getUser().getUser_avatar());
                             SpUtils.putString(BindPhoneActivity.this,"wx_id",loginBean.getUser().getWx_unionid());
-                            SpUtils.putString(BindPhoneActivity.this,"mobile",loginBean.getUser().getWx_unionid());
+                            SpUtils.putString(BindPhoneActivity.this,"mobile",loginBean.getUser().getUser_mobile());
                             String token = loginBean.getToken();
                             SpUtils.putString(BindPhoneActivity.this,"token",token);
                             long ttlMs = loginBean.getTtl() * 60 * 1000L;
