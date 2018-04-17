@@ -11,7 +11,6 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -89,22 +88,21 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
     }
 
     /*
-    * 我这边因为一开始没有考虑到音频列表的问题，所以在有播放的界面都是先播放一首，传进来一个playerBean,
-    * 然后再传进来List<PlayerBean>也就是音频列表，然后设置当前位置为0，这种处理也是可以的
+    * 随身听用的
     * */
     public static void insertMusicList2(List<PlayerBean> musiclist) {
         musicList.addAll(musiclist);
     }
 
     /*
-    * 播放列表的主界面的数据的list，当播放下一首上一首的时候主界面的数据也要变化，所以要传进来
+    * 随身听用的
     * */
     public static void insertMusicTypeList2(List<MusicTypeBean> beanList) {
         musicTypeBeanList.addAll(beanList);
     }
 
     /*
-    * 传进来的播放列表的历史封装list，当播放上一首下一首的时候播放历史也要增加
+    * 随身听用的
     * */
     public static void insertBoFangHistroyList2(List<BofangHistroyBean> beanList) {
         bofangHistroyBeanList.addAll(beanList);
@@ -144,10 +142,10 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 EventBus.getDefault().postSticky(musicTypeBean);//播放上一首下一首的时候刷新播放主界面的数据
             }
             //播放下一首上一首的时候增加播放历史数据库中的数据
-            if (bofangHistroyBeanList != null && musicTypeBeanList.size() > 0) {
+            if (bofangHistroyBeanList != null && bofangHistroyBeanList.size() > 0) {
                 BofangHistroyBean bofangHistroyBean = bofangHistroyBeanList.get(currPosition);
                 if (!HistroyUtils.isInserted(bofangHistroyBean.getVideo_name())) {
-                    bofangHistroyBean.setTime(SystemClock.currentThreadTimeMillis());
+                    bofangHistroyBean.setTime(System.currentTimeMillis());
                     HistroyUtils.add(bofangHistroyBean);
                 } else {
                     HistroyUtils.updateTime(System.currentTimeMillis(), bofangHistroyBean.getVideo_name());
@@ -168,10 +166,10 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 EventBus.getDefault().postSticky(musicTypeBean);//播放上一首下一首的时候刷新播放主界面的数据
             }
             //播放下一首上一首的时候增加播放历史数据库中的数据
-            if (bofangHistroyBeanList != null && musicTypeBeanList.size() > 0) {
+            if (bofangHistroyBeanList != null && bofangHistroyBeanList.size() > 0) {
                 BofangHistroyBean bofangHistroyBean = bofangHistroyBeanList.get(currPosition);
                 if (!HistroyUtils.isInserted(bofangHistroyBean.getVideo_name())) {
-                    bofangHistroyBean.setTime(SystemClock.currentThreadTimeMillis());
+                    bofangHistroyBean.setTime(System.currentTimeMillis());
                     HistroyUtils.add(bofangHistroyBean);
                 } else {
                     HistroyUtils.updateTime(System.currentTimeMillis(), bofangHistroyBean.getVideo_name());
@@ -192,10 +190,10 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 EventBus.getDefault().postSticky(musicTypeBean);//播放上一首下一首的时候刷新播放主界面的数据
             }
             //播放下一首上一首的时候增加播放历史数据库中的数据
-            if (bofangHistroyBeanList != null && musicTypeBeanList.size() > 0) {
+            if (bofangHistroyBeanList != null && bofangHistroyBeanList.size() > 0) {
                 BofangHistroyBean bofangHistroyBean = bofangHistroyBeanList.get(currPosition);
                 if (!HistroyUtils.isInserted(bofangHistroyBean.getVideo_name())) {
-                    bofangHistroyBean.setTime(SystemClock.currentThreadTimeMillis());
+                    bofangHistroyBean.setTime(System.currentTimeMillis());
                     HistroyUtils.add(bofangHistroyBean);
                 } else {
                     HistroyUtils.updateTime(System.currentTimeMillis(), bofangHistroyBean.getVideo_name());
@@ -212,7 +210,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         if (mAudioFocusManager.requestAudioFocus()) {
             try {
                 mMediaPlayer.setDataSource(localPath);
-                mMediaPlayer.prepare();//我发现本地播放不能用异步准备
+                mMediaPlayer.prepare();//好像是本地播放不能用异步准备
                 mMediaPlayer.start();
                 EventBean eventBean = new EventBean("rotate");
                 EventBus.getDefault().postSticky(eventBean);
@@ -223,10 +221,10 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                     EventBus.getDefault().postSticky(musicTypeBean);//播放上一首下一首的时候刷新播放主界面的数据
                 }
                 //播放下一首上一首的时候增加播放历史数据库中的数据
-                if (bofangHistroyBeanList != null && musicTypeBeanList.size() > 0) {
+                if (bofangHistroyBeanList != null && bofangHistroyBeanList.size() > 0) {
                     BofangHistroyBean bofangHistroyBean = bofangHistroyBeanList.get(currPosition);
                     if (!HistroyUtils.isInserted(bofangHistroyBean.getVideo_name())) {
-                        bofangHistroyBean.setTime(SystemClock.currentThreadTimeMillis());
+                        bofangHistroyBean.setTime(System.currentTimeMillis());
                         HistroyUtils.add(bofangHistroyBean);
                     } else {
                         HistroyUtils.updateTime(System.currentTimeMillis(), bofangHistroyBean.getVideo_name());
@@ -295,8 +293,12 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             EventBus.getDefault().postSticky(eventBean2);
         } else {
             if (isClosed) {
-                mBinder.setMusicUrl(mMusicUrl);
-                mBinder.playMusic(mPlayerBean);
+                if (TextUtils.isEmpty(mPlayerBean.getVideo_url())) {
+                    mBinder.setMusicLocal(mPlayerBean);
+                } else {
+                    mBinder.setMusicUrl(mMusicUrl);
+                    mBinder.playMusic(mPlayerBean);
+                }
             } else {
                 start();
             }
@@ -380,7 +382,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 try {
                     mMediaPlayer.reset();
                     mMediaPlayer.setDataSource(mMusicUrl);
-                    mMediaPlayer.prepare();
+                    mMediaPlayer.prepareAsync();
                     //                    mMediaPlayer.prepareAsync();
                 } catch (IOException e1) {
                     e1.printStackTrace();

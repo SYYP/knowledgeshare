@@ -20,7 +20,6 @@ import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.adapter.BuyTabAdapter;
-import www.knowledgeshare.com.knowledgeshare.fragment.mine.AlreadyDownLoadFragment;
 import www.knowledgeshare.com.knowledgeshare.fragment.mine.MusicDownLoadingFragment;
 import www.knowledgeshare.com.knowledgeshare.view.NoScrollViewPager;
 
@@ -43,6 +42,7 @@ public class DownLoadActivity extends BaseActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_down_load);
         ButterKnife.bind(this);
+        setISshow(false);
         initView();
     }
 
