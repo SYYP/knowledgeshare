@@ -358,6 +358,12 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         public String getPlayingUrl() {
             return mMusicUrl;
         }
+        public String getTname() {
+            if (bofangHistroyBeanList==null || bofangHistroyBeanList.size()==0){
+                return "";
+            }
+            return bofangHistroyBeanList.get(currPosition).getT_tag();
+        }
 
         /**
          * 播放音乐

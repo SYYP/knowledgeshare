@@ -189,11 +189,10 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
     public void myEvent(MusicTypeBean musicTypeBean) {
         if (musicTypeBean.getMsg().equals("musicplayertype")) {
             if (musicTypeBean == null) {
-                iv_bigphoto.setVisibility(View.INVISIBLE);
+                iv_bigphoto.setImageResource(R.drawable.home_default_xk);
                 tv_title.setText("");
                 return;
             }
-            iv_bigphoto.setVisibility(View.VISIBLE);
             //接收到播放主界面要刷新的数据
             mMusicTypeBean = musicTypeBean;
             tv_title.setText(mMusicTypeBean.getVideo_name());
@@ -202,7 +201,11 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
             //            options.centerCrop();
             //            options.dontAnimate();
             //            Glide.with(this).load(mMusicTypeBean.getT_head()).apply(options).into(iv_bigphoto);
-            Picasso.with(this).load(mMusicTypeBean.getT_head()).into(iv_bigphoto);
+            if (!NetWorkUtils.isNetworkConnected(this)) {
+                iv_bigphoto.setImageResource(R.drawable.home_default_xk);
+            } else {
+                Picasso.with(this).load(mMusicTypeBean.getT_head()).into(iv_bigphoto);
+            }
             List<BofangHistroyBean> search = HistroyUtils.search();
             if (search != null && search.size() > 0) {
                 tv_liebiao.setText(1 + "/" + search.size());
@@ -417,12 +420,15 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
         String title = getIntent().getStringExtra("title");
         tv_title.setText(title);
         if (mMusicTypeBean == null) {
-            iv_bigphoto.setVisibility(View.INVISIBLE);
+            iv_bigphoto.setImageResource(R.drawable.home_default_xk);
             //            tv_title.setText("");
         } else {
-            iv_bigphoto.setVisibility(View.VISIBLE);
+            if (!NetWorkUtils.isNetworkConnected(this)) {
+                iv_bigphoto.setImageResource(R.drawable.home_default_xk);
+            } else {
+                Picasso.with(this).load(mMusicTypeBean.getT_head()).into(iv_bigphoto);
+            }
             //            tv_title.setText(mMusicTypeBean.getVideo_name());
-            Picasso.with(this).load(mMusicTypeBean.getT_head()).into(iv_bigphoto);
         }
         List<BofangHistroyBean> search = HistroyUtils.search();
         if (search != null && search.size() > 0) {
@@ -519,6 +525,8 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                 if (!NetWorkUtils.isNetworkConnected(this)) {
                     Intent intent = new Intent(this, WenGaoFileActivity.class);
                     intent.putExtra("type", mMusicTypeBean.getType());
+                    intent.putExtra("title", mMusicTypeBean.getVideo_name());
+                    intent.putExtra("tname", mMyBinder.getTname());
                     intent.putExtra("mohuchaxun", mMusicTypeBean.getVideo_name());
                     startActivity(intent);
                 } else {

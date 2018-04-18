@@ -465,6 +465,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                     intent.putExtra("title", item.getName());
                     intent.putExtra("id", item.getTypeId());
                     intent.putExtra("childId", item.getChildId());
+                    intent.putExtra("tname", item.gettName());
                     intent.putExtra("type", type);
                     startActivity(intent);
                 }

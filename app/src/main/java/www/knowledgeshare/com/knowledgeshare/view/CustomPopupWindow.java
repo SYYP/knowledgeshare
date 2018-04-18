@@ -35,6 +35,7 @@ import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.MusicTypeBean;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.player.PlayerBean;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 /**
@@ -77,7 +78,11 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
             title = playerBean.getTitle();
             subtitle = playerBean.getSubtitle();
             header = playerBean.getTeacher_head();
-            Glide.with(MyApplication.getGloableContext()).load(header).into(iv_bo_head);
+            if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                iv_bo_head.setImageResource(R.drawable.home_default_xk);
+            } else {
+                Glide.with(MyApplication.getGloableContext()).load(header).into(iv_bo_head);
+            }
             tv_title.setText(title);
             tv_subtitle.setText(subtitle);
         }
@@ -146,7 +151,7 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
         } else if (eventBean.getMsg().equals("home_bofang") || eventBean.getMsg().equals("rotate")) {
             //学习时长
             pretime = System.currentTimeMillis();
-        }else if (eventBean.getMsg().equals("allmusiccomplete")){
+        } else if (eventBean.getMsg().equals("allmusiccomplete")) {
             rl_bofang.setVisibility(View.VISIBLE);
             iv_delete.setVisibility(View.GONE);
         }
@@ -229,11 +234,11 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
                 this.dismiss();
                 break;
             case R.id.iv_mulu:
-//                String userid = SpUtils.getString(mContext, "id", "");
-//                if (TextUtils.isEmpty(userid)) {
-//                    mContext.startActivity(new Intent(mContext, LoginActivity.class));
-//                    return;
-//                }
+                //                String userid = SpUtils.getString(mContext, "id", "");
+                //                if (TextUtils.isEmpty(userid)) {
+                //                    mContext.startActivity(new Intent(mContext, LoginActivity.class));
+                //                    return;
+                //                }
                 Intent intent11 = new Intent(mContext, BoFangListActivity.class);
                 mContext.startActivity(intent11);
                 break;

@@ -453,9 +453,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(PlayerBean playerBean) {
         if (playerBean.getMsg().equals("refreshplayer")) {//当在其他界面点击播放的时候homeFragment也要更新小型播放器
-            Glide.with(MyApplication.getGloableContext()).load(playerBean.getTeacher_head()).into(iv_bo_head);
             tv_title.setText(playerBean.getTitle());
             tv_subtitle.setText(playerBean.getSubtitle());
+            if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                iv_bo_head.setImageResource(R.drawable.home_default_xk);
+            } else {
+                Glide.with(MyApplication.getGloableContext()).load(playerBean.getTeacher_head()).into(iv_bo_head);
+            }
         }
     }
 

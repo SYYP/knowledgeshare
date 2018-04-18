@@ -19,6 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
+import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CircleImageView;
 
 public class WenGaoFileActivity extends BaseActivity implements View.OnClickListener {
@@ -51,9 +52,15 @@ public class WenGaoFileActivity extends BaseActivity implements View.OnClickList
         String title = getIntent().getStringExtra("title");
         String id = getIntent().getStringExtra("id");
         String childId = getIntent().getStringExtra("childId");
+        String tname = getIntent().getStringExtra("tname");
         type = getIntent().getStringExtra("type");
-        Glide.with(this).load(img).into(ivTeacherHead);
         tvKeName.setText(title);
+        tvTeacherName.setText(tname);
+        if (NetWorkUtils.isNetworkConnected(this)) {
+            Glide.with(this).load(img).into(ivTeacherHead);
+        }else {
+            ivTeacherHead.setImageResource(R.drawable.home_default_xk);
+        }
         String mohuchaxun = getIntent().getStringExtra("mohuchaxun");
         if (!TextUtils.isEmpty(mohuchaxun)) {
             String fromSDFile = loadFromSDFile2(mohuchaxun);

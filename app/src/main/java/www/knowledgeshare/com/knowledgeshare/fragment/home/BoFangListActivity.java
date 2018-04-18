@@ -36,6 +36,7 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.R;
+import www.knowledgeshare.com.knowledgeshare.activity.WenGaoFileActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
@@ -87,7 +88,6 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
         initDialog();
         initNETDialog();
     }
-
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -179,17 +179,6 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                 }
             });
         }
-        //        recycler_bofang.addOnScrollListener(new RecyclerView.OnScrollListener() {
-        //            @Override
-        //            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        //                super.onScrolled(recyclerView, dx, dy);
-        //                if (dy > 0) {
-        //                    setPopHide();
-        //                } else if (dy < 0) {
-        //                    SlidePopShow();
-        //                }
-        //            }
-        //        });
     }
 
     private void gobofang2(final PlayerBean playerBean) {
@@ -861,10 +850,19 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                 @Override
                 public void onClick(View view) {
                     mType = item.getType();
-                    Intent intent = new Intent(BoFangListActivity.this, WenGaoActivity.class);
-                    intent.putExtra("type", mType);
-                    intent.putExtra("id", item.getChildId() + "");
-                    startActivity(intent);
+                    if (!NetWorkUtils.isNetworkConnected(BoFangListActivity.this)) {
+                        Intent intent = new Intent(BoFangListActivity.this, WenGaoFileActivity.class);
+                        intent.putExtra("type", mType);
+                        intent.putExtra("title", item.getVideo_name());
+                        intent.putExtra("tname", item.getT_tag());
+                        intent.putExtra("mohuchaxun", item.getVideo_name());
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(BoFangListActivity.this, WenGaoActivity.class);
+                        intent.putExtra("type", mType);
+                        intent.putExtra("id", item.getChildId() + "");
+                        startActivity(intent);
+                    }
                 }
             });
             if (helper.getAdapterPosition() <= 8) {

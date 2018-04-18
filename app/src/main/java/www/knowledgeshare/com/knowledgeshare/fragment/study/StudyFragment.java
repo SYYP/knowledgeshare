@@ -181,9 +181,13 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
             rl_bofang.startAnimation(animation);
             rl_bofang.setVisibility(View.VISIBLE);
-            Glide.with(MyApplication.getGloableContext()).load(playerBean.getTeacher_head()).into(iv_bo_head);
             tv_title.setText(playerBean.getTitle());
             tv_subtitle.setText(playerBean.getSubtitle());
+            if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                iv_bo_head.setImageResource(R.drawable.home_default_xk);
+            } else {
+                Glide.with(MyApplication.getGloableContext()).load(playerBean.getTeacher_head()).into(iv_bo_head);
+            }
         }
     }
 
