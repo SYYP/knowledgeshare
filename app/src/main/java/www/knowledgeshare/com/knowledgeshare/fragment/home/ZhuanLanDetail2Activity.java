@@ -103,7 +103,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     private boolean isDianzan;
     private CustomActionWebView webview;
     private NestedScrollView nestView;
-    private boolean isBofang;
     private int lastID;
     private LiuYanAdapter mLiuYanAdapter;
     private List<FreeTryReadDetailBean.CommentEntity> mComment;
@@ -312,16 +311,15 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {//当这个界面的小型播放器点击了叉号的时候，播放按钮成暂停
         if (eventBean.getMsg().equals("norotate")) {
-            isBofang = false;
+            iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
+            iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
+            SpUtils.putString(ZhuanLanDetail2Activity.this, "zlisbofang", "");
+        }
+        if (eventBean.getMsg().equals("main_pause")) {
             iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
         }
         if (eventBean.getMsg().equals("weixinpaysuccess")) {
             showPaySuccessDialog();
-        }
-        if (eventBean.getMsg().equals("norotate")) {
-            SpUtils.putString(ZhuanLanDetail2Activity.this, "zlisbofang", "");
-            isBofang = false;
-            iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
         }
     }
 
@@ -339,30 +337,27 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
             if (mMyBinder.getMusicType().equals("zhuanlandetail")
                     && zlisbofang.equals(mFreeTryReadDetailBean.getVideo_url())
                     && mMyBinder.isPlaying()) {
-                isBofang = true;
                 iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
                 SlidePopShow();
             } else {
-                isBofang = false;
                 iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
             }
         } else {
-            isBofang = false;
             iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
         }
     }
 
     private void initListener() {
-//        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                if (scrollY - oldScrollY > 0) {
-//                    setPopHide();
-//                } else if (scrollY - oldScrollY < 0) {
-//                    SlidePopShow();
-//                }
-//            }
-//        });
+        //        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+        //            @Override
+        //            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+        //                if (scrollY - oldScrollY > 0) {
+        //                    setPopHide();
+        //                } else if (scrollY - oldScrollY < 0) {
+        //                    SlidePopShow();
+        //                }
+        //            }
+        //        });
     }
 
     private void initNETDialog() {
@@ -396,7 +391,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 mNetDialog.dismiss();
                 ClickPopShow();
                 SpUtils.putBoolean(this, "nowifiallowlisten", true);
-                isBofang = true;
                 //这个判断专栏的音频是否播放，哪个在播放
                 SpUtils.putString(ZhuanLanDetail2Activity.this, "zlisbofang", mFreeTryReadDetailBean.getVideo_url());
                 iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
@@ -412,7 +406,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                         mNetDialog.dismiss();
                         ClickPopShow();
                         SpUtils.putBoolean(ZhuanLanDetail2Activity.this, "nowifiallowlisten", true);
-                        isBofang = true;
                         //这个判断专栏的音频是否播放，哪个在播放
                         SpUtils.putString(ZhuanLanDetail2Activity.this, "zlisbofang", mFreeTryReadDetailBean.getVideo_url());
                         iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
@@ -423,15 +416,12 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                     public void onClick(View v) {
                         mNetDialog.dismiss();
                         iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
-                        isBofang = false;
                     }
                 });
             }
         } else if (NetWorkUtils.isMobileConnected(ZhuanLanDetail2Activity.this)) {
             Toast.makeText(this, "wifi不可用呢~", Toast.LENGTH_SHORT).show();
-            isBofang = false;
         } else {
-            isBofang = true;
             playerBean.setMsg("refreshplayer");
             EventBus.getDefault().postSticky(playerBean);
             mMyBinder.setMusicUrl(playerBean.getVideo_url());
@@ -448,8 +438,8 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
     }
 
     private void initData() {
-//        String title = getIntent().getStringExtra("title");
-//        tv_miantitle.setText(title.length()>18?title.substring(0,17)+"...":title);
+        //        String title = getIntent().getStringExtra("title");
+        //        tv_miantitle.setText(title.length()>18?title.substring(0,17)+"...":title);
         mId = getIntent().getStringExtra("id");
         HttpParams params = new HttpParams();
         params.put("id", mId);
@@ -474,14 +464,14 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                      layoutParams1.setMargins(0, 0, 0, 0);
                                      nestView.setLayoutParams(layoutParams1);
                                      nestView.requestLayout();
-                                 }else {
+                                 } else {
                                      tv_buy.setVisibility(View.VISIBLE);
                                  }
                                  EventBean eventBean = new EventBean("studycount");
                                  EventBus.getDefault().postSticky(eventBean);
                                  String title = mFreeTryReadDetailBean.getZl_name();
                                  if (!TextUtils.isEmpty(title))
-                                 tv_miantitle.setText(title.length()>18?title.substring(0,17)+"...":title);
+                                     tv_miantitle.setText(title.length() > 18 ? title.substring(0, 17) + "..." : title);
                                  Glide.with(MyApplication.getGloableContext()).load(mFreeTryReadDetailBean.getT_image()).into(iv_teacher_head);
                                  tv_teacher_name.setText(mFreeTryReadDetailBean.getT_name());
                                  tv_time1.setText(mFreeTryReadDetailBean.getCreated_at());
@@ -503,14 +493,11 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                      if (mMyBinder.getMusicType().equals("zhuanlandetail")
                                              && zlisbofang.equals(mFreeTryReadDetailBean.getVideo_url())
                                              && mMyBinder.isPlaying()) {
-                                         isBofang = true;
                                          iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
                                      } else {
-                                         isBofang = false;
                                          iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
                                      }
                                  } else {
-                                     isBofang = false;
                                      iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
                                  }
                              }
@@ -571,7 +558,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 iv_dianzan.setImageResource(R.drawable.free_dianzan);
             }
             Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into(iv_head);
-            helper.setText(R.id.tv_name, item.getUser_name().length()>6?item.getUser_name().substring(0,6)+"...":item.getUser_name())
+            helper.setText(R.id.tv_name, item.getUser_name().length() > 6 ? item.getUser_name().substring(0, 6) + "..." : item.getUser_name())
                     .setText(R.id.tv_time, item.getCreated_at())
                     .setText(R.id.tv_content, item.getContent())
                     .setText(R.id.tv_dainzan_count, item.getLive() + "");
@@ -954,7 +941,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 }
                 break;
             case R.id.iv_bofang:
-                if (!isBofang) {
+                if (!mMyBinder.isPlaying()) {
                     //                    Toast.makeText(this, "播放", Toast.LENGTH_SHORT).show();
                     if (mMyBinder.isClosed() || !mMyBinder.getPlayingUrl().equals(mFreeTryReadDetailBean.getVideo_url())) {
                         PlayerBean playerBean = new PlayerBean(mFreeTryReadDetailBean.getT_header(),
@@ -992,7 +979,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                         ClickPopShow();
                         iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
                         mMyBinder.playMusic();
-                        isBofang = true;
                         EventBean eventBean = new EventBean("rotate");
                         EventBus.getDefault().postSticky(eventBean);
                         EventBean eventBean2 = new EventBean("home_bofang");
@@ -1006,7 +992,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                     EventBus.getDefault().postSticky(eventBean);
                     EventBean eventBean2 = new EventBean("home_pause");
                     EventBus.getDefault().postSticky(eventBean2);
-                    isBofang = false;
                     //                    setPopHide();
                     ClickPopShow();
                 }
@@ -1059,7 +1044,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 showBuyDialog();
                 break;
             case R.id.iv_delete:
-                isBofang = false;
                 EventBean eventBean = new EventBean("norotate");
                 EventBus.getDefault().postSticky(eventBean);
                 EventBean eventBean2 = new EventBean("home_close");
@@ -1114,7 +1098,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         }
         Toast.makeText(ZhuanLanDetail2Activity.this, "已加入下载列表", Toast.LENGTH_SHORT).show();
         DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
-                "zhuanlan", mFreeTryReadDetailBean.getZl_id() + "", getIntent().getStringExtra("title"), mFreeTryReadDetailBean.getT_header(),
+                "zhuanlan", mFreeTryReadDetailBean.getZl_id() + "", mFreeTryReadDetailBean.getZl_name(), mFreeTryReadDetailBean.getT_header(),
                 mFreeTryReadDetailBean.getT_name(), mFreeTryReadDetailBean.getT_tag(), "1", list);
         DownUtil.add(downLoadListsBean);
 

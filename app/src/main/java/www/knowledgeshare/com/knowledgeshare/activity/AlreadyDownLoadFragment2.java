@@ -1,12 +1,12 @@
 package www.knowledgeshare.com.knowledgeshare.activity;
 
 import android.content.Intent;
-import android.os.Environment;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,7 +24,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -146,15 +145,11 @@ public class AlreadyDownLoadFragment2 extends BaseFragment {
             List<DownLoadListsBean> itemList = new ArrayList<>();
             String typeName = newList.get(i);
             for (int j = 0; j < list.size(); j++) {
-                if (typeName.equals(list.get(j).getTypeName())){
+                if (!TextUtils.isEmpty(typeName)&&typeName.equals(list.get(j).getTypeName())){
                     itemList.add(list.get(j));
                 }
             }
             dalist.add(itemList);
-        }
-
-        for (int i = 0; i < list.size(); i++) {
-
         }
 
 
