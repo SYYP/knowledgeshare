@@ -21,8 +21,8 @@
     </style>
     <!--dialog 从下往上弹出动画-->
     <style name="Bottom_Top_aniamtion">
-        <item name="android:windowEnterAnimation">@anim/bottom_in</item>
-        <item name="android:windowExitAnimation">@anim/bottom_out</item>
+        <item name="android:windowEnterAnimation">@anim/bottom_in3</item>
+        <item name="android:windowExitAnimation">@anim/bottom_out3</item>
     </style>
     <!--dialog 从上往下弹出动画-->
     <!--dialog 从左往右弹出动画-->

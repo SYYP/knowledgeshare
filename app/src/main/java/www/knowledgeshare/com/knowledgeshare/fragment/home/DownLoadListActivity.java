@@ -280,6 +280,10 @@ public class DownLoadListActivity extends BaseActivity implements View.OnClickLi
                         childEntity.getT_header(), childEntity.getT_name(), childEntity.getT_tag(), list.size() + "", downList);
                 Logger.e("点击下载时音频的name："+downList.get(0).getName());
                 DownUtil.add(downLoadListsBean);
+//                boolean haveFile = MyUtils.isHaveFile("", childEntity.getName() + childEntity.getXk_id() + "_" + childEntity.getId() + ".mp3");
+//                if (haveFile){
+//                    TUtils.showShort(MyApplication.getGloableContext(),"此音频已下载");
+//                }
 
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
                 OkDownload.request(childEntity.getXk_id() + "_" + childEntity.getId(), request)

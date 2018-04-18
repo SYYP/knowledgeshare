@@ -19,7 +19,6 @@ import com.lzy.okgo.db.DownloadManager;
 import com.lzy.okgo.model.Progress;
 import com.lzy.okserver.OkDownload;
 import com.lzy.okserver.download.DownloadTask;
-import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,7 +40,6 @@ import www.knowledgeshare.com.knowledgeshare.activity.AlreadyDownloadDetailActiv
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
-import www.knowledgeshare.com.knowledgeshare.db.DownUtil;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 
 /**
@@ -147,11 +145,6 @@ public class AlreadyDownLoadFragment extends BaseFragment {
             }
             dalist.add(itemList);
         }
-
-        for (int i = 0; i < list.size(); i++) {
-
-        }
-
 
         if (freeList.size() == 0){
             freeLl.setVisibility(View.GONE);

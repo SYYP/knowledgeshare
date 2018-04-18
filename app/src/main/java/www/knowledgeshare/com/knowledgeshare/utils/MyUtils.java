@@ -8,7 +8,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
@@ -16,7 +15,10 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.orhanobut.logger.Logger;
+import com.lzy.okgo.db.DownloadManager;
+import com.lzy.okgo.model.Progress;
+import com.lzy.okserver.OkDownload;
+import com.lzy.okserver.download.DownloadTask;
 
 import org.json.JSONObject;
 
@@ -27,10 +29,13 @@ import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 
 public class MyUtils {
     private static int mScreenWidth, mScreenHeight;
@@ -274,7 +279,55 @@ public class MyUtils {
     }
 
     public static boolean isHaveFile(String type, String fname) {
-        fname = "/" + fname;
+        List<DownloadTask> restoreList = OkDownload.restore(DownloadManager.getInstance().getFinished());
+        List<DownLoadListsBean> list = new ArrayList<>();
+        List<DownLoadListsBean> freeList = new ArrayList<>();
+        List<DownLoadListsBean> commentList = new ArrayList<>();
+        for (int i = 0; i < restoreList.size(); i++) {
+            Progress progress = restoreList.get(i).progress;
+            DownLoadListsBean downLoadListBean = (DownLoadListsBean) progress.extra3;
+            if (downLoadListBean.getType().equals("xiaoke")||downLoadListBean.getType().equals("zhuanlan")){
+                list.add(downLoadListBean);
+            }
+            if (downLoadListBean.getType().equals("free")){
+                freeList.add(downLoadListBean);
+            }
+            if (downLoadListBean.getType().equals("comment")){
+                commentList.add(downLoadListBean);
+            }
+        }
+        if (list.size() > 0){
+            for (int j = 0; j < list.size(); j++) {
+                DownLoadListsBean.ListBean listBean = list.get(j).getList().get(0);
+                String s = listBean.getName() + listBean.getTypeId() + "_" + listBean.getChildId() + ".mp3";
+                if (s.equals(fname)){
+//                    TUtils.showShort(MyApplication.getGloableContext(),"此音频已下载");
+                    return true;
+                }
+            }
+        }
+        if (freeList.size() > 0){
+            for (int j = 0; j < freeList.size(); j++) {
+                DownLoadListsBean.ListBean listBean = freeList.get(j).getList().get(0);
+                String s = listBean.getName() + listBean.getTypeId() + "_" + listBean.getChildId() + ".mp3";
+                if (s.equals(fname)){
+//                    TUtils.showShort(MyApplication.getGloableContext(),"此音频已下载");
+                    return true;
+                }
+            }
+        }
+        if (commentList.size() > 0){
+            for (int j = 0; j < commentList.size(); j++) {
+                DownLoadListsBean.ListBean listBean = commentList.get(j).getList().get(0);
+                String s = listBean.getName() + listBean.getTypeId() + "_" + listBean.getChildId() + ".mp3";
+                if (s.equals(fname)){
+//                    TUtils.showShort(MyApplication.getGloableContext(),"此音频已下载");
+                    return true;
+                }
+            }
+        }
+
+        /*fname = "/" + fname;
         String result = null;
         File f = null;
         try {
@@ -302,7 +355,7 @@ public class MyUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         return false;
     }
 }
