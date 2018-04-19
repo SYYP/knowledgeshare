@@ -25,6 +25,15 @@ public class BofangHistroyBean extends DataSupport {
     private String txt_url;
     private String parentName;
     private boolean isLocal;//判断是不是本地音乐
+    private int duration;//记忆播放的位置
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
 
     public boolean isLocal() {
         return isLocal;

@@ -122,6 +122,12 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         @Override
         public void onPrepared(MediaPlayer mp) {
             isPrepared = true;
+            //从记忆播放的数据库中取出来继续播放
+            BofangHistroyBean bofangHistroyBean = bofangHistroyBeanList.get(currPosition);
+            int oneDuration = HistroyUtils.getOneDuration(bofangHistroyBean.getType(), bofangHistroyBean.getVideo_name());
+            if (oneDuration != 0) {
+                mBinder.seekToPositon(oneDuration);
+            }
             start();
         }
     };
@@ -293,7 +299,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             EventBus.getDefault().postSticky(eventBean2);
         } else {
             if (isClosed) {
-                if (TextUtils.isEmpty(mPlayerBean.getVideo_url())) {
+                if (TextUtils.isEmpty(mPlayerBean.getVideo_url())) {//播放本地的
                     mBinder.setMusicLocal(mPlayerBean);
                 } else {
                     mBinder.setMusicUrl(mMusicUrl);
@@ -358,8 +364,9 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         public String getPlayingUrl() {
             return mMusicUrl;
         }
+
         public String getTname() {
-            if (bofangHistroyBeanList==null || bofangHistroyBeanList.size()==0){
+            if (bofangHistroyBeanList == null || bofangHistroyBeanList.size() == 0) {
                 return "";
             }
             return bofangHistroyBeanList.get(currPosition).getT_tag();
@@ -374,7 +381,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             }
             mPlayerBean = playerBean;
             if (mPlayerBean.getPosition() != 0) {
-                //因为有构造器是不传position的，当播放下一首的时候会再走一遍会变成0
+                //因为有的构造器是不传position的，当播放下一首的时候会再走一遍会变成0
                 currPosition = mPlayerBean.getPosition();
             } else {
                 currPosition = 0;
@@ -434,9 +441,6 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 }.execute(playerBean.getTeacher_head());
             } else {
                 if (!mBinder.isPlaying()) {
-                    //                    Notifier.showPlay(mPlayerBean);
-                    //                    EventBean eventBean = new EventBean("rotate");
-                    //                    EventBus.getDefault().postSticky(eventBean);
                     start();
                 }
             }
@@ -601,13 +605,20 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         }
 
         /**
-         * 添加file文件到MediaPlayer对象并且准备播放音频
+         * 准备播放音频
          */
         public void setMusicUrl(String musicUrl) {
             //            if (mMusicUrl.equals(musicUrl) && isPlaying()) {
             //                Toast.makeText(MyApplication.getGloableContext(), "音频正在播放中", Toast.LENGTH_SHORT).show();
             //                return;
             //            }
+            if (!mMusicUrl.equals(musicUrl)){//点击了另外的音频就保存之前的
+                //保存记忆播放位置,注意要在MediaPlayer.release()之前
+                BofangHistroyBean bofangHistroyBean =mBinder.getBofangHistroyBean();
+                if (bofangHistroyBean != null) {
+                    HistroyUtils.setOneDuration(bofangHistroyBean);
+                }
+            }
             mMusicUrl = musicUrl;
             try {
                 //此处的两个方法需要捕获IO异常
@@ -639,6 +650,16 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 return "";
             }
             return musicTypeBeanList.get(currPosition).getType();
+        }
+
+        public BofangHistroyBean getBofangHistroyBean() {
+            if (bofangHistroyBeanList == null || bofangHistroyBeanList.size() == 0) {
+                return null;
+            }
+            BofangHistroyBean bofangHistroyBean = bofangHistroyBeanList.get(currPosition);
+//            Toast.makeText(MyApplication.getGloableContext(), "xxx"+getPlayPosition(), Toast.LENGTH_SHORT).show();
+            bofangHistroyBean.setDuration(getPlayPosition());
+            return bofangHistroyBean;
         }
 
         public void setMusicLocal(PlayerBean playerBean) {

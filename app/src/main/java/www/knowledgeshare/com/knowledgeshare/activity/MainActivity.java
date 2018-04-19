@@ -39,6 +39,8 @@ import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.base.BaseFragment;
 import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
+import www.knowledgeshare.com.knowledgeshare.db.BofangHistroyBean;
+import www.knowledgeshare.com.knowledgeshare.db.HistroyUtils;
 import www.knowledgeshare.com.knowledgeshare.db.StudyTimeBean;
 import www.knowledgeshare.com.knowledgeshare.db.StudyTimeUtils;
 import www.knowledgeshare.com.knowledgeshare.fragment.buy.BuyFragment;
@@ -161,7 +163,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void pop() {
-        if (!getIntent().getBooleanExtra("homewindow",false)) {
+        if (!getIntent().getBooleanExtra("homewindow", false)) {
             return;
         }
         HttpParams params2 = new HttpParams();
@@ -277,6 +279,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
             mMyBinder.playMusic();
         } else if (eventBean.getMsg().equals("norotate")) {
+            //保存记忆播放位置,注意要在MediaPlayer.release()之前
+            BofangHistroyBean bofangHistroyBean = mMyBinder.getBofangHistroyBean();
+            if (bofangHistroyBean != null) {
+                HistroyUtils.setOneDuration(bofangHistroyBean);
+            }
             isPause = true;
             iv_listen.clearAnimation();
             iv_listen.setImageResource(R.drawable.tab_listen_pause);
@@ -293,7 +300,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
         } else if (eventBean.getMsg().equals("nonetwork1")) {
             OkDownload.getInstance().pauseAll();
-        }else if (eventBean.getMsg().equals("allmusiccomplete")){
+        } else if (eventBean.getMsg().equals("allmusiccomplete")) {
             isPause = true;
             iv_listen.clearAnimation();
             iv_listen.setImageResource(R.drawable.tab_listen_pause);
@@ -379,10 +386,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 }
                 break;
             case R.id.ll_listen:
-//                if (!NetWorkUtils.isNetworkConnected(this)) {
-//                    Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
+                //                if (!NetWorkUtils.isNetworkConnected(this)) {
+                //                    Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
+                //                    return;
+                //                }
                 if (isPause) {
                     iv_listen.setImageResource(R.drawable.tab_listen_bo);
                     if (mMyBinder.isClosed()) {

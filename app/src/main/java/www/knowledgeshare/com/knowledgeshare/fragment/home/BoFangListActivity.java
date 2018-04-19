@@ -93,6 +93,8 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         SlidePopShow();
+        mList = HistroyUtils.search();
+        mLieBiaoAdapter.notifyDataSetChanged();
     }
 
     private void initDialog() {
