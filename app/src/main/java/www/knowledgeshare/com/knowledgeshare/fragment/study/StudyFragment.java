@@ -252,47 +252,14 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
         initLoadMore();
         requestNoteList("");
         initMusic();
-        study_xinxin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!isfav) {
-                    requestDayFavorite();
-                } else {
-                    requestDayNoFav();
-                }
-            }
-
-        });
-
-        fram_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), MessageActivity.class);
-                startActivity(intent);
-            }
-        });
+        study_xinxin.setOnClickListener(this);
+        fram_layout.setOnClickListener(this);
         //搜索
-        tv_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(mContext, SearchActivity.class));
-            }
-        });
+        tv_search.setOnClickListener(this);
         //收藏
-        study_collect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), CollectActivity.class);
-                startActivity(intent);
-            }
-        });
+        study_collect.setOnClickListener(this);
         //新增笔记
-        study_newNotice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(mContext, EditNoticeActivity.class));
-            }
-        });
+        study_newNotice.setOnClickListener(this);
         initListener();
         delAnimation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_out);
         return rootView;
@@ -438,6 +405,13 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void requestNoteList(String after) {
+        if (!NetWorkUtils.isNetworkConnected(mContext)) {
+            Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+            historyRl.setVisibility(View.GONE);
+            return;
+        }else {
+            historyRl.setVisibility(View.VISIBLE);
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
@@ -513,6 +487,10 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_suishenting:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 suishenting();
                 break;
             case R.id.iv_delete:
@@ -533,6 +511,45 @@ public class StudyFragment extends BaseFragment implements View.OnClickListener,
             case R.id.iv_mulu:
                 Intent intent11 = new Intent(mContext, BoFangListActivity.class);
                 startActivity(intent11);
+                break;
+            case R.id.study_xinxin:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!isfav) {
+                    requestDayFavorite();
+                } else {
+                    requestDayNoFav();
+                }
+                break;
+            case R.id.frame_layout:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                startActivity(new Intent(getActivity(), MessageActivity.class));
+                break;
+            case R.id.tv_search:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                startActivity(new Intent(mContext, SearchActivity.class));
+                break;
+            case R.id.study_collect:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                startActivity(new Intent(getActivity(), CollectActivity.class));
+                break;
+            case R.id.study_new_notice:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                startActivity(new Intent(mContext, EditNoticeActivity.class));
                 break;
         }
     }

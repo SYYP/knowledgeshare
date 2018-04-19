@@ -258,7 +258,7 @@ public class GuidePageBean extends BaseBean implements Serializable {
         }
     }
 
-    public static class GuideEntity {
+    public static class GuideEntity implements Serializable{
         /**
          * imgurl : http://knowledges.oss-cn-qingdao.aliyuncs.com/guide/20180111/1856.png
          * imgurl1 :

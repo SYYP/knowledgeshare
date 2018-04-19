@@ -1254,36 +1254,60 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_search:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 startActivity(new Intent(mContext, SearchActivity.class));
                 break;
             case R.id.ll_download:
                 startActivity(new Intent(getActivity(), DownLoadActivity.class));
                 break;
             case R.id.ll_gudian:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(mContext, GuDianActivity.class);
                 intent.putExtra("title", "古典");
                 intent.putExtra("type", "gudian");
                 startActivity(intent);
                 break;
             case R.id.ll_minzu:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent2 = new Intent(mContext, GuDianActivity.class);
                 intent2.putExtra("title", "民族");
                 intent2.putExtra("type", "minzu");
                 startActivity(intent2);
                 break;
             case R.id.ll_liuxing:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent3 = new Intent(mContext, GuDianActivity.class);
                 intent3.putExtra("title", "流行");
                 intent3.putExtra("type", "liuxing");
                 startActivity(intent3);
                 break;
             case R.id.ll_suyang:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent4 = new Intent(mContext, GuDianActivity.class);
                 intent4.putExtra("title", "素养");
                 intent4.putExtra("type", "suyang");
                 startActivity(intent4);
                 break;
             case R.id.ll_guanzhu:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String id = SpUtils.getString(mContext, "id", "");
                 if (TextUtils.isEmpty(id)) {
                     startActivity(new Intent(mContext, LoginActivity.class));
@@ -1292,26 +1316,54 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 }
                 break;
             case R.id.tv_lianxubofang:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 EventBus.getDefault().post(new EventBean("morenbofang"));
                 break;
             case R.id.iv_zhuanlan_head:
                 break;
             case R.id.tv_zhuanlan_more:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 startActivity(new Intent(mContext, FreeActivity.class));
                 break;
             case R.id.tv_meiri_more:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 startActivity(new Intent(mContext, EveryDayCommentActivity.class));
                 break;
             case R.id.ll_dashi_refresh:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 daShiBanRefresh();
                 break;
             case R.id.tv_dashi_lookmore:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 startActivity(new Intent(mContext, MusicMasterActivity.class));
                 break;
             case R.id.tv_yinyueke_lookmore:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 startActivity(new Intent(mContext, SoftMusicActivity.class));
                 break;
             case R.id.ll_like_refresh:
+                if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                    Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 yourLikeRefresh();
                 break;
             case R.id.iv_delete:

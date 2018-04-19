@@ -90,9 +90,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         apnType = NetWorkUtils.getAPNType(mContext);
         if (apnType == 0) {
             Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
-            linearLayout.setVisibility(View.GONE);
+//            linearLayout.setVisibility(View.GONE);
         } else{
-            linearLayout.setVisibility(View.VISIBLE);
+//            linearLayout.setVisibility(View.VISIBLE);
             frameLayout.setVisibility(View.VISIBLE);
             titleMessageIv.setVisibility(View.VISIBLE);
             titleSettingIv.setVisibility(View.VISIBLE);
@@ -135,14 +135,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         apnType = NetWorkUtils.getAPNType(mContext);
         if (apnType == 0) {
 //            Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
-            linearLayout.setVisibility(View.GONE);
+//            linearLayout.setVisibility(View.GONE);
         } else if (apnType == 1){
-            linearLayout.setVisibility(View.VISIBLE);
+//            linearLayout.setVisibility(View.VISIBLE);
             requestUserInfo1();
 //            OkDownload.getInstance().startAll();
 
         }else {
-            linearLayout.setVisibility(View.VISIBLE);
+//            linearLayout.setVisibility(View.VISIBLE);
             requestUserInfo1();
         }
     }
@@ -310,13 +310,25 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         } else{
             switch (view.getId()) {
                 case R.id.title_message_iv://消息
+                    if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                        Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     intent = new Intent(getActivity(), MyMessageActivity.class);
                     startActivity(intent);
                     break;
                 case R.id.title_setting_iv://设置
+                    if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                        Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     startActivity(new Intent(getActivity(),SettingActivity.class));
                     break;
                 case R.id.mine_face_iv://个人信息
+                    if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                        Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     intent = new Intent(getActivity(),PersonInfomationActivity.class);
                     intent.putExtra("url",SpUtils.getString(mContext,"userFace",""));
                     intent.putExtra("name",SpUtils.getString(mContext,"name",""));
@@ -327,32 +339,64 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                     startActivity(intent);
                     break;
                 case R.id.rwxq_ll://任务详情
+                    if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                        Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     Intent intent1 = new Intent(getActivity(),TaskDetailActivity.class);
                     intent1.putExtra("jifen",user_integral+"");
                     startActivity(intent1);
                     break;
                 case R.id.xxsj_rl://学习时间
+                    if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                        Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     startActivity(new Intent(getActivity(), LearningTimeActivity.class));
                     break;
                 case R.id.wddy_rl://我的订阅
+                    if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                        Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     startActivity(new Intent(getActivity(),MySubscriptionsActivity.class));
                     break;
                 case R.id.xxjl_rl://学习记录
+                    if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                        Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     startActivity(new Intent(getActivity(),LearningRecordActivity.class));
                     break;
                 case R.id.wdzh_rl://我的账户
+                    if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                        Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     startActivity(new Intent(getActivity(),MyAccountActivity.class));
                     break;
                 case R.id.wdxz_rl://我的勋章
+                    if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                        Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     Intent intent = new Intent(getActivity(),MyMedalActivity.class);
                     intent.putExtra("level",user_level+"");
                     intent.putExtra("xunzhang", (Serializable) level);
                     startActivity(intent);
                     break;
                 case R.id.zhaq_rl://帐号安全
+                    if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                        Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     startActivity(new Intent(getActivity(), AccountSafeActivity.class));
                     break;
                 case R.id.qiandao_btn://签到
+                    if (!NetWorkUtils.isNetworkConnected(mContext)) {
+                        Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     requestSignIn();
                 default:
                     break;
