@@ -691,16 +691,23 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
                                  Toast.makeText(BoFangListActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 int collect_count = mList.get(adapterPosition).getCollect_count();
                                  if (mIsCollected) {
                                      Drawable drawable = getResources().getDrawable(R.drawable.bofanglist_collect);
                                      /// 这一步必须要做,否则不会显示.
                                      drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                                      mTv_collect.setCompoundDrawables(null, drawable, null, null);
+                                     if (collect_count <= 0) {
+                                         mList.get(adapterPosition).setCollect_count(0);
+                                     } else {
+                                         mList.get(adapterPosition).setCollect_count(collect_count - 1);
+                                     }
                                  } else {
                                      Drawable drawable = getResources().getDrawable(R.drawable.collect_shixin);
                                      /// 这一步必须要做,否则不会显示.
                                      drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                                      mTv_collect.setCompoundDrawables(null, drawable, null, null);
+                                     mList.get(adapterPosition).setCollect_count(collect_count + 1);
                                  }
                                  mIsCollected = !mIsCollected;
                                  mList.get(adapterPosition).setCollected(mIsCollected);
@@ -744,16 +751,23 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
                                  Toast.makeText(BoFangListActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 int good_count = mList.get(adapterPosition).getGood_count();
                                  if (mDianzan) {
                                      Drawable drawable = getResources().getDrawable(R.drawable.dianzan_yellow_big);
                                      /// 这一步必须要做,否则不会显示.
                                      drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                                      mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                                     if (good_count <= 0) {
+                                         mList.get(adapterPosition).setGood_count(0);
+                                     } else {
+                                         mList.get(adapterPosition).setGood_count(good_count - 1);
+                                     }
                                  } else {
                                      Drawable drawable = getResources().getDrawable(R.drawable.dianzan_shixin);
                                      /// 这一步必须要做,否则不会显示.
                                      drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                                      mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                                     mList.get(adapterPosition).setGood_count(good_count + 1);
                                  }
                                  mDianzan = !mDianzan;
                                  mList.get(adapterPosition).setDianzan(mDianzan);

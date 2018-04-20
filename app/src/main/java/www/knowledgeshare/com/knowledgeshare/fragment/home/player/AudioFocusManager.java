@@ -3,6 +3,9 @@ package www.knowledgeshare.com.knowledgeshare.fragment.home.player;
 import android.media.AudioManager;
 import android.support.annotation.NonNull;
 
+import org.greenrobot.eventbus.EventBus;
+
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 
 import static android.content.Context.AUDIO_SERVICE;
@@ -82,10 +85,14 @@ public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListene
     }
 
     private void forceStop() {
-        if (mPlayService.isPreparing()) {
+        if (!mPlayService.isPreparing()) {
             mPlayService.stop();
         } else if (mPlayService.isPlaying()) {
             mPlayService.pause();
         }
+        EventBean eventBean = new EventBean("main_pause");
+        EventBus.getDefault().postSticky(eventBean);
+        EventBean eventBean2 = new EventBean("home_pause");
+        EventBus.getDefault().postSticky(eventBean2);
     }
 }

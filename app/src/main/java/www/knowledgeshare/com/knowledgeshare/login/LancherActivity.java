@@ -12,6 +12,7 @@ import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Progress;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 
 import java.io.File;
 import java.io.Serializable;
@@ -112,7 +113,6 @@ public class LancherActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<File> response) {
                         //                        Toast.makeText(LancherActivity.this, "下载完成"+imgname, Toast.LENGTH_SHORT).show();
-                        imgList.add(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/" + imgname);
                         position++;
                         if (position == list.size()) {
                             Intent intent = new Intent(LancherActivity.this, GuidePageActivity.class);
@@ -120,6 +120,13 @@ public class LancherActivity extends BaseActivity {
                             startActivity(intent);
                             finish();
                         }
+                    }
+
+                    @Override
+                    public void onStart(Request<File, ? extends Request> request) {
+                        super.onStart(request);
+                        //之所以放在这里，是因为onsuccess是下载完成的回调，不一定哪个先下载完
+                        imgList.add(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/" + imgname);
                     }
 
                     @Override

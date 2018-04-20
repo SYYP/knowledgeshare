@@ -736,16 +736,30 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
                                  Toast.makeText(EveryDayCommentActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 int collect_count = mDailys.get(adapterPosition).getCollect_count();
+                                 int collect_count_true = mDailys.get(adapterPosition).getCollect_count_true();
                                  if (mIsCollected) {
                                      Drawable drawable = getResources().getDrawable(R.drawable.bofanglist_collect);
                                      /// 这一步必须要做,否则不会显示.
                                      drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                                      mTv_collect.setCompoundDrawables(null, drawable, null, null);
+                                     if (collect_count <= 0) {
+                                         mDailys.get(adapterPosition).setCollect_count(0);
+                                     } else {
+                                         mDailys.get(adapterPosition).setCollect_count(collect_count - 1);
+                                     }
+                                     if (collect_count_true<=0){
+                                         mDailys.get(adapterPosition).setCollect_count_true(0);
+                                     }else {
+                                         mDailys.get(adapterPosition).setCollect_count_true(collect_count_true - 1);
+                                     }
                                  } else {
                                      Drawable drawable = getResources().getDrawable(R.drawable.collect_shixin);
                                      /// 这一步必须要做,否则不会显示.
                                      drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                                      mTv_collect.setCompoundDrawables(null, drawable, null, null);
+                                     mDailys.get(adapterPosition).setCollect_count(collect_count + 1);
+                                     mDailys.get(adapterPosition).setCollect_count_true(collect_count_true + 1);
                                  }
                                  mIsCollected = !mIsCollected;
                                  mDailys.get(adapterPosition).setIsfav(mIsCollected);
@@ -782,16 +796,30 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
                                  Toast.makeText(EveryDayCommentActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 int good_count = mDailys.get(adapterPosition).getGood_count();
+                                 int good_count_true = mDailys.get(adapterPosition).getGood_count_true();
                                  if (mDianzan) {
                                      Drawable drawable = getResources().getDrawable(R.drawable.dianzan_yellow_big);
                                      /// 这一步必须要做,否则不会显示.
                                      drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                                      mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                                     if (good_count <= 0) {
+                                         mDailys.get(adapterPosition).setGood_count(0);
+                                     } else {
+                                         mDailys.get(adapterPosition).setGood_count(good_count - 1);
+                                     }
+                                     if (good_count_true<=0){
+                                         mDailys.get(adapterPosition).setGood_count_true(0);
+                                     }else {
+                                         mDailys.get(adapterPosition).setGood_count_true(good_count_true - 1);
+                                     }
                                  } else {
                                      Drawable drawable = getResources().getDrawable(R.drawable.dianzan_shixin);
                                      /// 这一步必须要做,否则不会显示.
                                      drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                                      mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                                     mDailys.get(adapterPosition).setGood_count(good_count + 1);
+                                     mDailys.get(adapterPosition).setGood_count_true(good_count_true + 1);
                                  }
                                  mDianzan = !mDianzan;
                                  mDailys.get(adapterPosition).setIslive(mDianzan);

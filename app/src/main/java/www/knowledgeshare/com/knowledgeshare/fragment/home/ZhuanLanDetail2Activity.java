@@ -187,7 +187,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         });
         initDialog();
         initData();
-        initListener();
         initNETDialog();
         setTimeRecord();
         // 通过WXAPIFactory工厂，获取IWXAPI的实例
@@ -313,7 +312,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
         if (eventBean.getMsg().equals("norotate")) {
             iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
             iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
-            SpUtils.putString(ZhuanLanDetail2Activity.this, "zlisbofang", "");
         }
         if (eventBean.getMsg().equals("main_pause")) {
             iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
@@ -325,40 +323,23 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(MusicTypeBean musicTypeBean) {
-        if (musicTypeBean.getMsg().equals("musicplayertype")) {
+        if (musicTypeBean.getMsg().equals("musicplayertype")) {//当点击了播放但是还没开始播，又点击跳转到了播放主界面，这时候播放了，再回来的时候要刷新状态
             refreshState();
         }
     }
 
     private void refreshState() {
         //判断哪个专栏的音频在播放
-        String zlisbofang = SpUtils.getString(ZhuanLanDetail2Activity.this, "zlisbofang", "");
-        if (!TextUtils.isEmpty(zlisbofang)) {
-            if (mMyBinder.getMusicType().equals("zhuanlandetail")
-                    && zlisbofang.equals(mFreeTryReadDetailBean.getVideo_url())
-                    && mMyBinder.isPlaying()) {
-                iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
-                SlidePopShow();
-            } else {
-                iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
-            }
+        if (mMyBinder.getMusicType().equals("zhuanlandetail")
+                && mMyBinder.getPlayingUrl().equals(mFreeTryReadDetailBean.getVideo_url())
+                && mMyBinder.isPlaying()) {
+            iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
+            SlidePopShow();
         } else {
             iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
         }
     }
 
-    private void initListener() {
-        //        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-        //            @Override
-        //            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-        //                if (scrollY - oldScrollY > 0) {
-        //                    setPopHide();
-        //                } else if (scrollY - oldScrollY < 0) {
-        //                    SlidePopShow();
-        //                }
-        //            }
-        //        });
-    }
 
     private void initNETDialog() {
         BaseDialog.Builder builder = new BaseDialog.Builder(this);
@@ -392,7 +373,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 ClickPopShow();
                 SpUtils.putBoolean(this, "nowifiallowlisten", true);
                 //这个判断专栏的音频是否播放，哪个在播放
-                SpUtils.putString(ZhuanLanDetail2Activity.this, "zlisbofang", mFreeTryReadDetailBean.getVideo_url());
                 iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
             } else {
                 mNetDialog.show();
@@ -407,7 +387,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                         ClickPopShow();
                         SpUtils.putBoolean(ZhuanLanDetail2Activity.this, "nowifiallowlisten", true);
                         //这个判断专栏的音频是否播放，哪个在播放
-                        SpUtils.putString(ZhuanLanDetail2Activity.this, "zlisbofang", mFreeTryReadDetailBean.getVideo_url());
                         iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
                     }
                 });
@@ -432,7 +411,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
             //            EventBus.getDefault().postSticky(eventBean2);
             ClickPopShow();
             //这个判断专栏的音频是否播放，哪个在播放
-            SpUtils.putString(ZhuanLanDetail2Activity.this, "zlisbofang", mFreeTryReadDetailBean.getVideo_url());
             iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
         }
     }
@@ -488,18 +466,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                      iv_collect.setImageResource(R.drawable.weiguanzhuxin);
                                  }
                                  //判断哪个专栏的音频在播放
-                                 String zlisbofang = SpUtils.getString(ZhuanLanDetail2Activity.this, "zlisbofang", "");
-                                 if (!TextUtils.isEmpty(zlisbofang)) {
-                                     if (mMyBinder.getMusicType().equals("zhuanlandetail")
-                                             && zlisbofang.equals(mFreeTryReadDetailBean.getVideo_url())
-                                             && mMyBinder.isPlaying()) {
-                                         iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
-                                     } else {
-                                         iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
-                                     }
-                                 } else {
-                                     iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
-                                 }
+                                 refreshState();
                              }
                          }
                 );
@@ -941,41 +908,20 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 }
                 break;
             case R.id.iv_bofang:
-                if (!mMyBinder.isPlaying()) {
-                    //                    Toast.makeText(this, "播放", Toast.LENGTH_SHORT).show();
-                    if (mMyBinder.isClosed() || !mMyBinder.getPlayingUrl().equals(mFreeTryReadDetailBean.getVideo_url())) {
-                        PlayerBean playerBean = new PlayerBean(mFreeTryReadDetailBean.getT_header(),
-                                mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getT_tag(),
-                                mFreeTryReadDetailBean.getVideo_url());
-                        gobofang(playerBean);
-                        addListenCount(mFreeTryReadDetailBean.getId() + "");
-                        //设置进入播放主界面的数据
-                        List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
-                        mMusicTypeBean = new MusicTypeBean("zhuanlandetail",
-                                mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getId() + "",
-                                mFreeTryReadDetailBean.isIsfav());
-                        mMusicTypeBean.setMsg("musicplayertype");
-                        EventBus.getDefault().postSticky(mMusicTypeBean);
-                        musicTypeBeanList.add(mMusicTypeBean);
-                        MediaService.insertMusicTypeList(musicTypeBeanList);
-                        List<PlayerBean> list = new ArrayList<PlayerBean>();
-                        list.add(playerBean);
-                        MediaService.insertMusicList(list);
-                        //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
-                        List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
-                        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("zhuanlandetail", mFreeTryReadDetailBean.getId(),
-                                mFreeTryReadDetailBean.getName(),
-                                mFreeTryReadDetailBean.getCreated_at(), mFreeTryReadDetailBean.getVideo_url(),
-                                mFreeTryReadDetailBean.getRss_count(),
-                                mFreeTryReadDetailBean.getCollect_count(), mFreeTryReadDetailBean.getView_count(),
-                                mFreeTryReadDetailBean.isIsfav(), mFreeTryReadDetailBean.isIsfav(),
-                                mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getT_tag(),
-                                mFreeTryReadDetailBean.getH5_url(), System.currentTimeMillis()
-                                , mFreeTryReadDetailBean.getZl_id() + "",
-                                mFreeTryReadDetailBean.getParent_name(), "");
-                        histroyBeanList.add(bofangHistroyBean);
-                        MediaService.insertBoFangHistroyList(histroyBeanList);
-                    } else {
+                if (mMyBinder.isClosed()) {
+                    startnewMusic();
+                } else {
+                    if (mMyBinder.isPlaying() && mMyBinder.getPlayingUrl().equals(mFreeTryReadDetailBean.getVideo_url())) {
+                        iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
+                        mMyBinder.pauseMusic();
+                        EventBean eventBean = new EventBean("main_pause");
+                        EventBus.getDefault().postSticky(eventBean);
+                        EventBean eventBean2 = new EventBean("home_pause");
+                        EventBus.getDefault().postSticky(eventBean2);
+                        ClickPopShow();
+                    } else if (mMyBinder.isPlaying() && !mMyBinder.getPlayingUrl().equals(mFreeTryReadDetailBean.getVideo_url())) {
+                        startnewMusic();
+                    } else if (!mMyBinder.isPlaying() && mMyBinder.getPlayingUrl().equals(mFreeTryReadDetailBean.getVideo_url())) {
                         ClickPopShow();
                         iv_bofang.setImageResource(R.drawable.bofang_yellow_middle);
                         mMyBinder.playMusic();
@@ -984,16 +930,6 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                         EventBean eventBean2 = new EventBean("home_bofang");
                         EventBus.getDefault().postSticky(eventBean2);
                     }
-                } else {
-                    //                    Toast.makeText(this, "暂停", Toast.LENGTH_SHORT).show();
-                    iv_bofang.setImageResource(R.drawable.pause_yellow_middle);
-                    mMyBinder.pauseMusic();
-                    EventBean eventBean = new EventBean("main_pause");
-                    EventBus.getDefault().postSticky(eventBean);
-                    EventBean eventBean2 = new EventBean("home_pause");
-                    EventBus.getDefault().postSticky(eventBean2);
-                    //                    setPopHide();
-                    ClickPopShow();
                 }
                 break;
             case R.id.iv_download:
@@ -1065,6 +1001,40 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                 //                mActivity.overridePendingTransition(R.anim.bottom_in, 0);
                 break;
         }
+    }
+
+    private void startnewMusic() {
+        PlayerBean playerBean = new PlayerBean(mFreeTryReadDetailBean.getT_header(),
+                mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getT_tag(),
+                mFreeTryReadDetailBean.getVideo_url());
+        gobofang(playerBean);
+        addListenCount(mFreeTryReadDetailBean.getId() + "");
+        //设置进入播放主界面的数据
+        List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
+        mMusicTypeBean = new MusicTypeBean("zhuanlandetail",
+                mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getName(), mFreeTryReadDetailBean.getId() + "",
+                mFreeTryReadDetailBean.isIsfav());
+        mMusicTypeBean.setMsg("musicplayertype");
+        EventBus.getDefault().postSticky(mMusicTypeBean);
+        musicTypeBeanList.add(mMusicTypeBean);
+        MediaService.insertMusicTypeList(musicTypeBeanList);
+        List<PlayerBean> list = new ArrayList<PlayerBean>();
+        list.add(playerBean);
+        MediaService.insertMusicList(list);
+        //还要传递播放列表的浏览历史list到service中，播放下一首上一首的时候控制浏览历史的增加
+        List<BofangHistroyBean> histroyBeanList = new ArrayList<BofangHistroyBean>();
+        BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("zhuanlandetail", mFreeTryReadDetailBean.getId(),
+                mFreeTryReadDetailBean.getName(),
+                mFreeTryReadDetailBean.getCreated_at(), mFreeTryReadDetailBean.getVideo_url(),
+                mFreeTryReadDetailBean.getRss_count(),
+                mFreeTryReadDetailBean.getCollect_count(), mFreeTryReadDetailBean.getView_count(),
+                mFreeTryReadDetailBean.isIsfav(), mFreeTryReadDetailBean.isIsfav(),
+                mFreeTryReadDetailBean.getT_header(), mFreeTryReadDetailBean.getT_tag(),
+                mFreeTryReadDetailBean.getH5_url(), System.currentTimeMillis()
+                , mFreeTryReadDetailBean.getZl_id() + "",
+                mFreeTryReadDetailBean.getParent_name(), "");
+        histroyBeanList.add(bofangHistroyBean);
+        MediaService.insertBoFangHistroyList(histroyBeanList);
     }
 
     private void download() {

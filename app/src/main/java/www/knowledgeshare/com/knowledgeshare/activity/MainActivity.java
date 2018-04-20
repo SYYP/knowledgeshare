@@ -77,7 +77,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout ll_mine;
     private LinearLayout activity_main;
     private int position;
-    private boolean isPause = true;
     private Animation mRotate_anim;
     private long preTime;
     private MediaService.MyBinder mMyBinder;
@@ -272,7 +271,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("rotate")) {
-            isPause = false;
             iv_listen.setImageResource(R.drawable.tab_listen_bo);
             if (mRotate_anim != null) {
                 iv_listen.startAnimation(mRotate_anim);  //开始动画
@@ -284,13 +282,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             if (bofangHistroyBean != null) {
                 HistroyUtils.setOneDuration(bofangHistroyBean);
             }
-            isPause = true;
             iv_listen.clearAnimation();
             iv_listen.setImageResource(R.drawable.tab_listen_pause);
             //homefragment传来这个的时候就是点了叉了
             mMyBinder.closeMedia();
         } else if (eventBean.getMsg().equals("main_pause")) {
-            isPause = true;
             iv_listen.clearAnimation();
             iv_listen.setImageResource(R.drawable.tab_listen_pause);
             //播放界面传来的
@@ -301,7 +297,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         } else if (eventBean.getMsg().equals("nonetwork1")) {
             OkDownload.getInstance().pauseAll();
         } else if (eventBean.getMsg().equals("allmusiccomplete")) {
-            isPause = true;
             iv_listen.clearAnimation();
             iv_listen.setImageResource(R.drawable.tab_listen_pause);
         }
@@ -390,7 +385,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 //                    Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
                 //                    return;
                 //                }
-                if (isPause) {
+                if (!mMyBinder.isPlaying()) {
                     iv_listen.setImageResource(R.drawable.tab_listen_bo);
                     if (mMyBinder.isClosed()) {
                         EventBus.getDefault().post(new EventBean("morenbofang"));
@@ -408,10 +403,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     EventBean eventBean = new EventBean("home_pause");
                     EventBus.getDefault().postSticky(eventBean);
                     mMyBinder.pauseMusic();
-                    ////////////////专栏详情里面的
-                    SpUtils.putString(this, "zlisbofang", "");
                 }
-                isPause = !isPause;
                 break;
             case R.id.ll_buy:
                 if (TextUtils.isEmpty(id)) {

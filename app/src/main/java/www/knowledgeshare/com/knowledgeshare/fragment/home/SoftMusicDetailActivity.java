@@ -1178,16 +1178,30 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
                                  Toast.makeText(SoftMusicDetailActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 int collect_count = mChild.get(adapterPosition).getCollect_count();
+                                 int collect_count_true = mChild.get(adapterPosition).getCollect_count_true();
                                  if (mIsCollected) {
                                      Drawable drawable = getResources().getDrawable(R.drawable.bofanglist_collect);
                                      /// 这一步必须要做,否则不会显示.
                                      drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                                      mTv_collect.setCompoundDrawables(null, drawable, null, null);
+                                     if (collect_count <= 0) {
+                                         mChild.get(adapterPosition).setCollect_count(0);
+                                     } else {
+                                         mChild.get(adapterPosition).setCollect_count(collect_count - 1);
+                                     }
+                                     if (collect_count_true<=0){
+                                         mChild.get(adapterPosition).setCollect_count_true(0);
+                                     }else {
+                                         mChild.get(adapterPosition).setCollect_count_true(collect_count_true - 1);
+                                     }
                                  } else {
                                      Drawable drawable = getResources().getDrawable(R.drawable.collect_shixin);
                                      /// 这一步必须要做,否则不会显示.
                                      drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                                      mTv_collect.setCompoundDrawables(null, drawable, null, null);
+                                     mChild.get(adapterPosition).setCollect_count(collect_count + 1);
+                                     mChild.get(adapterPosition).setCollect_count_true(collect_count_true + 1);
                                  }
                                  mIsCollected = !mIsCollected;
                                  mChild.get(adapterPosition).setIsfav(mIsCollected);
@@ -1224,16 +1238,30 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
                                  Toast.makeText(SoftMusicDetailActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 int good_count = mChild.get(adapterPosition).getGood_count();
+                                 int good_count_true = mChild.get(adapterPosition).getGood_count_true();
                                  if (mDianzan) {
                                      Drawable drawable = getResources().getDrawable(R.drawable.dianzan_yellow_big);
                                      /// 这一步必须要做,否则不会显示.
                                      drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                                      mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                                     if (good_count <= 0) {
+                                         mChild.get(adapterPosition).setGood_count(0);
+                                     } else {
+                                         mChild.get(adapterPosition).setGood_count(good_count - 1);
+                                     }
+                                     if (good_count_true<=0){
+                                         mChild.get(adapterPosition).setGood_count_true(0);
+                                     }else {
+                                         mChild.get(adapterPosition).setGood_count_true(good_count_true - 1);
+                                     }
                                  } else {
                                      Drawable drawable = getResources().getDrawable(R.drawable.dianzan_shixin);
                                      /// 这一步必须要做,否则不会显示.
                                      drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                                      mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                                     mChild.get(adapterPosition).setGood_count(good_count + 1);
+                                     mChild.get(adapterPosition).setGood_count_true(good_count_true + 1);
                                  }
                                  mDianzan = !mDianzan;
                                  mChild.get(adapterPosition).setIslive(mDianzan);

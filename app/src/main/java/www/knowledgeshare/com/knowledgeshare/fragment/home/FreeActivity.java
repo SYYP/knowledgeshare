@@ -129,13 +129,13 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("refresh_free")) {
-            String id=eventBean.getMsg2();
+            String id = eventBean.getMsg2();
             for (int i = 0; i < mChild.size(); i++) {
                 String id1 = mChild.get(i).getId() + "";
-                if (id.equals(id1)){
-//                    recycler_free.scrollToPosition(i);
+                if (id.equals(id1)) {
+                    //                    recycler_free.scrollToPosition(i);
                     int measuredHeight = tv_teacher_intro.getMeasuredHeight();
-                    nestView.scrollTo(0,measuredHeight+MyUtils.dip2px(this,200+i*50));
+                    nestView.scrollTo(0, measuredHeight + MyUtils.dip2px(this, 200 + i * 50));
                     return;
                 }
             }
@@ -165,16 +165,16 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
     }
 
     private void initListener() {
-//        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                if (scrollY - oldScrollY > 0) {
-//                    setPopHide();
-//                } else if (scrollY - oldScrollY < 0) {
-//                    SlidePopShow();
-//                }
-//            }
-//        });
+        //        nestView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+        //            @Override
+        //            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+        //                if (scrollY - oldScrollY > 0) {
+        //                    setPopHide();
+        //                } else if (scrollY - oldScrollY < 0) {
+        //                    SlidePopShow();
+        //                }
+        //            }
+        //        });
         springview.setType(SpringView.Type.FOLLOW);
         springview.setListener(new SpringView.OnFreshListener() {
             @Override
@@ -275,13 +275,13 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                 recycler_free.setAdapter(mFreeAdapter);
                             }
                             mTeacher_has = mFreeBean.getTeacher_has();
-                            RequestOptions options=new RequestOptions();
+                            RequestOptions options = new RequestOptions();
                             options.error(R.drawable.default_banner);
                             options.placeholder(R.drawable.default_banner);
                             Glide.with(MyApplication.getGloableContext()).load(mFreeBean.getImgurl()).apply(options).into(iv_beijing);
                             ViewGroup.LayoutParams layoutParams = iv_beijing.getLayoutParams();
                             int width = MyUtils.getScreenWidth(FreeActivity.this);
-                            layoutParams.height= width*7/15;
+                            layoutParams.height = width * 7 / 15;
                             iv_beijing.setLayoutParams(layoutParams);
                             tv_teacher_intro.setText(mFreeBean.getLook());
                             isGuanzhu = mTeacher_has.isIsfollow();
@@ -494,7 +494,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
             });
             if (helper.getAdapterPosition() <= 8) {
                 helper.setText(R.id.tv_order, "0" + (helper.getAdapterPosition() + 1));
-            }else {
+            } else {
                 helper.setText(R.id.tv_order, "" + (helper.getAdapterPosition() + 1));
             }
         }
@@ -849,7 +849,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                 mNetDialog.dismiss();
                             }
                         });
-                    }else {
+                    } else {
                         FreeBean.ChildEntity childEntity = mChild.get(adapterPosition);
                         String created_at = childEntity.getCreated_at();
                         String[] split = created_at.split(" ");
@@ -1002,16 +1002,30 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
                                  Toast.makeText(FreeActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 int collect_count = mChild.get(adapterPosition).getCollect_count();
+                                 int collect_count_true = mChild.get(adapterPosition).getCollect_count_true();
                                  if (mIsCollected) {
                                      Drawable drawable = getResources().getDrawable(R.drawable.bofanglist_collect);
                                      /// 这一步必须要做,否则不会显示.
                                      drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                                      mTv_collect.setCompoundDrawables(null, drawable, null, null);
+                                     if (collect_count <= 0) {
+                                         mChild.get(adapterPosition).setCollect_count(0);
+                                     } else {
+                                         mChild.get(adapterPosition).setCollect_count(collect_count - 1);
+                                     }
+                                     if (collect_count_true<=0){
+                                         mChild.get(adapterPosition).setCollect_count_true(0);
+                                     }else {
+                                         mChild.get(adapterPosition).setCollect_count_true(collect_count_true - 1);
+                                     }
                                  } else {
                                      Drawable drawable = getResources().getDrawable(R.drawable.collect_shixin);
                                      /// 这一步必须要做,否则不会显示.
                                      drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                                      mTv_collect.setCompoundDrawables(null, drawable, null, null);
+                                     mChild.get(adapterPosition).setCollect_count(collect_count + 1);
+                                     mChild.get(adapterPosition).setCollect_count_true(collect_count_true + 1);
                                  }
                                  mIsCollected = !mIsCollected;
                                  mChild.get(adapterPosition).setIsfav(mIsCollected);
@@ -1048,16 +1062,30 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                  int code = response.code();
                                  DianZanbean dianZanbean = response.body();
                                  Toast.makeText(FreeActivity.this, dianZanbean.getMessage(), Toast.LENGTH_SHORT).show();
+                                 int good_count = mChild.get(adapterPosition).getGood_count();
+                                 int good_count_true = mChild.get(adapterPosition).getGood_count_true();
                                  if (mDianzan) {
                                      Drawable drawable = getResources().getDrawable(R.drawable.dianzan_yellow_big);
                                      /// 这一步必须要做,否则不会显示.
                                      drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                                      mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                                     if (good_count <= 0) {
+                                         mChild.get(adapterPosition).setGood_count(0);
+                                     } else {
+                                         mChild.get(adapterPosition).setGood_count(good_count - 1);
+                                     }
+                                     if (good_count_true<=0){
+                                         mChild.get(adapterPosition).setGood_count_true(0);
+                                     }else {
+                                         mChild.get(adapterPosition).setGood_count_true(good_count_true - 1);
+                                     }
                                  } else {
                                      Drawable drawable = getResources().getDrawable(R.drawable.dianzan_shixin);
                                      /// 这一步必须要做,否则不会显示.
                                      drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                                      mTv_dianzan.setCompoundDrawables(null, drawable, null, null);
+                                     mChild.get(adapterPosition).setGood_count(good_count + 1);
+                                     mChild.get(adapterPosition).setGood_count_true(good_count_true + 1);
                                  }
                                  mDianzan = !mDianzan;
                                  mChild.get(adapterPosition).setIslive(mDianzan);
@@ -1165,7 +1193,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<DianZanbean>(FreeActivity.this,DianZanbean.class) {
+                .execute(new DialogCallback<DianZanbean>(FreeActivity.this, DianZanbean.class) {
                              @Override
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
@@ -1193,7 +1221,7 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<DianZanbean>(FreeActivity.this,DianZanbean.class) {
+                .execute(new DialogCallback<DianZanbean>(FreeActivity.this, DianZanbean.class) {
                              @Override
                              public void onSuccess(Response<DianZanbean> response) {
                                  int code = response.code();
