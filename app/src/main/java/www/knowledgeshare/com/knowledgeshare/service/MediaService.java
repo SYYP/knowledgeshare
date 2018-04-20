@@ -123,6 +123,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         public void onPrepared(MediaPlayer mp) {
             isPrepared = true;
             //从记忆播放的数据库中取出来继续播放
+            Toast.makeText(MyApplication.getGloableContext(), "xxxxxxxxxxxxxxx", Toast.LENGTH_SHORT).show();
             BofangHistroyBean bofangHistroyBean = bofangHistroyBeanList.get(currPosition);
             int oneDuration = HistroyUtils.getOneDuration(bofangHistroyBean.getType(), bofangHistroyBean.getVideo_name());
             if (oneDuration != 0) {
@@ -513,7 +514,11 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         public void closeMedia() {
             if (mMediaPlayer != null) {
                 mMediaPlayer.stop();
-                mMediaPlayer.release();
+                /*
+                * 网络音频有这行没关系，每次都会走prepare的监听，但是本地播放就不一样了，
+                * 本地播放在调用了这个方法后，再点击播放就不会再走prepare的监听了，我怀疑是不是异步准备和同步准备有区别的问题
+                * */
+//                mMediaPlayer.release();
                 isPlaying = false;
                 isPrepared = false;
                 isClosed = true;
@@ -664,16 +669,27 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
 
         public void setMusicLocal(PlayerBean playerBean) {
             try {
-                //此处的两个方法需要捕获IO异常
-                //设置音频文件到MediaPlayer对象中
+                if (mPlayerBean!=null && !mPlayerBean.getTitle().equals(playerBean.getTitle())){//点击了另外的音频就保存之前的
+                    //保存上一首的记忆播放位置,注意要在MediaPlayer.release()之前
+                    BofangHistroyBean bofangHistroyBean =mBinder.getBofangHistroyBean();
+                    if (bofangHistroyBean != null) {
+                        HistroyUtils.setOneDuration(bofangHistroyBean);
+                    }
+                }
+                mPlayerBean = playerBean;
                 mMediaPlayer.reset();
                 mMediaPlayer.setDataSource(playerBean.getLocalPath());
                 //                FileInputStream fis = new FileInputStream(new File(playerBean.getLocalPath()));这种也行
                 //                mMediaPlayer.setDataSource(fis.getFD());
                 //让MediaPlayer对象准备
                 mMediaPlayer.prepare();
-                mPlayerBean = playerBean;
-                currPosition = mPlayerBean.getPosition();
+                mMediaPlayer.setOnPreparedListener(mPreparedListener);
+                if (mPlayerBean.getPosition() != 0) {
+                    //因为有的构造器是不传position的，当播放下一首的时候会再走一遍会变成0
+                    currPosition = mPlayerBean.getPosition();
+                } else {
+                    currPosition = 0;
+                }
                 startLocal();
             } catch (IllegalStateException e) {
                 mMediaPlayer = null;
@@ -683,7 +699,12 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                     mMediaPlayer.setDataSource(playerBean.getLocalPath());
                     mMediaPlayer.prepare();
                     mPlayerBean = playerBean;
-                    currPosition = mPlayerBean.getPosition();
+                    if (mPlayerBean.getPosition() != 0) {
+                        //因为有的构造器是不传position的，当播放下一首的时候会再走一遍会变成0
+                        currPosition = mPlayerBean.getPosition();
+                    } else {
+                        currPosition = 0;
+                    }
                     startLocal();
                 } catch (IOException e1) {
                     e1.printStackTrace();

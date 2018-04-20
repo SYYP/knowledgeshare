@@ -160,6 +160,12 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                                } else {
                                                    mytype = "zhuanlandetail";
                                                }
+                                               DownLoadListsBean.ListBean listBean = list.get(position);
+                                               PlayerBean playerBean = new PlayerBean(listBean.getIconUrl(), listBean.getName(),
+                                                       listBean.gettName(), "", loadFromSDFile(listBean.getName() + listBean.getTypeId() + "_"
+                                                       + listBean.getChildId() + ".mp3"), position);
+                                               setISshow(true);
+                                               gobofang(playerBean);
                                                //还要设置一个播放主界面的list数据，因为自动播放下一首上一首的时候主界面的数据也得变
                                                List<MusicTypeBean> musicTypeBeanList = new ArrayList<MusicTypeBean>();
                                                for (int i = 0; i < list.size(); i++) {
@@ -196,12 +202,6 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                                    histroyBeanList.add(bofangHistroyBean);
                                                }
                                                MediaService.insertBoFangHistroyList(histroyBeanList);
-                                               DownLoadListsBean.ListBean listBean = list.get(position);
-                                               PlayerBean playerBean = new PlayerBean(listBean.getIconUrl(), listBean.getName(),
-                                                       listBean.gettName(), "", loadFromSDFile(listBean.getName() + listBean.getTypeId() + "_"
-                                                       + listBean.getChildId() + ".mp3"), position);
-                                               setISshow(true);
-                                               gobofang(playerBean);
 //                                               //刷新没网情况下的文稿
 //                                               List<NoNetWenGaoBean> noNetWenGaoBeanList=new ArrayList<NoNetWenGaoBean>();
 //                                               for (int i = 0; i < list.size(); i++) {
