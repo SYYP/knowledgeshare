@@ -417,6 +417,7 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                      springview.setLayoutParams(layoutParams1);
                                      springview.requestLayout();
                                  } else {
+                                     setShowTop(true);
                                      bottomLl.setVisibility(View.VISIBLE);
                                      tv_read.setVisibility(View.GONE);
                                  }
@@ -499,9 +500,17 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                      LookUtils.updateTime(System.currentTimeMillis(),
                                              mMusicDetailBean.getXk_name(), "xiaoke");
                                  }
+                                 //打印了一下发现onWindowFocusChanged会在initData之前完成，
+                                 // 所以就注释掉了父类的onWindowFocusChanged方法，改成放到这里来判断是否开启popupwindow和应该显示在哪个位置
+                                 SlidePopShow();
                              }
                          }
                 );
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        //        super.onWindowFocusChanged(hasFocus);
     }
 
     @Override

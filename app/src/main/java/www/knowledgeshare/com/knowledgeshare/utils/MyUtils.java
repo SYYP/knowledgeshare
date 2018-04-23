@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.Settings;
@@ -35,6 +36,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import www.knowledgeshare.com.knowledgeshare.MyApplication;
 import www.knowledgeshare.com.knowledgeshare.db.DownLoadListsBean;
 
 public class MyUtils {
@@ -251,6 +253,14 @@ public class MyUtils {
         return (int) (pxValue / scale + 0.5f);
     }
 
+    public static int getNavigationBarHeight() {
+        Resources resources = MyApplication.getGloableContext().getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        int height = resources.getDimensionPixelSize(resourceId);
+//        Toast.makeText(MyApplication.getGloableContext(), " ::"+height, Toast.LENGTH_SHORT).show();
+        return height;
+    }
+
     public static String dateToString(Date date, String type) {
         String str = null;
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -286,42 +296,42 @@ public class MyUtils {
         for (int i = 0; i < restoreList.size(); i++) {
             Progress progress = restoreList.get(i).progress;
             DownLoadListsBean downLoadListBean = (DownLoadListsBean) progress.extra3;
-            if (downLoadListBean.getType().equals("xiaoke")||downLoadListBean.getType().equals("zhuanlan")){
+            if (downLoadListBean.getType().equals("xiaoke") || downLoadListBean.getType().equals("zhuanlan")) {
                 list.add(downLoadListBean);
             }
-            if (downLoadListBean.getType().equals("free")){
+            if (downLoadListBean.getType().equals("free")) {
                 freeList.add(downLoadListBean);
             }
-            if (downLoadListBean.getType().equals("comment")){
+            if (downLoadListBean.getType().equals("comment")) {
                 commentList.add(downLoadListBean);
             }
         }
-        if (list.size() > 0){
+        if (list.size() > 0) {
             for (int j = 0; j < list.size(); j++) {
                 DownLoadListsBean.ListBean listBean = list.get(j).getList().get(0);
                 String s = listBean.getName() + listBean.getTypeId() + "_" + listBean.getChildId() + ".mp3";
-                if (s.equals(fname)){
-//                    TUtils.showShort(MyApplication.getGloableContext(),"此音频已下载");
+                if (s.equals(fname)) {
+                    //                    TUtils.showShort(MyApplication.getGloableContext(),"此音频已下载");
                     return true;
                 }
             }
         }
-        if (freeList.size() > 0){
+        if (freeList.size() > 0) {
             for (int j = 0; j < freeList.size(); j++) {
                 DownLoadListsBean.ListBean listBean = freeList.get(j).getList().get(0);
                 String s = listBean.getName() + listBean.getTypeId() + "_" + listBean.getChildId() + ".mp3";
-                if (s.equals(fname)){
-//                    TUtils.showShort(MyApplication.getGloableContext(),"此音频已下载");
+                if (s.equals(fname)) {
+                    //                    TUtils.showShort(MyApplication.getGloableContext(),"此音频已下载");
                     return true;
                 }
             }
         }
-        if (commentList.size() > 0){
+        if (commentList.size() > 0) {
             for (int j = 0; j < commentList.size(); j++) {
                 DownLoadListsBean.ListBean listBean = commentList.get(j).getList().get(0);
                 String s = listBean.getName() + listBean.getTypeId() + "_" + listBean.getChildId() + ".mp3";
-                if (s.equals(fname)){
-//                    TUtils.showShort(MyApplication.getGloableContext(),"此音频已下载");
+                if (s.equals(fname)) {
+                    //                    TUtils.showShort(MyApplication.getGloableContext(),"此音频已下载");
                     return true;
                 }
             }

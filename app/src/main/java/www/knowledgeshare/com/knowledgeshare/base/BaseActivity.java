@@ -27,6 +27,7 @@ import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.RefreshToken;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
+import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.NetWorkUtils;
 import www.knowledgeshare.com.knowledgeshare.utils.SpUtils;
 import www.knowledgeshare.com.knowledgeshare.view.CustomPopupWindow;
@@ -43,9 +44,9 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
     public MediaService.MyBinder mMyBinder;
     //“绑定”服务的intent
     public Intent MediaServiceIntent;
-    private GestureDetector detector;
     //声明一个手势检测器对象
-
+    private GestureDetector detector;
+    private boolean isShowTop;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,7 +75,7 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
             musicPop = new CustomPopupWindow(this);
         }
         SlidePopShow();
-//        Toast.makeText(this, " "+musicPop.isShowing(), Toast.LENGTH_SHORT).show();
+        //        Toast.makeText(this, " "+musicPop.isShowing(), Toast.LENGTH_SHORT).show();
     }
 
     private void refreshToken() {
@@ -128,7 +129,9 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
         if (musicPop == null) {
             return;
         }
-        if (isshow) {
+        if (isshow && isShowTop) {
+            musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, MyUtils.getNavigationBarHeight() + MyUtils.dip2px(this, 50));
+        } else if (isshow && !isShowTop) {
             musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
         }
     }
@@ -137,10 +140,11 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
         if (musicPop == null) {
             return;
         }
-        if (isshow && !mMyBinder.isClosed() && !musicPop.isShowing()) {
+        if (isshow && isShowTop && !mMyBinder.isClosed() && !musicPop.isShowing()) {
+            musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, MyUtils.getNavigationBarHeight() + MyUtils.dip2px(this, 50));
+        } else if (isshow && !isShowTop && !mMyBinder.isClosed() && !musicPop.isShowing()) {
             musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
         }
-//        Toast.makeText(this, " "+musicPop.isShowing(), Toast.LENGTH_SHORT).show();
     }
 
     public void setPopHide() {
@@ -149,13 +153,17 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
         }
         if (musicPop.isShowing()) {
             musicPop.dismiss();
-//            Toast.makeText(this, " "+musicPop.isShowing(), Toast.LENGTH_SHORT).show();
+            //            Toast.makeText(this, " "+musicPop.isShowing(), Toast.LENGTH_SHORT).show();
         }
-//        Toast.makeText(this, " "+musicPop.isShowing(), Toast.LENGTH_SHORT).show();
+        //        Toast.makeText(this, " "+musicPop.isShowing(), Toast.LENGTH_SHORT).show();
     }
 
     public void setISshow(boolean iSshow) {
         isshow = iSshow;
+    }
+
+    public void setShowTop(boolean showTop) {
+        isShowTop = showTop;
     }
 
     @Override
@@ -230,7 +238,6 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
     @Override
     public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float distanceX, float distanceY) {
         //            Toast.makeText(this, " "+musicPop.isShowing(), Toast.LENGTH_SHORT).show();
-        //在滑动过程中popupwindow的isshowing一直是false，真不明白到底是为什么
         //            Logger.e("distanceY:::::::"+distanceY);
         if (distanceY >= 0) {
             //            Toast.makeText(this, "显示", Toast.LENGTH_SHORT).show();

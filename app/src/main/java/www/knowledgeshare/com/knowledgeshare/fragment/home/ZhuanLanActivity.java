@@ -138,6 +138,7 @@ public class ZhuanLanActivity extends UMShareActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setShowTop(true);
         setContentView(R.layout.activity_zhuan_lan);
         initView();
         initData();

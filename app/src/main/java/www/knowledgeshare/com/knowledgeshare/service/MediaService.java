@@ -123,7 +123,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         public void onPrepared(MediaPlayer mp) {
             isPrepared = true;
             //从记忆播放的数据库中取出来继续播放
-            Toast.makeText(MyApplication.getGloableContext(), "xxxxxxxxxxxxxxx", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(MyApplication.getGloableContext(), "xxxxxxxxxxxxxxx", Toast.LENGTH_SHORT).show();
             BofangHistroyBean bofangHistroyBean = bofangHistroyBeanList.get(currPosition);
             int oneDuration = HistroyUtils.getOneDuration(bofangHistroyBean.getType(), bofangHistroyBean.getVideo_name());
             if (oneDuration != 0) {

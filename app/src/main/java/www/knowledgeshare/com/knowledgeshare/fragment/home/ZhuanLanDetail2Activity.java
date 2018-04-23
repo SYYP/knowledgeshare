@@ -443,6 +443,7 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                      nestView.setLayoutParams(layoutParams1);
                                      nestView.requestLayout();
                                  } else {
+                                     setShowTop(true);
                                      tv_buy.setVisibility(View.VISIBLE);
                                  }
                                  EventBean eventBean = new EventBean("studycount");
@@ -467,9 +468,17 @@ public class ZhuanLanDetail2Activity extends BaseActivity implements View.OnClic
                                  }
                                  //判断哪个专栏的音频在播放
                                  refreshState();
+                                 //打印了一下发现onWindowFocusChanged会在initData之前完成，
+                                 // 所以就注释掉了父类的onWindowFocusChanged方法，改成放到这里来判断是否开启popupwindow和应该显示在哪个位置
+                                 SlidePopShow();
                              }
                          }
                 );
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+//        super.onWindowFocusChanged(hasFocus);
     }
 
     private void initDialog() {

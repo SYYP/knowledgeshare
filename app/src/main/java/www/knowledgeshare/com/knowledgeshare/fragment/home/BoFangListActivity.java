@@ -855,14 +855,16 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                     .setText(R.id.tv_look_count, item.getView_count() + "")
                     .setText(R.id.tv_collect_count, item.getCollect_count() + "")
                     .setText(R.id.tv_dianzan_count, item.getGood_count() + "");
-            helper.getView(R.id.iv_dian).setOnClickListener(new View.OnClickListener() {
+            ImageView iv_dian=helper.getView(R.id.iv_dian);
+            ImageView iv_wengao=helper.getView(R.id.iv_wengao);
+            iv_dian.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     mType = item.getType();
                     showListDialog(helper.getAdapterPosition(), item.getChildId(), item.getType());
                 }
             });
-            helper.getView(R.id.iv_wengao).setOnClickListener(new View.OnClickListener() {
+            iv_wengao.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     mType = item.getType();
@@ -887,8 +889,8 @@ public class BoFangListActivity extends BaseActivity implements View.OnClickList
                 helper.setText(R.id.tv_order, "" + (helper.getAdapterPosition() + 1));
             }
             if (item.getType().equals("zhuanlandetail")) {
-                helper.setVisible(R.id.iv_dian, false)
-                        .setVisible(R.id.iv_wengao, false);
+                iv_dian.setVisibility(View.INVISIBLE);
+                iv_wengao.setVisibility(View.INVISIBLE);
             }
         }
     }
