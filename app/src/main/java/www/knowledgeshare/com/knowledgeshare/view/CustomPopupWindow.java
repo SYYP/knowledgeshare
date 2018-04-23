@@ -61,14 +61,10 @@ public class CustomPopupWindow extends PopupWindow implements View.OnClickListen
 
     public CustomPopupWindow(Activity context) {
         super(context);
-        //        this.mContext = context;
-        init(mContext);
+        this.mContext = context;
+        init(context);
         setPopupWindow();
         EventBus.getDefault().register(this);
-    }
-
-    public static void setPopContext(Activity activity) {
-        mContext = activity;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -120,7 +120,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private LinearLayout ll_like_refresh, ll_dashi_refresh;
     private ImageView iv_dashi_refresh, iv_like_refresh;
     private TextView tv_yinyueke_lookmore;
-    private boolean isBofang;
     private Animation mRotate_anim;
     private String mytype = "";
     private int myposition;
@@ -242,22 +241,18 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("home_bofang")) {
-            isBofang = true;
             rl_bofang.setVisibility(View.VISIBLE);
             iv_delete.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(mytype)) {
                 refreshbofang();
             }
         } else if (eventBean.getMsg().equals("home_pause")) {
-            isBofang = false;
             iv_delete.setVisibility(View.VISIBLE);
             allpause();
         } else if (eventBean.getMsg().equals("norotate")) {
-            isBofang = false;
             rl_bofang.setVisibility(View.GONE);
             allclose();
         } else if (eventBean.getMsg().equals("home_close")) {
-            isBofang = false;
             rl_bofang.setVisibility(View.GONE);
             allclose();
         } else if (eventBean.getMsg().equals("morenbofang")) {
@@ -267,7 +262,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         } else if (eventBean.getMsg().equals("suishenting")) {
             suishenting();
         } else if (eventBean.getMsg().equals("allmusiccomplete")) {
-            isBofang = false;
             iv_delete.setVisibility(View.VISIBLE);
             allclose();
         }
@@ -1128,13 +1122,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void gobofang(final PlayerBean playerBean) {
-        isBofang = false;
         int apnType = NetWorkUtils.getAPNType(mContext);
         if (apnType == 0) {
             Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
         } else if (apnType == 2 || apnType == 3 || apnType == 4) {
             if (SpUtils.getBoolean(mContext, "nowifiallowlisten", false)) {//记住用户允许流量播放
-                isBofang = true;
                 Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
                 rl_bofang.startAnimation(animation);
                 rl_bofang.setVisibility(View.VISIBLE);
@@ -1153,7 +1145,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        isBofang = true;
                         Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
                         rl_bofang.startAnimation(animation);
                         rl_bofang.setVisibility(View.VISIBLE);
@@ -1173,7 +1164,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     @Override
                     public void onClick(View v) {
                         mDialog.dismiss();
-                        isBofang = false;
                         rl_bofang.setVisibility(View.GONE);
                         EventBus.getDefault().postSticky(new EventBean("norotate"));
                     }
@@ -1182,7 +1172,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         } else if (NetWorkUtils.isMobileConnected(mContext)) {
             Toast.makeText(mContext, "wifi不可用呢~", Toast.LENGTH_SHORT).show();
         } else {
-            isBofang = true;
             rl_bofang.setVisibility(View.VISIBLE);
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_in);
             rl_bofang.startAnimation(animation);
@@ -1367,7 +1356,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 yourLikeRefresh();
                 break;
             case R.id.iv_delete:
-                isBofang = false;
                 rl_bofang.startAnimation(delAnimation);
                 rl_bofang.setVisibility(View.GONE);
                 EventBean eventBean = new EventBean("norotate");

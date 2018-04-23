@@ -77,7 +77,6 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
         super.onWindowFocusChanged(hasFocus);
         if (!hasFocus)
             return;
-        CustomPopupWindow.setPopContext(this);
         if (musicPop == null) {
             musicPop = new CustomPopupWindow(this);
         }
