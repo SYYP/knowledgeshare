@@ -299,6 +299,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         } else if (eventBean.getMsg().equals("allmusiccomplete")) {
             iv_listen.clearAnimation();
             iv_listen.setImageResource(R.drawable.tab_listen_pause);
+        }else if (eventBean.getMsg().equals("clickrenwulist")){
+            //点击历史任务列表按钮
+            //保存记忆播放位置,注意要在MediaPlayer.release()之前
+            BofangHistroyBean bofangHistroyBean = mMyBinder.getBofangHistroyBean();
+            if (bofangHistroyBean != null) {
+                HistroyUtils.setOneDuration(bofangHistroyBean);
+            }
         }
     }
 
@@ -511,6 +518,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         } else {
             EventBean eventBean = new EventBean("home_pause");//发一个保证正在播放音频的学习时长的终止
             EventBus.getDefault().postSticky(eventBean);
+            EventBean eventBean2 = new EventBean("norotate");//记忆播放存数据库
+            EventBus.getDefault().postSticky(eventBean2);
             SpUtils.putBoolean(this, "nowifiallowdown", false);
             SpUtils.putBoolean(this, "nowifiallowlisten", false);
             super.onBackPressed();//相当于finish()

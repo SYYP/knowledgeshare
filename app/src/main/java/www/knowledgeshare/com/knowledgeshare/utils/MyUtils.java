@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.text.DateFormat;
@@ -257,9 +258,32 @@ public class MyUtils {
         Resources resources = MyApplication.getGloableContext().getResources();
         int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
         int height = resources.getDimensionPixelSize(resourceId);
-//        Toast.makeText(MyApplication.getGloableContext(), " ::"+height, Toast.LENGTH_SHORT).show();
+        //        Toast.makeText(MyApplication.getGloableContext(), " ::"+height, Toast.LENGTH_SHORT).show();
         return height;
     }
+
+    //判断设备是否存在NavigationBar,false的话是那些导航栏不在显示屏上的手机
+    public static boolean checkDeviceHasNavigationBar(Context context) {
+        boolean hasNavigationBar = false;
+        Resources rs = context.getResources();
+        int id = rs.getIdentifier("config_showNavigationBar", "bool", "android");
+        if (id > 0) {
+            hasNavigationBar = rs.getBoolean(id);
+        }
+        try {
+            Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
+            Method m = systemPropertiesClass.getMethod("get", String.class);
+            String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
+            if ("1".equals(navBarOverride)) {
+                hasNavigationBar = false;
+            } else if ("0".equals(navBarOverride)) {
+                hasNavigationBar = true;
+            }
+        } catch (Exception e) {
+        }
+        return hasNavigationBar;
+    }
+
 
     public static String dateToString(Date date, String type) {
         String str = null;

@@ -3,6 +3,7 @@ package www.knowledgeshare.com.knowledgeshare.base;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.fragment.home.bean.RefreshToken;
+import www.knowledgeshare.com.knowledgeshare.receiver.MyReceiver;
 import www.knowledgeshare.com.knowledgeshare.service.MediaService;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
 import www.knowledgeshare.com.knowledgeshare.utils.MyUtils;
@@ -47,6 +49,7 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
     //声明一个手势检测器对象
     private GestureDetector detector;
     private boolean isShowTop;
+    private MyReceiver receiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,6 +66,10 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
         refreshToken();
         //实例化这个手势检测器对象
         detector = new GestureDetector(this, this);
+        //动态注册广播，来监听任务键的点击
+        receiver = new MyReceiver();
+        IntentFilter homeFilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        registerReceiver(receiver, homeFilter);
     }
 
     @Override
@@ -130,7 +137,11 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
             return;
         }
         if (isshow && isShowTop) {
-            musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, MyUtils.getNavigationBarHeight() + MyUtils.dip2px(this, 50));
+            if (MyUtils.checkDeviceHasNavigationBar(this)) {
+                musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, MyUtils.getNavigationBarHeight() + MyUtils.dip2px(this, 50));
+            } else {
+                musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, MyUtils.dip2px(this, 50));
+            }
         } else if (isshow && !isShowTop) {
             musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
         }
@@ -141,7 +152,11 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
             return;
         }
         if (isshow && isShowTop && !mMyBinder.isClosed() && !musicPop.isShowing()) {
-            musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, MyUtils.getNavigationBarHeight() + MyUtils.dip2px(this, 50));
+            if (MyUtils.checkDeviceHasNavigationBar(this)) {
+                musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, MyUtils.getNavigationBarHeight() + MyUtils.dip2px(this, 50));
+            } else {
+                musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, MyUtils.dip2px(this, 50));
+            }
         } else if (isshow && !isShowTop && !mMyBinder.isClosed() && !musicPop.isShowing()) {
             musicPop.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
         }
@@ -173,6 +188,7 @@ public class BaseActivity extends AppCompatActivity implements GestureDetector.O
             activityList.remove(this);
         }
         unbindService(mServiceConnection);
+        unregisterReceiver(receiver);
     }
 
     @Override

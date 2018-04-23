@@ -123,7 +123,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         public void onPrepared(MediaPlayer mp) {
             isPrepared = true;
             //从记忆播放的数据库中取出来继续播放
-//            Toast.makeText(MyApplication.getGloableContext(), "xxxxxxxxxxxxxxx", Toast.LENGTH_SHORT).show();
+            //            Toast.makeText(MyApplication.getGloableContext(), "xxxxxxxxxxxxxxx", Toast.LENGTH_SHORT).show();
             BofangHistroyBean bofangHistroyBean = bofangHistroyBeanList.get(currPosition);
             int oneDuration = HistroyUtils.getOneDuration(bofangHistroyBean.getType(), bofangHistroyBean.getVideo_name());
             if (oneDuration != 0) {
@@ -518,7 +518,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 * 网络音频有这行没关系，每次都会走prepare的监听，但是本地播放就不一样了，
                 * 本地播放在调用了这个方法后，再点击播放就不会再走prepare的监听了，我怀疑是不是异步准备和同步准备有区别的问题
                 * */
-//                mMediaPlayer.release();
+                //                mMediaPlayer.release();
                 isPlaying = false;
                 isPrepared = false;
                 isClosed = true;
@@ -617,9 +617,9 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             //                Toast.makeText(MyApplication.getGloableContext(), "音频正在播放中", Toast.LENGTH_SHORT).show();
             //                return;
             //            }
-            if (!mMusicUrl.equals(musicUrl)){//点击了另外的音频就保存之前的
+            if (!mMusicUrl.equals(musicUrl)) {//点击了另外的音频就保存之前的
                 //保存记忆播放位置,注意要在MediaPlayer.release()之前
-                BofangHistroyBean bofangHistroyBean =mBinder.getBofangHistroyBean();
+                BofangHistroyBean bofangHistroyBean = mBinder.getBofangHistroyBean();
                 if (bofangHistroyBean != null) {
                     HistroyUtils.setOneDuration(bofangHistroyBean);
                 }
@@ -662,16 +662,16 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 return null;
             }
             BofangHistroyBean bofangHistroyBean = bofangHistroyBeanList.get(currPosition);
-//            Toast.makeText(MyApplication.getGloableContext(), "xxx"+getPlayPosition(), Toast.LENGTH_SHORT).show();
+            //            Toast.makeText(MyApplication.getGloableContext(), "xxx"+getPlayPosition(), Toast.LENGTH_SHORT).show();
             bofangHistroyBean.setDuration(getPlayPosition());
             return bofangHistroyBean;
         }
 
         public void setMusicLocal(PlayerBean playerBean) {
             try {
-                if (mPlayerBean!=null && !mPlayerBean.getTitle().equals(playerBean.getTitle())){//点击了另外的音频就保存之前的
+                if (mPlayerBean != null && !mPlayerBean.getTitle().equals(playerBean.getTitle())) {//点击了另外的音频就保存之前的
                     //保存上一首的记忆播放位置,注意要在MediaPlayer.release()之前
-                    BofangHistroyBean bofangHistroyBean =mBinder.getBofangHistroyBean();
+                    BofangHistroyBean bofangHistroyBean = mBinder.getBofangHistroyBean();
                     if (bofangHistroyBean != null) {
                         HistroyUtils.setOneDuration(bofangHistroyBean);
                     }
