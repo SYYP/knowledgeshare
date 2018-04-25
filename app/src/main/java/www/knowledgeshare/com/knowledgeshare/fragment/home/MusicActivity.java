@@ -269,6 +269,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
             mHandler.postDelayed(mRunnable, 1000);
         }
     };
+    private boolean isChanging;
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -292,18 +293,17 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                     //这里很重要，如果不判断是否来自用户操作进度条，会不断执行下面语句块里面的逻辑，然后就会卡顿卡顿
                     if (fromUser) {
                         mMyBinder.seekToPositon(seekBar.getProgress());
-                        //                    mMediaService.mMediaPlayer.seekTo(seekBar.getProgress());
                     }
                 }
 
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
-
+                    isChanging=true;//正在拖动
                 }
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-
+                    isChanging=false;//结束拖动
                 }
             });
             mHandler.post(mRunnable);

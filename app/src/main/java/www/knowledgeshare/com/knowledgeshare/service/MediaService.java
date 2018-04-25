@@ -15,6 +15,8 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
+
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
@@ -61,8 +63,8 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         super.onCreate();
         Notifier.init(this);
         mAudioFocusManager = new AudioFocusManager(this);
-        mMediaPlayer.setOnCompletionListener(this);
         mMediaPlayer.setOnErrorListener(this);
+        mMediaPlayer.setOnCompletionListener(this);
     }
 
     /*
@@ -123,15 +125,49 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         public void onPrepared(MediaPlayer mp) {
             isPrepared = true;
             //从记忆播放的数据库中取出来继续播放
-            //            Toast.makeText(MyApplication.getGloableContext(), "xxxxxxxxxxxxxxx", Toast.LENGTH_SHORT).show();
+            Logger.e("xxxxxxxxxx" + "准备完成");
             BofangHistroyBean bofangHistroyBean = bofangHistroyBeanList.get(currPosition);
             int oneDuration = HistroyUtils.getOneDuration(bofangHistroyBean.getType(), bofangHistroyBean.getVideo_name());
             if (oneDuration != 0) {
-                mBinder.seekToPositon(oneDuration);
+                Logger.e("xxxxxxxxxx取出" + bofangHistroyBean.getVideo_name() + "历史：" + oneDuration);
+                try {
+                    mBinder.seekToPositon(oneDuration);
+                } catch (Exception e) {
+                    Logger.e("xxxxxxxxxx" + "捕捉到异常");
+                    e.printStackTrace();
+                }
             }
             start();
         }
     };
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        if (currPosition == musicList.size() - 1) {
+            //全部播放完成
+            EventBus.getDefault().postSticky(new EventBean("allmusiccomplete"));
+            return;
+        }
+         /*
+        此方法的回调在很多情况下会被回调，例如
+        1.当播放完成的时候会被回调
+        2.当mMediaPlayer.setDataSource()方法没有调用或者还没有完成，就使用了 mMediaPlayer.getDuration()、
+        mMediaPlayer.seekto()等方法的时候，总之大部分不正确的使用都会回调onCompletion此方法，出现了这种情况就会走播放下一首的逻辑
+         */
+        Logger.e("xxxxxxxxxx" + "下一首！！");
+        Logger.e("xxxxxxxxxx" + mPlayerBean.getTitle() + "  " + mBinder.getPlayPosition() + "::" + mBinder.getProgress());
+        mBinder.nextMusic();
+    }
+
+    /*
+    * 当你调用了mediaplayer的reset方法后，会出现播放异常的问题，要实现MediaPlayer的onError回调，然后返回值设置成true
+    * */
+    @Override
+    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+        //        很诡异的bug
+        Logger.e("xxxxxxxxxx" + "播放错误");
+        return true;//要设置为true
+    }
 
     private void start() {
         if (mAudioFocusManager.requestAudioFocus()) {
@@ -185,62 +221,34 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
         }
     }
 
-    private void startLocal() {
-        if (mAudioFocusManager.requestAudioFocus()) {
-            mMediaPlayer.start();
-            EventBean eventBean = new EventBean("rotate");
-            EventBus.getDefault().postSticky(eventBean);
-            EventBean eventBean2 = new EventBean("home_bofang");
-            EventBus.getDefault().postSticky(eventBean2);
-            if (musicTypeBeanList != null && musicTypeBeanList.size() > 0) {
-                MusicTypeBean musicTypeBean = musicTypeBeanList.get(currPosition);
-                EventBus.getDefault().postSticky(musicTypeBean);//播放上一首下一首的时候刷新播放主界面的数据
-            }
-            //播放下一首上一首的时候增加播放历史数据库中的数据
-            if (bofangHistroyBeanList != null && bofangHistroyBeanList.size() > 0) {
-                BofangHistroyBean bofangHistroyBean = bofangHistroyBeanList.get(currPosition);
-                if (!HistroyUtils.isInserted(bofangHistroyBean.getVideo_name())) {
-                    bofangHistroyBean.setTime(System.currentTimeMillis());
-                    HistroyUtils.add(bofangHistroyBean);
-                } else {
-                    HistroyUtils.updateTime(System.currentTimeMillis(), bofangHistroyBean.getVideo_name());
-                }
-            }
-            registerReceiver(mNoisyReceiver, mNoisyFilter);
-            mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
-            isClosed = false;
-            Notifier.showPlay(mPlayerBean);
-        }
-    }
-
     private void playLocal(String localPath) {
         if (mAudioFocusManager.requestAudioFocus()) {
             try {
-                mMediaPlayer.setDataSource(localPath);
-                mMediaPlayer.prepare();//好像是本地播放不能用异步准备
-                mMediaPlayer.start();
-                EventBean eventBean = new EventBean("rotate");
-                EventBus.getDefault().postSticky(eventBean);
-                EventBean eventBean2 = new EventBean("home_bofang");
-                EventBus.getDefault().postSticky(eventBean2);
-                if (musicTypeBeanList != null && musicTypeBeanList.size() > 0) {
-                    MusicTypeBean musicTypeBean = musicTypeBeanList.get(currPosition);
-                    EventBus.getDefault().postSticky(musicTypeBean);//播放上一首下一首的时候刷新播放主界面的数据
-                }
-                //播放下一首上一首的时候增加播放历史数据库中的数据
-                if (bofangHistroyBeanList != null && bofangHistroyBeanList.size() > 0) {
-                    BofangHistroyBean bofangHistroyBean = bofangHistroyBeanList.get(currPosition);
-                    if (!HistroyUtils.isInserted(bofangHistroyBean.getVideo_name())) {
-                        bofangHistroyBean.setTime(System.currentTimeMillis());
-                        HistroyUtils.add(bofangHistroyBean);
-                    } else {
-                        HistroyUtils.updateTime(System.currentTimeMillis(), bofangHistroyBean.getVideo_name());
+                try {
+                    if (mPlayerBean != null && !mPlayerBean.getLocalPath().equals(localPath)) {//点击了另外的音频就保存之前的
+                        //保存上一首的记忆播放位置,注意要在MediaPlayer.release()之前
+                        BofangHistroyBean bofangHistroyBean = mBinder.getBofangHistroyBean();
+                        if (bofangHistroyBean != null) {
+                            HistroyUtils.setOneDuration(bofangHistroyBean);
+                            Logger.e("xxxxxxxxxx保存" + bofangHistroyBean.getVideo_name() + "：" + bofangHistroyBean.getDuration());
+                        }
+                    }
+                    mMediaPlayer.setDataSource(localPath);
+                    mMediaPlayer.prepare();//好像是本地播放不能用异步准备
+                    mMediaPlayer.setOnPreparedListener(mPreparedListener);
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                    //                    mMediaPlayer = null;
+                    //                    mMediaPlayer = new MediaPlayer();
+                    try {
+                        mMediaPlayer.reset();
+                        mMediaPlayer.setDataSource(localPath);
+                        mMediaPlayer.prepare();
+                        mMediaPlayer.setOnPreparedListener(mPreparedListener);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
                     }
                 }
-                registerReceiver(mNoisyReceiver, mNoisyFilter);
-                mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
-                isClosed = false;
-                Notifier.showPlay(mPlayerBean);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -329,30 +337,6 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mediaPlayer) {
-        if (currPosition == musicList.size() - 1) {
-            //全部播放完成
-            EventBus.getDefault().postSticky(new EventBean("allmusiccomplete"));
-            return;
-        }
-         /*
-        此方法的回调在很多情况下会被回调，例如
-        1.当播放完成的时候会被回调
-        2.当mMediaPlayer.setDataSource(）方法还没有来得及调用，就使用了 mMediaPlayer.getDuration()的时候
-        3.当mMediaPlayer.setDataSource(）方法没有调用，就使用了mMediaPlayer.seekto();的时候，
-        总之大部分不正确的使用都会回调onCompletion此方法，所以需要注意
-        解决办法就是实现MediaPlayer的onError回调，然后返回值设置成true
-         */
-        mBinder.nextMusic();
-    }
-
-    @Override
-    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-        //        Toast.makeText(this, "播放错误", Toast.LENGTH_SHORT).show();很诡异的bug
-        return true;//要设置为true
     }
 
     public class MyBinder extends Binder {
@@ -528,6 +512,8 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             }
         }
 
+        private int change = 0;
+
         /**
          * 下一首
          */
@@ -538,7 +524,8 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                     Toast.makeText(MyApplication.getGloableContext(), "已是最后一首", Toast.LENGTH_SHORT).show();
                 } else {
                     currPosition++;
-                    mMediaPlayer.reset();
+                    change = 1;
+                    //                    mMediaPlayer.reset();
                     //当播放本地音频的时候我没传url，就通过这个来区分
                     if (TextUtils.isEmpty(musicList.get(currPosition).getVideo_url())) {
                         playLocal(musicList.get(currPosition).getLocalPath());
@@ -564,7 +551,8 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                     Toast.makeText(MyApplication.getGloableContext(), "已是第一首", Toast.LENGTH_SHORT).show();
                 } else {
                     currPosition--;
-                    mMediaPlayer.reset();
+                    change = -1;
+                    //                    mMediaPlayer.reset();
                     if (TextUtils.isEmpty(musicList.get(currPosition).getVideo_url())) {
                         playLocal(musicList.get(currPosition).getLocalPath());
                     } else {
@@ -613,15 +601,16 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
          * 准备播放音频
          */
         public void setMusicUrl(String musicUrl) {
-            //            if (mMusicUrl.equals(musicUrl) && isPlaying()) {
-            //                Toast.makeText(MyApplication.getGloableContext(), "音频正在播放中", Toast.LENGTH_SHORT).show();
-            //                return;
-            //            }
+            if (mMusicUrl.equals(musicUrl) && isPlaying()) {
+                //                Toast.makeText(MyApplication.getGloableContext(), "音频正在播放中", Toast.LENGTH_SHORT).show();
+                return;
+            }
             if (!mMusicUrl.equals(musicUrl)) {//点击了另外的音频就保存之前的
                 //保存记忆播放位置,注意要在MediaPlayer.release()之前
                 BofangHistroyBean bofangHistroyBean = mBinder.getBofangHistroyBean();
                 if (bofangHistroyBean != null) {
                     HistroyUtils.setOneDuration(bofangHistroyBean);
+                    Logger.e("xxxxxxxxxx保存" + bofangHistroyBean.getVideo_name() + "：" + bofangHistroyBean.getDuration());
                 }
             }
             mMusicUrl = musicUrl;
@@ -635,6 +624,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 //                mMediaPlayer.prepare();卡顿
                 mMediaPlayer.prepareAsync();
             } catch (IllegalStateException e) {
+                Logger.e("xxxxxxxxxx" + "setDataSourceError");
                 mMediaPlayer = null;
                 mMediaPlayer = new MediaPlayer();
                 try {
@@ -661,21 +651,34 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             if (bofangHistroyBeanList == null || bofangHistroyBeanList.size() == 0) {
                 return null;
             }
-            BofangHistroyBean bofangHistroyBean = bofangHistroyBeanList.get(currPosition);
-            //            Toast.makeText(MyApplication.getGloableContext(), "xxx"+getPlayPosition(), Toast.LENGTH_SHORT).show();
+            BofangHistroyBean bofangHistroyBean = null;
+            if (change == 1) {
+                bofangHistroyBean = bofangHistroyBeanList.get(currPosition - 1);
+            } else if (change == -1) {
+                bofangHistroyBean = bofangHistroyBeanList.get(currPosition + 1);
+            } else {
+                bofangHistroyBean = bofangHistroyBeanList.get(currPosition);
+            }
+            change = 0;
+            //            Toast.makeText(MyApplication.getGloableContext(), "xxx" + getPlayPosition(), Toast.LENGTH_SHORT).show();
             bofangHistroyBean.setDuration(getPlayPosition());
             return bofangHistroyBean;
         }
 
         public void setMusicLocal(PlayerBean playerBean) {
             try {
+                if (mPlayerBean != null && mPlayerBean.getTitle().equals(playerBean.getTitle()) && isPlaying()) {
+                    return;
+                }
                 if (mPlayerBean != null && !mPlayerBean.getTitle().equals(playerBean.getTitle())) {//点击了另外的音频就保存之前的
                     //保存上一首的记忆播放位置,注意要在MediaPlayer.release()之前
                     BofangHistroyBean bofangHistroyBean = mBinder.getBofangHistroyBean();
                     if (bofangHistroyBean != null) {
                         HistroyUtils.setOneDuration(bofangHistroyBean);
+                        Logger.e("xxxxxxxxxx保存" + bofangHistroyBean.getVideo_name() + "：" + bofangHistroyBean.getDuration());
                     }
                 }
+                mMusicUrl = "";
                 mPlayerBean = playerBean;
                 mMediaPlayer.reset();
                 mMediaPlayer.setDataSource(playerBean.getLocalPath());
@@ -690,7 +693,6 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                 } else {
                     currPosition = 0;
                 }
-                startLocal();
             } catch (IllegalStateException e) {
                 mMediaPlayer = null;
                 mMediaPlayer = new MediaPlayer();
@@ -705,7 +707,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
                     } else {
                         currPosition = 0;
                     }
-                    startLocal();
+                    mMediaPlayer.setOnPreparedListener(mPreparedListener);
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
