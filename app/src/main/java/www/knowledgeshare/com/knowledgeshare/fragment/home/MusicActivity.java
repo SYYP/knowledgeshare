@@ -674,6 +674,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                                          Toast.makeText(MusicActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                                          return;
                                      }
+                                     Toast.makeText(MusicActivity.this, "已加入下载列表", Toast.LENGTH_SHORT).show();
                                      DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                                              "free", listBean.getTypeId() + "", "", dataEntity.getImage(), "", "", list.size() + "", list);
                                      DownUtil.add(downLoadListsBean);
@@ -729,6 +730,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                                          Toast.makeText(MusicActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                                          return;
                                      }
+                                     Toast.makeText(MusicActivity.this, "已加入下载列表", Toast.LENGTH_SHORT).show();
                                      DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                                              "comment", listBean.getTypeId() + "", "", dataEntity.getImage(), "", "", list.size() + "", list);
                                      DownUtil.add(downLoadListsBean);
@@ -785,6 +787,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                                          Toast.makeText(MusicActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                                          return;
                                      }
+                                     Toast.makeText(MusicActivity.this, "已加入下载列表", Toast.LENGTH_SHORT).show();
                                      DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                                              "xiaoke", dataEntity.getId() + "", dataEntity.getXk_name(), dataEntity.getXk_image(),
                                              dataEntity.getT_name(), dataEntity.getXk_teacher_tags(), "1", list);
@@ -841,6 +844,7 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                                          Toast.makeText(MusicActivity.this, "此音频已下载", Toast.LENGTH_SHORT).show();
                                          return;
                                      }
+                                     Toast.makeText(MusicActivity.this, "已加入下载列表", Toast.LENGTH_SHORT).show();
                                      DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
                                              "zhuanlan", dataEntity.getId() + "", getIntent().getStringExtra("title"),
                                              dataEntity.getZl_image(),
