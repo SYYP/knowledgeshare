@@ -731,6 +731,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             public void onRefresh() {
                 if (!NetWorkUtils.isNetworkConnected(mContext)) {
                     Toast.makeText(mContext, "无网络连接", Toast.LENGTH_SHORT).show();
+                    springview.onFinishFreshAndLoad();
                     return;
                 }
                 new Handler().postDelayed(new Runnable() {

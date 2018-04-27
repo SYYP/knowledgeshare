@@ -474,8 +474,8 @@ public class SoftMusicDetailActivity extends UMShareActivity implements View.OnC
                                                  SoftMusicDetailBean.ChildEntity entity = mChild.get(i);
                                                  if (entity.getIs_try() == 1 || mMusicDetailBean.is_buy()) {
                                                      BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("softmusicdetail", entity.getId(), entity.getName(),
-                                                             entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
-                                                             entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
+                                                             entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count_true(),
+                                                             entity.getCollect_count_true(), entity.getView_count_true(), entity.isIslive(), entity.isIsfav()
                                                              , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url()
                                                              , System.currentTimeMillis(), mMusicDetailBean.getXk_class_id() + "",
                                                              entity.getParent_name(), entity.getTxt_url());

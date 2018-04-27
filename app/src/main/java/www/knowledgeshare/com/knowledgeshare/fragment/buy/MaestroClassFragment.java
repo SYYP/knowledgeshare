@@ -86,6 +86,7 @@ public class MaestroClassFragment extends BaseFragment {
             public void onRefresh() {
                 if (!NetWorkUtils.isNetworkConnected(mContext)){
                     Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
+                    springView.onFinishFreshAndLoad();
                     return;
                 }
                 new Handler().postDelayed(new Runnable() {
@@ -101,6 +102,7 @@ public class MaestroClassFragment extends BaseFragment {
             public void onLoadmore() {
                 if (!NetWorkUtils.isNetworkConnected(mContext)){
                     Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
+                    springView.onFinishFreshAndLoad();
                     return;
                 }
                 new Handler().postDelayed(new Runnable() {

@@ -46,6 +46,8 @@ import www.knowledgeshare.com.knowledgeshare.utils.TUtils;
 import www.knowledgeshare.com.knowledgeshare.view.MyFooter;
 import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 
+import static www.knowledgeshare.com.knowledgeshare.R.id.springview;
+
 /**
  * Created by Administrator on 2017/11/23.
  * 轻松音乐课
@@ -54,7 +56,7 @@ import www.knowledgeshare.com.knowledgeshare.view.MyHeader;
 public class EasyMusicLessonFragment extends BaseFragment {
     @BindView(R.id.recycler_easy)
     RecyclerView recyclerEasy;
-    @BindView(R.id.springview)
+    @BindView(springview)
     SpringView springView;
     Unbinder unbinder;
     private List<BuyXkBean.DataBean> list = new ArrayList<>();
@@ -83,6 +85,7 @@ public class EasyMusicLessonFragment extends BaseFragment {
             public void onRefresh() {
                 if (!NetWorkUtils.isNetworkConnected(mContext)){
                     Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
+                    springView.onFinishFreshAndLoad();
                     return;
                 }
                 new Handler().postDelayed(new Runnable() {
@@ -98,6 +101,7 @@ public class EasyMusicLessonFragment extends BaseFragment {
             public void onLoadmore() {
                 if (!NetWorkUtils.isNetworkConnected(mContext)){
                     Toast.makeText(mContext, "当前无网络连接，请检查设置", Toast.LENGTH_SHORT).show();
+                    springView.onFinishFreshAndLoad();
                     return;
                 }
                 new Handler().postDelayed(new Runnable() {

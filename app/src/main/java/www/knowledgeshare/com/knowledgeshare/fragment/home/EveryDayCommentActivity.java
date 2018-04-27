@@ -263,8 +263,8 @@ public class EveryDayCommentActivity extends UMShareActivity implements View.OnC
                                     for (int i = 0; i < mDailys.size(); i++) {
                                         EveryDayBean.DailysBean entity = mDailys.get(i);
                                         BofangHistroyBean bofangHistroyBean = new BofangHistroyBean("everydaycomment", entity.getId(), entity.getVideo_name(),
-                                                entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count(),
-                                                entity.getCollect_count(), entity.getView_count(), entity.isIslive(), entity.isIsfav()
+                                                entity.getCreated_at(), entity.getVideo_url(), entity.getGood_count_true(),
+                                                entity.getCollect_count_true(), entity.getView_count_true(), entity.isIslive(), entity.isIsfav()
                                                 , entity.getT_header(), entity.getParent_name(), entity.getShare_h5_url(),
                                                 System.currentTimeMillis()
                                                 , "commentId", entity.getParent_name(), entity.getTxt_url());
