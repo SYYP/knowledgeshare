@@ -40,6 +40,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.MyApplication;
@@ -694,6 +695,41 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
         });
     }
 
+    private String getRingDuring(String url) {
+        String duration = null;
+        android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
+        String s = null;
+        try {
+            if (url != null) {
+                HashMap<String, String> headers = null;
+                if (headers == null) {
+                    headers = new HashMap<String, String>();
+                    headers.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.4.2; zh-CN; MW-KW-001 Build/JRO03C) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 UCBrowser/1.0.0.001 U4/0.8.0 Mobile Safari/533.1");
+                }
+                mmr.setDataSource(url, headers);
+            }
+            duration = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);
+            int musicTime = Integer.parseInt(duration) / 1000;
+            int xxx = musicTime / 60;
+            int yyy = musicTime % 60;
+            String zzz = "";
+            if (yyy == 0) {
+                zzz = "00";
+            } else {
+                zzz = yyy + "";
+            }
+            if (xxx <= 9) {
+                s = "0" + xxx + ":" + zzz;
+            } else {
+                s = xxx + ":" + zzz;
+            }
+        } catch (Exception ex) {
+        } finally {
+            mmr.release();
+        }
+        return s + "";
+    }
+
     private void showListDialog(final int adapterPosition, boolean isfav, boolean islive, final int id) {
         mDialog = mBuilder.setViewId(R.layout.dialog_free)
                 //设置dialogpadding
@@ -796,7 +832,8 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                 listBean.setTypeId("freeId");
                                 listBean.setChildId(childEntity.getId() + "");
                                 listBean.setName(childEntity.getVideo_name());
-                                listBean.setVideoTime(childEntity.getVideo_time());
+                                //                                listBean.setVideoTime(childEntity.getVideo_time());
+                                listBean.setVideoTime(getRingDuring(childEntity.getVideo_url()));
                                 listBean.setDate(split[0]);
                                 listBean.setTime(split[1]);
                                 listBean.setVideoUrl(childEntity.getVideo_url());
@@ -858,7 +895,8 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                         listBean.setTypeId("freeId");
                         listBean.setChildId(childEntity.getId() + "");
                         listBean.setName(childEntity.getVideo_name());
-                        listBean.setVideoTime(childEntity.getVideo_time());
+                        //                        listBean.setVideoTime(childEntity.getVideo_time());
+                        listBean.setVideoTime(getRingDuring(childEntity.getVideo_url()));
                         listBean.setDate(split[0]);
                         listBean.setTime(split[1]);
                         listBean.setVideoUrl(childEntity.getVideo_url());
@@ -919,7 +957,8 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                     listBean.setTypeId("freeId");
                     listBean.setChildId(childEntity.getId() + "");
                     listBean.setName(childEntity.getVideo_name());
-                    listBean.setVideoTime(childEntity.getVideo_time());
+                    //                    listBean.setVideoTime(childEntity.getVideo_time());
+                    listBean.setVideoTime(getRingDuring(childEntity.getVideo_url()));
                     listBean.setDate(split[0]);
                     listBean.setTime(split[1]);
                     listBean.setVideoUrl(childEntity.getVideo_url());
@@ -1014,9 +1053,9 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                      } else {
                                          mChild.get(adapterPosition).setCollect_count(collect_count - 1);
                                      }
-                                     if (collect_count_true<=0){
+                                     if (collect_count_true <= 0) {
                                          mChild.get(adapterPosition).setCollect_count_true(0);
-                                     }else {
+                                     } else {
                                          mChild.get(adapterPosition).setCollect_count_true(collect_count_true - 1);
                                      }
                                  } else {
@@ -1074,9 +1113,9 @@ public class FreeActivity extends UMShareActivity implements View.OnClickListene
                                      } else {
                                          mChild.get(adapterPosition).setGood_count(good_count - 1);
                                      }
-                                     if (good_count_true<=0){
+                                     if (good_count_true <= 0) {
                                          mChild.get(adapterPosition).setGood_count_true(0);
-                                     }else {
+                                     } else {
                                          mChild.get(adapterPosition).setGood_count_true(good_count_true - 1);
                                      }
                                  } else {

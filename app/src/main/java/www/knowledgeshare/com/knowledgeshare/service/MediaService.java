@@ -568,6 +568,7 @@ public class MediaService extends Service implements MediaPlayer.OnCompletionLis
             }
         }
 
+
         /**
          * 获取歌曲长度
          **/

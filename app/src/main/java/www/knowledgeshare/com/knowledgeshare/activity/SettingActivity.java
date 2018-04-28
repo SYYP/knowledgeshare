@@ -16,11 +16,14 @@ import com.suke.widget.SwitchButton;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import www.knowledgeshare.com.knowledgeshare.R;
 import www.knowledgeshare.com.knowledgeshare.base.BaseActivity;
 import www.knowledgeshare.com.knowledgeshare.bean.BaseBean;
+import www.knowledgeshare.com.knowledgeshare.bean.EventBean;
 import www.knowledgeshare.com.knowledgeshare.callback.JsonCallback;
 import www.knowledgeshare.com.knowledgeshare.utils.DataCleanManager;
 import www.knowledgeshare.com.knowledgeshare.utils.MyContants;
@@ -161,14 +164,21 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                             case 3:
                                 requsetLogout();
                                 TUtils.showShort(SettingActivity.this,"退出");
-                                SpUtils.putBoolean(SettingActivity.this, "abool", false);
+//                                SpUtils.putBoolean(SettingActivity.this, "abool", false);
                                 SpUtils.putString(SettingActivity.this,"id","");
                                 SpUtils.putBoolean(SettingActivity.this, "wengaowindow", false);
                                 SpUtils.putString(SettingActivity.this,"token","");
                                 SpUtils.putString(SettingActivity.this, "wx_id", "");
-                                removeAllActivitys();
+//                                removeAllActivitys();
+                                finish();
                                 DownloadManager.getInstance().getDownloading().clear();
-                                startActivity(new Intent(SettingActivity.this,MainActivity.class));
+                                EventBean eventBean = new EventBean("norotate");
+                                EventBus.getDefault().postSticky(eventBean);
+                                EventBean eventBean2 = new EventBean("home_close");
+                                EventBus.getDefault().postSticky(eventBean2);
+                                Intent intent1 = new Intent(SettingActivity.this, MainActivity.class);
+                                intent1.putExtra("loginout","loginout");
+                                startActivity(intent1);
                                 break;
                             case 4:
                                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+kfzxCallTv.getText().toString()));

@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.MyApplication;
@@ -109,7 +110,7 @@ public class FreeDownListActivity extends BaseActivity implements View.OnClickLi
     private void getIntentData() {
         freeBean = (FreeBean) getIntent().getExtras().getSerializable("model");
         list = freeBean.getChild();
-        if (list != null && list.size() > 0){
+        if (list != null && list.size() > 0) {
             mMyAdapter = new MyAdapter(R.layout.item_download, list);
             recycler_list.setAdapter(mMyAdapter);
             mMyAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -129,7 +130,7 @@ public class FreeDownListActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-    private boolean isHasOneChecked(){
+    private boolean isHasOneChecked() {
         for (int i = 0; i < list.size(); i++) {
             boolean checked = list.get(i).isChecked();
             if (checked) {
@@ -186,11 +187,11 @@ public class FreeDownListActivity extends BaseActivity implements View.OnClickLi
             String created_at = item.getCreated_at();
             Logger.e(created_at);
             String[] split = created_at.split(" ");
-            helper.setVisible(R.id.tv_time,false);//先隐藏掉
-            helper.setText(R.id.tv_name,item.getVideo_name())
-                    .setText(R.id.tv_date,split[0])
-                    .setText(R.id.tv_time,item.getVideo_time())
-                    .setText(R.id.tv_order,helper.getAdapterPosition()+1+"");
+            helper.setVisible(R.id.tv_time, false);//先隐藏掉
+            helper.setText(R.id.tv_name, item.getVideo_name())
+                    .setText(R.id.tv_date, split[0])
+                    .setText(R.id.tv_time, item.getVideo_time())
+                    .setText(R.id.tv_order, helper.getAdapterPosition() + 1 + "");
         }
     }
 
@@ -215,7 +216,7 @@ public class FreeDownListActivity extends BaseActivity implements View.OnClickLi
                     startActivity(new Intent(this, LoginActivity.class));
                     return;
                 }
-                if (!isHasOneChecked()){
+                if (!isHasOneChecked()) {
                     Toast.makeText(this, "请选中后再下载", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -242,20 +243,56 @@ public class FreeDownListActivity extends BaseActivity implements View.OnClickLi
                                 download();
                             }
                         });
-                    }else {
+                    } else {
                         download();
                     }
                 } else {
-                   download();
+                    download();
                 }
 
                 break;
         }
     }
 
-    private void download(){
+
+    private String getRingDuring(String url) {
+        String duration = null;
+        android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
+        String s = null;
+        try {
+            if (url != null) {
+                HashMap<String, String> headers = null;
+                if (headers == null) {
+                    headers = new HashMap<String, String>();
+                    headers.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.4.2; zh-CN; MW-KW-001 Build/JRO03C) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 UCBrowser/1.0.0.001 U4/0.8.0 Mobile Safari/533.1");
+                }
+                mmr.setDataSource(url, headers);
+            }
+            duration = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);
+            int musicTime = Integer.parseInt(duration) / 1000;
+            int xxx = musicTime / 60;
+            int yyy = musicTime % 60;
+            String zzz = "";
+            if (yyy == 0) {
+                zzz = "00";
+            } else {
+                zzz = yyy + "";
+            }
+            if (xxx <= 9) {
+                s = "0" + xxx + ":" + zzz;
+            } else {
+                s = xxx + ":" + zzz;
+            }
+        } catch (Exception ex) {
+        } finally {
+            mmr.release();
+        }
+        return s + "";
+    }
+
+    private void download() {
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).isChecked()){
+            if (list.get(i).isChecked()) {
                 FreeBean.ChildEntity childEntity = list.get(i);
                 String created_at = childEntity.getCreated_at();
                 String[] split = created_at.split(" ");
@@ -263,9 +300,10 @@ public class FreeDownListActivity extends BaseActivity implements View.OnClickLi
                 List<DownLoadListsBean.ListBean> list = new ArrayList<>();
                 DownLoadListsBean.ListBean listBean = new DownLoadListsBean.ListBean();
                 listBean.setTypeId("freeId");
-                listBean.setChildId(childEntity.getId()+"");
+                listBean.setChildId(childEntity.getId() + "");
                 listBean.setName(childEntity.getVideo_name());
-                listBean.setVideoTime(childEntity.getVideo_time());
+                listBean.setVideoTime(getRingDuring(childEntity.getVideo_url()));
+                //                listBean.setVideoTime(childEntity.getVideo_time());
                 listBean.setDate(split[0]);
                 listBean.setTime(split[1]);
                 listBean.setVideoUrl(childEntity.getVideo_url());
@@ -281,7 +319,7 @@ public class FreeDownListActivity extends BaseActivity implements View.OnClickLi
                 listBean.setCollected(childEntity.isIsfav());
                 list.add(listBean);
                 DownLoadListsBean downLoadListsBean = new DownLoadListsBean(
-                        "free", listBean.getTypeId(), "", childEntity.getT_header(), "", "",list.size()+"",list);
+                        "free", listBean.getTypeId(), "", childEntity.getT_header(), "", "", list.size() + "", list);
                 DownUtil.add(downLoadListsBean);
 
                         /*DownLoadListBean DownLoadListBean = new DownLoadListBean(childEntity.getChildId(),-1,-4,-3,
@@ -289,20 +327,20 @@ public class FreeDownListActivity extends BaseActivity implements View.OnClickLi
                                 childEntity.getVideo_url(), childEntity.getTxt_url(),childEntity.getT_header());
                         DownUtils.add(DownLoadListBean);*/
                 GetRequest<File> request = OkGo.<File>get(childEntity.getVideo_url());
-                OkDownload.request(listBean.getTypeId()+"_"+childEntity.getId(), request)
+                OkDownload.request(listBean.getTypeId() + "_" + childEntity.getId(), request)
                         .folder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download")
-                        .fileName(childEntity.getVideo_name()+listBean.getTypeId()+"_"+childEntity.getId()+".mp3")
+                        .fileName(childEntity.getVideo_name() + listBean.getTypeId() + "_" + childEntity.getId() + ".mp3")
                         .extra3(downLoadListsBean)//额外数据
                         .save()
                         .register(new LogDownloadListener())//当前任务的回调监听
                         .start();
                 OkGo.<File>get(childEntity.getTxt_url())
                         .execute(new FileCallback(Environment.getExternalStorageDirectory().getAbsolutePath() + "/boyue/download/free_download"
-                                ,childEntity.getVideo_name()+listBean.getTypeId()+"-"+childEntity.getId()+".txt") {
+                                , childEntity.getVideo_name() + listBean.getTypeId() + "-" + childEntity.getId() + ".txt") {
                             @Override
                             public void onSuccess(Response<File> response) {
                                 int code = response.code();
-                                if (code >= 200 && code <= 204){
+                                if (code >= 200 && code <= 204) {
                                     Logger.e("文稿下载完成");
                                 }
                             }

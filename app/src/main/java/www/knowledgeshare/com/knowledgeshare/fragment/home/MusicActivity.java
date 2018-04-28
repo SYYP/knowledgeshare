@@ -35,6 +35,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import www.knowledgeshare.com.knowledgeshare.MyApplication;
@@ -629,7 +630,41 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
         } else {
             download();
         }
+    }
 
+    private String getRingDuring(String url) {
+        String duration = null;
+        android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
+        String s = null;
+        try {
+            if (url != null) {
+                HashMap<String, String> headers = null;
+                if (headers == null) {
+                    headers = new HashMap<String, String>();
+                    headers.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.4.2; zh-CN; MW-KW-001 Build/JRO03C) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 UCBrowser/1.0.0.001 U4/0.8.0 Mobile Safari/533.1");
+                }
+                mmr.setDataSource(url, headers);
+            }
+            duration = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);
+            int musicTime = Integer.parseInt(duration) / 1000;
+            int xxx = musicTime / 60;
+            int yyy = musicTime % 60;
+            String zzz = "";
+            if (yyy == 0) {
+                zzz = "00";
+            } else {
+                zzz = yyy + "";
+            }
+            if (xxx <= 9) {
+                s = "0" + xxx + ":" + zzz;
+            } else {
+                s = xxx + ":" + zzz;
+            }
+        } catch (Exception ex) {
+        } finally {
+            mmr.release();
+        }
+        return s + "";
     }
 
     private void download() {
@@ -663,7 +698,8 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                                      listBean.setTypeId("freeId");
                                      listBean.setChildId(dataEntity.getId() + "");
                                      listBean.setName(dataEntity.getVideo_name());
-                                     listBean.setVideoTime(dataEntity.getVideo_time());
+//                                     listBean.setVideoTime(dataEntity.getVideo_time());
+                                     listBean.setVideoTime(getRingDuring(dataEntity.getVideo_url()));
                                      listBean.setDate("");
                                      listBean.setTime(dataEntity.getVideo_time());
                                      listBean.setVideoUrl(dataEntity.getVideo_url());
@@ -721,7 +757,8 @@ public class MusicActivity extends UMShareActivity implements View.OnClickListen
                                      listBean.setName(dataEntity.getVideo_name());
                                      listBean.setVideoTime(dataEntity.getVideo_time());
                                      listBean.setDate("");
-                                     listBean.setTime(dataEntity.getVideo_time());
+//                                     listBean.setTime(dataEntity.getVideo_time());
+                                     listBean.setVideoTime(getRingDuring(dataEntity.getVideo_url()));
                                      listBean.setVideoUrl(dataEntity.getVideo_url());
                                      listBean.setTxtUrl(dataEntity.getTxt_url());
                                      listBean.setIconUrl(dataEntity.getImage());

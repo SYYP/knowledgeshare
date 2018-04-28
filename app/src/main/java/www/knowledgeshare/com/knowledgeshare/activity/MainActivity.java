@@ -127,6 +127,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        String loginout = intent.getStringExtra("loginout");//注意这里不要getIntent
+        if (!TextUtils.isEmpty(loginout) && loginout.equals("loginout")) {
+            ll_home.performClick();
+        }
+    }
+
     //每次应用启动的时候上传一下学习时间
     private void setStudyTime() {
         List<StudyTimeBean> search = StudyTimeUtils.search();

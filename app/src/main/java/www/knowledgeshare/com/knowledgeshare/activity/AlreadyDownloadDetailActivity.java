@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -113,14 +114,46 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                 titleContentTv.setText("免费随身学");
                 listFree = (List<DownLoadListsBean>) getIntent().getExtras().getSerializable("list");
                 for (int i = 0; i < listFree.size(); i++) {
-                    list.addAll(listFree.get(i).getList());
+                    List<DownLoadListsBean.ListBean> list1 = listFree.get(i).getList();
+//                    if (list1 != null && list1.size() > 0) {
+//                        for (int i1 = 0; i1 < list1.size(); i1++) {
+//                            String videoUrl = list1.get(i1).getVideoUrl();
+//                            String ringDuring = getRingDuring(videoUrl);
+//                            int musicTime = Integer.parseInt(ringDuring) / 1000;
+//                            int xxx = musicTime / 60;
+//                            String s = "";
+//                            if (xxx <= 9) {
+//                                s = 0 + xxx + ":" + musicTime % 60;
+//                            } else {
+//                                s = xxx + ":" + musicTime % 60;
+//                            }
+//                            list1.get(i1).setVideoTime(s);
+//                        }
+//                    }
+                    this.list.addAll(list1);
                 }
                 break;
             case "comment":
                 titleContentTv.setText("每日推荐");
                 listComment = (List<DownLoadListsBean>) getIntent().getExtras().getSerializable("list");
                 for (int i = 0; i < listComment.size(); i++) {
-                    list.addAll(listComment.get(i).getList());
+                    List<DownLoadListsBean.ListBean> list1 = listComment.get(i).getList();
+//                    if (list1 != null && list1.size() > 0) {
+//                        for (int i1 = 0; i1 < list1.size(); i1++) {
+//                            String videoUrl = list1.get(i1).getVideoUrl();
+//                            String ringDuring = getRingDuring(videoUrl);
+//                            int musicTime = Integer.parseInt(ringDuring) / 1000;
+//                            int xxx = musicTime / 60;
+//                            String s = "";
+//                            if (xxx <= 9) {
+//                                s = "0" + xxx + ":" + musicTime % 60;
+//                            } else {
+//                                s = xxx + ":" + musicTime % 60;
+//                            }
+//                            list1.get(i1).setVideoTime(s);
+//                        }
+//                    }
+                    this.list.addAll(list1);
                 }
                 break;
             case "xiaoke":
@@ -140,6 +173,26 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
         }
 
         initData();
+    }
+
+    private String getRingDuring(String mUri) {
+        String duration = null;
+        android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
+        try {
+            if (mUri != null) {
+                HashMap<String, String> headers = null;
+                if (headers == null) {
+                    headers = new HashMap<String, String>();
+                    headers.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.4.2; zh-CN; MW-KW-001 Build/JRO03C) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 UCBrowser/1.0.0.001 U4/0.8.0 Mobile Safari/533.1");
+                }
+                mmr.setDataSource(mUri, headers);
+            }
+            duration = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);
+        } catch (Exception ex) {
+        } finally {
+            mmr.release();
+        }
+        return duration;
     }
 
     private void initData() {
@@ -171,7 +224,7 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                                for (int i = 0; i < list.size(); i++) {
                                                    DownLoadListsBean.ListBean listBean1 = list.get(i);
                                                    MusicTypeBean musicTypeBean1 = new MusicTypeBean(mytype,
-                                                           listBean1.getIconUrl(), listBean1.getName(), listBean1.getTypeId(),
+                                                           listBean1.getIconUrl(), listBean1.getName(), listBean1.getChildId(),
                                                            listBean1.isSave());
                                                    musicTypeBean1.setMsg("musicplayertype");
                                                    musicTypeBeanList.add(musicTypeBean1);
@@ -196,22 +249,22 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
                                                            entity.getDate(), "", entity.getGood_count(),
                                                            entity.getCollect_count(), entity.getView_count(), entity.isDianzan(), entity.isCollected()
                                                            , entity.getIconUrl(), entity.gettName(), entity.getH5_url()
-                                                           , System.currentTimeMillis(), entity.getTypeId(),
+                                                           , System.currentTimeMillis(), entity.getChildId(),
                                                            entity.getParentName(), entity.getTxtUrl());
                                                    bofangHistroyBean.setLocal(true);
                                                    histroyBeanList.add(bofangHistroyBean);
                                                }
                                                MediaService.insertBoFangHistroyList(histroyBeanList);
-//                                               //刷新没网情况下的文稿
-//                                               List<NoNetWenGaoBean> noNetWenGaoBeanList=new ArrayList<NoNetWenGaoBean>();
-//                                               for (int i = 0; i < list.size(); i++) {
-//                                                   DownLoadListsBean.ListBean listBean1 = list.get(i);
-//                                                   NoNetWenGaoBean noNetWenGaoBean = new NoNetWenGaoBean(listBean1.getIconUrl(), listBean1.getTypeId()
-//                                                           , listBean1.getName(), listBean1.getChildId(), type);
-//                                                   noNetWenGaoBean.setMsg("refreshnonetwengao");
-//                                                   noNetWenGaoBeanList.add(noNetWenGaoBean);
-//                                               }
-//                                               MediaService.insertWengaoBeanList(noNetWenGaoBeanList);
+                                               //                                               //刷新没网情况下的文稿
+                                               //                                               List<NoNetWenGaoBean> noNetWenGaoBeanList=new ArrayList<NoNetWenGaoBean>();
+                                               //                                               for (int i = 0; i < list.size(); i++) {
+                                               //                                                   DownLoadListsBean.ListBean listBean1 = list.get(i);
+                                               //                                                   NoNetWenGaoBean noNetWenGaoBean = new NoNetWenGaoBean(listBean1.getIconUrl(), listBean1.getTypeId()
+                                               //                                                           , listBean1.getName(), listBean1.getChildId(), type);
+                                               //                                                   noNetWenGaoBean.setMsg("refreshnonetwengao");
+                                               //                                                   noNetWenGaoBeanList.add(noNetWenGaoBean);
+                                               //                                               }
+                                               //                                               MediaService.insertWengaoBeanList(noNetWenGaoBeanList);
                                            }
                                        }
 
@@ -269,7 +322,9 @@ public class AlreadyDownloadDetailActivity extends BaseActivity implements View.
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMyBinder = (MediaService.MyBinder) service;
             if (mMyBinder.isPlaying()) {
+
             } else {
+
             }
         }
 
