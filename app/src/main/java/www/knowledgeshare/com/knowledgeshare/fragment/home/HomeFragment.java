@@ -470,6 +470,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         HttpParams params = new HttpParams();
         params.put("tagid", SpUtils.getString(mContext, "tag", ""));
         params.put("userid", SpUtils.getString(mContext, "id", ""));
+//        String url = "http://47.104.173.223/api/v2/index";
         OkGo.<HomeBean>post(MyContants.LXKURL + "index")
                 .tag(this)
                 .params(params)

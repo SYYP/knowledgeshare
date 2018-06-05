@@ -58,12 +58,13 @@ public class MyApplication extends LitePalApplication {
 
     /**
      * 初始化云推送通道
-     *移动推送的初始化必须在Application中，不能放到Activity中执行。移动推送在初始化过程中将启动后台进程channel，
+     * 移动推送的初始化必须在Application中，不能放到Activity中执行。移动推送在初始化过程中将启动后台进程channel，
      * 必须保证应用进程和channel进程都执行到推送初始化代码。
-     如果设备成功注册，将回调callback.onSuccess()方法。
-     但如果注册服务器连接失败，则调用callback.onFailed方法，并且自动进行重新注册，直到onSuccess为止。
-     （重试规则会由网络切换等时间自动触发。）
-     请在网络通畅的情况下进行相关的初始化调试，如果网络不通，或者App信息配置错误，在onFailed方法中，会有相应的错误码返回
+     * 如果设备成功注册，将回调callback.onSuccess()方法。
+     * 但如果注册服务器连接失败，则调用callback.onFailed方法，并且自动进行重新注册，直到onSuccess为止。
+     * （重试规则会由网络切换等时间自动触发。）
+     * 请在网络通畅的情况下进行相关的初始化调试，如果网络不通，或者App信息配置错误，在onFailed方法中，会有相应的错误码返回
+     *
      * @param applicationContext
      */
     private void initCloudChannel(final Context applicationContext) {
@@ -74,16 +75,16 @@ public class MyApplication extends LitePalApplication {
          * 若没有获取到指定声音文件，取设备设置的声音，
          * filePath 通知声音文件路径。
          */
-//        PushServiceFactory.getCloudPushService().setNotificationSoundFilePath("android.resource://" +
-//                getGloableContext().getPackageName() + "/" + R.raw.notifacation);
+        //        PushServiceFactory.getCloudPushService().setNotificationSoundFilePath("android.resource://" +
+        //                getGloableContext().getPackageName() + "/" + R.raw.notifacation);
         final CloudPushService pushService = PushServiceFactory.getCloudPushService();
         pushService.register(applicationContext, new CommonCallback() {
             @Override
             public void onSuccess(String response) {
                 //                Log.d(TAG, "init cloudchannel success");
                 String deviceId = pushService.getDeviceId();
-                System.out.println("xxxxxxxxx  "+deviceId);
-                SpUtils.putString(MyApplication.getGloableContext(),"device_token",deviceId);
+                System.out.println("xxxxxxxxx  " + deviceId);
+                SpUtils.putString(MyApplication.getGloableContext(), "device_token", deviceId);
             }
 
             @Override
